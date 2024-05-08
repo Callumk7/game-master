@@ -7,7 +7,6 @@
     "lint": "turbo lint"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "turbo": "latest"
   },
   "engines": {
