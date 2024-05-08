@@ -1,25 +1,15 @@
-import { and, eq, inArray } from "drizzle-orm";
-import { DB } from "~/db";
+import { eq, and, inArray } from "drizzle-orm";
+import { DB } from "../db";
 import {
-	allies,
 	characters,
 	charactersInFactions,
+	allies,
 	enemies,
-} from "~/db/schemas/characters";
-import { notes, notesOnCharacters } from "~/db/schemas/notes";
-import { plotsOnCharacters } from "~/db/schemas/plots";
-import { charactersInSessions } from "~/db/schemas/sessions";
-import {
-	AllyInsert,
-	Character,
-	CharactersInFactionsInsert,
-	EnemyInsert,
-	NoteInsert,
-} from "~/types";
+} from "../db/schemas/characters";
+import { notesOnCharacters, notes } from "../db/schemas/notes";
+import { plotsOnCharacters } from "../db/schemas/plots";
+import { charactersInSessions } from "../db/schemas/sessions";
 
-///
-/// GET CHARACTER DATA
-///
 export const getFullCharacterData = async (db: DB, characterId: string) => {
 	const charResult = await db.query.characters.findFirst({
 		where: eq(characters.id, characterId),

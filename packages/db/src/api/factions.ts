@@ -1,15 +1,14 @@
-import { and, eq, inArray } from "drizzle-orm";
-import { DB } from "~/db";
-import { charactersInFactions } from "~/db/schemas/characters";
-import { factions } from "~/db/schemas/factions";
-import { notesOnFactions, notesOnSessions } from "~/db/schemas/notes";
-import { plotsOnFactions } from "~/db/schemas/plots";
-import { factionsInSessions } from "~/db/schemas/sessions";
-import { Faction } from "~/types";
+import { eq, and, inArray } from "drizzle-orm";
+import { DB } from "../db";
+import { charactersInFactions } from "../db/schemas/characters";
+import { factions } from "../db/schemas/factions";
+import { notesOnFactions } from "../db/schemas/notes";
+import { plotsOnFactions } from "../db/schemas/plots";
+import { factionsInSessions } from "../db/schemas/sessions";
 
 export const getAllUserFactions = async (db: DB, userId: string) => {
 	return await db.select().from(factions).where(eq(factions.userId, userId));
-}
+};
 
 export const getFaction = async (db: DB, factionId: string) => {
 	return await db.query.factions.findFirst({

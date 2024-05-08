@@ -1,12 +1,11 @@
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { Outlet } from "@remix-run/react";
+import { createDrizzleForTurso, getAllUserEntities } from "@repo/db";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { MainContainer, SidebarLayout } from "~/components/layout";
 import { Sidebar } from "~/components/sidebar";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
-import { createDrizzleForTurso } from "@repo/db/drizzle";
-import { getAllUserEntities } from "@repo/db/api";
 
 export const meta: MetaFunction = () => {
 	return [

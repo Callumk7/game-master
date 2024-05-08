@@ -1,15 +1,14 @@
 import { eq } from "drizzle-orm";
-import { DB } from "~/db";
-import { notesOnSessions } from "~/db/schemas/notes";
+import { DB } from "../db";
+import { notesOnSessions } from "../db/schemas/notes";
 import {
+	sessions,
 	charactersInSessions,
 	factionsInSessions,
 	plotsInSessions,
-	sessions,
-} from "~/db/schemas/sessions";
-import { CompleteNote, Session } from "~/types";
+} from "../db/schemas/sessions";
+import { CompleteNote, Session } from "../types";
 
-// GET
 export const getCompleteSession = async (db: DB, sessionId: string) => {
 	const session = await db.query.sessions.findFirst({
 		where: eq(sessions.id, sessionId),

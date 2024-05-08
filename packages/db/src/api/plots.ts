@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
-import { DB } from "~/db";
-import { plots, plotsOnCharacters } from "~/db/schemas/plots";
-import { Plot } from "~/types";
+import { DB } from "../db";
+import { plotsOnCharacters, plots } from "../db/schemas/plots";
 
 export const getCharacterPlots = async (db: DB, characterId: string) => {
 	return await db.query.plotsOnCharacters.findMany({

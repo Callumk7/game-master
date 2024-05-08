@@ -1,8 +1,12 @@
 import { Hono } from "hono";
 import type { Bindings } from "..";
-import { createDrizzleForTurso } from "@repo/db";
-import { characters } from "@repo/db";
-import { createCharacterRequest } from "@repo/db";
+import {
+	CharacterInsert,
+	characters,
+	createCharacterRequest,
+	createDrizzleForTurso,
+} from "@repo/db";
+import { uuidv4 } from "callum-util";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -16,4 +20,10 @@ charactersRoute.post("/", async (c) => {
 	const body = await c.req.json();
 	const db = createDrizzleForTurso(c.env);
 	const character = createCharacterRequest.parse(body);
+	const characterInsert: CharacterInsert = {
+		id: `char_${uuidv4()}`,
+		...character,
+	};
+	const newChar = await db.insert(characters).values(characterInsert).returning();
+	return c.json(newChar);
 });

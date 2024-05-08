@@ -1,6 +1,10 @@
 import { and, eq } from "drizzle-orm";
-import { DB } from "~/db";
-import { notes, folders, plots, characters, factions, sessions } from "~/db/schemas";
+import { DB } from "../db";
+import { characters } from "../db/schemas/characters";
+import { factions } from "../db/schemas/factions";
+import { notes, folders } from "../db/schemas/notes";
+import { plots } from "../db/schemas/plots";
+import { sessions } from "../db/schemas/sessions";
 
 export const getAllUserEntities = async (db: DB, userId: string) => {
 	const unsortedNotesPromise = db.query.notes.findMany({

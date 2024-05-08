@@ -1,31 +1,21 @@
 import { uuidv4 } from "callum-util";
 import { and, eq } from "drizzle-orm";
-import { DB } from "~/db";
-import { charactersInFactions } from "~/db/schemas/characters";
+import { DB } from "../db";
+import { charactersInFactions } from "../db/schemas/characters";
 import {
 	notes,
-	notesOnSessions,
 	notesOnCharacters,
 	notesOnFactions,
+	notesOnSessions,
 	notesOnPlots,
 	linkedNotes,
-} from "~/db/schemas/notes";
-import { plotsOnCharacters, plotsOnFactions } from "~/db/schemas/plots";
+} from "../db/schemas/notes";
+import { plotsOnCharacters, plotsOnFactions } from "../db/schemas/plots";
 import {
 	charactersInSessions,
 	factionsInSessions,
 	plotsInSessions,
-} from "~/db/schemas/sessions";
-import {
-	Character,
-	Faction,
-	LinkedNoteInsert,
-	Note,
-	Plot,
-	Session,
-} from "~/types";
-
-// GET
+} from "../db/schemas/sessions";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 	const allNotes = await db.query.notes.findMany({
@@ -137,19 +127,13 @@ export const createNote = async (
 
 // PUT
 export const deleteCharacterJoinsFromNote = async (db: DB, noteId: string) => {
-	return await db
-		.delete(notesOnCharacters)
-		.where(eq(notesOnCharacters.noteId, noteId));
+	return await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
 };
 export const deleteFactionJoinsFromNote = async (db: DB, noteId: string) => {
-	return await db
-		.delete(notesOnFactions)
-		.where(eq(notesOnFactions.noteId, noteId));
+	return await db.delete(notesOnFactions).where(eq(notesOnFactions.noteId, noteId));
 };
 export const deleteSessionJoinsFromNote = async (db: DB, noteId: string) => {
-	return await db
-		.delete(notesOnSessions)
-		.where(eq(notesOnSessions.noteId, noteId));
+	return await db.delete(notesOnSessions).where(eq(notesOnSessions.noteId, noteId));
 };
 export const deletePlotJoinsFromNote = async (db: DB, noteId: string) => {
 	return await db.delete(notesOnPlots).where(eq(notesOnPlots.noteId, noteId));
@@ -208,20 +192,12 @@ export const linkFactionsToNote = async (
 		.returning();
 };
 
-export const linkPlotsToNote = async (
-	db: DB,
-	noteId: string,
-	plotIds: string[],
-) => {
+export const linkPlotsToNote = async (db: DB, noteId: string, plotIds: string[]) => {
 	const insert = plotIds.map((id) => ({
 		noteId: noteId,
 		plotId: id,
 	}));
-	return await db
-		.insert(notesOnPlots)
-		.values(insert)
-		.onConflictDoNothing()
-		.returning();
+	return await db.insert(notesOnPlots).values(insert).onConflictDoNothing().returning();
 };
 
 export const linkNotesTogether = async (
@@ -241,11 +217,7 @@ export const linkNotesTogether = async (
 		});
 	});
 
-	return await db
-		.insert(linkedNotes)
-		.values(insert)
-		.returning()
-		.onConflictDoNothing();
+	return await db.insert(linkedNotes).values(insert).returning().onConflictDoNothing();
 };
 
 ///
@@ -263,13 +235,7 @@ export const createNoteForSeshCharJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(charactersInSessions)
 		.set({ noteId: newNote.id })
@@ -287,13 +253,7 @@ export const createNoteForSeshFactionJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(factionsInSessions)
 		.set({ noteId: newNote.id })
@@ -311,13 +271,7 @@ export const createNoteForSeshPlotJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(plotsInSessions)
 		.set({ noteId: newNote.id })
@@ -335,13 +289,7 @@ export const createNoteForCharFactionJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(charactersInFactions)
 		.set({ noteId: newNote.id })
@@ -359,13 +307,7 @@ export const createNoteForCharPlotJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(plotsOnCharacters)
 		.set({ noteId: newNote.id })
@@ -383,13 +325,7 @@ export const createNoteforFactionPlotJoin = async (
 	name?: string,
 	htmlContent?: string,
 ) => {
-	const newNote = await createNote(
-		db,
-		userId,
-		name ?? "LINK-NOTE",
-		htmlContent,
-		true,
-	);
+	const newNote = await createNote(db, userId, name ?? "LINK-NOTE", htmlContent, true);
 	await db
 		.update(plotsOnFactions)
 		.set({ noteId: newNote.id })
@@ -452,9 +388,7 @@ export const deleteNoteJoins = async (db: DB, noteId: string) => {
 	const deleteSessionJoin = db
 		.delete(notesOnSessions)
 		.where(eq(notesOnSessions.noteId, noteId));
-	const deletePlotJoin = db
-		.delete(notesOnPlots)
-		.where(eq(notesOnPlots.noteId, noteId));
+	const deletePlotJoin = db.delete(notesOnPlots).where(eq(notesOnPlots.noteId, noteId));
 
 	try {
 		await Promise.all([

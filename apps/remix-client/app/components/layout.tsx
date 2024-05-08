@@ -2,7 +2,7 @@ import { HTMLAttributes, ReactNode } from "react";
 import { tv } from "tailwind-variants";
 import { EditableText } from "./editable-text";
 import { FormMethod } from "@remix-run/react";
-import { INTENT } from "@repo/db/api";
+import { INTENT } from "@repo/db";
 
 interface MainContainerProps extends HTMLAttributes<HTMLDivElement> {
 	width?: "wide" | "max";
