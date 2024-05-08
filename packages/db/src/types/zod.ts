@@ -1,4 +1,6 @@
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import { characters } from "~/db/schemas";
 
 export const OptionalEntitySchema = z
 	.array(z.string())
@@ -18,3 +20,10 @@ export const LoginBodySchema = z.object({
 	username: z.string(),
 	password: z.string(),
 });
+
+export const charactersInsertSchema = createInsertSchema(characters);
+export const characersSelectSchema = createSelectSchema(characters);
+export const createCharacterRequest = charactersInsertSchema.omit({ id: true });
+
+export type Character = z.infer<typeof characersSelectSchema>;
+export type CharacterInsert = z.infer<typeof charactersInsertSchema>;

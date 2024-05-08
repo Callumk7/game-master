@@ -3,13 +3,8 @@
 	"private": true,
 	"version": "0.0.1",
 	"description": "Drizzle client, types, and schemas.",
-	"exports": {
-		"./api": "./src/api/index.ts",
-		"./drizzle": "./src/db/index.ts",
-		"./schema": "./src/db/schemas/index.ts",
-		"./types": "./src/types/index.ts",
-		"./zod": "./src/types/zod.ts"
-	},
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
 	"scripts": {},
 	"dependencies": {
 		"@libsql/client": "^0.5.6",

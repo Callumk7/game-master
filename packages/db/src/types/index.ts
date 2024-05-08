@@ -1,21 +1,21 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import {
+	notes,
+	folders,
+	linkedNotes,
 	characters,
 	races,
-	charactersInFactions,
 	allies,
 	enemies,
-} from "~/db/schemas/characters";
-import { factions } from "~/db/schemas/factions";
-import { folders, linkedNotes, notes } from "~/db/schemas/notes";
-import { plots } from "~/db/schemas/plots";
-import {
+	factions,
+	charactersInFactions,
+	plots,
 	sessions,
 	charactersInSessions,
 	factionsInSessions,
 	plotsInSessions,
-} from "~/db/schemas/sessions";
+} from "../db/schemas";
 
 // AI types
 type AiMessageRole = "user" | "system" | "assistant";
@@ -28,12 +28,7 @@ type AiMessage = {
 export type { AiMessage, AiMessageRole };
 
 // Custom Types
-export type EntityType =
-	| "characters"
-	| "factions"
-	| "plots"
-	| "notes"
-	| "sessions";
+export type EntityType = "characters" | "factions" | "plots" | "notes" | "sessions";
 export type BasicEntity = { id: string; name: string };
 export type FilterableEntity = BasicEntity & {
 	characters: BasicEntity[];
@@ -91,17 +86,11 @@ export const factionSelectSchema = createSelectSchema(factions);
 export type Faction = z.infer<typeof factionSelectSchema>;
 export type FactionInsert = z.infer<typeof factionInsertSchema>;
 
-export const charactersInFactionsInsertSchema =
-	createInsertSchema(charactersInFactions);
-export const charactersInFactionsSelectSchema =
-	createSelectSchema(charactersInFactions);
+export const charactersInFactionsInsertSchema = createInsertSchema(charactersInFactions);
+export const charactersInFactionsSelectSchema = createSelectSchema(charactersInFactions);
 
-export type CharactersInFactions = z.infer<
-	typeof charactersInFactionsSelectSchema
->;
-export type CharactersInFactionsInsert = z.infer<
-	typeof charactersInFactionsInsertSchema
->;
+export type CharactersInFactions = z.infer<typeof charactersInFactionsSelectSchema>;
+export type CharactersInFactionsInsert = z.infer<typeof charactersInFactionsInsertSchema>;
 
 export const plotInsertSchema = createInsertSchema(plots);
 export const plotSelectSchema = createSelectSchema(plots);
@@ -114,29 +103,19 @@ export type PlotInsert = z.infer<typeof plotInsertSchema>;
 
 export const sessionInsertSchema = createInsertSchema(sessions);
 export const sessionSelectSchema = createSelectSchema(sessions);
-export const charactersInSessionsInsertSchema =
-	createInsertSchema(charactersInSessions);
-export const charactersInSessionsSelectSchema =
-	createSelectSchema(charactersInSessions);
-export const factionsInSessionsInsertSchema =
-	createInsertSchema(factionsInSessions);
-export const factionsInSessionsSelectSchema =
-	createSelectSchema(factionsInSessions);
+export const charactersInSessionsInsertSchema = createInsertSchema(charactersInSessions);
+export const charactersInSessionsSelectSchema = createSelectSchema(charactersInSessions);
+export const factionsInSessionsInsertSchema = createInsertSchema(factionsInSessions);
+export const factionsInSessionsSelectSchema = createSelectSchema(factionsInSessions);
 export const plotsInSessionsInsertSchema = createInsertSchema(plotsInSessions);
 export const plotsInSessionsSelectSchema = createSelectSchema(plotsInSessions);
 
 export type Session = z.infer<typeof sessionSelectSchema>;
 export type SessionInsert = z.infer<typeof sessionInsertSchema>;
-export type CharactersInSessions = z.infer<
-	typeof charactersInSessionsSelectSchema
->;
-export type CharactersInSessionsInsert = z.infer<
-	typeof charactersInSessionsInsertSchema
->;
+export type CharactersInSessions = z.infer<typeof charactersInSessionsSelectSchema>;
+export type CharactersInSessionsInsert = z.infer<typeof charactersInSessionsInsertSchema>;
 export type FactionsInSessions = z.infer<typeof factionsInSessionsSelectSchema>;
-export type FactionsInSessionsInsert = z.infer<
-	typeof factionsInSessionsInsertSchema
->;
+export type FactionsInSessionsInsert = z.infer<typeof factionsInSessionsInsertSchema>;
 export type PlotsInSessions = z.infer<typeof plotsInSessionsSelectSchema>;
 export type PlotsInSessionsInsert = z.infer<typeof plotsInSessionsInsertSchema>;
 
