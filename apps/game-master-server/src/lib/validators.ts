@@ -1,4 +1,5 @@
 import { zValidator } from "@hono/zod-validator";
+import { createCharacterRequest } from "@repo/db";
 import { z } from "zod";
 
 export const userIdValidator = zValidator(
@@ -7,3 +8,8 @@ export const userIdValidator = zValidator(
 		userId: z.string(),
 	}),
 );
+
+export const newCharacterValidator = zValidator(
+	"json",
+	createCharacterRequest
+)

@@ -9,8 +9,8 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import { Description, FieldError, Label } from "./field";
-import { composeTailwindRenderProps, focusRing } from "~/utils";
 import { CheckIcon, MinusIcon } from "@radix-ui/react-icons";
+import { composeTailwindRenderProps, focusRing } from "../utils";
 
 export interface CheckboxGroupProps extends Omit<AriaCheckboxGroupProps, "children"> {
 	label?: string;

@@ -20,8 +20,8 @@ import {
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 import { Checkbox } from "./checkbox";
-import { composeTailwindRenderProps, focusRing } from "~/utils";
 import { ArrowUpIcon, DragHandleDots1Icon } from "@radix-ui/react-icons";
+import { composeTailwindRenderProps, focusRing } from "../utils";
 
 export function Table(props: TableProps) {
 	return (

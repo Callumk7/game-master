@@ -5,10 +5,15 @@ import { Button } from "~/components/ui/button";
 import { TextField } from "~/components/ui/text-field";
 import { zx } from "zodix";
 import { createCharacterRequest } from "@repo/db";
+import { validateUser } from "~/lib/auth";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-	const parsedForm = await zx.parseForm(request, createCharacterRequest);
-	const newCharBody = JSON.stringify(parsedForm);
+	const userId = await validateUser(request);
+	const parsedForm = await zx.parseForm(
+		request,
+		createCharacterRequest.omit({ userId: true }),
+	);
+	const newCharBody = JSON.stringify({ userId, ...parsedForm });
 	const res = await fetch("http://localhost:8787/characters", {
 		method: "POST",
 		body: newCharBody,
@@ -40,7 +45,6 @@ export function NewCharacterForm({ action }: NewCharacterFormProps) {
 			<TextField textarea name="bio" label="Character Bio" />
 			<TextField name="raceId" label="Race" />
 			<Button type="submit">Submit</Button>
-			<input type="hidden" value={"user_id"} name="userId" />
 		</Form>
 	);
 }
