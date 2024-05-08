@@ -1,5 +1,5 @@
 import { zValidator } from "@hono/zod-validator";
-import { logger } from 'hono/logger';
+import { logger } from "hono/logger";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import { z } from "zod";
@@ -18,7 +18,7 @@ app.get("/", (c) => {
 	return c.text("YOU DID IT");
 });
 
-app.use(logger())
+app.use(logger());
 
 app.route("/characters", charactersRoute);
 app.route("/factions", factionsRoute);
