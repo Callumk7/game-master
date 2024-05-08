@@ -4,7 +4,8 @@
 	"version": "0.0.1",
 	"description": "Drizzle client, types, and schemas.",
 	"exports": {
-		"./db": "./src/db/index.ts"
+		"./drizzle": "./src/db/index.ts",
+		"./schema": "./src/db/schemas/index.ts"
 	},
 	"scripts": {},
 	"dependencies": {

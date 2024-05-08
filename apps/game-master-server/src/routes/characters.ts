@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { Bindings } from "..";
-import { characters } from "~/db/schemas/characters";
-import { createDrizzleForTurso } from "@repo/db/db";
+import { createDrizzleForTurso } from "@repo/db/drizzle";
+import { characters } from "@repo/db/schema";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 

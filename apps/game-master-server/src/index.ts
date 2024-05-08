@@ -3,10 +3,8 @@ import { logger } from 'hono/logger';
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import { z } from "zod";
-import { allEntitiesRoute } from "~/routes/all";
 import { charactersRoute } from "~/routes/characters";
 import { factionsRoute } from "./routes/factions";
-import { notesRoute } from "./routes/notes";
 
 export type Bindings = {
 	TURSO_CONNECTION_URL: string;
@@ -22,8 +20,6 @@ app.get("/", (c) => {
 
 app.use(logger())
 
-app.route("/notes", notesRoute);
-app.route("/all", allEntitiesRoute);
 app.route("/characters", charactersRoute);
 app.route("/factions", factionsRoute);
 
