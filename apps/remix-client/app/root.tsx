@@ -4,7 +4,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from "@remix-run/react";
+import { RouterProvider } from "react-aria-components";
+import "./tw.css"
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,5 +28,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+	const navigate = useNavigate();
+	return (
+		<RouterProvider navigate={navigate}>
+			<Outlet />
+		</RouterProvider>
+	);
 }

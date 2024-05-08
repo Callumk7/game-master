@@ -1,0 +1,2 @@
+[vars]
+TURSO_CONNECTION_URL = "libsql://ai-notes-prod-callumk7.turso.io"

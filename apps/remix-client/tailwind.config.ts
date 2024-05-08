@@ -1,10 +1,32 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
+
+function getColorScale(name: string) {
+	const scale = {};
+	for (let i = 1; i <= 12; i++) {
+		scale[i] = `var(--${name}-${i})`;
+		// next line only needed if using alpha values
+		scale[`a${i}`] = `var(--${name}-a${i})`;
+	}
+
+	return scale;
+}
 
 export default {
-  content: [],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-} satisfies Config
-
+	content: ["./app/**/*.{js,jsx,ts,tsx}"],
+	theme: {
+		extend: {
+			colors: {
+				grade: getColorScale("slate"),
+				primary: getColorScale("iris"),
+				accent: getColorScale("mauve"),
+				jade: getColorScale("jade"),
+				destructive: getColorScale("red"),
+			},
+		},
+	},
+	plugins: [
+		require("tailwindcss-react-aria-components"),
+		require("tailwindcss-animate"),
+		require("@tailwindcss/typography"),
+	],
+} satisfies Config;
