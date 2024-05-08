@@ -111,6 +111,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.3.0
         version: 2.3.1(@tiptap/pm@2.3.1)
+      callum-util:
+        specifier: ^1.2.1
+        version: 1.2.1
       http-status-codes:
         specifier: ^2.3.0
         version: 2.3.0

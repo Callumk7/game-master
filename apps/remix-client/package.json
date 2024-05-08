@@ -31,6 +31,7 @@
 		"@tiptap/pm": "^2.3.0",
 		"@tiptap/react": "^2.3.0",
 		"@tiptap/starter-kit": "^2.3.0",
+		"callum-util": "^1.2.1",
 		"http-status-codes": "^2.3.0",
 		"isbot": "^4.1.0",
 		"miniflare": "^3.20240404.0",

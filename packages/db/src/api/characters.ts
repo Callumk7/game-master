@@ -169,7 +169,6 @@ export const linkFactionsToCharacter = async (
 		noteInsert.push({
 			id: noteId,
 			name: "LINK NOTE",
-			content: "DEPRECATED",
 			userId: "NO_USER",
 			htmlContent: "Default Note",
 		});
@@ -229,7 +228,6 @@ export const linkAlliesToChar = async (
 		noteInsert.push({
 			id: noteId,
 			name: "LINK NOTE",
-			content: "DEPRECATED",
 			userId: "NO_USER",
 			htmlContent: "Default Note",
 		});
@@ -254,7 +252,6 @@ export const linkEnemiesToChar = async (
 		noteInsert.push({
 			id: noteId,
 			name: "LINK NOTE",
-			content: "DEPRECATED",
 			userId: "NO_USER",
 			htmlContent: "Default Note",
 		});
