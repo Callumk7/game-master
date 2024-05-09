@@ -11,8 +11,8 @@ import { tv } from "tailwind-variants";
 import { Description, FieldError, Label } from "./field";
 import { DropdownItem, DropdownSection, DropdownSectionProps } from "./list-box";
 import { Popover } from "./popover";
-import { composeTailwindRenderProps, focusRing } from "~/utils";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { composeTailwindRenderProps, focusRing } from "../utils";
 
 const styles = tv({
 	extend: focusRing,

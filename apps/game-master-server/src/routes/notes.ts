@@ -4,9 +4,22 @@ import { z } from "zod";
 import {
 	INTENT,
 	IntentSchema,
+	LinkIntentSchema,
+	OptionalEntitySchema,
 	createDrizzleForTurso,
+	deleteCharacterJoinsFromNote,
+	deleteFactionJoinsFromNote,
+	deleteNoteConnectionsFromNote,
+	deletePlotJoinsFromNote,
+	deleteSessionJoinsFromNote,
 	getNote,
 	getNoteAndLinkedEntities,
+	handleLinkingByIntent,
+	linkCharactersToNote,
+	linkFactionsToNote,
+	linkNotesTogether,
+	linkPlotsToNote,
+	linkSessionsToNote,
 	notes,
 	notesInsertSchema,
 	updateNoteContent,
@@ -36,13 +49,6 @@ notesRoute.get("/:id", async (c) => {
 	return c.json(note);
 });
 
-// log the body of incoming requests
-notesRoute.use("/", async (c, next) => {
-	const body = await c.req.json();
-	console.log(body);
-	await next();
-});
-
 notesRoute.post("/", async (c) => {
 	const noteBody = await c.req.json();
 	try {
@@ -59,6 +65,41 @@ notesRoute.post("/", async (c) => {
 		throw internalServerError();
 	}
 });
+
+notesRoute.post("/:noteId/links", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { intent, targetIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		targetIds: OptionalEntitySchema,
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	const res = await handleLinkingByIntent(db, noteId, targetIds, intent, {
+		characters: {
+			link: linkCharactersToNote,
+			delete: deleteCharacterJoinsFromNote,
+		},
+		factions: {
+			link: linkFactionsToNote,
+			delete: deleteFactionJoinsFromNote,
+		},
+		notes: {
+			link: linkNotesTogether,
+			delete: deleteNoteConnectionsFromNote,
+		},
+		plots: {
+			link: linkPlotsToNote,
+			delete: deletePlotJoinsFromNote,
+		},
+		sessions: {
+			link: linkSessionsToNote,
+			delete: deleteSessionJoinsFromNote,
+		},
+	});
+
+	return res;
+});
+
 notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { intent, name, htmlContent } = await zx.parseForm(c.req.raw, updateNoteSchema);

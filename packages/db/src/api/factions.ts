@@ -5,7 +5,11 @@ import { factions } from "../db/schemas/factions";
 import { notesOnFactions } from "../db/schemas/notes";
 import { plotsOnFactions } from "../db/schemas/plots";
 import { factionsInSessions } from "../db/schemas/sessions";
+import type { Faction } from "../types";
 
+///
+/// GET DATA
+///
 export const getAllUserFactions = async (db: DB, userId: string) => {
 	return await db.select().from(factions).where(eq(factions.userId, userId));
 };
@@ -39,6 +43,9 @@ export const getFaction = async (db: DB, factionId: string) => {
 	});
 };
 
+///
+/// UPDATE DATA
+///
 export const updateFaction = async (
 	db: DB,
 	update: Partial<Faction>,
