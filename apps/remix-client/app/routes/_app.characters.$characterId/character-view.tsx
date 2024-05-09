@@ -1,7 +1,6 @@
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useSubmit, Outlet, useLoaderData, Form } from "@remix-run/react";
-import { useTypedLoaderData } from "remix-typedjson";
-import { EntityView, EntityHeader, SidebarLayout } from "~/components/layout";
+import { EntityView, EntityHeader } from "~/components/layout";
 import { loader } from "./route";
 import { Button } from "~/components/ui/button";
 import { Header } from "~/components/typeography";

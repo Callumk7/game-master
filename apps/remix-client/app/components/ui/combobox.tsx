@@ -9,8 +9,8 @@ import { Button } from "./button";
 import { Description, FieldError, FieldGroup, Input, Label } from "./field";
 import { DropdownItem, DropdownSection, DropdownSectionProps } from "./list-box";
 import { Popover } from "./popover";
-import { composeTailwindRenderProps } from "~/utils";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { composeTailwindRenderProps } from "../utils";
 
 export interface ComboBoxProps<T extends object>
 	extends Omit<AriaComboBoxProps<T>, "children"> {

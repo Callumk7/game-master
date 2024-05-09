@@ -11,40 +11,40 @@ import {
 } from "@repo/db";
 import { validateUser } from "~/lib/auth";
 
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-	const userId = await validateUser(request);
-
-	const { name, description } = await zx.parseForm(
-		request,
-		createFactionRequest.omit({ userId: true }),
-	);
-
-	// I am testing making a new faction within the action for the character
-	const { characterId } = zx.parseParams(params, { characterId: z.string() });
-
-	const url = new URL("http://localhost:8787/factions");
-	const linkParams = { link: characterId, linkType: "characters" };
-	url.search = new URLSearchParams(linkParams).toString();
-
-	const factionInsert = {
-		userId,
-		name,
-		description,
-	};
-
-	console.log(factionInsert);
-
-	const newReq = new Request(url, {
-		method: "POST",
-		body: JSON.stringify(factionInsert),
-		headers: {
-			"Content-Type": "application-json",
-		},
-	});
-	const newFaction = await fetch(newReq);
-	return null;
-};
-
+// export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+// 	const userId = await validateUser(request);
+//
+// 	const { name, description } = await zx.parseForm(
+// 		request,
+// 		createFactionRequest.omit({ userId: true }),
+// 	);
+//
+// 	// I am testing making a new faction within the action for the character
+// 	const { characterId } = zx.parseParams(params, { characterId: z.string() });
+//
+// 	const url = new URL("http://localhost:8787/factions");
+// 	const linkParams = { link: characterId, linkType: "characters" };
+// 	url.search = new URLSearchParams(linkParams).toString();
+//
+// 	const factionInsert = {
+// 		userId,
+// 		name,
+// 		description,
+// 	};
+//
+// 	console.log(factionInsert);
+//
+// 	const newReq = new Request(url, {
+// 		method: "POST",
+// 		body: JSON.stringify(factionInsert),
+// 		headers: {
+// 			"Content-Type": "application-json",
+// 		},
+// 	});
+// 	const newFaction = await fetch(newReq);
+// 	return null;
+// };
+//
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	const { characterId } = zx.parseParams(params, { characterId: z.string() });
 	const characterData = characersSelectSchema.parse(
