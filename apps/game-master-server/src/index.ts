@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { charactersRoute } from "~/routes/characters";
 import { factionsRoute } from "./routes/factions";
 import { notesRoute } from "./routes/notes";
+import { sessionsRoute } from "./routes/sessions";
 
 export type Bindings = {
 	TURSO_CONNECTION_URL: string;
@@ -21,5 +22,6 @@ app.get("/", (c) => {
 app.route("/notes", notesRoute);
 app.route("/characters", charactersRoute);
 app.route("/factions", factionsRoute);
+app.route("/sessions", sessionsRoute);
 
 export default app;

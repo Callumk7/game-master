@@ -7,7 +7,7 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { CompleteNote, Session } from "../types";
+import { CompleteNote, Session, SessionInsert } from "../types";
 
 export const getCompleteSession = async (db: DB, sessionId: string) => {
 	const session = await db.query.sessions.findFirst({
@@ -90,6 +90,24 @@ export const getSessionNotes = async (db: DB, sessionId: string) => {
 	}));
 
 	return sessionNotes;
+};
+
+export const createSession = async (db: DB, sessionInsert: SessionInsert) => {
+	return await db
+		.insert(sessions)
+		.values(sessionInsert)
+		.returning()
+		.then((result) => result[0]);
+};
+
+export const deleteSession = async (db: DB, sessionId: string) => {
+	try {
+		await db.delete(sessions).where(eq(sessions.id, sessionId));
+	} catch (err) {
+		console.error("Unable to delete session from database", err);
+		return { success: false };
+	}
+	return { success: true };
 };
 
 // PUT
