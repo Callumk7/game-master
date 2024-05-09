@@ -3,6 +3,7 @@
 
 interface Env {
 	TURSO_CONNECTION_URL: "libsql://ai-notes-prod-callumk7.turso.io";
+	GAME_MASTER_URL: "http://localhost:8787";
 	TURSO_AUTH_TOKEN: string;
 	AUTH_KEY: string;
 }

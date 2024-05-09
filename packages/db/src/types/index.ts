@@ -17,6 +17,8 @@ import {
 	plotsInSessions,
 } from "../db/schemas";
 
+export * from "./http";
+
 // AI types
 type AiMessageRole = "user" | "system" | "assistant";
 

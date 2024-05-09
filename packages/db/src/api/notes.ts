@@ -16,6 +16,7 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
+import { LinkedNoteInsert } from "../types";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 	const allNotes = await db.query.notes.findMany({
@@ -116,7 +117,6 @@ export const createNote = async (
 		.values({
 			id: newNoteId,
 			name,
-			content: "DEPRECIATED",
 			htmlContent: htmlContent ?? "Start writing..",
 			userId,
 			isLinkNote,
@@ -403,65 +403,22 @@ export const deleteNoteJoins = async (db: DB, noteId: string) => {
 	}
 };
 
-///
-///
-/////////////////////////////////////
-/// CLASS STUFF: HIGHLY EXPERIMENTAL
-///
-// Lets try using classes with notes to see if it is useful
-export class NoteClass implements Note {
-	db: DB;
-	id = `note_${uuidv4()}`;
-	ownerId = "NO_USER";
-	name: string;
-	htmlContent: string;
-	content = "DEPRECIATED";
-	createdAt = new Date();
-	updatedAt = new Date();
-	folderId = null;
-	characters: Character[] = [];
-	factions: Faction[] = [];
-	sessions: Session[] = [];
-	plots: Plot[] = [];
+export const updateNoteContent = async (db: DB, noteId: string, htmlContent: string) => {
+	return await db
+		.update(notes)
+		.set({
+			htmlContent,
+		})
+		.where(eq(notes.id, noteId))
+		.returning();
+};
 
-	constructor(
-		db: DB,
-		id: string,
-		name: string,
-		htmlContent: string,
-		characters?: Character[],
-		factions?: Faction[],
-		sessions?: Session[],
-		plots?: Plot[],
-	) {
-		this.db = db;
-		this.id = id;
-		this.name = name;
-		this.htmlContent = htmlContent;
-		if (characters) this.characters = characters;
-		if (factions) this.factions = factions;
-		if (sessions) this.sessions = sessions;
-		if (plots) this.plots = plots;
-	}
-
-	static async get(db: DB, id: string) {
-		const noteData = await NoteClass.getNoteAndLinkedEntities(db, id);
-		if (!noteData) throw new Error("SHOT IT");
-		const characters = noteData.characters.map((c) => c.character);
-		const factions = noteData.factions.map((c) => c.faction);
-		const sessions = noteData.sessions.map((c) => c.session);
-		const plots = noteData.plots.map((c) => c.plot);
-		return new NoteClass(
-			db,
-			id,
-			noteData.name,
-			noteData.htmlContent,
-			characters,
-			factions,
-			sessions,
-			plots,
-		);
-	}
-
-	static getNoteAndLinkedEntities = getNoteAndLinkedEntities;
-}
+export const updateNoteName = async (db: DB, noteId: string, name: string) => {
+	return await db
+		.update(notes)
+		.set({
+			name,
+		})
+		.where(eq(notes.id, noteId))
+		.returning();
+};

@@ -8,15 +8,16 @@
 		"lint": "biome lint ./src"
 	},
 	"dependencies": {
-		"@repo/db": "workspace:*",
 		"@hono/zod-validator": "^0.2.1",
 		"@libsql/client": "^0.5.6",
+		"@repo/db": "workspace:*",
 		"callum-util": "^1.2.1",
 		"drizzle-orm": "^0.30.4",
 		"drizzle-zod": "^0.5.1",
 		"hono": "^4.2.9",
 		"http-status-codes": "^2.3.0",
-		"zod": "^3.22.4"
+		"zod": "^3.22.4",
+		"zodix": "^0.4.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.1",

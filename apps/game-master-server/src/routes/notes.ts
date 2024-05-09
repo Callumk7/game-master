@@ -1,19 +1,24 @@
 import { Hono } from "hono";
 import { Bindings } from "..";
-import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import {
-	OptionalEntitySchema,
+	INTENT,
+	IntentSchema,
 	createDrizzleForTurso,
 	getNote,
 	getNoteAndLinkedEntities,
 	notes,
 	notesInsertSchema,
+	updateNoteName,
 } from "@repo/db";
-import { HTTPException } from "hono/http-exception";
+import { getIntentOrThrow, internalServerError } from "~/utils";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
-export const notesRoute = new Hono<{ Bindings: Bindings }>();
+type Variables = {
+	intent: INTENT;
+};
+
+export const notesRoute = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 notesRoute.get("/:id", async (c) => {
 	const db = createDrizzleForTurso(c.env);
@@ -48,8 +53,43 @@ notesRoute.post("/", async (c) => {
 		} else {
 			console.log("Unknown Error", err);
 		}
-		throw new HTTPException(StatusCodes.INTERNAL_SERVER_ERROR, {
-			message: ReasonPhrases.INTERNAL_SERVER_ERROR,
-		});
+		throw internalServerError();
 	}
+});
+
+notesRoute.use("/:noteId", async (c, next) => {
+	console.log("patch middleware");
+	const body = await c.req.json();
+	const intent = z.object({ intent: IntentSchema }).safeParse(body);
+	if (intent.success) {
+		console.log(`intent: ${intent.data.intent}`);
+		c.set("intent", intent.data.intent);
+	} else {
+		console.log("something went wrong, throwing server error");
+		throw internalServerError();
+	}
+	await next();
+});
+notesRoute.patch("/:noteId", async (c) => {
+	const noteId = c.req.param("noteId");
+	const body = await c.req.json();
+	const intent = c.get("intent");
+	const db = createDrizzleForTurso(c.env);
+	switch (intent) {
+		case INTENT.UPDATE_NAME: {
+			const name = z.object({ name: z.string() }).safeParse(body);
+			if (name.success) {
+				console.log(`Parsing name was a success: ${name.data.name}`);
+				await updateNoteName(db, noteId, name.data.name);
+			}
+
+			c.status(StatusCodes.NO_CONTENT);
+			return c.body(null);
+		}
+
+		default:
+			break;
+	}
+
+	return c.text("Got here and nothing has worked correctly");
 });

@@ -41,6 +41,9 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.23.7
+      zodix:
+        specifier: ^0.4.4
+        version: 0.4.4(@remix-run/server-runtime@2.9.1(typescript@5.3.3))(zod@3.23.7)
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.6.1
@@ -153,6 +156,9 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.23.7
+      zod-fetch:
+        specifier: ^0.1.1
+        version: 0.1.1
       zodix:
         specifier: ^0.4.4
         version: 0.4.4(@remix-run/server-runtime@2.9.1(typescript@5.3.3))(zod@3.23.7)
@@ -5050,6 +5056,9 @@ packages:
 
   youch@3.3.3:
     resolution: {integrity: sha512-qSFXUk3UZBLfggAW3dJKg0BMblG5biqSF8M34E06o5CSsZtH92u9Hqmj2RzGiHDi64fhe83+4tENFP2DB6t6ZA==}
+
+  zod-fetch@0.1.1:
+    resolution: {integrity: sha512-1YqEhqjIQuatiHGCiKceAEzLrd2PZAN/Y8lWSlhkec2nDuImePieFWX33WSB+c1E4P/kEiai7rb8upBMdjFo1w==}
 
   zod@3.23.7:
     resolution: {integrity: sha512-NBeIoqbtOiUMomACV/y+V3Qfs9+Okr18vR5c/5pHClPpufWOrsx8TENboDPe265lFdfewX2yBtNTLPvnmCxwog==}
@@ -10509,6 +10518,8 @@ snapshots:
       cookie: 0.5.0
       mustache: 4.2.0
       stacktracey: 2.1.8
+
+  zod-fetch@0.1.1: {}
 
   zod@3.23.7: {}
 

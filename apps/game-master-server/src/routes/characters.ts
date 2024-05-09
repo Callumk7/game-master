@@ -8,7 +8,6 @@ import {
 	getFullCharacterData,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
-import { newCharacterValidator } from "~/lib/validators";
 import { eq } from "drizzle-orm";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
@@ -42,8 +41,8 @@ charactersRoute.get("/:characterId", async (c) => {
 
 // The new character validator will throw a bad request if the
 // request json body does not match the schema
-charactersRoute.post("/", newCharacterValidator, async (c) => {
-	const newCharBody = c.req.valid("json");
+charactersRoute.post("/", async (c) => {
+	const newCharBody = await c.req.json();
 
 	const db = createDrizzleForTurso(c.env);
 
