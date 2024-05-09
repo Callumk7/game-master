@@ -9,10 +9,13 @@ import {
 	getNoteAndLinkedEntities,
 	notes,
 	notesInsertSchema,
+	updateNoteContent,
 	updateNoteName,
+	updateNoteSchema,
 } from "@repo/db";
 import { getIntentOrThrow, internalServerError } from "~/utils";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { zx } from "zodix";
 
 type Variables = {
 	intent: INTENT;
@@ -56,31 +59,24 @@ notesRoute.post("/", async (c) => {
 		throw internalServerError();
 	}
 });
-
-notesRoute.use("/:noteId", async (c, next) => {
-	console.log("patch middleware");
-	const body = await c.req.json();
-	const intent = z.object({ intent: IntentSchema }).safeParse(body);
-	if (intent.success) {
-		console.log(`intent: ${intent.data.intent}`);
-		c.set("intent", intent.data.intent);
-	} else {
-		console.log("something went wrong, throwing server error");
-		throw internalServerError();
-	}
-	await next();
-});
 notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
-	const body = await c.req.json();
-	const intent = c.get("intent");
+	const { intent, name, htmlContent } = await zx.parseForm(c.req.raw, updateNoteSchema);
 	const db = createDrizzleForTurso(c.env);
 	switch (intent) {
 		case INTENT.UPDATE_NAME: {
-			const name = z.object({ name: z.string() }).safeParse(body);
-			if (name.success) {
-				console.log(`Parsing name was a success: ${name.data.name}`);
-				await updateNoteName(db, noteId, name.data.name);
+			if (name) {
+				console.log(`Parsing name was a success: ${name}`);
+				await updateNoteName(db, noteId, name);
+			}
+
+			c.status(StatusCodes.NO_CONTENT);
+			return c.body(null);
+		}
+		case INTENT.UPDATE_CONTENT: {
+			if (htmlContent) {
+				console.log(`Parsing name was a success: ${htmlContent}`);
+				await updateNoteContent(db, noteId, htmlContent);
 			}
 
 			c.status(StatusCodes.NO_CONTENT);

@@ -15,8 +15,8 @@ export const useSyncEditor = (options: SyncEditorOptions) => {
 
 	let optimisticContent = options.initContent;
 
-	if (fetcher.formData?.has("html_content")) {
-		optimisticContent = String(fetcher.formData.get("html_content"));
+	if (fetcher.formData?.has("htmlContent")) {
+		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
 	const editor = useDefaultEditor(optimisticContent);
@@ -43,7 +43,7 @@ export const useSyncEditor = (options: SyncEditorOptions) => {
 		if (editor && isEdited && !isEditing) {
 			fetcher.submit(
 				{
-					html_content: editor.getHTML(),
+					htmlContent: editor.getHTML(),
 					intent: options.intent ?? INTENT.UPDATE_CONTENT,
 				},
 				{ method: "PATCH", action: options.action },

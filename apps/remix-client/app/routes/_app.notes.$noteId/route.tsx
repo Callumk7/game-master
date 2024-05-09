@@ -1,48 +1,26 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import {
-	IntentSchema,
-	UpdateNoteRequest,
 	createDrizzleForTurso,
 	getNoteAndLinkedEntities,
 	getUserFolders,
-	internalServerError,
-	updateNoteSchema,
 } from "@repo/db";
 import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
 import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
-import { StatusCodes } from "http-status-codes";
+import ky from "ky";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const { noteId } = zx.parseParams(params, { noteId: z.string() });
-	const { intent, name, htmlContent } = await zx.parseForm(
-		request,
-		updateNoteSchema.omit({ noteId: true }),
-	);
-	const noteUpdate: UpdateNoteRequest = {
-		noteId,
-		intent,
-		name,
-		htmlContent,
-	};
+	const formData = await request.formData();
 
-	const fetchResult = await fetch(
+	const res = await ky.patch(
 		`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}`,
-		{
-			method: "PATCH",
-			body: JSON.stringify(noteUpdate),
-		},
+		{ body: formData },
 	);
 
-	console.log(fetchResult.status);
-
-	if (fetchResult.status === StatusCodes.NO_CONTENT) {
-		return json({ success: true });
-	}
-
-	return internalServerError();
+	return json({ success: "unknown" });
 };
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
