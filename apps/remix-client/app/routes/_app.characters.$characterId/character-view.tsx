@@ -1,33 +1,16 @@
 import { TrashIcon } from "@radix-ui/react-icons";
-import { useSubmit, Outlet, useLoaderData } from "@remix-run/react";
+import { useSubmit, Outlet, useLoaderData, Form } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { EntityView, EntityHeader, SidebarLayout } from "~/components/layout";
 import { loader } from "./route";
 import { Button } from "~/components/ui/button";
+import { Header } from "~/components/typeography";
+import { TextField } from "~/components/ui/text-field";
 
 export function CharacterView() {
 	const character = useLoaderData<typeof loader>().characterData;
 
 	const submit = useSubmit();
-
-	const navItems = [
-		{
-			name: "Bio",
-			href: `/characters/${character.id}`,
-		},
-		{
-			name: "Notes",
-			href: `/characters/${character.id}/notes`,
-		},
-		{
-			name: "Relationships",
-			href: `/characters/${character.id}/links`,
-		},
-		{
-			name: "Factions",
-			href: `/characters/${character.id}/factions`,
-		},
-	];
 
 	return (
 		<EntityView margin top>
@@ -49,6 +32,14 @@ export function CharacterView() {
 				</div>
 			</EntityHeader>
 			<Outlet />
+			<Header>Create a faction</Header>
+			<Form method="POST">
+				<div className="flex flex-col gap-5">
+					<TextField label="name" name="name" />
+					<TextField textarea label="description" name="description" />
+					<Button type="submit">Create</Button>
+				</div>
+			</Form>
 		</EntityView>
 	);
 }

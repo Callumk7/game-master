@@ -29,12 +29,21 @@ export type { AiMessage, AiMessageRole };
 
 // Custom Types
 export type EntityType = "characters" | "factions" | "plots" | "notes" | "sessions";
+export const EntityTypeSchema = z.enum([
+	"characters",
+	"factions",
+	"sessions",
+	"plots",
+	"notes",
+]);
 export type BasicEntity = { id: string; name: string };
 export type FilterableEntity = BasicEntity & {
 	characters: BasicEntity[];
 	factions: BasicEntity[];
 	sessions: BasicEntity[];
 };
+export const OptionalEntitySchema = z.array(z.string()).or(z.string()).optional();
+export type MultiSelectString = z.infer<typeof OptionalEntitySchema>;
 
 // Drizzle zod schemas, and inferred types
 export const notesInsertSchema = createInsertSchema(notes);
@@ -63,8 +72,8 @@ export type LinkedNote = z.infer<typeof linkedNotesSelectSchema>;
 export type LinkedNoteInsert = z.infer<typeof linkedNotesInsertSchema>;
 
 export const charactersInsertSchema = createInsertSchema(characters);
-export const characersSelectSchema = createSelectSchema(characters);
 export const createCharacterRequest = charactersInsertSchema.omit({ id: true });
+export const characersSelectSchema = createSelectSchema(characters);
 
 export type Character = z.infer<typeof characersSelectSchema>;
 export type CharacterInsert = z.infer<typeof charactersInsertSchema>;
@@ -82,6 +91,7 @@ export type EnemyInsert = z.infer<typeof enemiesInsertSchema>;
 
 export const factionInsertSchema = createInsertSchema(factions);
 export const factionSelectSchema = createSelectSchema(factions);
+export const createFactionRequest = factionInsertSchema.omit({ id: true });
 
 export type Faction = z.infer<typeof factionSelectSchema>;
 export type FactionInsert = z.infer<typeof factionInsertSchema>;
