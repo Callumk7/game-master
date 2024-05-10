@@ -3,6 +3,7 @@ import {
 	createDrizzleForTurso,
 	getNoteAndLinkedEntities,
 	getUserFolders,
+	handleDeleteNote,
 } from "@repo/db";
 import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
@@ -13,14 +14,21 @@ import ky from "ky";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const { noteId } = zx.parseParams(params, { noteId: z.string() });
-	const formData = await request.formData();
 
-	const res = await ky.patch(
-		`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}`,
-		{ body: formData },
-	);
+	if (request.method === "PATCH") {
+		const formData = await request.formData();
+		const res = await ky.patch(
+			`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}`,
+			{ body: formData },
+		);
 
-	return json({ success: "unknown" });
+		return json({ success: "unknown" });
+	}
+
+	if (request.method === "DELETE") {
+		const db = createDrizzleForTurso(context.cloudflare.env);
+		return await handleDeleteNote(db, noteId);
+	}
 };
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {

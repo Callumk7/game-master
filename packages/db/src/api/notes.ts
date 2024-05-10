@@ -17,6 +17,7 @@ import {
 	plotsInSessions,
 } from "../db/schemas/sessions";
 import { LinkedNoteInsert } from "../types";
+import { internalServerError, noContent } from "./util";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 	const allNotes = await db.query.notes.findMany({
@@ -421,4 +422,21 @@ export const updateNoteName = async (db: DB, noteId: string, name: string) => {
 		})
 		.where(eq(notes.id, noteId))
 		.returning();
+};
+
+export const handleDeleteNote = async (db: DB, noteId: string) => {
+	// TODO: This try catch has a number of problems:
+	// Not in parallel
+	// Do not have a process for completing the process.
+	// We will be left with bad data in the database if it fails halfway through
+	try {
+		await db.delete(notes).where(eq(notes.id, noteId));
+		await db.delete(notesOnFactions).where(eq(notesOnFactions.noteId, noteId));
+		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
+		await db.delete(notesOnSessions).where(eq(notesOnSessions.noteId, noteId));
+		return noContent();
+	} catch (err) {
+		console.error(err);
+		return internalServerError();
+	}
 };
