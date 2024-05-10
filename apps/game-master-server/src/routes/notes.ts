@@ -2,9 +2,12 @@ import { Hono } from "hono";
 import { Bindings } from "..";
 import { z } from "zod";
 import {
+	EntityTypeSchema,
 	INTENT,
 	IntentSchema,
 	LinkIntentSchema,
+	Note,
+	NoteInsert,
 	OptionalEntitySchema,
 	createDrizzleForTurso,
 	deleteCharacterJoinsFromNote,
@@ -14,6 +17,7 @@ import {
 	deleteSessionJoinsFromNote,
 	getNote,
 	getNoteAndLinkedEntities,
+	handleLinkEntitiesToTarget,
 	handleLinkingByIntent,
 	linkCharactersToNote,
 	linkFactionsToNote,
@@ -29,6 +33,8 @@ import {
 import { getIntentOrThrow, internalServerError } from "~/utils";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { zx } from "zodix";
+import { uuidv4 } from "callum-util";
+import { eq } from "drizzle-orm";
 
 type Variables = {
 	intent: INTENT;
@@ -49,13 +55,39 @@ notesRoute.get("/:id", async (c) => {
 	return c.json(note);
 });
 
+// accepts formData, forwarded from remix. We have additional data based on
+// if this is being linked to something straight away.
 notesRoute.post("/", async (c) => {
-	const noteBody = await c.req.json();
+	console.log("start of the note creation route");
+	const result = await zx.parseFormSafe(
+		c.req.raw,
+		notesInsertSchema.omit({ id: true }).extend({
+			links: zx.BoolAsString.optional(),
+			linkIds: OptionalEntitySchema,
+			intent: LinkIntentSchema.optional(),
+		}),
+	);
+
+	if (!result.success) {
+		console.log(result.error);
+		throw internalServerError();
+	}
+
+	const { data } = result;
+
+	let newNote: Note;
+	const db = createDrizzleForTurso(c.env);
+
 	try {
-		const noteInsert = notesInsertSchema.parse(noteBody);
-		const db = createDrizzleForTurso(c.env);
-		const newNote = await db.insert(notes).values(noteInsert).returning();
-		return c.json(newNote);
+		const noteInsert: NoteInsert = {
+			id: `note_${uuidv4()}`,
+			...data,
+		};
+		newNote = await db
+			.insert(notes)
+			.values(noteInsert)
+			.returning()
+			.then((result) => result[0]);
 	} catch (err) {
 		if (err instanceof z.ZodError) {
 			console.log("Invalid Data", err.errors);
@@ -64,17 +96,44 @@ notesRoute.post("/", async (c) => {
 		}
 		throw internalServerError();
 	}
+
+	if (data.links) {
+		await handleLinkingByIntent(db, newNote.id, data.linkIds, data.intent!, {
+			characters: {
+				link: linkCharactersToNote,
+				delete: deleteCharacterJoinsFromNote,
+			},
+			factions: {
+				link: linkFactionsToNote,
+				delete: deleteFactionJoinsFromNote,
+			},
+			notes: {
+				link: linkNotesTogether,
+				delete: deleteNoteConnectionsFromNote,
+			},
+			plots: {
+				link: linkPlotsToNote,
+				delete: deletePlotJoinsFromNote,
+			},
+			sessions: {
+				link: linkSessionsToNote,
+				delete: deleteSessionJoinsFromNote,
+			},
+		});
+	}
+
+	return c.json(newNote);
 });
 
 notesRoute.post("/:noteId/links", async (c) => {
 	const noteId = c.req.param("noteId");
-	const { intent, targetIds } = await zx.parseForm(c.req.raw, {
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
 		intent: LinkIntentSchema,
-		targetIds: OptionalEntitySchema,
+		linkIds: OptionalEntitySchema,
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	const res = await handleLinkingByIntent(db, noteId, targetIds, intent, {
+	const res = await handleLinkingByIntent(db, noteId, linkIds, intent, {
 		characters: {
 			link: linkCharactersToNote,
 			delete: deleteCharacterJoinsFromNote,
@@ -129,4 +188,12 @@ notesRoute.patch("/:noteId", async (c) => {
 	}
 
 	return c.text("Got here and nothing has worked correctly");
+});
+
+notesRoute.delete("/:noteId", async (c) => {
+	const noteId = c.req.param("noteId");
+	const db = createDrizzleForTurso(c.env);
+
+	await db.delete(notes).where(eq(notes.id, noteId));
+	return c.text("Successfully deleted note");
 });

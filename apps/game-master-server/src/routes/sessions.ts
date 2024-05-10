@@ -3,17 +3,33 @@ import { Bindings } from "..";
 import { zx } from "zodix";
 import {
 	SessionInsert,
+	badRequest,
 	createDrizzleForTurso,
 	createSession,
 	deleteSession,
 	sessionInsertSchema,
+	sessions,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerError } from "~/utils";
+import { eq } from "drizzle-orm";
 
 export const sessionsRoute = new Hono<{ Bindings: Bindings }>();
 
-sessionsRoute.get("/");
+// This is private, eventually
+sessionsRoute.get("/", async (c) => {
+	const { userId } = c.req.query();
+	if (!userId) {
+		return badRequest("No user id query param provided");
+	}
+	const db = createDrizzleForTurso(c.env);
+	const userSessions = await db
+		.select()
+		.from(sessions)
+		.where(eq(sessions.userId, userId));
+
+	return c.json(userSessions);
+});
 
 sessionsRoute.post("/", async (c) => {
 	const newSessionData = await zx.parseForm(

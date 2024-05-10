@@ -44,6 +44,7 @@ export function TableOfNotes({ notes }: TableOfNotesProps) {
 			sortDescriptor={sort.sortDescriptor}
 			onSortChange={sort.handleSortChange}
 			aria-label="note table"
+			selectionMode="multiple"
 		>
 			<TableHeader>
 				<Column id="name" isRowHeader width={"2fr"} allowsSorting>

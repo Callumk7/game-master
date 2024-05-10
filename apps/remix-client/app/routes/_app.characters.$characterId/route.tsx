@@ -1,13 +1,15 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
-import { useTypedRouteLoaderData } from "remix-typedjson";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
 import { CharacterView } from "./character-view";
 import {
 	FactionInsert,
 	characersSelectSchema,
+	createDrizzleForTurso,
 	createFactionRequest,
 	factionSelectSchema,
+	getFullCharacterData,
 } from "@repo/db";
 import { validateUser } from "~/lib/auth";
 
@@ -47,13 +49,12 @@ import { validateUser } from "~/lib/auth";
 //
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	const { characterId } = zx.parseParams(params, { characterId: z.string() });
-	const characterData = characersSelectSchema.parse(
-		await fetch(`http://localhost:8787/characters/${characterId}`, {
-			method: "GET",
-		}).then((res) => res.json()),
-	);
-
-	return json({ characterData });
+	const db = createDrizzleForTurso(context.cloudflare.env);
+	const characterData = await getFullCharacterData(db, characterId);
+	if (!characterData) {
+		return redirect("/characters");
+	}
+	return typedjson({ characterData });
 };
 
 export const useCharacterRouteData = () => {
