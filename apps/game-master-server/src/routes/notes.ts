@@ -30,8 +30,8 @@ import {
 	updateNoteName,
 	updateNoteSchema,
 } from "@repo/db";
-import { getIntentOrThrow, internalServerError } from "~/utils";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { internalServerError } from "~/utils";
+import { StatusCodes } from "http-status-codes";
 import { zx } from "zodix";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";

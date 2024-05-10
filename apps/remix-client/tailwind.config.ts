@@ -17,8 +17,10 @@ export default {
 		extend: {
 			colors: {
 				grade: getColorScale("slate"),
-				primary: getColorScale("iris"),
 				accent: getColorScale("mauve"),
+				primary: getColorScale("iris"),
+				secondary: getColorScale("lime"),
+				amber: getColorScale("amber"),
 				jade: getColorScale("jade"),
 				destructive: getColorScale("red"),
 			},

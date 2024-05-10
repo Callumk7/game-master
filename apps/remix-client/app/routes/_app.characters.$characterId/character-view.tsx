@@ -4,6 +4,7 @@ import { EntityView, EntityHeader } from "~/components/layout";
 import { loader } from "./route";
 import { Button } from "~/components/ui/button";
 import { useTypedLoaderData } from "remix-typedjson";
+import { Link } from "~/components/ui/link";
 
 export function CharacterView() {
 	const { characterData } = useTypedLoaderData<typeof loader>();
@@ -20,13 +21,9 @@ export function CharacterView() {
 				<TrashIcon />
 			</Button>
 			<EntityHeader title={characterData.name}>
-				<div className="flex gap-6 border-t border-grade-6 pt-2">
-					<p>
-						<span className="font-semibold">Class:</span> {characterData.class}
-					</p>
-					<p>
-						<span className="font-semibold">Level:</span> {characterData.level}
-					</p>
+				<div className="flex gap-x-6">
+					<Link href={`/characters/${characterData.id}/notes`}>Notes</Link>
+					<Link href={`/characters/${characterData.id}/links`}>Links</Link>
 				</div>
 			</EntityHeader>
 			<Outlet />

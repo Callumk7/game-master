@@ -14,7 +14,7 @@ import type {
 	Note,
 	Plot,
 	Session,
-} from "~/types";
+} from "@repo/db";
 import { Link } from "./ui/link";
 import { Button } from "./ui/button";
 import { Form, useNavigate } from "@remix-run/react";
@@ -26,10 +26,14 @@ import { TextField } from "./ui/text-field";
 import { AppToolbar } from "./app-toolbar";
 import { EntityListBox } from "./entity-listbox";
 import { Header } from "./typeography";
+import { NumberField } from "./ui/number-field";
+import { NewSessionForm } from "./forms/new-session";
+import { NewCharacterForm } from "./forms/new-character";
+import { NewFactionForm } from "./forms/new-faction";
 
 interface SidebarProps {
-  isSidebarOpen: boolean;
-  setIsSidebarOpen: (isOpen: boolean) => void;
+	isSidebarOpen: boolean;
+	setIsSidebarOpen: (isOpen: boolean) => void;
 	characters: Character[];
 	factions: Faction[];
 	plots: Plot[];
@@ -38,8 +42,8 @@ interface SidebarProps {
 	sessions: Session[];
 }
 export function Sidebar({
-  isSidebarOpen,
-  setIsSidebarOpen,
+	isSidebarOpen,
+	setIsSidebarOpen,
 	characters,
 	factions,
 	notes,
@@ -53,14 +57,27 @@ export function Sidebar({
 			<ScrollArea className="h-full">
 				<AppToolbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 				<div className="p-2 border-b border-grade-6 space-y-4">
-					<SidebarSection title="Sessions" icon={<HomeIcon />} href="/sessions">
+					<SidebarSection
+						title="Sessions"
+						icon={<HomeIcon />}
+						href="/sessions"
+						popover={<Dialog>{({ close }) => <NewSessionForm close={close} />}</Dialog>}
+					>
 						<EntityListBox type="sessions" items={sessions} className="border-0" />
 					</SidebarSection>
 					<SidebarSection
 						title="Notes"
 						icon={<Pencil1Icon />}
 						href="/notes"
-						isNoteSection
+						popover={
+							<Dialog>
+								{({ close }) => (
+									<Form method="GET" action="/notes/new" onSubmit={() => close()}>
+										<TextField label="Note Title" name="name" />
+									</Form>
+								)}
+							</Dialog>
+						}
 					>
 						{folders.map((folder) => (
 							<div key={folder.id}>
@@ -73,14 +90,21 @@ export function Sidebar({
 							<EntityListBox type="notes" items={notes} className="border-0" />
 						</div>
 					</SidebarSection>
-					<SidebarSection title="Characters" icon={<PersonIcon />} href="/characters">
+					<SidebarSection
+						title="Characters"
+						icon={<PersonIcon />}
+						href="/characters"
+						popover={<Dialog>{({ close }) => <NewCharacterForm close={close} />}</Dialog>}
+					>
 						<EntityListBox type="characters" items={characters} className="border-0" />
 					</SidebarSection>
-					<SidebarSection title="Factions" icon={<HomeIcon />} href="/factions">
-						<EntityListBox type="factions" items={factions} className="border-0" />
-					</SidebarSection>
-					<SidebarSection title="Plots" icon={<EyeOpenIcon />} href="/plots">
-						<EntityListBox type="plots" items={plotsWithName} className="border-0" />
+					<SidebarSection
+						title="Factions"
+						icon={<EyeOpenIcon />}
+						href="/characters"
+						popover={<Dialog>{({ close }) => <NewFactionForm close={close} />}</Dialog>}
+					>
+						<EntityListBox type="characters" items={characters} className="border-0" />
 					</SidebarSection>
 				</div>
 			</ScrollArea>
@@ -94,7 +118,7 @@ interface SidebarSectionProps {
 	href: string;
 	icon: ReactNode;
 	children: ReactNode;
-	isNoteSection?: boolean;
+	popover: ReactNode;
 }
 // TODO: there is no empty title validation on the create popover
 export function SidebarSection({
@@ -102,7 +126,7 @@ export function SidebarSection({
 	href,
 	icon,
 	children,
-	isNoteSection,
+	popover,
 }: SidebarSectionProps) {
 	const navigate = useNavigate();
 	return (
@@ -116,26 +140,12 @@ export function SidebarSection({
 					{icon}
 					<span>{title}</span>
 				</Link>
-				{isNoteSection ? (
-					<DialogTrigger>
-						<Button variant="ghost" size="icon-sm">
-							<PlusCircledIcon />
-						</Button>
-						<Popover>
-							<Dialog>
-								{({ close }) => (
-									<Form method="GET" action={`${href}/new`} onSubmit={() => close()}>
-										<TextField label="Note Title" name="name" />
-									</Form>
-								)}
-							</Dialog>
-						</Popover>
-					</DialogTrigger>
-				) : (
-					<Button variant="ghost" size="icon-sm" onPress={() => navigate(`${href}/new`)}>
+				<DialogTrigger>
+					<Button variant="ghost" size="icon-sm">
 						<PlusCircledIcon />
 					</Button>
-				)}
+					<Popover>{popover}</Popover>
+				</DialogTrigger>
 			</div>
 			{children}
 		</div>
