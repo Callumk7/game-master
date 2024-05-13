@@ -2,28 +2,16 @@ import { Hono } from "hono";
 import { Bindings } from "..";
 import { z } from "zod";
 import {
-	EntityTypeSchema,
 	INTENT,
-	IntentSchema,
 	LinkIntentSchema,
 	Note,
 	NoteInsert,
 	OptionalEntitySchema,
 	createDrizzleForTurso,
-	deleteCharacterJoinsFromNote,
-	deleteFactionJoinsFromNote,
-	deleteNoteConnectionsFromNote,
-	deletePlotJoinsFromNote,
-	deleteSessionJoinsFromNote,
 	getNote,
 	getNoteAndLinkedEntities,
-	handleLinkEntitiesToTarget,
-	handleLinkingByIntent,
+	handleNoteLinking,
 	linkCharactersToNote,
-	linkFactionsToNote,
-	linkNotesTogether,
-	linkPlotsToNote,
-	linkSessionsToNote,
 	notes,
 	notesInsertSchema,
 	updateNoteContent,
@@ -98,28 +86,7 @@ notesRoute.post("/", async (c) => {
 	}
 
 	if (data.links) {
-		await handleLinkingByIntent(db, newNote.id, data.linkIds, data.intent!, {
-			characters: {
-				link: linkCharactersToNote,
-				delete: deleteCharacterJoinsFromNote,
-			},
-			factions: {
-				link: linkFactionsToNote,
-				delete: deleteFactionJoinsFromNote,
-			},
-			notes: {
-				link: linkNotesTogether,
-				delete: deleteNoteConnectionsFromNote,
-			},
-			plots: {
-				link: linkPlotsToNote,
-				delete: deletePlotJoinsFromNote,
-			},
-			sessions: {
-				link: linkSessionsToNote,
-				delete: deleteSessionJoinsFromNote,
-			},
-		});
+		await handleNoteLinking(db, newNote.id, data.linkIds, data.intent!);
 	}
 
 	return c.json(newNote);
@@ -133,28 +100,7 @@ notesRoute.post("/:noteId/links", async (c) => {
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	const res = await handleLinkingByIntent(db, noteId, linkIds, intent, {
-		characters: {
-			link: linkCharactersToNote,
-			delete: deleteCharacterJoinsFromNote,
-		},
-		factions: {
-			link: linkFactionsToNote,
-			delete: deleteFactionJoinsFromNote,
-		},
-		notes: {
-			link: linkNotesTogether,
-			delete: deleteNoteConnectionsFromNote,
-		},
-		plots: {
-			link: linkPlotsToNote,
-			delete: deletePlotJoinsFromNote,
-		},
-		sessions: {
-			link: linkSessionsToNote,
-			delete: deleteSessionJoinsFromNote,
-		},
-	});
+	const res = await handleNoteLinking(db, noteId, linkIds, intent);
 
 	return res;
 });
@@ -196,4 +142,11 @@ notesRoute.delete("/:noteId", async (c) => {
 
 	await db.delete(notes).where(eq(notes.id, noteId));
 	return c.text("Successfully deleted note");
+});
+
+notesRoute.post("/:noteId/characters/:characterId", async (c) => {
+	const { characterId, noteId } = c.req.param();
+	const db = createDrizzleForTurso(c.env);
+	const result = await linkCharactersToNote(db, noteId, [characterId]);
+	return c.json(result);
 });

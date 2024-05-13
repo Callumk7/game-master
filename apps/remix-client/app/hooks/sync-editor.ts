@@ -10,6 +10,12 @@ type SyncEditorOptions = {
 	initContent: string;
 };
 
+/**
+ * This hook keeps the input data in sync between the editor component,
+ * and the database. It sends a PATCH request to the action (or nearest if
+ * no action is provided in the init options) which includes htmlContent, and
+ * an intent of UPDATE_CONTENT (can be overridden)
+ */
 export const useSyncEditor = (options: SyncEditorOptions) => {
 	const fetcher = useFetcher();
 

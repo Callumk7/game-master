@@ -9,7 +9,12 @@ import {
 import { notesOnCharacters, notes } from "../db/schemas/notes";
 import { plotsOnCharacters } from "../db/schemas/plots";
 import { charactersInSessions } from "../db/schemas/sessions";
-import { Character, MultiSelectString } from "../types";
+import {
+	Character,
+	CharactersInFactionsInsert,
+	MultiSelectString,
+	NoteInsert,
+} from "../types";
 import { LINK_INTENT } from "./util";
 import { handleLinkingByIntent } from "./generic";
 

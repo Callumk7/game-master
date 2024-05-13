@@ -8,6 +8,8 @@ import { TableBody } from "react-aria-components";
 import { useSortTable } from "~/hooks/sort-table";
 import { Tag, TagGroup } from "~/components/ui/tag-group";
 import { Note } from "@repo/db";
+import { Toolbar } from "~/components/ui/toolbar";
+import { SearchField } from "~/components/ui/search";
 
 export default function NotesView() {
 	const { allNotes } = useTypedLoaderData<typeof loader>();
@@ -26,6 +28,9 @@ export default function NotesView() {
 	return (
 		<div className="space-y-4">
 			<Header style="h1">All Notes</Header>
+      <Toolbar>
+        <SearchField />
+      </Toolbar>
 			<TableOfNotes notes={formattedNotes} />
 			<Button onPress={() => navigate("/notes/new")}>Add</Button>
 		</div>

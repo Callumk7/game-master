@@ -12,7 +12,8 @@ export const characters = sqliteTable("characters", {
 	raceId: text("race_id").notNull(),
 	level: integer("level"),
 	class: text("class"), // can be its own table eventually
-	bio: text("bio"),
+	bio: text("bio").notNull(),
+	pinnedNoteId: text("pinned_note_id"),
 	isPlayer: integer("is_player", { mode: "boolean" }).default(false),
 	image: text("image"),
 	userId: text("user_id").notNull(),
@@ -24,6 +25,10 @@ export const charactersRelations = relations(characters, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	notes: many(notesOnCharacters),
+	pinnedNote: one(notes, {
+		fields: [characters.pinnedNoteId],
+		references: [notes.id],
+	}),
 	factions: many(charactersInFactions),
 	allies: many(allies, { relationName: "character" }),
 	allyOf: many(allies, { relationName: "ally" }),

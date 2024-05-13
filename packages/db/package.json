@@ -5,7 +5,10 @@
 	"description": "Drizzle client, types, and schemas.",
 	"main": "./src/index.ts",
 	"types": "./src/index.ts",
-	"scripts": {},
+	"scripts": {
+		"db:push": "drizzle-kit push:sqlite",
+		"db:studio": "drizzle-kit studio"
+	},
 	"dependencies": {
 		"@libsql/client": "^0.5.6",
 		"callum-util": "^1.2.1",

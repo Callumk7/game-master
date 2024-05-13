@@ -16,7 +16,6 @@ export function NewCharacterForm({ action, close }: NewCharacterFormProps) {
 			onSubmit={close ? () => close() : undefined}
 		>
 			<TextField name="name" label="Character Name" />
-			<TextField textarea name="bio" label="Character Bio" />
 			<TextField name="raceId" label="Race" />
 			<Button type="submit">Submit</Button>
 		</Form>

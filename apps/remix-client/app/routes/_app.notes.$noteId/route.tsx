@@ -15,20 +15,27 @@ import ky from "ky";
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const { noteId } = zx.parseParams(params, { noteId: z.string() });
 
+	if (request.method === "POST") {
+		const { characterId } = await zx.parseForm(request, { characterId: z.string() });
+		const res = await ky.post(
+			`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}/characters/${characterId}`,
+		);
+	}
+
 	if (request.method === "PATCH") {
 		const formData = await request.formData();
 		const res = await ky.patch(
 			`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}`,
 			{ body: formData },
 		);
-
-		return json({ success: "unknown" });
 	}
 
+	// add intent to handle this and links
 	if (request.method === "DELETE") {
 		const db = createDrizzleForTurso(context.cloudflare.env);
 		return await handleDeleteNote(db, noteId);
 	}
+	return json({ success: "unknown" });
 };
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
