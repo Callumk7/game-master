@@ -9,6 +9,9 @@ import {
 import { notesOnCharacters, notes } from "../db/schemas/notes";
 import { plotsOnCharacters } from "../db/schemas/plots";
 import { charactersInSessions } from "../db/schemas/sessions";
+import { Character, MultiSelectString } from "../types";
+import { LINK_INTENT } from "./util";
+import { handleLinkingByIntent } from "./generic";
 
 export const getFullCharacterData = async (db: DB, characterId: string) => {
 	const charResult = await db.query.characters.findFirst({
@@ -328,4 +331,41 @@ export const updateCharacter = async (
 		.where(eq(characters.id, characterId))
 		.returning();
 	return result[0];
+};
+
+///
+/// Complete Update Functions
+///
+export const handleCharacterLinking = async (
+	db: DB,
+	characterId: string,
+	targetIds: MultiSelectString,
+	intent: LINK_INTENT,
+) => {
+	return await handleLinkingByIntent(db, characterId, targetIds, intent, {
+		allies: {
+			link: linkAlliesToChar,
+			delete: deleteAllyJoinsFromChar,
+		},
+		enemies: {
+			link: linkEnemiesToChar,
+			delete: deleteEnemyJoinsFromChar,
+		},
+		factions: {
+			link: linkFactionsToCharacter,
+			delete: deleteFactionJoinsFromChar,
+		},
+		sessions: {
+			link: linkSessionsToCharacter,
+			delete: deleteSessionJoinsFromChar,
+		},
+		notes: {
+			link: linkNotesToCharacter,
+			delete: deleteNoteJoinsFromChar,
+		},
+		plots: {
+			link: linkPlotsToCharacter,
+			delete: deletePlotJoinsFromChar,
+		},
+	});
 };

@@ -1,6 +1,9 @@
 import { eq } from "drizzle-orm";
 import { DB } from "../db";
 import { plotsOnCharacters, plots } from "../db/schemas/plots";
+import { MultiSelectString, Plot } from "../types";
+import { LINK_INTENT } from "./util";
+import { handleLinkingByIntent } from "./generic";
 
 export const getCharacterPlots = async (db: DB, characterId: string) => {
 	return await db.query.plotsOnCharacters.findMany({

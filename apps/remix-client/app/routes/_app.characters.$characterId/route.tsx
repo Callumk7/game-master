@@ -1,17 +1,9 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
 import { CharacterView } from "./character-view";
-import {
-	FactionInsert,
-	characersSelectSchema,
-	createDrizzleForTurso,
-	createFactionRequest,
-	factionSelectSchema,
-	getFullCharacterData,
-} from "@repo/db";
-import { validateUser } from "~/lib/auth";
+import { createDrizzleForTurso, getFullCharacterData } from "@repo/db";
 
 // export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 // 	const userId = await validateUser(request);

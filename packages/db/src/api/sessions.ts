@@ -7,7 +7,9 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { CompleteNote, Session, SessionInsert } from "../types";
+import { CompleteNote, MultiSelectString, Session, SessionInsert } from "../types";
+import { LINK_INTENT } from "./util";
+import { handleLinkingByIntent } from "./generic";
 
 export const getCompleteSession = async (db: DB, sessionId: string) => {
 	const session = await db.query.sessions.findFirst({
@@ -239,4 +241,30 @@ export const updateSession = async (
 		.where(eq(sessions.id, sessionId))
 		.returning();
 	return result[0];
+};
+
+export const handleSessionLinking = async (
+	db: DB,
+	sessionId: string,
+	targetIds: MultiSelectString,
+	intent: LINK_INTENT,
+) => {
+	return await handleLinkingByIntent(db, sessionId, targetIds, intent, {
+		characters: {
+			link: linkCharactersToSession,
+			delete: deleteCharacterJoinsFromSession,
+		},
+		factions: {
+			link: linkFactionsToSession,
+			delete: deleteFactionJoinsFromSession,
+		},
+		notes: {
+			link: linkNotesToSession,
+			delete: deleteNoteJoinsFromSession,
+		},
+		plots: {
+			link: linkPlotsToSession,
+			delete: deletePlotJoinsOnSession,
+		},
+	});
 };

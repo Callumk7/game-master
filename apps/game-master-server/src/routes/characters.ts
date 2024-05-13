@@ -2,13 +2,16 @@ import { Hono } from "hono";
 import type { Bindings } from "..";
 import {
 	CharacterInsert,
+	LinkIntentSchema,
+	OptionalEntitySchema,
 	characters,
-	createCharacterRequest,
 	createDrizzleForTurso,
 	getFullCharacterData,
+	handleCharacterLinking,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
+import { zx } from "zodix";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -53,4 +56,18 @@ charactersRoute.post("/", async (c) => {
 
 	const newChar = await db.insert(characters).values(characterInsert).returning();
 	return c.json(newChar);
+});
+
+charactersRoute.put("/:characterId/links", async (c) => {
+	const characterId = c.req.param("characterId");
+
+	const { intent, targetIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		targetIds: OptionalEntitySchema,
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	const res = await handleCharacterLinking(db, characterId, targetIds, intent);
+
+	return res;
 });

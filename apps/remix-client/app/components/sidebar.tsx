@@ -104,7 +104,7 @@ export function Sidebar({
 						href="/characters"
 						popover={<Dialog>{({ close }) => <NewFactionForm close={close} />}</Dialog>}
 					>
-						<EntityListBox type="characters" items={characters} className="border-0" />
+						<EntityListBox type="factions" items={factions} className="border-0" />
 					</SidebarSection>
 				</div>
 			</ScrollArea>

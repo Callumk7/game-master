@@ -16,8 +16,9 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { LinkedNoteInsert } from "../types";
-import { internalServerError, noContent } from "./util";
+import { LinkedNoteInsert, MultiSelectString } from "../types";
+import { LINK_INTENT, internalServerError, noContent } from "./util";
+import { handleLinkingByIntent } from "./generic";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 	const allNotes = await db.query.notes.findMany({
@@ -439,4 +440,35 @@ export const handleDeleteNote = async (db: DB, noteId: string) => {
 		console.error(err);
 		return internalServerError();
 	}
+};
+
+// Handle note linking
+export const handleNoteLinking = async (
+	db: DB,
+	noteId: string,
+	targetIds: MultiSelectString,
+	intent: LINK_INTENT,
+) => {
+	return await handleLinkingByIntent(db, noteId, targetIds, intent, {
+		characters: {
+			link: linkCharactersToNote,
+			delete: deleteCharacterJoinsFromNote,
+		},
+		factions: {
+			link: linkFactionsToNote,
+			delete: deleteFactionJoinsFromNote,
+		},
+		notes: {
+			link: linkNotesTogether,
+			delete: deleteNoteConnectionsFromNote,
+		},
+		plots: {
+			link: linkPlotsToNote,
+			delete: deletePlotJoinsFromNote,
+		},
+		sessions: {
+			link: linkSessionsToNote,
+			delete: deleteSessionJoinsFromNote,
+		},
+	});
 };

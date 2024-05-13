@@ -4,11 +4,11 @@ import {
 	Button,
 	GridListItemProps as AriaGridListItemProps,
 	GridListProps,
-    Text,
+	Text,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import { Checkbox } from "./checkbox";
-import { composeTailwindRenderProps, focusRing } from "~/utils";
+import { composeTailwindRenderProps, focusRing } from "../utils";
 
 export function GridList<T extends object>({ children, ...props }: GridListProps<T>) {
 	return (
@@ -39,7 +39,7 @@ const itemStyles = tv({
 });
 
 interface GridListItemProps extends AriaGridListItemProps {
-  name?: string;
+	name?: string;
 }
 
 export function GridListItem({ children, ...props }: GridListItemProps) {

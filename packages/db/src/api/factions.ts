@@ -5,7 +5,9 @@ import { factions } from "../db/schemas/factions";
 import { notesOnFactions } from "../db/schemas/notes";
 import { plotsOnFactions } from "../db/schemas/plots";
 import { factionsInSessions } from "../db/schemas/sessions";
-import type { Faction } from "../types";
+import type { Faction, MultiSelectString } from "../types";
+import { LINK_INTENT } from "./util";
+import { handleLinkingByIntent } from "./generic";
 
 ///
 /// GET DATA
@@ -197,4 +199,33 @@ export const deleteSessionsFromFaction = async (
 				inArray(factionsInSessions.sessionId, sessionIds),
 			),
 		);
+};
+
+///
+/// Complete Update Functions
+///
+export const handleFactionLinking = async (
+	db: DB,
+	factionId: string,
+	targetIds: MultiSelectString,
+	intent: LINK_INTENT,
+) => {
+	return await handleLinkingByIntent(db, factionId, targetIds, intent, {
+		characters: {
+			link: linkCharactersToFaction,
+			delete: deleteCharacterJoinsOnFaction,
+		},
+		sessions: {
+			link: linkSessionsToFaction,
+			delete: deleteSessionJoinsFromFaction,
+		},
+		notes: {
+			link: linkNotesToFaction,
+			delete: deleteNoteJoinsFromFaction,
+		},
+		plots: {
+			link: linkPlotsToFaction,
+			delete: deletePlotJoinsFromFaction,
+		},
+	});
 };
