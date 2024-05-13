@@ -1,13 +1,11 @@
 import { Hono } from "hono";
 import { Bindings } from "..";
-import { zValidator } from "@hono/zod-validator";
 import {
 	EntityTypeSchema,
 	FactionInsert,
 	OptionalEntitySchema,
 	charactersInFactions,
 	createDrizzleForTurso,
-	createFactionRequest,
 	deleteCharactersFromFaction,
 	factionInsertSchema,
 	factions,
@@ -16,6 +14,8 @@ import {
 import { uuidv4 } from "callum-util";
 import { z } from "zod";
 import { itemOrArrayToArray } from "~/utils";
+import { zx } from "zodix";
+import { and, eq } from "drizzle-orm";
 
 export const factionsRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -26,14 +26,10 @@ factionsRoute.get("/", async (c) => {
 
 factionsRoute.post("/", async (c) => {
 	// throws a bad request if the body is the incorrect format
-	const newFactionBody = await c.req.json();
-	try {
-		createFactionRequest.parse(newFactionBody);
-	} catch (err) {
-		console.error(err);
-	}
-
-	console.log(newFactionBody);
+	const newFactionBody = await zx.parseForm(
+		c.req.raw,
+		factionInsertSchema.omit({ id: true }),
+	);
 
 	const newFactionId = `fact_${uuidv4()}`;
 	const newFactionInsert: FactionInsert = {
@@ -82,6 +78,30 @@ members.post("/", async (c) => {
 	const db = createDrizzleForTurso(c.env);
 	const newLink = await linkCharactersToFaction(db, factionId!, parsedIds);
 	return c.json(newLink);
+});
+
+members.put("/:characterId", async (c) => {
+	const factionId = c.req.param("factionId");
+	const characterId = c.req.param("characterId");
+	const { role, description } = await zx.parseForm(c.req.raw, {
+		role: z.string().optional(),
+		description: z.string().optional(),
+	});
+
+	const db = createDrizzleForTurso(c.env);
+
+	// WARN: not sure what happens if the ids are wrong, does it throw?
+	const result = await db
+		.update(charactersInFactions)
+		.set({ role, description })
+		.where(
+			and(
+				eq(charactersInFactions.characterId, characterId),
+				eq(charactersInFactions.factionId, factionId!),
+			),
+		);
+
+	return c.json("done");
 });
 
 members.delete("/:characterId", async (c) => {

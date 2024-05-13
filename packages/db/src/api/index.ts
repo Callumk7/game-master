@@ -7,3 +7,4 @@ export * from "./plots";
 export * from "./sessions";
 export * from "./util";
 export * from "./generic";
+export * from "./users";

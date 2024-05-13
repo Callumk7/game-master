@@ -12,7 +12,16 @@ export function EntityListBox<T extends BasicEntity>({
 	className,
 }: EntityListBoxProps<T>) {
 	return (
-		<ListBox items={items} className={className} aria-label="Navigation links">
+		<ListBox
+			items={items}
+			className={className}
+			aria-label="Navigation links"
+			renderEmptyState={() => (
+				<p className="w-full text-sm text-grade-10 italic text-center p-3">
+					Nothing to display
+				</p>
+			)}
+		>
 			{(item) => <ListBoxItem href={`/${type}/${item.id}`}>{item.name}</ListBoxItem>}
 		</ListBox>
 	);
