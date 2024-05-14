@@ -17,11 +17,11 @@ const button = tv({
 	variants: {
 		variant: {
 			primary:
-				"bg-primary-3 hover:bg-primary-6 pressed:bg-primary-7 text-grade-12 border border-primary-8 shadow shadow-primary-5",
+				"bg-primary-3 hover:bg-primary-6 pressed:bg-primary-7 text-grade-12 border border-primary-8 shadow-lg shadow-purple-800/10",
 			secondary:
 				"bg-grade-3 hover:bg-grade-6 pressed:bg-grade-7 text-grade-12 border border-grade-8",
 			destructive:
-				"bg-destructive-6 hover:bg-destructive-8 pressed:bg-destructive-9 text-grade-12 border border-destructive-8 shadow shadow-destructive-5",
+				"bg-destructive-6 hover:bg-destructive-8 pressed:bg-destructive-9 text-grade-12 border border-destructive-8 shadow shadow-red-800/10",
 			ghost:
 				"hover:bg-grade-5 text-primary-11 hover:text-grade-12 border border-transparent pressed:text-primary-12 pressed:bg-grade-6",
 			outline:

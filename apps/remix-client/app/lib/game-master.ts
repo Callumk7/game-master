@@ -1,30 +1,22 @@
 import { AppLoadContext } from "@remix-run/cloudflare";
 import ky from "ky";
 
-export class GameMaster {
-	private url: string;
-
-	constructor(url: string) {
-		this.url = url;
-	}
-
-	static create(context: AppLoadContext) {
-		return new GameMaster(context.cloudflare.env.GAME_MASTER_URL);
-	}
-
-	async post(endpoint: string, body: FormData) {
-		return await ky.post(`${this.url}/${endpoint}`, { body: body });
-	}
-
-	async patch(endpoint: string, body: unknown) {
-		return await ky.patch(`${this.url}/${endpoint}`, { json: body });
-	}
-
-	async put(endpoint: string, body: unknown) {
-		return await ky.put(`${this.url}/${endpoint}`, { json: body });
-	}
-
-	async delete(endpoint: string) {
-		return await ky.delete(`${this.url}/${endpoint}`);
-	}
-}
+export const post = async (context: AppLoadContext, endpoint: string, form: FormData) => {
+	return await ky.post(`${context.cloudflare.env.GAME_MASTER_URL}/${endpoint}`, {
+		body: form,
+	});
+};
+export const patch = async (
+	context: AppLoadContext,
+	endpoint: string,
+	form: FormData,
+) => {
+	return await ky.patch(`${context.cloudflare.env.GAME_MASTER_URL}/${endpoint}`, {
+		body: form,
+	});
+};
+export const put = async (context: AppLoadContext, endpoint: string, form: FormData) => {
+	return await ky.put(`${context.cloudflare.env.GAME_MASTER_URL}/${endpoint}`, {
+		body: form,
+	});
+};

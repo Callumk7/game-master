@@ -22,6 +22,7 @@ import { z } from "zod";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
+// ALL characters (not user specific)
 charactersRoute.get("/", async (c) => {
 	const db = createDrizzleForTurso(c.env);
 	const allCharacters = await db.select().from(characters);
