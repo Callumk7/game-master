@@ -3,13 +3,15 @@ import { Bindings } from "..";
 import {
 	EntityTypeSchema,
 	FactionInsert,
-	OptionalEntitySchema,
+	LINK_INTENT,
+	LinkIntentSchema,
+	badRequest,
 	charactersInFactions,
+	charactersInFactionsInsertSchema,
 	createDrizzleForTurso,
 	deleteCharactersFromFaction,
 	factionInsertSchema,
 	factions,
-	linkCharactersToFaction,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { z } from "zod";
@@ -63,20 +65,42 @@ factionsRoute.post("/", async (c) => {
 	return c.json(newFaction);
 });
 
+factionsRoute.post("/:factionId/links", async (c) => {
+	const { type } = c.req.query();
+	if (!type) {
+		return badRequest("No type query parameter was provided");
+	}
+	const intentResult = LinkIntentSchema.safeParse(type);
+	if (!intentResult.success) {
+		return badRequest("Incorrect link type provided");
+	}
+
+	const db = createDrizzleForTurso(c.env);
+	switch (intentResult.data) {
+		case LINK_INTENT.CHARACTERS: {
+			const linkInsert = await zx.parseForm(
+				c.req.raw,
+				charactersInFactionsInsertSchema,
+			);
+			await db.insert(charactersInFactions).values(linkInsert);
+			return c.json(linkInsert);
+		}
+
+		default:
+			break;
+	}
+});
+
 // Here we are going to handle how members are added and removed from factions
 const members = new Hono<{ Bindings: Bindings }>();
 members.get("/", (c) => {
 	return c.text("This is found");
 });
 members.post("/", async (c) => {
-	const factionId = c.req.param("factionId");
-	// get the character Ids (or throw)
-	const { characterIds } = z
-		.object({ characterIds: OptionalEntitySchema })
-		.parse(await c.req.json());
-	const parsedIds = itemOrArrayToArray(characterIds);
+	const linkInsert = await zx.parseForm(c.req.raw, charactersInFactionsInsertSchema);
+
 	const db = createDrizzleForTurso(c.env);
-	const newLink = await linkCharactersToFaction(db, factionId!, parsedIds);
+	const newLink = await db.insert(charactersInFactions).values(linkInsert);
 	return c.json(newLink);
 });
 

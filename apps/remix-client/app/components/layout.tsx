@@ -3,6 +3,7 @@ import { tv } from "tailwind-variants";
 import { EditableText } from "./editable-text";
 import { FormMethod } from "@remix-run/react";
 import { INTENT } from "@repo/db";
+import { cn } from "callum-util";
 
 interface MainContainerProps extends HTMLAttributes<HTMLDivElement> {
 	width?: "wide" | "max";
@@ -68,15 +69,19 @@ interface EntityViewProps {
 	children: ReactNode;
 	margin?: boolean;
 	top?: boolean;
+	className?: string;
 }
 
 /**
  * This is simply adding vertical spacing.
  */
-export function EntityView({ children, margin, top }: EntityViewProps) {
+export function EntityView({ children, margin, top, className }: EntityViewProps) {
 	return (
 		<div
-			className={`space-y-7 ${margin ? "w-11/12 mx-auto" : "w-full"} ${top && "mt-12"}`}
+			className={cn(
+				`space-y-7 ${margin ? "w-11/12 mx-auto" : "w-full"} ${top && "mt-12"}`,
+				className,
+			)}
 		>
 			{children}
 		</div>

@@ -57,6 +57,7 @@ export const allies = sqliteTable(
 	{
 		allyId: text("ally_id").notNull(),
 		characterId: text("character_id").notNull(),
+		description: text("description"),
 		noteId: text("note_id"),
 	},
 	(t) => ({
@@ -85,6 +86,7 @@ export const enemies = sqliteTable(
 	{
 		enemyId: text("enemy_id").notNull(),
 		characterId: text("character_id").notNull(),
+		description: text("description"),
 		noteId: text("note_id"),
 	},
 	(t) => ({

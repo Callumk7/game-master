@@ -9,8 +9,8 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	const form = await request.formData();
 	form.append("userId", userId);
 
-  const res = await post(context, "sessions", form);
-  return json(await res.json());
+	const res = await post(context, "sessions", form);
+	return json(await res.json());
 };
 
 export default function NewSessionView() {

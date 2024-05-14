@@ -10,9 +10,9 @@ import {
 	charactersInsertSchema,
 	createDrizzleForTurso,
 	getFullCharacterData,
-	handleCharacterLinking,
+	handleAddLinkToCharacter,
+	handleBulkCharacterLinking,
 	linkFactionsToCharacter,
-	linkFactionsToNote,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
@@ -97,6 +97,20 @@ charactersRoute.patch("/:characterId", async (c) => {
 	return c.json("done");
 });
 
+// Post a single link to the character
+charactersRoute.post("/:characterId/links", async (c) => {
+	const characterId = c.req.param("characterId");
+
+	const { intent, targetId } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		targetId: z.string(),
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	return await handleAddLinkToCharacter(db, characterId, targetId, intent);
+});
+
+// Put removes all links and replaces them with the request
 charactersRoute.put("/:characterId/links", async (c) => {
 	const characterId = c.req.param("characterId");
 
@@ -106,9 +120,7 @@ charactersRoute.put("/:characterId/links", async (c) => {
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	const res = await handleCharacterLinking(db, characterId, targetIds, intent);
-
-	return res;
+	return await handleBulkCharacterLinking(db, characterId, targetIds, intent);
 });
 
 charactersRoute.get("/:characterId/factions", async (c) => {
@@ -120,6 +132,7 @@ charactersRoute.get("/:characterId/factions", async (c) => {
 	return c.json(characterFactions);
 });
 
+// We should do this for each entity type, if the route needs to handle a specific type of link
 charactersRoute.post("/:characterId/factions/:factionId", async (c) => {
 	const { characterId, factionId } = c.req.param();
 	const db = createDrizzleForTurso(c.env);

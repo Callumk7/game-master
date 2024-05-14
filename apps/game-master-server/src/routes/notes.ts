@@ -10,7 +10,7 @@ import {
 	createDrizzleForTurso,
 	getNote,
 	getNoteAndLinkedEntities,
-	handleNoteLinking,
+	handleBulkNoteLinking,
 	linkCharactersToNote,
 	notes,
 	notesInsertSchema,
@@ -86,7 +86,7 @@ notesRoute.post("/", async (c) => {
 	}
 
 	if (data.links) {
-		await handleNoteLinking(db, newNote.id, data.linkIds, data.intent!);
+		await handleBulkNoteLinking(db, newNote.id, data.linkIds, data.intent!);
 	}
 
 	return c.json(newNote);
@@ -100,7 +100,7 @@ notesRoute.post("/:noteId/links", async (c) => {
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	const res = await handleNoteLinking(db, noteId, linkIds, intent);
+	const res = await handleBulkNoteLinking(db, noteId, linkIds, intent);
 
 	return res;
 });

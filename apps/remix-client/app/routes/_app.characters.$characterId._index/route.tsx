@@ -1,40 +1,44 @@
 import { EntityListBox } from "~/components/entity-listbox";
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
 import { EditorPreview } from "~/components/editor-preview";
-import { Header } from "~/components/typeography";
+import { Header, HeaderLink } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useSyncEditor } from "~/hooks/sync-editor";
-import { PlusIcon } from "@radix-ui/react-icons";
-import { useFetcher } from "@remix-run/react";
-import ky from "ky";
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
-import { zx } from "zodix";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
-import { z } from "zod";
-import { CharacterFactionCard } from "./components/faction-card";
+import { Card } from "~/components/card";
+import { BasicEntity, EntityType, LINK_INTENT, LinkIntentSchema } from "@repo/db";
+import { DialogTrigger } from "react-aria-components";
+import { Popover } from "~/components/ui/popover";
+import { useSubmit } from "@remix-run/react";
+import { useAppData } from "../_app/route";
+import { ListBox, ListBoxItem } from "~/components/ui/list-box";
+import { post, put } from "~/lib/game-master";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-	const characterId = extractParam("characterId", params);
-	console.log("This has actually happened");
-	const { factionId } = await zx.parseForm(request, { factionId: z.string() });
-	const form = await request.formData();
-	const res = await ky.put(
-		`${context.cloudflare.env.GAME_MASTER_URL}/factions/${factionId}/members/${characterId}`,
-		{ body: form },
-	);
-
-	return null;
+	// On the character page, we can add links to other entities, we do this
+	// with a PUT request to the server, with the intent, and the required ids.
+	// In the case of this specific route, that is ALWAYS a single id.
+	if (request.method === "POST") {
+		const characterId = extractParam("characterId", params);
+		const form = await request.formData();
+		const res = await post(context, `characters/${characterId}/links`, form);
+		console.log(res);
+		return json({ success: "maybe" });
+	}
 };
 
 export default function CharacterIndex() {
+	const { allFactions, allSessions } = useAppData();
 	const { characterData } = useCharacterRouteData();
 	const { editor, isEditing, setIsEditing } = useSyncEditor({
 		initContent: characterData.bio,
 		action: `/characters/${characterData.id}`,
 	});
 	return (
-		<div className="grid grid-cols-2 gap-4">
-			<div className="space-y-4">
+		<div className="grid grid-cols-3 gap-4">
+			<div className="space-y-4 col-span-2">
 				<div className="flex gap-x-4 items-center">
 					<Header style="h2">Character Bio</Header>
 					<Button variant="secondary" onPress={() => setIsEditing(!isEditing)}>
@@ -48,37 +52,79 @@ export default function CharacterIndex() {
 				/>
 			</div>
 			<div className="space-y-10 pl-16">
-				<div className="space-y-4">
-					<div className="flex w-full justify-between">
-						<Header style="h2">Factions</Header>
-						<Button variant="ghost" size="icon">
-							<PlusIcon />
-						</Button>
-					</div>
-					<div className="border border-grade-6 p-4 rounded-lg">
-						{characterData.factions.map((f) => (
-							<CharacterFactionCard
-								faction={f.faction}
-								key={f.factionId}
-								role={f.role}
-								description={f.description}
-							/>
-						))}
-					</div>
-				</div>
-				<div className="space-y-4">
-					<div className="flex w-full justify-between">
-						<Header style="h2">Sessions</Header>
-						<Button variant="ghost" size="icon">
-							<PlusIcon />
-						</Button>
-					</div>
-					<EntityListBox
-						type="sessions"
-						items={characterData.sessions.map((s) => s.session)}
-					/>
-				</div>
+				<LinkAside
+					type="factions"
+					header="Factions"
+					items={characterData.factions.map((f) => f.faction)}
+					allItems={allFactions}
+					intent={LINK_INTENT.FACTIONS}
+				/>
+				<LinkAside
+					type="sessions"
+					header="Sessions"
+					items={characterData.sessions.map((s) => s.session)}
+					allItems={allSessions}
+					intent={LINK_INTENT.SESSIONS}
+				/>
 			</div>
 		</div>
+	);
+}
+
+interface LinkAsideProps<T> {
+	header: string;
+	items: T[];
+	allItems: T[];
+	type: EntityType;
+	intent: LINK_INTENT;
+}
+function LinkAside<T extends BasicEntity>({
+	header,
+	items,
+	allItems,
+	type,
+	intent,
+}: LinkAsideProps<T>) {
+	return (
+		<Card>
+			<div className="flex w-full justify-between items-center">
+				<HeaderLink to={`/${type}`} style="h4" className="mb-3 pl-3">
+					{header}
+				</HeaderLink>
+				<LinkEntityDropdown items={allItems} intent={intent} />
+			</div>
+			<EntityListBox items={items} type={type} className="border-0" />
+		</Card>
+	);
+}
+
+interface LinkEntityDropdownProps<T> {
+	items: T[];
+	action?: string;
+	intent: LINK_INTENT;
+}
+function LinkEntityDropdown<T extends BasicEntity>({
+	items,
+	action,
+	intent,
+}: LinkEntityDropdownProps<T>) {
+	const submit = useSubmit();
+	return (
+		<DialogTrigger>
+			<Button variant="ghost" size="icon-sm">
+				<PlusCircledIcon />
+			</Button>
+			<Popover>
+				<ListBox
+					items={items}
+					onAction={(k) =>
+						submit({ targetId: k.toString(), intent }, { method: "POST", action })
+					}
+					className={"border-0"}
+				>
+					{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+				</ListBox>
+			</Popover>
+		</DialogTrigger>
 	);
 }

@@ -9,7 +9,7 @@ export const typeStyles = tv({
 			h1: "text-3xl font-bold mb-5",
 			h2: "text-2xl font-semibold",
 			h3: "text-lg font-semibold",
-			h4: "font-semibold text-primary-10",
+			h4: "font-semibold text-primary-11",
 			h5: "text-sm font-semibold text-grade-11",
 			label: "text-xs font-semibold text-grade-11",
 			prose: "prose prose-invert max-w-none",

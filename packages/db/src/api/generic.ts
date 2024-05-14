@@ -29,6 +29,108 @@ export const handleLinkEntitiesToTarget = async <T>(
 	}
 };
 
+export const handleAddLinkToTarget = async <T>(
+	db: DB,
+	targetId: string,
+	linkId: string,
+	linkFunction: LinkFunction<T>,
+) => {
+	return await linkFunction(db, targetId, [linkId]);
+};
+
+type AddLinkHandlerFunctions<C, A, E, F, S, N, P> = {
+	characters?: LinkFunction<C>;
+	allies?: LinkFunction<A>;
+	enemies?: LinkFunction<E>;
+	factions?: LinkFunction<F>;
+	sessions?: LinkFunction<S>;
+	notes?: LinkFunction<N>;
+	plots?: LinkFunction<P>;
+};
+
+export const handleAddLinkToTargetByIntent = async <C, A, E, F, S, N, P>(
+	db: DB,
+	targetId: string,
+	linkId: string,
+	intent: LINK_INTENT,
+	handlerFunctions: AddLinkHandlerFunctions<C, A, E, F, S, N, P>,
+): Promise<Response> => {
+	switch (intent) {
+		case LINK_INTENT.CHARACTERS:
+			if (handlerFunctions.characters) {
+				await handleAddLinkToTarget(
+					db,
+					targetId,
+					linkId,
+					handlerFunctions.characters,
+				);
+			}
+			break;
+		case LINK_INTENT.ALLIES:
+			if (handlerFunctions.allies) {
+				await handleAddLinkToTarget(
+					db,
+					targetId,
+					linkId,
+					handlerFunctions.allies,
+				);
+			}
+			break;
+		case LINK_INTENT.ENEMIES:
+			if (handlerFunctions.enemies) {
+				await handleAddLinkToTarget(
+					db,
+					targetId,
+					linkId,
+					handlerFunctions.enemies,
+				);
+			}
+			break;
+		case LINK_INTENT.NOTES:
+			if (handlerFunctions.notes) {
+				await handleAddLinkToTarget(db, targetId, linkId, handlerFunctions.notes);
+			}
+			break;
+		case LINK_INTENT.FACTIONS:
+			if (handlerFunctions.factions) {
+				await handleAddLinkToTarget(
+					db,
+					targetId,
+					linkId,
+					handlerFunctions.factions,
+				);
+			}
+			break;
+		case LINK_INTENT.PLOTS:
+			if (handlerFunctions.plots) {
+				await handleAddLinkToTarget(db, targetId, linkId, handlerFunctions.plots);
+			}
+			break;
+		case LINK_INTENT.SESSIONS:
+			if (handlerFunctions.sessions) {
+				await handleAddLinkToTarget(
+					db,
+					targetId,
+					linkId,
+					handlerFunctions.sessions,
+				);
+			}
+			break;
+		case LINK_INTENT.ALL:
+			return badRequest("Unable to handle linking all types");
+		default:
+			return badRequest("Unrecognised intent.");
+	}
+	return new Response(
+		JSON.stringify({
+			success: true,
+			targetId,
+			linkId: linkId,
+		}),
+		{ status: StatusCodes.CREATED, statusText: ReasonPhrases.CREATED },
+	);
+};
+
 type HandlerFunctions<C, A, E, F, S, N, P> = {
 	characters?: {
 		link: LinkFunction<C>;

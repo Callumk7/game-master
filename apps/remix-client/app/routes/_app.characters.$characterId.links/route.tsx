@@ -1,55 +1,45 @@
-import { HeaderLink } from "~/components/typeography";
-import { useAppData } from "../_app/route";
-import { Key } from "react-aria-components";
-import { useState } from "react";
 import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { zx } from "zodix";
 import { z } from "zod";
-import ky from "ky";
-import { LINK_INTENT } from "@repo/db";
-import { useCharacterRouteData } from "../_app.characters.$characterId/route";
-import { EntitySelectCard } from "~/components/entity-select-card";
+import { extractParam } from "~/lib/zx-util";
+import { put } from "~/lib/game-master";
+import { CharacterFactionTable } from "./components/faction-table";
+import { ReactNode } from "react";
+import { Header } from "~/components/typeography";
+import { CharacterAllyTable } from "./components/ally-table";
 
 // Creating a link, through an action - mostly we
 // just want to route the same request to the backend server - with whatever
 // context that we need
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-	const { characterId } = zx.parseParams(params, { characterId: z.string() });
+	const characterId = extractParam("characterId", params);
+	const { factionId } = await zx.parseForm(request, { factionId: z.string() });
 	const form = await request.formData();
 
-	const res = await ky.put(
-		`${context.cloudflare.env.GAME_MASTER_URL}/characters/${characterId}/links`,
-		{ body: form },
-	);
+	const res = await put(context, `factions/${factionId}/members/${characterId}`, form);
 
 	return null;
 };
 
 export default function CharacterLinksRoute() {
-	const { allFactions } = useAppData();
-	const { characterData } = useCharacterRouteData();
-
-	const [factions, setFactions] = useState(
-		new Set(characterData.factions.map((f) => f.factionId as Key)),
-	);
 	return (
-		<>
-			<div className="grid grid-cols-3">
-				<div className="border border-grade-6 rounded-lg p-3">
-					<HeaderLink to="/factions" style="h2" link="primary">
-						Factions
-					</HeaderLink>
-					<EntitySelectCard
-						targetEntityId={characterData.id}
-						targetEntityType={"factions"}
-						allEntities={allFactions}
-						selectedEntities={factions}
-						setSelectedEntites={setFactions}
-						intent={LINK_INTENT.FACTIONS}
-						action=""
-					/>
-				</div>
-			</div>
-		</>
+		<div className="space-y-10">
+			<TableSection header="Factions">
+				<CharacterFactionTable />
+			</TableSection>
+
+			<TableSection header="Allies">
+				<CharacterAllyTable />
+			</TableSection>
+		</div>
+	);
+}
+
+function TableSection({ children, header }: { children: ReactNode; header: string }) {
+	return (
+		<div className="space-y-4">
+			<Header style="h3">{header}</Header>
+			{children}
+		</div>
 	);
 }

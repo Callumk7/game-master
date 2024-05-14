@@ -7,7 +7,7 @@ import { Link } from "~/components/ui/link";
 export function CharacterView() {
 	const { characterData } = useTypedLoaderData<typeof loader>();
 	return (
-		<EntityView margin top>
+		<EntityView top className="px-6">
 			<EntityHeader title={characterData.name}>
 				<div className="flex gap-x-6">
 					<Link href={`/characters/${characterData.id}/notes`}>Notes</Link>

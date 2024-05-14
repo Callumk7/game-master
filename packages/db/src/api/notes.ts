@@ -443,7 +443,7 @@ export const handleDeleteNote = async (db: DB, noteId: string) => {
 };
 
 // Handle note linking
-export const handleNoteLinking = async (
+export const handleBulkNoteLinking = async (
 	db: DB,
 	noteId: string,
 	targetIds: MultiSelectString,

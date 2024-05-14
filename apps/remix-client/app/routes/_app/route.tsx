@@ -88,9 +88,7 @@ export default function AppRoute() {
 				/>
 			}
 		>
-			<MainContainer>
-				<Outlet />
-			</MainContainer>
+			<Outlet />
 		</SidebarLayout>
 	);
 }

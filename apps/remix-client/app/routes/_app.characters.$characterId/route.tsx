@@ -6,6 +6,7 @@ import { CharacterView } from "./character-view";
 import { createDrizzleForTurso, getFullCharacterData } from "@repo/db";
 import ky from "ky";
 import { extractParam } from "~/lib/zx-util";
+import { patch } from "~/lib/game-master";
 
 // This is for updating stuff, like name and bio.
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
@@ -14,12 +15,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	if (request.method === "PATCH") {
 		const bio = String(form.get("htmlContent"));
 		form.append("bio", bio);
-		const res = await ky.patch(
-			`${context.cloudflare.env.GAME_MASTER_URL}/characters/${characterId}`,
-			{
-				body: form,
-			},
-		);
+    const res = await patch(context, `characters/${characterId}`, form);
 
 		return json({ success: "sure" });
 	}

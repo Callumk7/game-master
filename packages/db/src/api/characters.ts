@@ -10,13 +10,16 @@ import { notesOnCharacters, notes } from "../db/schemas/notes";
 import { plotsOnCharacters } from "../db/schemas/plots";
 import { charactersInSessions } from "../db/schemas/sessions";
 import {
+	AllyInsert,
 	Character,
 	CharactersInFactionsInsert,
+	EnemyInsert,
 	MultiSelectString,
 	NoteInsert,
 } from "../types";
 import { LINK_INTENT } from "./util";
-import { handleLinkingByIntent } from "./generic";
+import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
+import { linkFactionsToNote } from "./notes";
 
 export const getFullCharacterData = async (db: DB, characterId: string) => {
 	const charResult = await db.query.characters.findFirst({
@@ -341,7 +344,7 @@ export const updateCharacter = async (
 ///
 /// Complete Update Functions
 ///
-export const handleCharacterLinking = async (
+export const handleBulkCharacterLinking = async (
 	db: DB,
 	characterId: string,
 	targetIds: MultiSelectString,
@@ -372,5 +375,21 @@ export const handleCharacterLinking = async (
 			link: linkPlotsToCharacter,
 			delete: deletePlotJoinsFromChar,
 		},
+	});
+};
+
+export const handleAddLinkToCharacter = async (
+	db: DB,
+	characterId: string,
+	targetId: string,
+	intent: LINK_INTENT,
+) => {
+	return await handleAddLinkToTargetByIntent(db, characterId, targetId, intent, {
+		allies: linkAlliesToChar,
+		enemies: linkEnemiesToChar,
+		factions: linkFactionsToCharacter,
+		sessions: linkSessionsToCharacter,
+		notes: linkNotesToCharacter,
+		plots: linkPlotsToCharacter,
 	});
 };
