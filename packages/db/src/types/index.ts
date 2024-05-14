@@ -15,6 +15,7 @@ import {
 	charactersInSessions,
 	factionsInSessions,
 	plotsInSessions,
+	locations,
 } from "../db/schemas";
 
 export * from "./http";
@@ -30,19 +31,27 @@ type AiMessage = {
 export type { AiMessage, AiMessageRole };
 
 // Custom Types
-export type EntityType = "characters" | "factions" | "plots" | "notes" | "sessions";
+export type EntityType =
+	| "characters"
+	| "factions"
+	| "plots"
+	| "notes"
+	| "sessions"
+	| "locations";
 export const EntityTypeSchema = z.enum([
 	"characters",
 	"factions",
 	"sessions",
 	"plots",
 	"notes",
+	"locations",
 ]);
 export type BasicEntity = { id: string; name: string };
 export type FilterableEntity = BasicEntity & {
 	characters: BasicEntity[];
 	factions: BasicEntity[];
 	sessions: BasicEntity[];
+	locations: BasicEntity[];
 };
 export const OptionalEntitySchema = z.array(z.string()).or(z.string()).optional();
 export type MultiSelectString = z.infer<typeof OptionalEntitySchema>;
@@ -112,6 +121,12 @@ export type NamedPlot = Plot & {
 	name: string;
 };
 export type PlotInsert = z.infer<typeof plotInsertSchema>;
+
+export const locationInsertSchema = createInsertSchema(locations);
+export const locationSelectSchema = createSelectSchema(locations);
+
+export type Location = z.infer<typeof locationSelectSchema>;
+export type LocationInsert = z.infer<typeof locationInsertSchema>;
 
 export const sessionInsertSchema = createInsertSchema(sessions);
 export const sessionSelectSchema = createSelectSchema(sessions);

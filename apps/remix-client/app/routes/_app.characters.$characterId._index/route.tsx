@@ -3,16 +3,15 @@ import { useCharacterRouteData } from "../_app.characters.$characterId/route";
 import { EditorPreview } from "~/components/editor-preview";
 import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
-import { ToggleButton } from "~/components/ui/toggle-button";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { PlusIcon } from "@radix-ui/react-icons";
-import { Form, useFetcher } from "@remix-run/react";
-import { TextField } from "~/components/ui/text-field";
+import { useFetcher } from "@remix-run/react";
 import ky from "ky";
 import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { zx } from "zodix";
 import { extractParam } from "~/lib/zx-util";
 import { z } from "zod";
+import { CharacterFactionCard } from "./components/faction-card";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const characterId = extractParam("characterId", params);
@@ -33,7 +32,6 @@ export default function CharacterIndex() {
 		initContent: characterData.bio,
 		action: `/characters/${characterData.id}`,
 	});
-	const fetcher = useFetcher();
 	return (
 		<div className="grid grid-cols-2 gap-4">
 			<div className="space-y-4">
@@ -59,15 +57,12 @@ export default function CharacterIndex() {
 					</div>
 					<div className="border border-grade-6 p-4 rounded-lg">
 						{characterData.factions.map((f) => (
-							<div key={f.factionId} className="p-2 flex flex-col gap-2">
-								<Header style="h4">{f.faction.name}</Header>
-								<Form method="put">
-									<TextField label="Role" name="role" />
-									<TextField label="Description" name="description" />
-									<input type="hidden" value={f.factionId} name="factionId" />
-									<Button type="submit">ok</Button>
-								</Form>
-							</div>
+							<CharacterFactionCard
+								faction={f.faction}
+								key={f.factionId}
+								role={f.role}
+								description={f.description}
+							/>
 						))}
 					</div>
 				</div>

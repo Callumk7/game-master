@@ -5,6 +5,7 @@ import { factions } from "./factions";
 import { notes, notesOnSessions } from "./notes";
 import { plots } from "./plots";
 import { users } from "./users";
+import { locations } from "./locations";
 
 export const sessions = sqliteTable("sessions", {
 	id: text("id").primaryKey().notNull(),
@@ -114,5 +115,27 @@ export const plotsInSessionsRelations = relations(plotsInSessions, ({ one }) => 
 	note: one(notes, {
 		fields: [plotsInSessions.noteId],
 		references: [notes.id],
+	}),
+}));
+
+export const locationsInSessions = sqliteTable(
+	"locations_in_sessions",
+	{
+		locationId: text("note_id").notNull(),
+		sessionId: text("session_id").notNull(),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.locationId, t.sessionId] }),
+	}),
+);
+
+export const locationsInSessionsRelations = relations(locationsInSessions, ({ one }) => ({
+	session: one(sessions, {
+		fields: [locationsInSessions.sessionId],
+		references: [sessions.id],
+	}),
+	location: one(locations, {
+		fields: [locationsInSessions.locationId],
+		references: [locations.id],
 	}),
 }));
