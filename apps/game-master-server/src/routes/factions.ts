@@ -65,6 +65,24 @@ factionsRoute.post("/", async (c) => {
 	return c.json(newFaction);
 });
 
+factionsRoute.patch("/:factionId", async (c) => {
+	const factionId = c.req.param("factionId");
+	const factionUpdateData = await zx.parseForm(
+		c.req.raw,
+		factionInsertSchema.partial(),
+	);
+	console.log(factionUpdateData);
+	const db = createDrizzleForTurso(c.env);
+	const updatedFaction = await db
+		.update(factions)
+		.set(factionUpdateData)
+		.where(eq(factions.id, factionId))
+		.returning();
+
+	console.log(updatedFaction);
+	return c.json(updatedFaction);
+});
+
 factionsRoute.post("/:factionId/links", async (c) => {
 	const { type } = c.req.query();
 	if (!type) {

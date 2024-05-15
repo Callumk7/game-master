@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { z } from "zod";
 import { zx } from "zodix";
 import FactionView from "./faction-view";
@@ -7,6 +7,7 @@ import { OptionalEntitySchema, createDrizzleForTurso } from "@repo/db";
 import { handleFactionLoader, handleUpdateFaction } from "./queries.server";
 import ky from "ky";
 import { validateUser } from "~/lib/auth";
+import { patch, post } from "~/lib/game-master";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -32,17 +33,27 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		return await handleUpdateFaction(db, factionId, request);
 	}
 	if (request.method === "POST") {
-		const { characterIds } = await zx.parseForm(request, {
-			characterIds: OptionalEntitySchema,
+		const { intent } = await zx.parseForm(request, {
+			intent: z.union([z.literal("leader"), z.literal("members")]),
 		});
-		const json = await ky
-			.post(`${context.cloudflare.env.GAME_MASTER_URL}/factions/${factionId}/members`, {
-				json: {
-					characterIds: characterIds,
-				},
-			})
-			.json();
-		return json;
+		if (intent === "members") {
+			const { characterIds } = await zx.parseForm(request, {
+				characterIds: OptionalEntitySchema,
+			});
+			const json = await ky
+				.post(`${context.cloudflare.env.GAME_MASTER_URL}/factions/${factionId}/members`, {
+					json: {
+						characterIds: characterIds,
+					},
+				})
+				.json();
+			return json;
+		}
+		if (intent === "leader") {
+			const form = await request.formData();
+			const res = await patch(context, `factions/${factionId}`, form);
+			return json(await res.json());
+		}
 	}
 
 	if (request.method === "DELETE") {

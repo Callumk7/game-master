@@ -20,8 +20,7 @@ export const handleFactionLoader = async (db: DB, userId: string, factionId: str
 		return redirect("/factions");
 	}
 
-	const allCharacters = await getAllUserCharacters(db, userId);
-	return typedjson({ faction, allCharacters });
+	return typedjson({ faction });
 };
 
 export const handleUpdateFaction = async (
