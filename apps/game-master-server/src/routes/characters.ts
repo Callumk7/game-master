@@ -6,6 +6,7 @@ import {
 	IntentSchema,
 	LinkIntentSchema,
 	OptionalEntitySchema,
+	badRequest,
 	characters,
 	charactersInsertSchema,
 	createDrizzleForTurso,
@@ -22,10 +23,17 @@ import { z } from "zod";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
-// ALL characters (not user specific)
+// User specific characters
 charactersRoute.get("/", async (c) => {
+	const { userId } = c.req.query();
+	if (!userId) {
+		return badRequest("No userId provided");
+	}
 	const db = createDrizzleForTurso(c.env);
-	const allCharacters = await db.select().from(characters);
+	const allCharacters = await db
+		.select()
+		.from(characters)
+		.where(eq(characters.userId, userId));
 	return c.json(allCharacters);
 });
 

@@ -30,6 +30,7 @@ import { NumberField } from "./ui/number-field";
 import { NewSessionForm } from "./forms/new-session";
 import { NewCharacterForm } from "./forms/new-character";
 import { NewFactionForm } from "./forms/new-faction";
+import { SearchField } from "./ui/search";
 
 interface SidebarProps {
 	isSidebarOpen: boolean;
@@ -81,7 +82,9 @@ export function Sidebar({
 					>
 						{folders.map((folder) => (
 							<div key={folder.id}>
-								<Header style="h5">{folder.name}</Header>
+								<Header style="h5" className="ml-1">
+									{folder.name}
+								</Header>
 								<EntityListBox type="notes" items={folder.notes} className="border-0" />
 							</div>
 						))}

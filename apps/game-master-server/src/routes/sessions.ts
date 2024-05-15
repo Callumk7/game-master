@@ -49,6 +49,22 @@ sessionsRoute.post("/", async (c) => {
 	return c.json(newSession);
 });
 
+sessionsRoute.patch("/:sessionId", async (c) => {
+	const sessionId = c.req.param("sessionId");
+	const db = createDrizzleForTurso(c.env);
+	const sessionUpdateData = await zx.parseForm(
+		c.req.raw,
+		sessionInsertSchema.partial(),
+	);
+	const updatedSession = await db
+		.update(sessions)
+		.set(sessionUpdateData)
+		.where(eq(sessions.id, sessionId))
+		.returning();
+
+	return c.json(updatedSession);
+});
+
 sessionsRoute.delete("/:sessionId", async (c) => {
 	const sessionId = c.req.param("sessionId");
 	const db = createDrizzleForTurso(c.env);

@@ -11,7 +11,7 @@ interface LinkProps extends AriaLinkProps, VariantProps<typeof styles> {}
 
 const styles = tv({
 	extend: focusRing,
-	base: "disabled:cursor-default rounded-lg font-semibold forced-colors:disabled:text-[GrayText] transition",
+	base: "disabled:cursor-default rounded-lg underline decoration-amber-10 forced-colors:disabled:text-[GrayText] transition",
 	variants: {
 		variant: {
 			primary: "text-jade-11 hover:text-jade-12",
@@ -19,9 +19,9 @@ const styles = tv({
 			note: "text-jade-9 hover:text-jade-11",
 		},
 		size: {
-			sm: "text-sm",
-			md: "text-md",
 			xs: "text-xs",
+			sm: "text-sm",
+			md: "text-base",
 		},
 		isActive: {
 			true: "text-grade-12 bg-grade-5",

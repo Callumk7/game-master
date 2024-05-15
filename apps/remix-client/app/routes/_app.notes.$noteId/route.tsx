@@ -12,15 +12,28 @@ import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
 import ky from "ky";
 import { extractParam } from "~/lib/zx-util";
-import { put } from "~/lib/game-master";
+import { post, put } from "~/lib/game-master";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+	const userId = await validateUser(request);
 	const noteId = extractParam("noteId", params);
-	const form = await request.formData();
 
 	// Handle linking entities to note
 	if (request.method === "PUT") {
+		const form = await request.formData();
 		const res = await put(context, `notes/${noteId}/links`, form);
+		return json(await res.json());
+	}
+
+	// Handle folder requests
+	if (request.method === "POST") {
+		const { folderName } = await zx.parseForm(request, { folderName: z.string() });
+		const form = await request.formData();
+		form.append("userId", userId);
+		form.append("name", folderName);
+		form.append("noteId", noteId);
+
+		const res = await post(context, "folders", form);
 		return json(await res.json());
 	}
 

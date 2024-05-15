@@ -5,6 +5,7 @@ import { factionsRoute } from "./routes/factions";
 import { notesRoute } from "./routes/notes";
 import { sessionsRoute } from "./routes/sessions";
 import { locationsRoute } from "./routes/locations";
+import { foldersRoute } from "./routes/folders";
 
 export type Bindings = {
 	TURSO_CONNECTION_URL: string;
@@ -25,5 +26,6 @@ app.route("/characters", charactersRoute);
 app.route("/factions", factionsRoute);
 app.route("/sessions", sessionsRoute);
 app.route("/locations", locationsRoute);
+app.route("/folders", foldersRoute);
 
 export default app;

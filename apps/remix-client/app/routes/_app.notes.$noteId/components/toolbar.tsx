@@ -44,7 +44,7 @@ export function EditNoteToolbar({
 						<fetcher.Form method="POST" className="flex gap-2 items-end">
 							<ComboBox
 								label="Select Folder"
-								name="folder"
+								name="folderName"
 								allowsCustomValue
 								items={folders}
 							>

@@ -67,7 +67,7 @@ export const foldersInsertSchema = createInsertSchema(folders);
 export const foldersSelectSchema = createSelectSchema(folders);
 
 export type Folder = z.infer<typeof foldersSelectSchema>;
-export type FolderInsert = z.infer<typeof notesInsertSchema>;
+export type FolderInsert = z.infer<typeof foldersInsertSchema>;
 
 export type NoteWithFolder = Note & {
 	folder: Folder | null;
