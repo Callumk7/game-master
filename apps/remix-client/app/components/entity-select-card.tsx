@@ -53,7 +53,7 @@ export function EntitySelectCard<T extends BasicEntity>({
 	const label = labelMap[intent];
 
 	const form = new FormData();
-	selectedEntities.forEach((e) => form.append("entity_id", e.toString()));
+	selectedEntities.forEach((e) => form.append("linkIds", e.toString()));
 	form.append("intent", intent);
 
 	const handleToggleSelectionMode = () => {

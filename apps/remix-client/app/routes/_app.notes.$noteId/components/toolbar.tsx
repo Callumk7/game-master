@@ -8,6 +8,7 @@ import { DialogTrigger } from "react-aria-components";
 import { Dialog } from "~/components/ui/dialog";
 import { ComboBox, ComboBoxItem } from "~/components/ui/combobox";
 import { BasicEntity } from "@repo/db";
+import { NoteLinksSlideOver } from "./links-slideover";
 
 interface EditNoteToolbarProps {
 	isEditing: boolean;
@@ -56,6 +57,7 @@ export function EditNoteToolbar({
 					</Dialog>
 				</Popover>
 			</DialogTrigger>
+			<NoteLinksSlideOver />
 		</Toolbar>
 	);
 }

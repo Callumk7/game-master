@@ -11,17 +11,20 @@ import { zx } from "zodix";
 import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
 import ky from "ky";
+import { extractParam } from "~/lib/zx-util";
+import { put } from "~/lib/game-master";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-	const { noteId } = zx.parseParams(params, { noteId: z.string() });
+	const noteId = extractParam("noteId", params);
+	const form = await request.formData();
 
-	if (request.method === "POST") {
-		const { characterId } = await zx.parseForm(request, { characterId: z.string() });
-		const res = await ky.post(
-			`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}/characters/${characterId}`,
-		);
+	// Handle linking entities to note
+	if (request.method === "PUT") {
+		const res = await put(context, `notes/${noteId}/links`, form);
+		return json(await res.json());
 	}
 
+	// Handle updating the note itself
 	if (request.method === "PATCH") {
 		const formData = await request.formData();
 		const res = await ky.patch(

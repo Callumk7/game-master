@@ -6,13 +6,8 @@ import { EditorPreview } from "~/components/editor-preview";
 import { INTENT } from "@repo/db";
 import { EditNoteToolbar } from "./components/toolbar";
 import { LinksAside } from "./components/links-aside";
-import { Form, useSubmit } from "@remix-run/react";
-import { Select, SelectItem } from "~/components/ui/select";
-import { useAppData } from "../_app/route";
-import { Button } from "~/components/ui/button";
 
 export default function NoteView() {
-	const { allCharacters } = useAppData();
 	const { noteData, folders } = useTypedLoaderData<typeof loader>();
 
 	const { editor, isEditing, setIsEditing } = useSyncEditor({
@@ -53,12 +48,6 @@ export default function NoteView() {
 					editor={editor}
 					htmlContent={noteData.htmlContent}
 				/>
-				<Form method="POST">
-					<Select name="characterId" items={allCharacters}>
-						{(item) => <SelectItem>{item.name}</SelectItem>}
-					</Select>
-					<Button type="submit">Add Character</Button>
-				</Form>
 			</div>
 			<LinksAside
 				characters={noteData.characters.map((c) => c.character)}

@@ -105,6 +105,19 @@ notesRoute.post("/:noteId/links", async (c) => {
 	return res;
 });
 
+// Put is for bulk updating
+notesRoute.put("/:noteId/links", async (c) => {
+	const noteId = c.req.param("noteId");
+
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		linkIds: OptionalEntitySchema,
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	return await handleBulkNoteLinking(db, noteId, linkIds, intent);
+});
+
 notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { intent, name, htmlContent } = await zx.parseForm(c.req.raw, updateNoteSchema);
