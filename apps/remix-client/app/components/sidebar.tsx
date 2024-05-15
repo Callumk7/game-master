@@ -26,11 +26,9 @@ import { TextField } from "./ui/text-field";
 import { AppToolbar } from "./app-toolbar";
 import { EntityListBox } from "./entity-listbox";
 import { Header } from "./typeography";
-import { NumberField } from "./ui/number-field";
 import { NewSessionForm } from "./forms/new-session";
 import { NewCharacterForm } from "./forms/new-character";
 import { NewFactionForm } from "./forms/new-faction";
-import { SearchField } from "./ui/search";
 
 interface SidebarProps {
 	isSidebarOpen: boolean;
@@ -82,14 +80,16 @@ export function Sidebar({
 					>
 						{folders.map((folder) => (
 							<div key={folder.id}>
-								<Header style="h5" className="ml-1">
+								<Header style="h5" className="ml-1" colour="muted">
 									{folder.name}
 								</Header>
 								<EntityListBox type="notes" items={folder.notes} className="border-0" />
 							</div>
 						))}
 						<div>
-							<Header style="h5">Unsorted</Header>
+							<Header style="h5" colour="muted">
+								Unsorted
+							</Header>
 							<EntityListBox type="notes" items={notes} className="border-0" />
 						</div>
 					</SidebarSection>

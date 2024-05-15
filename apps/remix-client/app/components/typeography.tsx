@@ -18,6 +18,7 @@ export const typeStyles = tv({
 			primary: "text-primary-12",
 			amber: "text-amber-12",
 			warning: "text-destructive-10",
+			muted: "text-grade-10",
 		},
 		link: {
 			primary: "text-primary-10 hover:text-primary-11",

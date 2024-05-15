@@ -37,8 +37,8 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 			intent: z.union([z.literal("leader"), z.literal("members")]),
 		});
 		if (intent === "members") {
-			const { characterIds } = await zx.parseForm(request, {
-				characterIds: OptionalEntitySchema,
+			const { characterId } = await zx.parseForm(request, {
+				characterId: OptionalEntitySchema,
 			});
 			const json = await ky
 				.post(`${context.cloudflare.env.GAME_MASTER_URL}/factions/${factionId}/members`, {
