@@ -18,7 +18,7 @@ import {
 } from "../db/schemas/sessions";
 import { LinkedNoteInsert, MultiSelectString } from "../types";
 import { LINK_INTENT, internalServerError, noContent } from "./util";
-import { handleLinkingByIntent } from "./generic";
+import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 	const allNotes = await db.query.notes.findMany({
@@ -470,5 +470,18 @@ export const handleBulkNoteLinking = async (
 			link: linkSessionsToNote,
 			delete: deleteSessionJoinsFromNote,
 		},
+	});
+};
+
+export const handleNoteLinking = async (
+	db: DB,
+	noteId: string,
+	targetId: string,
+	intent: LINK_INTENT,
+) => {
+	return await handleAddLinkToTargetByIntent(db, noteId, targetId, intent, {
+		characters: linkCharactersToNote,
+		factions: linkFactionsToNote,
+		sessions: linkSessionsToNote,
 	});
 };

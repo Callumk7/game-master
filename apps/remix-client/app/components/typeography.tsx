@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 import { VariantProps, tv } from "tailwind-variants";
 
 export const typeStyles = tv({
-	base: "text-grade-12",
 	variants: {
 		style: {
 			h1: "text-3xl font-bold mb-5",
@@ -14,11 +13,18 @@ export const typeStyles = tv({
 			label: "text-xs font-semibold text-grade-11",
 			prose: "prose prose-invert max-w-none",
 		},
+		colour: {
+			base: "text-grade-12",
+			primary: "text-primary-12",
+			amber: "text-amber-12",
+			warning: "text-destructive-10",
+		},
 		link: {
 			primary: "text-primary-10 hover:text-primary-11",
 		},
 	},
 	defaultVariants: {
+		colour: "base",
 		style: "h1",
 	},
 });
@@ -28,8 +34,8 @@ interface HeaderProps extends VariantProps<typeof typeStyles> {
 	className?: string;
 }
 
-export function Header({ className, style, children }: HeaderProps) {
-	return <h1 className={typeStyles({ className, style })}>{children}</h1>;
+export function Header({ className, style, colour, children }: HeaderProps) {
+	return <h1 className={typeStyles({ className, style, colour })}>{children}</h1>;
 }
 
 interface HeaderLinkProps extends HeaderProps {

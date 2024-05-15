@@ -1,6 +1,5 @@
 import { Header } from "./typeography";
 import { useSortTable } from "~/hooks/sort-table";
-import { Select, SelectItem } from "./ui/select";
 import { Toolbar } from "./ui/toolbar";
 import { EditorContent } from "@tiptap/react";
 import { useSyncEditor } from "~/hooks/sync-editor";
@@ -21,18 +20,8 @@ export function NotePage({ notes, entityId, entityType, action }: NotePageProps)
 	// TODO: Should make this sort hook more generic for use in all collections
 	const sort = useSortTable(notes);
 	return (
-		<div>
-			<Toolbar className="mb-5">
-				<Select
-					onSelectionChange={(k) =>
-						sort.handleSortChange({ column: k, direction: "descending" })
-					}
-				>
-					<SelectItem id={"name"}>Name</SelectItem>
-					<SelectItem id={"createdAt"}>Created At</SelectItem>
-				</Select>
-				<QuickNoteSlideOver action={action ?? "/notes/new"} />
-			</Toolbar>
+		<div className="space-y-4">
+			<QuickNoteSlideOver action={action} />
 			<div className="border border-grade-6 rounded-lg p-4">
 				{sort.sortedItems.map((note) => (
 					<NoteBlock
@@ -70,7 +59,9 @@ export function NoteBlock({ note, entityId, entityType }: NoteBlockProps) {
 			<span className="text-sm font-light italic text-grade-9">
 				{note.createdAt.toLocaleString("gmt")}
 			</span>
-			<Header style="h3">{note.name}</Header>
+			<Header style="h3" colour="amber">
+				{note.name}
+			</Header>
 			{isEditing ? (
 				<EditorContent editor={editor} />
 			) : (

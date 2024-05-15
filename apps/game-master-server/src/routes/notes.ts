@@ -7,10 +7,13 @@ import {
 	Note,
 	NoteInsert,
 	OptionalEntitySchema,
+	badRequest,
 	createDrizzleForTurso,
 	getNote,
 	getNoteAndLinkedEntities,
+	handleAddLinkToTargetByIntent,
 	handleBulkNoteLinking,
+	handleNoteLinking,
 	linkCharactersToNote,
 	notes,
 	notesInsertSchema,
@@ -43,50 +46,37 @@ notesRoute.get("/:id", async (c) => {
 	return c.json(note);
 });
 
-// accepts formData, forwarded from remix. We have additional data based on
-// if this is being linked to something straight away.
 notesRoute.post("/", async (c) => {
-	console.log("start of the note creation route");
-	const result = await zx.parseFormSafe(
+	const newNoteData = await zx.parseForm(
 		c.req.raw,
-		notesInsertSchema.omit({ id: true }).extend({
-			links: zx.BoolAsString.optional(),
-			linkIds: OptionalEntitySchema,
-			intent: LinkIntentSchema.optional(),
-		}),
+		notesInsertSchema
+			.omit({ id: true })
+			.extend({ link: z.string().optional(), intent: LinkIntentSchema.optional() }),
 	);
 
-	if (!result.success) {
-		console.log(result.error);
-		throw internalServerError();
-	}
+	const newNoteInsert: NoteInsert = {
+		id: `note_${uuidv4()}`,
+		...newNoteData,
+	};
 
-	const { data } = result;
-
-	let newNote: Note;
 	const db = createDrizzleForTurso(c.env);
+	const newNote = await db
+		.insert(notes)
+		.values(newNoteInsert)
+		.returning()
+		.then((row) => row[0]);
 
-	try {
-		const noteInsert: NoteInsert = {
-			id: `note_${uuidv4()}`,
-			...data,
-		};
-		newNote = await db
-			.insert(notes)
-			.values(noteInsert)
-			.returning()
-			.then((result) => result[0]);
-	} catch (err) {
-		if (err instanceof z.ZodError) {
-			console.log("Invalid Data", err.errors);
-		} else {
-			console.log("Unknown Error", err);
+	if (newNoteData.link) {
+		if (!newNoteData.intent) {
+			return badRequest("Missing link intent.");
 		}
-		throw internalServerError();
-	}
 
-	if (data.links) {
-		await handleBulkNoteLinking(db, newNote.id, data.linkIds, data.intent!);
+		return await handleNoteLinking(
+			db,
+			newNote.id,
+			newNoteData.link,
+			newNoteData.intent,
+		);
 	}
 
 	return c.json(newNote);

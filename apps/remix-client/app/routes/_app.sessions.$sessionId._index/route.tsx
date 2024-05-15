@@ -37,13 +37,12 @@ function PinnedNote({ pinnedNoteId }: { pinnedNoteId: string | null }) {
 	const note = allNotes.find((note) => note.id === pinnedNoteId);
 	if (!note) {
 		return (
-			<div>
-				<p>No note, pin note now</p>
-				<Form method="POST">
-					<Select name="pinnedNoteId" items={allNotes}>
+			<div className="max-w-md">
+				<Form method="POST" className="flex gap-2 items-center">
+					<Select name="pinnedNoteId" items={allNotes} placeholder="Select a note to pin">
 						{(item) => <SelectItem>{item.name}</SelectItem>}
 					</Select>
-					<Button type="submit" size="icon">
+					<Button type="submit" size="icon-sm">
 						<SewingPinIcon />
 					</Button>
 				</Form>

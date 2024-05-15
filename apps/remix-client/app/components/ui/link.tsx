@@ -51,7 +51,7 @@ export function Link(props: LinkProps) {
 
 const navStyles = tv({
 	extend: focusRing,
-	base: "disabled:cursor-default px-3 py-1 rounded-lg font-semibold forced-colors:disabled:text-[GrayText] transition",
+	base: "disabled:cursor-default px-3 py-1 rounded-lg underline decoration-amber-10 forced-colors:disabled:text-[GrayText] transition",
 	variants: {
 		variant: {
 			primary: "text-jade-11 hover:text-jade-12",
@@ -66,7 +66,7 @@ const navStyles = tv({
 			xs: "text-xs",
 		},
 		isActive: {
-			true: "text-grade-12 bg-grade-5",
+			true: "text-amber-12 bg-amber-5 no-underline border-amber-7",
 		},
 	},
 	defaultVariants: {
