@@ -4,8 +4,8 @@ import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { validateUser } from "~/lib/auth";
 import { zx } from "zodix";
 import { z } from "zod";
-import { GameMaster } from "~/lib/game-master";
 import { LINK_INTENT } from "@repo/db";
+import { post } from "~/lib/game-master";
 
 // formData shape...
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
@@ -16,8 +16,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	form.append("links", "true");
 	form.append("intent", LINK_INTENT.CHARACTERS);
 	form.append("linkIds", characterId);
-	const gameMaster = GameMaster.create(context);
-	const res = await gameMaster.post("notes", form);
+	const res = await post(context, "notes", form);
 	return await res.json();
 };
 

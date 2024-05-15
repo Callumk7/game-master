@@ -1,3 +1,6 @@
+name = "game-master-remix-client"
+pages_build_output_dir = "./build/client"
+
 [vars]
 TURSO_CONNECTION_URL = "libsql://ai-notes-prod-callumk7.turso.io"
 GAME_MASTER_URL = "http://localhost:8787"
