@@ -2,18 +2,24 @@ import { Hono } from "hono";
 import type { Bindings } from "..";
 import {
 	CharacterInsert,
+	DB,
 	INTENT,
 	IntentSchema,
 	LinkIntentSchema,
 	OptionalEntitySchema,
 	badRequest,
 	characters,
+	charactersInFactions,
+	charactersInSessions,
 	charactersInsertSchema,
 	createDrizzleForTurso,
 	getFullCharacterData,
 	handleAddLinkToCharacter,
 	handleBulkCharacterLinking,
 	linkFactionsToCharacter,
+	noContent,
+	notesOnCharacters,
+	plotsOnCharacters,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
@@ -155,4 +161,23 @@ charactersRoute.get("/:characterId/sessions", async (c) => {
 	const characterSessions = await getCharacterSessions(db, characterId);
 
 	return c.json(characterSessions);
+});
+
+charactersRoute.delete("/:characterId", async (c) => {
+	const characterId = c.req.param("characterId");
+
+	const db = createDrizzleForTurso(c.env);
+	const r1 = db.delete(characters).where(eq(characters.id, characterId));
+	const r2 = db
+		.delete(charactersInFactions)
+		.where(eq(charactersInFactions.characterId, characterId));
+	const r3 = db
+		.delete(charactersInSessions)
+		.where(eq(charactersInSessions, characterId));
+	const r4 = db.delete(plotsOnCharacters).where(eq(plotsOnCharacters, characterId));
+	const r5 = db.delete(notesOnCharacters).where(eq(notesOnCharacters, characterId));
+
+	await Promise.all([r1, r2, r3, r4, r5]);
+
+	return noContent();
 });

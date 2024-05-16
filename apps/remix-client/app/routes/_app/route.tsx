@@ -30,6 +30,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 		allFactions,
 		allPlots,
 		allSessions,
+		allRaces,
 	} = await getAllUserEntities(db, userId);
 
 	const error = session.get("error") || null;
@@ -45,6 +46,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 			allFactions,
 			allPlots,
 			allSessions,
+			allRaces,
 		},
 		{
 			headers: {

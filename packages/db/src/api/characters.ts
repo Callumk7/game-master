@@ -85,7 +85,14 @@ export const getFullCharacterData = async (db: DB, characterId: string) => {
 export const getAllUserCharacters = async (db: DB, userId: string) => {
 	const allCharacters = await db.query.characters.findMany({
 		where: eq(characters.userId, userId),
-		with: { race: true, factions: { with: { faction: true } } },
+		with: {
+			race: true,
+			factions: {
+				with: {
+					faction: true,
+				},
+			},
+		},
 	});
 
 	return allCharacters;

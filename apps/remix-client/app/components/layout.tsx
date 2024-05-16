@@ -93,6 +93,7 @@ interface EntityHeaderProps {
 	children?: ReactNode;
 	updateTitleMethod?: FormMethod;
 	updateTitleAction?: string;
+	menu?: ReactNode;
 }
 
 /**
@@ -104,23 +105,27 @@ export function EntityHeader({
 	children,
 	updateTitleMethod,
 	updateTitleAction,
+	menu,
 }: EntityHeaderProps) {
 	return (
 		<div className="flex flex-col gap-3">
-			<EditableText
-				fieldName={"name"}
-				value={title}
-				inputClassName={
-					"text-3xl font-bold mb-5 focus:outline-none bg-inherit text-grade-12"
-				}
-				inputLabel={"note name input"}
-				buttonClassName={"text-3xl font-bold mb-5 text-left"}
-				buttonLabel={"note name button"}
-				method={updateTitleMethod ? updateTitleMethod : "patch"}
-				action={updateTitleAction}
-			>
-				<input type="hidden" name="intent" value={INTENT.UPDATE_NAME} />
-			</EditableText>
+			<div className="flex gap-4 items-baseline">
+				<EditableText
+					fieldName={"name"}
+					value={title}
+					inputClassName={
+						"text-3xl font-bold mb-5 focus:outline-none bg-inherit text-grade-12"
+					}
+					inputLabel={"note name input"}
+					buttonClassName={"text-3xl font-bold mb-5 text-left"}
+					buttonLabel={"note name button"}
+					method={updateTitleMethod ? updateTitleMethod : "patch"}
+					action={updateTitleAction}
+				>
+					<input type="hidden" name="intent" value={INTENT.UPDATE_NAME} />
+				</EditableText>
+				{menu}
+			</div>
 			{children}
 		</div>
 	);

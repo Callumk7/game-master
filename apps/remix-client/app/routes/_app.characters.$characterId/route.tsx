@@ -15,7 +15,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	if (request.method === "PATCH") {
 		const bio = String(form.get("htmlContent"));
 		form.append("bio", bio);
-    const res = await patch(context, `characters/${characterId}`, form);
+		const res = await patch(context, `characters/${characterId}`, form);
 
 		return json({ success: "sure" });
 	}

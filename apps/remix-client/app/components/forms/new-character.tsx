@@ -1,6 +1,8 @@
 import { Form } from "@remix-run/react";
 import { TextField } from "../ui/text-field";
 import { Button } from "../ui/button";
+import { useAppData } from "~/routes/_app/route";
+import { ComboBox, ComboBoxItem } from "../ui/combobox";
 
 interface NewCharacterFormProps {
 	action?: string;
@@ -16,8 +18,17 @@ export function NewCharacterForm({ action, close }: NewCharacterFormProps) {
 			onSubmit={close ? () => close() : undefined}
 		>
 			<TextField name="name" label="Character Name" />
-			<TextField name="raceId" label="Race" />
+			<RaceComboBox name="race" />
 			<Button type="submit">Submit</Button>
 		</Form>
+	);
+}
+
+function RaceComboBox({ name }: { name: string }) {
+	const { allRaces } = useAppData();
+	return (
+		<ComboBox items={allRaces} allowsCustomValue name={name}>
+			{(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
+		</ComboBox>
 	);
 }

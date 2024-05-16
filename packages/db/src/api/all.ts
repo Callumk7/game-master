@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { DB } from "../db";
-import { characters } from "../db/schemas/characters";
+import { characters, races } from "../db/schemas/characters";
 import { factions } from "../db/schemas/factions";
 import { notes, folders } from "../db/schemas/notes";
 import { plots } from "../db/schemas/plots";
@@ -34,16 +34,25 @@ export const getAllUserEntities = async (db: DB, userId: string) => {
 		.select()
 		.from(sessions)
 		.where(eq(sessions.userId, userId));
+	const allRacesPromise = db.select().from(races).where(eq(races.userId, userId));
 
-	const [unsortedNotes, allFolders, allCharacters, allFactions, allPlots, allSessions] =
-		await Promise.all([
-			unsortedNotesPromise,
-			allFoldersPromise,
-			allCharactersPromise,
-			allFactionsPromise,
-			allPlotsPromise,
-			allSessionsPromise,
-		]);
+	const [
+		unsortedNotes,
+		allFolders,
+		allCharacters,
+		allFactions,
+		allPlots,
+		allSessions,
+		allRaces,
+	] = await Promise.all([
+		unsortedNotesPromise,
+		allFoldersPromise,
+		allCharactersPromise,
+		allFactionsPromise,
+		allPlotsPromise,
+		allSessionsPromise,
+		allRacesPromise,
+	]);
 
 	const allNotes = unsortedNotes.concat(allFolders.flatMap((folder) => folder.notes));
 
@@ -55,5 +64,6 @@ export const getAllUserEntities = async (db: DB, userId: string) => {
 		allFactions,
 		allPlots,
 		allSessions,
+		allRaces,
 	};
 };

@@ -1,12 +1,18 @@
 import { TrashIcon } from "@radix-ui/react-icons";
-import { LoaderFunctionArgs, json } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { useSubmit } from "@remix-run/react";
 import {
 	CharacterWithRaceAndFactions,
 	createDrizzleForTurso,
 	getAllUserCharacters,
+	internalServerError,
+	methodNotAllowed,
 } from "@repo/db";
+import ky from "ky";
 import { Group, TableBody } from "react-aria-components";
+import { typedjson, useTypedActionData, useTypedLoaderData } from "remix-typedjson";
+import { z } from "zod";
+import { zx } from "zodix";
 import { EntityFilter } from "~/components/entity-filter";
 import { Header } from "~/components/typeography";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
@@ -22,18 +28,18 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const db = createDrizzleForTurso(context.cloudflare.env);
 
 	const allCharacters = await getAllUserCharacters(db, userId);
-	console.log({ allCharacters });
 
-	return json({ allCharacters });
+	return typedjson({ allCharacters });
 };
 
 export default function CharacterIndex() {
-	const { allCharacters } = useLoaderData<typeof loader>();
+	const { allCharacters } = useTypedLoaderData<typeof loader>();
 	const filterSource = allCharacters.map((char) => ({
 		...char,
 		characters: [],
 		factions: char.factions.map((f) => f.faction),
 		sessions: [],
+		locations: [],
 	}));
 	const filter = useFilterByRelation(filterSource);
 	const factionList = allCharacters.flatMap((note) =>
@@ -67,6 +73,7 @@ interface CharacterTableProps {
 
 function CharacterTable({ characters }: CharacterTableProps) {
 	const sort = useSortTable(characters, "name");
+	const submit = useSubmit();
 	return (
 		<Table
 			className={"w-full"}
@@ -105,7 +112,15 @@ function CharacterTable({ characters }: CharacterTableProps) {
 						<Cell>
 							<Toolbar>
 								<Group aria-label="manage">
-									<Button variant="ghost">
+									<Button
+										variant="ghost"
+										onPress={() =>
+											submit(
+												{ characterId: char.id },
+												{ method: "DELETE", action: "/characters" },
+											)
+										}
+									>
 										<TrashIcon />
 									</Button>
 								</Group>

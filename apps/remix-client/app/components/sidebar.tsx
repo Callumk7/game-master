@@ -52,7 +52,7 @@ export function Sidebar({
 }: SidebarProps) {
 	const plotsWithName = plots.filter((plot): plot is NamedPlot => plot.name !== null);
 	return (
-		<div className="fixed min-w-[15vw] max-w-56 h-full min-h-screen max-h-screen pt-4 bg-grade-1 border-r border-grade-5">
+		<div className="bg-primary-1 fixed min-w-[15vw] max-w-56 h-full min-h-screen max-h-screen pt-4 border-r border-grade-5">
 			<ScrollArea className="h-full">
 				<AppToolbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 				<div className="p-2 border-b border-grade-6 space-y-4">

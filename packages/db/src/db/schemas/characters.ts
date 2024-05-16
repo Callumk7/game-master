@@ -43,13 +43,18 @@ export const charactersRelations = relations(characters, ({ one, many }) => ({
 }));
 
 export const races = sqliteTable("races", {
+	userId: text("user_id").notNull(),
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	description: text("description"),
 });
 
-export const racesRelations = relations(races, ({ many }) => ({
+export const racesRelations = relations(races, ({ one, many }) => ({
 	characters: many(characters),
+	user: one(users, {
+		fields: [races.userId],
+		references: [users.id],
+	}),
 }));
 
 export const allies = sqliteTable(

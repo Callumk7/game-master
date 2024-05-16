@@ -4,7 +4,7 @@ import { EditorPreview } from "~/components/editor-preview";
 import { Header, HeaderLink } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useSyncEditor } from "~/hooks/sync-editor";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, PlusCircledIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { Card } from "~/components/card";
@@ -39,10 +39,10 @@ export default function CharacterIndex() {
 	return (
 		<div className="grid grid-cols-3 gap-4">
 			<div className="space-y-4 col-span-2">
-				<div className="flex gap-x-4 items-center">
+				<div className="flex gap-x-6 items-center">
 					<Header style="h2">Character Bio</Header>
-					<Button variant="secondary" onPress={() => setIsEditing(!isEditing)}>
-						{isEditing ? "Save" : "Edit"}
+					<Button variant="ghost" onPress={() => setIsEditing(!isEditing)} size="icon-sm">
+						{isEditing ? <TriangleUpIcon /> : <Pencil1Icon />}
 					</Button>
 				</div>
 				<EditorPreview
