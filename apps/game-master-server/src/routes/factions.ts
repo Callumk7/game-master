@@ -9,6 +9,7 @@ import {
 	charactersInFactions,
 	charactersInFactionsInsertSchema,
 	createDrizzleForTurso,
+	createFaction,
 	deleteCharactersFromFaction,
 	factionInsertSchema,
 	factions,
@@ -40,7 +41,7 @@ factionsRoute.post("/", async (c) => {
 	};
 
 	const db = createDrizzleForTurso(c.env);
-	const newFaction = await db.insert(factions).values(newFactionInsert).returning();
+	const newFaction = await createFaction(db, newFactionInsert);
 
 	// Can also link the new entity to the origin request
 	const link = c.req.query("link");
@@ -54,7 +55,7 @@ factionsRoute.post("/", async (c) => {
 			case "characters":
 				await db
 					.insert(charactersInFactions)
-					.values({ characterId: link, factionId: newFaction[0].id });
+					.values({ characterId: link, factionId: newFaction.id });
 				break;
 
 			default:

@@ -84,9 +84,9 @@ export type LinkedNoteInsert = z.infer<typeof linkedNotesInsertSchema>;
 
 export const charactersInsertSchema = createInsertSchema(characters);
 export const createCharacterRequest = charactersInsertSchema.omit({ id: true });
-export const characersSelectSchema = createSelectSchema(characters);
+export const charactersSelectSchema = createSelectSchema(characters);
 
-export type Character = z.infer<typeof characersSelectSchema>;
+export type Character = z.infer<typeof charactersSelectSchema>;
 export type CharacterInsert = z.infer<typeof charactersInsertSchema>;
 
 export const racesInsertSchema = createInsertSchema(races);
@@ -168,3 +168,38 @@ export type CompleteNote = Note & {
 export type SessionWithCompleteNotes = Session & {
 	notes: CompleteNote[];
 };
+
+// Custom Zod schemas
+export const allUserDataSchema = z.object({
+	allNotes: z.array(
+		notesSelectSchema.extend({
+			createdAt: z.coerce.date(),
+			updatedAt: z.coerce.date(),
+		}),
+	),
+	unsortedNotes: z.array(
+		notesSelectSchema.extend({
+			createdAt: z.coerce.date(),
+			updatedAt: z.coerce.date(),
+		}),
+	),
+	allFolders: z.array(
+		foldersSelectSchema.extend({
+			createdAt: z.coerce.date(),
+			updatedAt: z.coerce.date(),
+			notes: z.array(
+				notesSelectSchema.extend({
+					createdAt: z.coerce.date(),
+					updatedAt: z.coerce.date(),
+				}),
+			),
+		}),
+	),
+	allCharacters: z.array(charactersSelectSchema),
+	allFactions: z.array(factionSelectSchema),
+	allPlots: z.array(plotSelectSchema),
+	allSessions: z.array(sessionSelectSchema),
+	allRaces: z.array(racesSelectSchema),
+});
+
+export type AllUserData = z.infer<typeof allUserDataSchema>;

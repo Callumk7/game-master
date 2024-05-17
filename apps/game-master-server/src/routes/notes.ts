@@ -8,6 +8,7 @@ import {
 	OptionalEntitySchema,
 	badRequest,
 	createDrizzleForTurso,
+	createNoteFromInsert,
 	getNote,
 	getNoteAndLinkedEntities,
 	handleBulkNoteLinking,
@@ -54,19 +55,13 @@ notesRoute.post("/", async (c) => {
 			.omit({ id: true }),
 	);
 
-	console.log(newNoteData);
-
 	const newNoteInsert: NoteInsert = {
 		id: `note_${uuidv4()}`,
 		...newNoteData,
 	};
 
 	const db = createDrizzleForTurso(c.env);
-	const newNote = await db
-		.insert(notes)
-		.values(newNoteInsert)
-		.returning()
-		.then((row) => row[0]);
+	const newNote = await createNoteFromInsert(db, newNoteInsert);
 
 	if (newNoteData.linkId) {
 		if (!newNoteData.intent) {

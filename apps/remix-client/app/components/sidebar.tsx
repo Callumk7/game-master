@@ -35,7 +35,6 @@ interface SidebarProps {
 	setIsSidebarOpen: (isOpen: boolean) => void;
 	characters: Character[];
 	factions: Faction[];
-	plots: Plot[];
 	notes: Note[];
 	folders: FolderWithNotes[];
 	sessions: Session[];
@@ -50,7 +49,6 @@ export function Sidebar({
 	plots,
 	sessions,
 }: SidebarProps) {
-	const plotsWithName = plots.filter((plot): plot is NamedPlot => plot.name !== null);
 	return (
 		<div className="bg-primary-1 fixed min-w-[15vw] max-w-56 h-full min-h-screen max-h-screen pt-4 border-r border-grade-5">
 			<ScrollArea className="h-full">

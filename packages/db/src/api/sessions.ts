@@ -103,7 +103,7 @@ export const createSession = async (db: DB, sessionInsert: SessionInsert) => {
 		.insert(sessions)
 		.values(sessionInsert)
 		.returning()
-		.then((result) => result[0]);
+		.then((row) => row[0]);
 };
 
 export const deleteSession = async (db: DB, sessionId: string) => {

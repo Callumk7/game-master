@@ -1,4 +1,5 @@
 import { INTENT, IntentSchema } from "@repo/db";
+import { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { z } from "zod";
@@ -43,3 +44,16 @@ export function internalServerError() {
 		message: ReasonPhrases.INTERNAL_SERVER_ERROR,
 	});
 }
+export function badRequestExeption(message: string) {
+	return new HTTPException(StatusCodes.BAD_REQUEST, {
+		message,
+	});
+}
+
+export const getUserIdQueryParam = (c: Context) => {
+	const { userId } = c.req.query();
+	if (!userId) {
+		throw badRequestExeption("No userId query string provided.");
+	}
+	return userId;
+};

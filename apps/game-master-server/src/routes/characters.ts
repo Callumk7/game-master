@@ -11,6 +11,7 @@ import {
 	charactersInFactions,
 	charactersInSessions,
 	charactersInsertSchema,
+	createCharacter,
 	createDrizzleForTurso,
 	getAllUserCharacters,
 	getFullCharacterData,
@@ -75,7 +76,7 @@ charactersRoute.post("/", async (c) => {
 		...newCharBody,
 	};
 
-	const newChar = await db.insert(characters).values(characterInsert).returning();
+	const newChar = await createCharacter(db, characterInsert);
 	return c.json(newChar);
 });
 

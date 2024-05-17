@@ -12,6 +12,7 @@ import { charactersInSessions } from "../db/schemas/sessions";
 import {
 	AllyInsert,
 	Character,
+	CharacterInsert,
 	CharacterWithRaceAndFactions,
 	CharactersInFactionsInsert,
 	EnemyInsert,
@@ -105,6 +106,11 @@ export const getAllUserCharacters = async (
 		...character,
 		factions: character.factions.map((faction) => faction.faction),
 	}));
+};
+
+export const createCharacter = async (db: DB, characterInsert: CharacterInsert) => {
+	const newChar = await db.insert(characters).values(characterInsert).returning();
+	return newChar[0];
 };
 
 ///

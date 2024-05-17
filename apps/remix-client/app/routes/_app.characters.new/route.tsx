@@ -6,6 +6,7 @@ import { post } from "~/lib/game-master";
 import { objectToFormData } from "~/lib/obj-to-form";
 import { BasicEntity, createDrizzleForTurso } from "@repo/db";
 import { getRaceId } from "./queries.server";
+import { redirect } from "remix-typedjson";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -21,9 +22,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 			userId,
 		});
 		// TODO: type the responses from the server
-		const res = (await post(context, "races", raceForm).then((res) =>
-			res.json(),
-		)) as BasicEntity;
+		const res = (await (await post(context, "races", raceForm)).json()) as BasicEntity;
 		const raceId = res.id;
 		form.append("raceId", raceId);
 	} else {
@@ -32,8 +31,9 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 	form.append("userId", userId);
 
-	const res = await post(context, "characters", form);
-	return json({ character: await res.json() });
+	// TODO: this is a little weird
+	const res = (await (await post(context, "characters", form)).json()) as BasicEntity;
+	return redirect(`/characters/${res.id}`);
 };
 
 export default function NewCharacterRoute() {

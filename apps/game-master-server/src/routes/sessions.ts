@@ -18,7 +18,6 @@ import {
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerError } from "~/utils";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const sessionsRoute = new Hono<{ Bindings: Bindings }>();

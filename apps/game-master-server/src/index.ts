@@ -8,6 +8,8 @@ import { locationsRoute } from "./routes/locations";
 import { notesRoute } from "./routes/notes";
 import { racesRoute } from "./routes/races";
 import { sessionsRoute } from "./routes/sessions";
+import { badRequest, createDrizzleForTurso, getAllUserEntities } from "@repo/db";
+import { getUserIdQueryParam } from "./utils";
 
 export type Bindings = {
 	TURSO_CONNECTION_URL: string;
@@ -23,8 +25,12 @@ app.use(async (c, next) => {
 	await auth(c, next);
 });
 
-app.get("/", (c) => {
-	return c.text("YOU DID IT");
+// All user entities
+app.get("/", async (c) => {
+	const userId = getUserIdQueryParam(c);
+	const db = createDrizzleForTurso(c.env);
+	const userData = await getAllUserEntities(db, userId);
+	return c.json(userData);
 });
 
 app.route("/notes", notesRoute);

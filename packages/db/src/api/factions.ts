@@ -5,7 +5,7 @@ import { factions } from "../db/schemas/factions";
 import { notesOnFactions } from "../db/schemas/notes";
 import { plotsOnFactions } from "../db/schemas/plots";
 import { factionsInSessions } from "../db/schemas/sessions";
-import type { Faction, MultiSelectString } from "../types";
+import type { Faction, FactionInsert, MultiSelectString } from "../types";
 import { LINK_INTENT } from "./util";
 import { handleLinkingByIntent } from "./generic";
 
@@ -43,6 +43,11 @@ export const getFaction = async (db: DB, factionId: string) => {
 			},
 		},
 	});
+};
+
+export const createFaction = async (db: DB, factionInsert: FactionInsert) => {
+	const newFaction = await db.insert(factions).values(factionInsert).returning();
+	return newFaction[0];
 };
 
 ///

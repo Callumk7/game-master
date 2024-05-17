@@ -1,11 +1,13 @@
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { Outlet } from "@remix-run/react";
-import { createDrizzleForTurso, getAllUserEntities } from "@repo/db";
+import { allUserDataSchema, createDrizzleForTurso, getAllUserEntities } from "@repo/db";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { MainContainer, SidebarLayout } from "~/components/layout";
 import { Sidebar } from "~/components/sidebar";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
+import { createApi } from "~/lib/game-master";
+import { getAllUserData } from "./queries.server";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -20,18 +22,8 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const session = await validateUserSession(request);
 	const userId = getUserId(session);
-	const db = createDrizzleForTurso(context.cloudflare.env);
 
-	const {
-		allNotes,
-		unsortedNotes,
-		allFolders,
-		allCharacters,
-		allFactions,
-		allPlots,
-		allSessions,
-		allRaces,
-	} = await getAllUserEntities(db, userId);
+	const userData = await getAllUserData(userId, context);
 
 	const error = session.get("error") || null;
 
@@ -39,14 +31,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 		{
 			userId,
 			error,
-			allNotes,
-			unsortedNotes,
-			allFolders,
-			allCharacters,
-			allFactions,
-			allPlots,
-			allSessions,
-			allRaces,
+			...userData,
 		},
 		{
 			headers: {

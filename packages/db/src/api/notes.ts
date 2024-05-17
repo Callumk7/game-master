@@ -16,7 +16,7 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { LinkedNoteInsert, MultiSelectString } from "../types";
+import { LinkedNoteInsert, MultiSelectString, NoteInsert } from "../types";
 import { LINK_INTENT, internalServerError, noContent } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
@@ -125,6 +125,14 @@ export const createNote = async (
 		})
 		.returning();
 	return newNote[0];
+};
+
+export const createNoteFromInsert = async (db: DB, noteInsert: NoteInsert) => {
+	return await db
+		.insert(notes)
+		.values(noteInsert)
+		.returning()
+		.then((row) => row[0]);
 };
 
 // PUT

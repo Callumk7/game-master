@@ -2,14 +2,17 @@ import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
 import { validateUser } from "~/lib/auth";
 import { NewNoteView } from "./new-note-view";
 import { post } from "~/lib/game-master";
+import { BasicEntity } from "@repo/db";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
 	const form = await request.formData();
 	form.append("userId", userId);
 
-	const res = await post(context, "notes", form);
-	return json(await res.json());
+	const res = (await post(context, "notes", form).then((result) =>
+		result.json(),
+	)) as BasicEntity;
+	return redirect(`/notes/${res.id}`);
 };
 
 export { NewNoteView as default };
