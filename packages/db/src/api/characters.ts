@@ -19,7 +19,6 @@ import {
 } from "../types";
 import { LINK_INTENT } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
-import { linkFactionsToNote } from "./notes";
 
 export const getFullCharacterData = async (db: DB, characterId: string) => {
 	const charResult = await db.query.characters.findFirst({

@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import type { Bindings } from "..";
 import {
 	CharacterInsert,
-	DB,
 	INTENT,
 	IntentSchema,
 	LinkIntentSchema,

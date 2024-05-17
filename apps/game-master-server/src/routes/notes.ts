@@ -4,14 +4,12 @@ import { z } from "zod";
 import {
 	INTENT,
 	LinkIntentSchema,
-	Note,
 	NoteInsert,
 	OptionalEntitySchema,
 	badRequest,
 	createDrizzleForTurso,
 	getNote,
 	getNoteAndLinkedEntities,
-	handleAddLinkToTargetByIntent,
 	handleBulkNoteLinking,
 	handleNoteLinking,
 	linkCharactersToNote,
@@ -21,7 +19,6 @@ import {
 	updateNoteName,
 	updateNoteSchema,
 } from "@repo/db";
-import { internalServerError } from "~/utils";
 import { StatusCodes } from "http-status-codes";
 import { zx } from "zodix";
 import { uuidv4 } from "callum-util";
@@ -50,9 +47,14 @@ notesRoute.post("/", async (c) => {
 	const newNoteData = await zx.parseForm(
 		c.req.raw,
 		notesInsertSchema
-			.omit({ id: true })
-			.extend({ link: z.string().optional(), intent: LinkIntentSchema.optional() }),
+			.extend({
+				linkId: z.string().optional(),
+				intent: LinkIntentSchema.optional(),
+			})
+			.omit({ id: true }),
 	);
+
+	console.log(newNoteData);
 
 	const newNoteInsert: NoteInsert = {
 		id: `note_${uuidv4()}`,
@@ -66,7 +68,7 @@ notesRoute.post("/", async (c) => {
 		.returning()
 		.then((row) => row[0]);
 
-	if (newNoteData.link) {
+	if (newNoteData.linkId) {
 		if (!newNoteData.intent) {
 			return badRequest("Missing link intent.");
 		}
@@ -74,7 +76,7 @@ notesRoute.post("/", async (c) => {
 		return await handleNoteLinking(
 			db,
 			newNote.id,
-			newNoteData.link,
+			newNoteData.linkId,
 			newNoteData.intent,
 		);
 	}

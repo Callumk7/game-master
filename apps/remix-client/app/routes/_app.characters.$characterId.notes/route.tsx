@@ -13,9 +13,9 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	const { characterId } = zx.parseParams(params, { characterId: z.string() });
 	const form = await request.formData();
 	form.append("userId", userId);
-	form.append("links", "true");
 	form.append("intent", LINK_INTENT.CHARACTERS);
-	form.append("linkIds", characterId);
+	form.append("linkId", characterId);
+	console.log(form);
 	const res = await post(context, "notes", form);
 	return await res.json();
 };
@@ -28,7 +28,7 @@ export default function CharacterNotesView() {
 			entityId={characterData.id}
 			entityType="characters"
 			notes={characterNotes}
-			action={`/characters/${characterData.id}/notes`}
+			action=""
 		/>
 	);
 }

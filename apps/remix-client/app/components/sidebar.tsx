@@ -104,7 +104,7 @@ export function Sidebar({
 					<SidebarSection
 						title="Factions"
 						icon={<EyeOpenIcon />}
-						href="/characters"
+						href="/factions"
 						popover={<Dialog>{({ close }) => <NewFactionForm close={close} />}</Dialog>}
 					>
 						<EntityListBox type="factions" items={factions} className="border-0" />
@@ -131,7 +131,6 @@ export function SidebarSection({
 	children,
 	popover,
 }: SidebarSectionProps) {
-	const navigate = useNavigate();
 	return (
 		<div className="relative w-full py-3">
 			<div className="flex justify-between">

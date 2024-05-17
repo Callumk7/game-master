@@ -12,7 +12,7 @@ import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
 import ky from "ky";
 import { extractParam } from "~/lib/zx-util";
-import { post, put } from "~/lib/game-master";
+import { patch, post, put } from "~/lib/game-master";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -39,11 +39,8 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 	// Handle updating the note itself
 	if (request.method === "PATCH") {
-		const formData = await request.formData();
-		const res = await ky.patch(
-			`${context.cloudflare.env.GAME_MASTER_URL}/notes/${noteId}`,
-			{ body: formData },
-		);
+		const form = await request.formData();
+		const res = await patch(context, `notes/${noteId}`, form);
 	}
 
 	// add intent to handle this and links

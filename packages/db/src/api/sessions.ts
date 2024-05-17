@@ -9,7 +9,11 @@ import {
 } from "../db/schemas/sessions";
 import { CompleteNote, MultiSelectString, Session, SessionInsert } from "../types";
 import { LINK_INTENT } from "./util";
-import { handleLinkingByIntent } from "./generic";
+import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
+
+export const getUserSessions = async (db: DB, userId: string) => {
+	return await db.select().from(sessions).where(eq(sessions.userId, userId));
+};
 
 export const getCompleteSession = async (db: DB, sessionId: string) => {
 	const session = await db.query.sessions.findFirst({
@@ -243,7 +247,7 @@ export const updateSession = async (
 	return result[0];
 };
 
-export const handleSessionLinking = async (
+export const handleBulkSessionLinking = async (
 	db: DB,
 	sessionId: string,
 	targetIds: MultiSelectString,
@@ -266,5 +270,19 @@ export const handleSessionLinking = async (
 			link: linkPlotsToSession,
 			delete: deletePlotJoinsOnSession,
 		},
+	});
+};
+
+export const handleAddLinkToSession = async (
+	db: DB,
+	sessionId: string,
+	targetId: string,
+	intent: LINK_INTENT,
+) => {
+	return await handleAddLinkToTargetByIntent(db, sessionId, targetId, intent, {
+		characters: linkCharactersToSession,
+		factions: linkFactionsToSession,
+		notes: linkNotesToSession,
+		plots: linkPlotsToSession,
 	});
 };
