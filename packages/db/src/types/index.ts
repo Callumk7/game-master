@@ -157,7 +157,7 @@ export type CharacterWithRace = Character & {
 	race: Race;
 };
 export type CharacterWithRaceAndFactions = CharacterWithRace & {
-	factions: (Faction | null)[];
+	factions: Faction[];
 };
 export type CompleteNote = Note & {
 	characters: Character[];
@@ -167,7 +167,4 @@ export type CompleteNote = Note & {
 };
 export type SessionWithCompleteNotes = Session & {
 	notes: CompleteNote[];
-};
-export type CharacterInFaction = CharactersInFactions & {
-	faction: Faction | null;
 };

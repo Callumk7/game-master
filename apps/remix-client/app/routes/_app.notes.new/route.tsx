@@ -8,8 +8,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 	const form = await request.formData();
 	form.append("userId", userId);
 
-  const res = await post(context, "notes", form);
-  return json(await res.json());
+	const res = await post(context, "notes", form);
+	return json(await res.json());
 };
 
 export { NewNoteView as default };

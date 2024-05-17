@@ -5,16 +5,23 @@ import { Header, HeaderLink } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { Pencil1Icon, PlusCircledIcon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { Card } from "~/components/card";
-import { BasicEntity, EntityType, LINK_INTENT, LinkIntentSchema } from "@repo/db";
+import {
+	BasicEntity,
+	CharacterWithRaceAndFactions,
+	EntityType,
+	LINK_INTENT,
+	LinkIntentSchema,
+} from "@repo/db";
 import { DialogTrigger } from "react-aria-components";
 import { Popover } from "~/components/ui/popover";
 import { useSubmit } from "@remix-run/react";
 import { useAppData } from "../_app/route";
 import { ListBox, ListBoxItem } from "~/components/ui/list-box";
-import { post, put } from "~/lib/game-master";
+import { createApi, post, put } from "~/lib/game-master";
+import { validateUser } from "~/lib/auth";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	// On the character page, we can add links to other entities, we do this

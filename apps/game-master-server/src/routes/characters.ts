@@ -12,6 +12,7 @@ import {
 	charactersInSessions,
 	charactersInsertSchema,
 	createDrizzleForTurso,
+	getAllUserCharacters,
 	getFullCharacterData,
 	handleAddLinkToCharacter,
 	handleBulkCharacterLinking,
@@ -35,10 +36,7 @@ charactersRoute.get("/", async (c) => {
 		return badRequest("No userId provided");
 	}
 	const db = createDrizzleForTurso(c.env);
-	const allCharacters = await db
-		.select()
-		.from(characters)
-		.where(eq(characters.userId, userId));
+	const allCharacters = await getAllUserCharacters(db, userId);
 	return c.json(allCharacters);
 });
 

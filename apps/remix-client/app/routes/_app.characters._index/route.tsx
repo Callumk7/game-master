@@ -1,18 +1,13 @@
 import { TrashIcon } from "@radix-ui/react-icons";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { useSubmit } from "@remix-run/react";
 import {
 	CharacterWithRaceAndFactions,
 	createDrizzleForTurso,
 	getAllUserCharacters,
-	internalServerError,
-	methodNotAllowed,
 } from "@repo/db";
-import ky from "ky";
 import { Group, TableBody } from "react-aria-components";
-import { typedjson, useTypedActionData, useTypedLoaderData } from "remix-typedjson";
-import { z } from "zod";
-import { zx } from "zodix";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { EntityFilter } from "~/components/entity-filter";
 import { Header } from "~/components/typeography";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
@@ -22,51 +17,33 @@ import { Toolbar } from "~/components/ui/toolbar";
 import { useFilterByRelation } from "~/hooks/filter-by-relation";
 import { useSortTable } from "~/hooks/sort-table";
 import { validateUser } from "~/lib/auth";
+import { createApi } from "~/lib/game-master";
 
-export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
-	const db = createDrizzleForTurso(context.cloudflare.env);
-
-	const allCharacters = await getAllUserCharacters(db, userId);
-
+	const api = createApi(context);
+	const allCharacters = (await api
+		.get("characters", {
+			searchParams: new URLSearchParams([["userId", userId]]),
+		})
+		.json()) as CharacterWithRaceAndFactions[];
 	return typedjson({ allCharacters });
 };
 
 export default function CharacterIndex() {
 	const { allCharacters } = useTypedLoaderData<typeof loader>();
-	const filterSource = allCharacters.map((char) => ({
-		...char,
-		characters: [],
-		factions: char.factions.map((f) => f.faction),
-		sessions: [],
-		locations: [],
-	}));
-	const filter = useFilterByRelation(filterSource);
-	const factionList = allCharacters.flatMap((note) =>
-		note.factions.map((faction) => faction.faction),
-	);
+	// const filter = useFilterByRelation(allCharacters);
 	return (
 		<div className="w-4/5 mx-auto mt-10 space-y-4">
 			<Header style="h1">All Characters</Header>
-			<EntityFilter
-				allChars={[]}
-				allFactions={factionList}
-				allSessions={[]}
-				charFilter={filter.charFilter}
-				factionFilter={filter.factionFilter}
-				sessionFilter={filter.seshFilter}
-				handleCharFilter={filter.handleCharFilter}
-				handleFactionFilter={filter.handleFactionFilter}
-				handleSessionFilter={filter.handleSessionFilter}
-				handleClearAllFilters={filter.handleClearAllFilters}
-			/>
 			<div className="mb-5">
-				<CharacterTable characters={filter.output} />
+				<CharacterTable characters={allCharacters} />
 			</div>
 			<Button>Add</Button>
 		</div>
 	);
 }
+
 interface CharacterTableProps {
 	characters: CharacterWithRaceAndFactions[];
 }

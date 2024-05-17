@@ -12,6 +12,7 @@ import { charactersInSessions } from "../db/schemas/sessions";
 import {
 	AllyInsert,
 	Character,
+	CharacterWithRaceAndFactions,
 	CharactersInFactionsInsert,
 	EnemyInsert,
 	MultiSelectString,
@@ -81,7 +82,13 @@ export const getFullCharacterData = async (db: DB, characterId: string) => {
 	return charResult;
 };
 
-export const getAllUserCharacters = async (db: DB, userId: string) => {
+/**
+ * Get all user characters. Race and Factions are included.
+ */
+export const getAllUserCharacters = async (
+	db: DB,
+	userId: string,
+): Promise<CharacterWithRaceAndFactions[]> => {
 	const allCharacters = await db.query.characters.findMany({
 		where: eq(characters.userId, userId),
 		with: {
@@ -94,7 +101,10 @@ export const getAllUserCharacters = async (db: DB, userId: string) => {
 		},
 	});
 
-	return allCharacters;
+	return allCharacters.map((character) => ({
+		...character,
+		factions: character.factions.map((faction) => faction.faction),
+	}));
 };
 
 ///
