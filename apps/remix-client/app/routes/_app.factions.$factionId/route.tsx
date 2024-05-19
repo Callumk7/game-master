@@ -3,11 +3,11 @@ import { z } from "zod";
 import { zx } from "zodix";
 import FactionView from "./faction-view";
 import { useTypedRouteLoaderData } from "remix-typedjson";
-import { OptionalEntitySchema, createDrizzleForTurso } from "@repo/db";
+import { createDrizzleForTurso } from "@repo/db";
 import { handleFactionLoader, handleUpdateFaction } from "./queries.server";
 import ky from "ky";
 import { validateUser } from "~/lib/auth";
-import { patch, post } from "~/lib/game-master";
+import { patch } from "~/lib/game-master";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -36,19 +36,6 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		const { intent } = await zx.parseForm(request, {
 			intent: z.union([z.literal("leader"), z.literal("members")]),
 		});
-		if (intent === "members") {
-			const { characterId } = await zx.parseForm(request, {
-				characterId: OptionalEntitySchema,
-			});
-			const json = await ky
-				.post(`${context.cloudflare.env.GAME_MASTER_URL}/factions/${factionId}/members`, {
-					json: {
-						characterIds: characterIds,
-					},
-				})
-				.json();
-			return json;
-		}
 		if (intent === "leader") {
 			const form = await request.formData();
 			const res = await patch(context, `factions/${factionId}`, form);

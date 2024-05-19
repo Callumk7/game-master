@@ -38,7 +38,7 @@ function SidebarSorter() {
 	return (
 		<Toolbar>
 			<DialogTrigger>
-				<Button>Sort</Button>
+				<Button size="sm" variant="secondary">Sort</Button>
 				<Menu>
 					<MenuItem>Name</MenuItem>
 					<MenuItem>Created</MenuItem>

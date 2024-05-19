@@ -1,9 +1,6 @@
-import { useTypedLoaderData } from "remix-typedjson";
 import { EntityHeader, EntityView } from "~/components/layout";
-import { loader, useFactionRouteData } from "./route";
-import { Header } from "~/components/typeography";
-import { Form, Outlet, useFetcher, useSubmit } from "@remix-run/react";
-import { useAppData } from "../_app/route";
+import { useFactionRouteData } from "./route";
+import { Outlet } from "@remix-run/react";
 import { LeaderSelect } from "./components/faction-leader";
 
 export default function FactionView() {

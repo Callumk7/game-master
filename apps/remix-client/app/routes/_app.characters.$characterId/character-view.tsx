@@ -13,7 +13,6 @@ import { CharacterSidebar } from "./components/character-sidebar";
 
 export function CharacterView() {
 	const { characterData, noteTree } = useTypedLoaderData<typeof loader>();
-	const characterNotes = characterData.notes.map((n) => n.note);
 	const links = [
 		{
 			name: "Home",
