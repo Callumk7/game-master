@@ -89,7 +89,7 @@ export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
 		<AriaTableHeader
 			{...props}
 			className={twMerge(
-				"sticky top-0 z-10 bg-grade-6/80 backdrop-blur-md supports-[-moz-appearance:none]:bg-grade-5 forced-colors:bg-[Canvas] rounded-t-lg border-b border-grade-6",
+				"sticky top-0 z-10 bg-grade-5 backdrop-blur-md forced-colors:bg-[Canvas] rounded-t-lg border-b border-amber-6",
 				props.className,
 			)}
 		>
