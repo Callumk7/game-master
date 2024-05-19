@@ -1,10 +1,5 @@
-import { Header } from "~/components/typeography";
+import { useLoaderData } from "@remix-run/react";
 
 export default function AppIndex() {
-	return (
-		<div>
-			<Header style="h1">Hello, Username</Header>
-			<p>List of all notes (or table)</p>
-		</div>
-	);
+	return <div>hello</div>;
 }
