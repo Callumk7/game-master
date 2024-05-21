@@ -59,7 +59,7 @@ function CharacterAllyTableRow({
 		<Row id={id}>
 			<Cell>{allyName}</Cell>
 			<Cell>
-				<div className="flex w-full justify-between items-center">
+				<div className="flex justify-between items-center w-full">
 					{description}
 					<DialogTrigger>
 						<Button size="icon-sm" variant="ghost" onPress={handleEditPressed}>

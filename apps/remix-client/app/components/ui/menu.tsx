@@ -32,11 +32,11 @@ export function MenuItem(props: MenuItemProps) {
 			{composeRenderProps(props.children, (children, { selectionMode, isSelected }) => (
 				<>
 					{selectionMode !== "none" && (
-						<span className="flex w-4 items-center">
-							{isSelected && <CheckIcon aria-hidden className="h-4 w-4" />}
+						<span className="flex items-center w-4">
+							{isSelected && <CheckIcon aria-hidden className="w-4 h-4" />}
 						</span>
 					)}
-					<span className="group-selected:font-semibold flex flex-1 items-center gap-2 truncate font-normal">
+					<span className="flex flex-1 gap-2 items-center font-normal group-selected:font-semibold truncate">
 						{children}
 					</span>
 				</>
@@ -49,7 +49,7 @@ export function MenuSeparator(props: SeparatorProps) {
 	return (
 		<Separator
 			{...props}
-			className="mx-3 my-1 border-b border-gray-300 dark:border-zinc-700"
+			className="my-1 mx-3 border-b border-gray-300 dark:border-zinc-700"
 		/>
 	);
 }

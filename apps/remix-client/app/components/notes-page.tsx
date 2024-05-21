@@ -22,7 +22,7 @@ export function NotePage({ notes, entityId, entityType, action }: NotePageProps)
 	return (
 		<div className="space-y-4">
 			<QuickNoteSlideOver action={action} />
-			<div className="border border-grade-6 rounded-lg p-4">
+			<div className="p-4 rounded-lg border border-grade-6">
 				{sort.sortedItems.map((note) => (
 					<NoteBlock
 						key={note.id}
@@ -48,7 +48,7 @@ export function NoteBlock({ note, entityId, entityType }: NoteBlockProps) {
 		action: `/notes/${note.id}`,
 	});
 	return (
-		<div className="flex flex-col gap-3 hover:bg-grade-1 py-2 px-4 rounded-lg">
+		<div className="flex flex-col gap-3 py-2 px-4 rounded-lg hover:bg-grade-1">
 			<NoteBlockToolbar
 				entityId={entityId}
 				entityType={entityType}
@@ -56,7 +56,7 @@ export function NoteBlock({ note, entityId, entityType }: NoteBlockProps) {
 				isEditing={isEditing}
 				setIsEditing={setIsEditing}
 			/>
-			<span className="text-sm font-light italic text-grade-9">
+			<span className="text-sm italic font-light text-grade-9">
 				{note.createdAt.toLocaleString("gmt")}
 			</span>
 			<Header style="h3" colour="amber">

@@ -43,7 +43,7 @@ export function ComboBox<T extends object>({
 			{description && <Description>{description}</Description>}
 			<FieldError>{errorMessage}</FieldError>
 			<Popover className="w-[--trigger-width]">
-				<ListBox items={items} className="outline-0 p-1 max-h-[inherit] overflow-auto">
+				<ListBox items={items} className="overflow-auto p-1 outline-0 max-h-[inherit]">
 					{children}
 				</ListBox>
 			</Popover>

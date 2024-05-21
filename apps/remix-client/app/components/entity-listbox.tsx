@@ -17,7 +17,7 @@ export function EntityListBox<T extends BasicEntity>({
 			className={className}
 			aria-label="Navigation links"
 			renderEmptyState={() => (
-				<p className="w-full text-sm text-grade-10 italic text-center p-3">
+				<p className="p-3 w-full text-sm italic text-center text-grade-10">
 					Nothing to display
 				</p>
 			)}

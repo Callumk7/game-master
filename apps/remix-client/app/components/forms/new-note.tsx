@@ -17,7 +17,7 @@ export function AddNoteForm({ action, close }: AddNoteFormProps) {
 			className="h-full"
 			onSubmit={close ? () => close() : undefined}
 		>
-			<div className="relative flex flex-col gap-6 h-full">
+			<div className="flex relative flex-col gap-6 h-full">
 				<Input
 					defaultValue="Note Title.."
 					type="text"

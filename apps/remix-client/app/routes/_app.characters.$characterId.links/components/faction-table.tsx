@@ -66,7 +66,7 @@ function CharacterFactionTableRow({
 		<Row id={id} href={`/factions/${id}`}>
 			<Cell>{factionName}</Cell>
 			<Cell>
-				<div className="flex w-full justify-between items-center">
+				<div className="flex justify-between items-center w-full">
 					{role}
 					<DialogTrigger>
 						<Button size="icon-sm" variant="ghost" onPress={handleEditPressed}>
@@ -83,7 +83,7 @@ function CharacterFactionTableRow({
 				</div>
 			</Cell>
 			<Cell>
-				<div className="flex w-full justify-between items-center">
+				<div className="flex justify-between items-center w-full">
 					{description}
 					<DialogTrigger>
 						<Button size="icon-sm" variant="ghost" onPress={handleEditPressed}>

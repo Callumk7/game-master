@@ -25,7 +25,7 @@ import { composeTailwindRenderProps, focusRing } from "../utils";
 
 export function Table(props: TableProps) {
 	return (
-		<ResizableTableContainer className="overflow-hidden scroll-pt-[2.281rem] relative border border-grade-6 rounded-lg">
+		<ResizableTableContainer className="overflow-hidden relative rounded-lg border scroll-pt-[2.281rem] border-grade-6">
 			<AriaTable
 				{...props}
 				className="border-separate border-spacing-0 drop-target:outline-2 drop-target:bg-primary-9"
@@ -68,7 +68,7 @@ export function Column(props: ColumnProps) {
 									{sortDirection && (
 										<ArrowUpIcon
 											aria-hidden
-											className="w-4 h-4 text-gray-500 dark:text-zinc-400 forced-colors:text-[ButtonText]"
+											className="w-4 h-4 text-gray-500 forced-colors:text-[ButtonText] dark:text-zinc-400"
 										/>
 									)}
 								</span>
@@ -99,7 +99,7 @@ export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
 				<AriaColumn
 					width={36}
 					minWidth={36}
-					className="text-start text-sm font-semibold cursor-default p-2"
+					className="p-2 text-sm font-semibold cursor-default text-start"
 				>
 					{selectionMode === "multiple" && <Checkbox slot="selection" />}
 				</AriaColumn>

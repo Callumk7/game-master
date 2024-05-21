@@ -45,7 +45,7 @@ export default function CharacterIndex() {
 	});
 	return (
 		<div className="grid grid-cols-3 gap-4">
-			<div className="space-y-4 col-span-2">
+			<div className="col-span-2 space-y-4">
 				<div className="flex gap-x-6 items-center">
 					<Header style="h2">Character Bio</Header>
 					<Button variant="ghost" onPress={() => setIsEditing(!isEditing)} size="icon-sm">
@@ -58,7 +58,7 @@ export default function CharacterIndex() {
 					htmlContent={characterData.bio}
 				/>
 			</div>
-			<div className="space-y-10 pl-16">
+			<div className="pl-16 space-y-10">
 				<LinkAside
 					type="factions"
 					header="Factions"
@@ -94,8 +94,8 @@ function LinkAside<T extends BasicEntity>({
 }: LinkAsideProps<T>) {
 	return (
 		<Card>
-			<div className="flex w-full justify-between items-center">
-				<HeaderLink to={`/${type}`} style="h4" className="mb-3 pl-3">
+			<div className="flex justify-between items-center w-full">
+				<HeaderLink to={`/${type}`} style="h4" className="pl-3 mb-3">
 					{header}
 				</HeaderLink>
 				<LinkEntityDropdown items={allItems} intent={intent} />

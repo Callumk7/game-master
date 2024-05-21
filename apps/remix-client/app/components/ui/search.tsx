@@ -32,7 +32,7 @@ export function SearchField({
 			<FieldGroup>
 				<MagnifyingGlassIcon
 					aria-hidden
-					className="w-4 h-4 ml-2 text-gray-500 dark:text-zinc-400 forced-colors:text-[ButtonText] group-disabled:text-gray-200 dark:group-disabled:text-zinc-600 forced-colors:group-disabled:text-[GrayText]"
+					className="ml-2 w-4 h-4 text-gray-500 forced-colors:text-[ButtonText] group-disabled:text-gray-200 forced-colors:group-disabled:text-[GrayText] dark:text-zinc-400 dark:group-disabled:text-zinc-600"
 				/>
 				<Input className="[&::-webkit-search-cancel-button]:hidden" />
 				<Button size="icon-sm" variant="ghost" className="group-empty:invisible">

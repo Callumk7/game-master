@@ -23,16 +23,16 @@ interface LinksAsideProps {
 
 export function LinksAside({ characters, factions, sessions }: LinksAsideProps) {
 	return (
-		<div className="space-y-7 pl-7">
+		<div className="pl-7 space-y-7">
 			<Card>
-				<div className="flex items-center justify-between w-full mb-2">
+				<div className="flex justify-between items-center mb-2 w-full">
 					<Header style="h3">Links</Header>
 					<AddLinkModal />
 				</div>
 				<Separator />
 				{characters.length > 0 && (
 					<>
-						<h2 className="text-lg font-semibold my-3">Characters</h2>
+						<h2 className="my-3 text-lg font-semibold">Characters</h2>
 						<ul className="flex flex-col gap-2">
 							{characters.map((char) => (
 								<li key={char.id}>
@@ -44,7 +44,7 @@ export function LinksAside({ characters, factions, sessions }: LinksAsideProps) 
 				)}
 				{factions.length > 0 && (
 					<>
-						<h2 className="text-lg font-semibold my-3">Factions</h2>
+						<h2 className="my-3 text-lg font-semibold">Factions</h2>
 						<ul className="flex flex-col gap-2">
 							{factions.map((faction) => (
 								<li key={faction.id}>
@@ -56,7 +56,7 @@ export function LinksAside({ characters, factions, sessions }: LinksAsideProps) 
 				)}
 				{sessions.length > 0 && (
 					<>
-						<h2 className="text-lg font-semibold my-3">Sessions</h2>
+						<h2 className="my-3 text-lg font-semibold">Sessions</h2>
 						<ul className="flex flex-col gap-2">
 							{sessions.map((sesh) => (
 								<li key={sesh.id}>

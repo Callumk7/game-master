@@ -49,10 +49,10 @@ export function Sidebar({
 	sessions,
 }: SidebarProps) {
 	return (
-		<div className="bg-primary-1 fixed min-w-[15vw] max-w-56 h-full min-h-screen max-h-screen pt-4 border-r border-grade-5">
+		<div className="fixed pt-4 h-full min-h-screen max-h-screen border-r bg-primary-1 min-w-[15vw] max-w-56 border-grade-5">
 			<ScrollArea className="h-full">
 				<AppToolbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-				<div className="p-2 border-b border-grade-6 space-y-4">
+				<div className="p-2 space-y-4 border-b border-grade-6">
 					<SidebarSection
 						title="Sessions"
 						icon={<HomeIcon />}
@@ -129,12 +129,12 @@ export function SidebarSection({
 	popover,
 }: SidebarSectionProps) {
 	return (
-		<div className="relative w-full py-3">
+		<div className="relative py-3 w-full">
 			<div className="flex justify-between">
 				<Link
 					href={href}
 					size="sm"
-					className="flex gap-3 items-center text-grade-11 font-semibold"
+					className="flex gap-3 items-center font-semibold text-grade-11"
 				>
 					{icon}
 					<span>{title}</span>
@@ -169,12 +169,12 @@ export function NoteSectionWithFolders({
 }: NoteSectionWithFoldersProps) {
 	const navigate = useNavigate();
 	return (
-		<div className="relative w-full py-3">
+		<div className="relative py-3 w-full">
 			<div className="flex justify-between">
 				<Link
 					href={href}
 					size="sm"
-					className="flex gap-3 items-center text-grade-11 font-semibold"
+					className="flex gap-3 items-center font-semibold text-grade-11"
 				>
 					{icon}
 					<span>{title}</span>

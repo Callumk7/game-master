@@ -18,7 +18,7 @@ export default function NoteView() {
 		<div className="grid grid-cols-5">
 			<div className="col-span-4">
 				{noteData.folder && (
-					<p className="mb-4 text-xs bg-primary-7 text-primary-12 px-2 py-1 rounded-full w-fit">
+					<p className="py-1 px-2 mb-4 text-xs rounded-full bg-primary-7 text-primary-12 w-fit">
 						{noteData.folder.name}
 					</p>
 				)}

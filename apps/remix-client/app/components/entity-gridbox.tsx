@@ -22,7 +22,7 @@ export function EntityGridBox<T extends BasicEntity>({
 		<GridList items={items} className={className}>
 			{(item) => (
 				<GridListItem href={`/${contentType}/${item.id}`}>
-					<div className="w-full flex justify-between items-center font-semibold">
+					<div className="flex justify-between items-center w-full font-semibold">
 						{item.name}
 						<Button
 							variant="ghost"

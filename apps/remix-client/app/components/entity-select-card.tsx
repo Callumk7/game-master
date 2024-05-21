@@ -80,7 +80,7 @@ export function EntitySelectCard<T extends BasicEntity>({
 				onSelectionChange={handleSelectionChange}
 				selectionMode={selectionMode}
 				renderEmptyState={() => (
-					<div className="p-3 text-center w-full text-sm text-grade-10">
+					<div className="p-3 w-full text-sm text-center text-grade-10">
 						No linked notes <Link href={`/${targetEntityType}/new`}>Create</Link>
 					</div>
 				)}

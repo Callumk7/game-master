@@ -140,7 +140,7 @@ interface EntityDescriptionProps {
  * to the heading (or anywhere).
  */
 export function EntityDescription({ children }: EntityDescriptionProps) {
-	return <p className="font-light text-sm leading-loose">{children}</p>;
+	return <p className="text-sm font-light leading-loose">{children}</p>;
 }
 
 interface SidebarLayoutProps {
@@ -154,7 +154,7 @@ export function SidebarLayout({ children, sidebar, isSidebarOpen }: SidebarLayou
 		<div className="flex">
 			{isSidebarOpen && (
 				<>
-					<div className="min-w-[15vw] max-w-56 h-screen w-full" />
+					<div className="w-full h-screen min-w-[15vw] max-w-56" />
 					{sidebar}
 				</>
 			)}

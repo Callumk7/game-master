@@ -34,7 +34,7 @@ export default function CharacterIndex() {
 	const { allCharacters } = useTypedLoaderData<typeof loader>();
 	// const filter = useFilterByRelation(allCharacters);
 	return (
-		<div className="w-4/5 mx-auto mt-10 space-y-4">
+		<div className="mx-auto mt-10 space-y-4 w-4/5">
 			<Header style="h1">All Characters</Header>
 			<div className="mb-5">
 				<CharacterTable characters={allCharacters} />

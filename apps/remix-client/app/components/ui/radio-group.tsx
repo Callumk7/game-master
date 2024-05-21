@@ -24,7 +24,7 @@ export function RadioGroup(props: RadioGroupProps) {
 			className={composeTailwindRenderProps(props.className, "group flex flex-col gap-2")}
 		>
 			<Label>{props.label}</Label>
-			<div className="flex group-orientation-vertical:flex-col gap-2 group-orientation-horizontal:gap-4">
+			<div className="flex gap-2 group-orientation-vertical:flex-col group-orientation-horizontal:gap-4">
 				{props.children}
 			</div>
 			{props.description && <Description>{props.description}</Description>}

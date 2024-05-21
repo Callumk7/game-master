@@ -17,7 +17,7 @@ interface CharacterSidebarProps {
 }
 export function CharacterSidebar({ notes }: CharacterSidebarProps) {
 	return (
-		<div className="fixed bg-primary-2 border-r border-grade-6 min-w-[15vw] max-w-56 h-full min-h-screen max-h-screen px-3 pt-5 space-y-6">
+		<div className="fixed px-3 pt-5 space-y-6 h-full min-h-screen max-h-screen border-r bg-primary-2 border-grade-6 min-w-[15vw] max-w-56">
 			<SidebarSorter />
 			<div className="space-y-4">
 				{notes.map((note) => (

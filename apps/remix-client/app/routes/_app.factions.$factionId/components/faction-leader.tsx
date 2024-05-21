@@ -11,9 +11,9 @@ export function LeaderSelect() {
 	return (
 		<div>
 			{faction.leader && !isEditing ? (
-				<div className="border-b border-grade-6 pb-2 flex gap-4 items-center">
+				<div className="flex gap-4 items-center pb-2 border-b border-grade-6">
 					<div>
-						<span className="font-semibold mr-3">Leader:</span>
+						<span className="mr-3 font-semibold">Leader:</span>
 						<Link href={`/characters/${faction.leaderId}`}>{faction.leader.name}</Link>
 					</div>
 					<Button size="sm" variant="outline" onPress={() => setIsEditing(true)}>

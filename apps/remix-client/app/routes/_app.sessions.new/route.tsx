@@ -18,7 +18,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 export default function NewSessionView() {
 	return (
-		<div className="mt-10 mx-auto w-fit">
+		<div className="mx-auto mt-10 w-fit">
 			<Card size="xl">
 				<NewSessionForm />
 			</Card>
