@@ -1,12 +1,10 @@
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { Outlet } from "@remix-run/react";
-import { allUserDataSchema, createDrizzleForTurso, getAllUserEntities } from "@repo/db";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
-import { MainContainer, SidebarLayout } from "~/components/layout";
+import { SidebarLayout } from "~/components/layout";
 import { Sidebar } from "~/components/sidebar";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
-import { createApi } from "~/lib/game-master";
 import { getAllUserData } from "./queries.server";
 
 export const meta: MetaFunction = () => {
@@ -19,7 +17,7 @@ export const meta: MetaFunction = () => {
 	];
 };
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const session = await validateUserSession(request);
 	const userId = getUserId(session);
 
@@ -54,7 +52,7 @@ export function useAppData() {
 }
 
 export default function AppRoute() {
-	const { allCharacters, allFactions, allFolders, allPlots, allSessions, unsortedNotes } =
+	const { allCharacters, allFactions, allFolders, allSessions, unsortedNotes } =
 		useTypedLoaderData<typeof loader>();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -70,7 +68,6 @@ export default function AppRoute() {
 					factions={allFactions}
 					notes={unsortedNotes}
 					folders={allFolders}
-					plots={allPlots}
 					sessions={allSessions}
 				/>
 			}

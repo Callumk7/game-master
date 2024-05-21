@@ -1,5 +1,5 @@
 import { eq, and, inArray } from "drizzle-orm";
-import { DB } from "../db";
+import type { DB } from "../db";
 import {
 	characters,
 	charactersInFactions,
@@ -9,7 +9,7 @@ import {
 import { notesOnCharacters, notes } from "../db/schemas/notes";
 import { plotsOnCharacters } from "../db/schemas/plots";
 import { charactersInSessions } from "../db/schemas/sessions";
-import {
+import type {
 	AllyInsert,
 	Character,
 	CharacterInsert,
@@ -19,7 +19,7 @@ import {
 	MultiSelectString,
 	NoteInsert,
 } from "../types";
-import { LINK_INTENT } from "./util";
+import type { LINK_INTENT } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
 export const getFullCharacterData = async (db: DB, characterId: string) => {

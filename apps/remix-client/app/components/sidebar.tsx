@@ -46,7 +46,6 @@ export function Sidebar({
 	factions,
 	notes,
 	folders,
-	plots,
 	sessions,
 }: SidebarProps) {
 	return (

@@ -1,12 +1,12 @@
 import {
 	composeRenderProps,
 	Button as RACButton,
-	ButtonProps as RACButtonProps,
+	type ButtonProps as RACButtonProps,
 } from "react-aria-components";
 import { Link as RLink } from "@remix-run/react";
-import { tv, VariantProps } from "tailwind-variants";
-import { RemixLinkProps } from "@remix-run/react/dist/components";
-import { HTMLAttributes, ReactNode } from "react";
+import { tv, type VariantProps } from "tailwind-variants";
+import type { RemixLinkProps } from "@remix-run/react/dist/components";
+import type { HTMLAttributes, ReactNode } from "react";
 import { focusRing } from "../utils";
 
 export interface ButtonProps extends RACButtonProps, VariantProps<typeof button> {}
