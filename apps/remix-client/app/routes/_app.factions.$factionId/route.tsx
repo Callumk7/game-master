@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { z } from "zod";
 import { zx } from "zodix";
 import FactionView from "./faction-view";

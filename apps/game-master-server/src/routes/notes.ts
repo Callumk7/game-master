@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { Bindings } from "..";
+import type { Bindings } from "..";
 import { z } from "zod";
 import {
 	INTENT,
 	LinkIntentSchema,
-	NoteInsert,
+	type NoteInsert,
 	OptionalEntitySchema,
 	badRequest,
 	createDrizzleForTurso,
@@ -24,6 +24,7 @@ import { StatusCodes } from "http-status-codes";
 import { zx } from "zodix";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
+import { htmlToText } from "html-to-text";
 
 type Variables = {
 	intent: INTENT;
@@ -55,8 +56,11 @@ notesRoute.post("/", async (c) => {
 			.omit({ id: true }),
 	);
 
+	const content = htmlToText(newNoteData.htmlContent);
+
 	const newNoteInsert: NoteInsert = {
 		id: `note_${uuidv4()}`,
+		content,
 		...newNoteData,
 	};
 

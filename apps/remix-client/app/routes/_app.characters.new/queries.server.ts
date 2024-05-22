@@ -1,4 +1,4 @@
-import { DB, races } from "@repo/db";
+import { type DB, races } from "@repo/db";
 import { eq } from "drizzle-orm";
 
 export const getRaceId = async (db: DB, raceName: string, userId: string) => {

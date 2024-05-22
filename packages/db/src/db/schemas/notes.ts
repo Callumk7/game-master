@@ -10,6 +10,7 @@ import { locations } from "./locations";
 export const notes = sqliteTable("notes", {
 	id: text("id").primaryKey().notNull(),
 	name: text("title").notNull(),
+	content: text("content"),
 	htmlContent: text("html_content").notNull(),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.notNull()

@@ -1,9 +1,10 @@
-import { INTENT, IntentSchema } from "@repo/db";
-import { Context } from "hono";
+import { type INTENT, IntentSchema } from "@repo/db";
+import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { z } from "zod";
 import { zx } from "zodix";
+import { convert } from "html-to-text";
 
 export const itemOrArrayToArray = <T>(input: T | T[] | undefined): T[] => {
 	let output: T[] = [];

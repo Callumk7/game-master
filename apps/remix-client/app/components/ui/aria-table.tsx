@@ -1,3 +1,4 @@
+import { ArrowUpIcon, DragHandleDots1Icon } from "@radix-ui/react-icons";
 import {
 	Cell as AriaCell,
 	Column as AriaColumn,
@@ -5,27 +6,26 @@ import {
 	Table as AriaTable,
 	TableHeader as AriaTableHeader,
 	Button,
-	CellProps,
+	type CellProps,
 	Collection,
-	ColumnProps,
+	type ColumnProps,
 	ColumnResizer,
 	Group,
 	ResizableTableContainer,
-	RowProps,
-	TableHeaderProps,
-	TableProps,
+	type RowProps,
+	type TableHeaderProps,
+	type TableProps,
 	composeRenderProps,
 	useTableOptions,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
-import { Checkbox } from "./checkbox";
-import { ArrowUpIcon, DragHandleDots1Icon } from "@radix-ui/react-icons";
 import { composeTailwindRenderProps, focusRing } from "../utils";
+import { Checkbox } from "./checkbox";
 
 export function Table(props: TableProps) {
 	return (
-		<ResizableTableContainer className="overflow-hidden relative rounded-lg border scroll-pt-[2.281rem] border-grade-6">
+		<ResizableTableContainer className="overflow-hidden relative rounded-lg border scroll-pt-[2.281rem] border-primary-6">
 			<AriaTable
 				{...props}
 				className="border-separate border-spacing-0 drop-target:outline-2 drop-target:bg-primary-9"
@@ -89,7 +89,7 @@ export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
 		<AriaTableHeader
 			{...props}
 			className={twMerge(
-				"sticky top-0 z-10 bg-grade-5 backdrop-blur-md forced-colors:bg-[Canvas] rounded-t-lg border-b border-amber-6",
+				"sticky top-0 z-10 bg-primary-2 backdrop-blur-md forced-colors:bg-[Canvas] rounded-t-lg border-b border-amber-6",
 				props.className,
 			)}
 		>

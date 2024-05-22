@@ -1,4 +1,4 @@
-import { Session } from "@repo/db";
+import type { Session } from "@repo/db";
 import { TableBody } from "react-aria-components";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
 
