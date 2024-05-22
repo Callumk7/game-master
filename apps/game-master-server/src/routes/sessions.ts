@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { Bindings } from "..";
+import type { Bindings } from "..";
 import { zx } from "zodix";
 import {
 	LinkIntentSchema,
 	OptionalEntitySchema,
-	SessionInsert,
+	type SessionInsert,
 	badRequest,
 	createDrizzleForTurso,
 	createSession,
@@ -13,12 +13,19 @@ import {
 	handleAddLinkToSession,
 	handleBulkSessionLinking,
 	sessionInsertSchema,
-	sessions,
 	updateSession,
+	notesInsertSchema,
+	type NoteInsert,
+	createNoteFromInsert,
+	charactersInSessions,
+    notesOnCharacters,
+    notesOnSessions,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerError } from "~/utils";
 import { z } from "zod";
+import { and } from "drizzle-orm/sql";
+import { eq } from "drizzle-orm/expressions";
 
 export const sessionsRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -93,4 +100,49 @@ sessionsRoute.put("/:sessionId/links", async (c) => {
 
 	const db = createDrizzleForTurso(c.env);
 	return await handleBulkSessionLinking(db, sessionId, targetIds, intent);
+});
+
+// Here, we are letting the user create a note as to why the character is linked to the 
+// session. As such, it makes sense to also link the note to both the session and the 
+// character.
+sessionsRoute.post("/:sessionId/characters/:characterId", async (c) => {
+	const { sessionId, characterId } = c.req.param();
+	const newNoteData = await zx.parseForm(
+		c.req.raw,
+		notesInsertSchema.omit({ id: true }),
+	);
+
+	const noteInsert: NoteInsert = {
+		id: `note_${uuidv4()}`,
+		...newNoteData,
+	};
+
+	console.log(noteInsert);
+
+	const db = createDrizzleForTurso(c.env);
+	const newNote = await createNoteFromInsert(db, noteInsert);
+
+	await db
+		.update(charactersInSessions)
+		.set({ noteId: newNote.id })
+		.where(
+			and(
+				eq(charactersInSessions.characterId, characterId),
+				eq(charactersInSessions.sessionId, sessionId),
+			),
+		);
+
+	// Here we are going to create the links between note and character/session
+	await db.insert(notesOnCharacters).values({
+		characterId,
+		noteId: newNote.id
+	})
+	// This last one might be weird.. because the note will appear in the note feed on the 
+	// session view, which is probably a duplication of information
+	await db.insert(notesOnSessions).values({
+		sessionId,
+		noteId: newNote.id
+	})
+
+	return c.json(newNote);
 });

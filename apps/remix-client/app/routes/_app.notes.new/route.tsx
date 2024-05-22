@@ -1,8 +1,8 @@
-import { ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
+import { type ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
 import { validateUser } from "~/lib/auth";
 import { NewNoteView } from "./new-note-view";
 import { post } from "~/lib/game-master";
-import { BasicEntity } from "@repo/db";
+import type { BasicEntity } from "@repo/db";
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);

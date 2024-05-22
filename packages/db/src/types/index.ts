@@ -146,12 +146,6 @@ export type FactionsInSessionsInsert = z.infer<typeof factionsInSessionsInsertSc
 export type PlotsInSessions = z.infer<typeof plotsInSessionsSelectSchema>;
 export type PlotsInSessionsInsert = z.infer<typeof plotsInSessionsInsertSchema>;
 
-// export const logInsertSchema = createInsertSchema(logs);
-// export const logSelectSchema = createSelectSchema(logs);
-//
-// export type Log = z.infer<typeof logSelectSchema>;
-// export type LogInsert = z.infer<typeof logInsertSchema>;
-
 // Composite types
 export type CharacterWithRace = Character & {
 	race: Race;
@@ -159,6 +153,14 @@ export type CharacterWithRace = Character & {
 export type CharacterWithRaceAndFactions = CharacterWithRace & {
 	factions: Faction[];
 };
+export type CharactersInSessionsWithCharacterNote = CharactersInSessions & {
+	character: Character;
+	note: Note | null;
+};
+export type FactionsInSessionsWithFactionNote = FactionsInSessions & {
+	faction: Faction;
+	note: Note | null;
+}
 export type CompleteNote = Note & {
 	characters: Character[];
 	factions: Faction[];
