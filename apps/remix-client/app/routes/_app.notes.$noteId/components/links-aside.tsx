@@ -1,7 +1,7 @@
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { Character, Faction, LINK_INTENT, Session } from "@repo/db";
+import { type Character, type Faction, LINK_INTENT, type Session } from "@repo/db";
 import { useState } from "react";
-import { DialogTrigger, Key } from "react-aria-components";
+import { DialogTrigger, type Key } from "react-aria-components";
 import { Card } from "~/components/card";
 import { EntitySelectCard } from "~/components/entity-select-card";
 import { Header } from "~/components/typeography";
@@ -11,7 +11,6 @@ import { Link } from "~/components/ui/link";
 import { Modal } from "~/components/ui/modal";
 import { Separator } from "~/components/ui/separator";
 import { Tab, TabList, TabPanel, Tabs } from "~/components/ui/tabs";
-import { useSessionRouteData } from "~/routes/_app.sessions.$sessionId/route";
 import { useAppData } from "~/routes/_app/route";
 import { useNoteIdLoaderData } from "../route";
 
@@ -22,6 +21,7 @@ interface LinksAsideProps {
 }
 
 export function LinksAside({ characters, factions, sessions }: LinksAsideProps) {
+  if (characters.length === 0 && factions.length === 0 && sessions.length === 0) return null
 	return (
 		<div className="pl-7 space-y-7">
 			<Card>

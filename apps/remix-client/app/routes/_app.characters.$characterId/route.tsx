@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import {
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	json,
+} from "@remix-run/cloudflare";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";

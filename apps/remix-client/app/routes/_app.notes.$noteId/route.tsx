@@ -1,18 +1,23 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import {
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	json,
+} from "@remix-run/cloudflare";
 import {
 	createDrizzleForTurso,
 	getNoteAndLinkedEntities,
 	getUserFolders,
 	handleDeleteNote,
+	methodNotAllowed,
 } from "@repo/db";
 import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
 import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
-import ky from "ky";
 import { extractParam } from "~/lib/zx-util";
 import { patch, post, put } from "~/lib/game-master";
+import { handleBulkLinkToNote, handleLinkNoteToFolder } from "./queries.server";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -20,39 +25,30 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 	// Handle linking entities to note
 	if (request.method === "PUT") {
-		const form = await request.formData();
-		const res = await put(context, `notes/${noteId}/links`, form);
-		return json(await res.json());
+		return await handleBulkLinkToNote(request, context, noteId);
 	}
 
 	// Handle folder requests
 	if (request.method === "POST") {
-		const { folderName } = await zx.parseForm(request, { folderName: z.string() });
-		const form = await request.formData();
-		form.append("userId", userId);
-		form.append("name", folderName);
-		form.append("noteId", noteId);
-
-		const res = await post(context, "folders", form);
-		return json(await res.json());
+		return await handleLinkNoteToFolder(request, context, userId, noteId);
 	}
 
 	// Handle updating the note itself
 	if (request.method === "PATCH") {
 		const form = await request.formData();
-		const res = await patch(context, `notes/${noteId}`, form);
+		await patch(context, `notes/${noteId}`, form);
+		return json({ noteId, success: true });
 	}
 
-	// add intent to handle this and links
 	if (request.method === "DELETE") {
 		const db = createDrizzleForTurso(context.cloudflare.env);
 		return await handleDeleteNote(db, noteId);
 	}
-	return json({ success: "unknown" });
+	return methodNotAllowed();
 };
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
-	const { noteId } = zx.parseParams(params, { noteId: z.string() });
+	const noteId = extractParam("noteId", params);
 	const userId = await validateUser(request);
 
 	const db = createDrizzleForTurso(context.cloudflare.env);

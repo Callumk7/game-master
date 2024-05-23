@@ -1,15 +1,15 @@
-import { Outlet, useSubmit } from "@remix-run/react";
-import { EntityView, EntityHeader, SidebarLayout } from "~/components/layout";
-import { loader } from "./route";
-import { useTypedLoaderData } from "remix-typedjson";
-import { Link } from "~/components/ui/link";
-import { NavigationLinks } from "~/components/navigation";
-import { DialogTrigger } from "react-aria-components";
-import { Button } from "~/components/ui/button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { Menu, MenuItem } from "~/components/ui/menu";
+import { Outlet, useSubmit } from "@remix-run/react";
 import { useState } from "react";
+import { DialogTrigger } from "react-aria-components";
+import { useTypedLoaderData } from "remix-typedjson";
+import { EntityHeader, EntityView, SidebarLayout } from "~/components/layout";
+import { NavigationLinks } from "~/components/navigation";
+import { Button } from "~/components/ui/button";
+import { Link } from "~/components/ui/link";
+import { Menu, MenuItem } from "~/components/ui/menu";
 import { CharacterSidebar } from "./components/character-sidebar";
+import type { loader } from "./route";
 
 export function CharacterView() {
 	const { characterData, noteTree } = useTypedLoaderData<typeof loader>();
@@ -21,6 +21,10 @@ export function CharacterView() {
 		{
 			name: "Notes",
 			href: `/characters/${characterData.id}/notes`,
+		},
+		{
+			name: "Faction",
+			href: `/characters/${characterData.id}/faction`,
 		},
 		{
 			name: "links",

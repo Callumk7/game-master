@@ -1,12 +1,12 @@
 import { eq, and, inArray } from "drizzle-orm";
-import { DB } from "../db";
+import type { DB } from "../db";
 import { charactersInFactions } from "../db/schemas/characters";
 import { factions } from "../db/schemas/factions";
 import { notesOnFactions } from "../db/schemas/notes";
 import { plotsOnFactions } from "../db/schemas/plots";
 import { factionsInSessions } from "../db/schemas/sessions";
 import type { Faction, FactionInsert, MultiSelectString } from "../types";
-import { LINK_INTENT } from "./util";
+import type { LINK_INTENT } from "./util";
 import { handleLinkingByIntent } from "./generic";
 
 ///
@@ -209,7 +209,7 @@ export const deleteSessionsFromFaction = async (
 ///
 /// Complete Update Functions
 ///
-export const handleFactionLinking = async (
+export const handleBulkFactionLinking = async (
 	db: DB,
 	factionId: string,
 	targetIds: MultiSelectString,

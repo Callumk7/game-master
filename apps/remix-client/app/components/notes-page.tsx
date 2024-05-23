@@ -5,7 +5,7 @@ import { EditorContent } from "@tiptap/react";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { Button } from "./ui/button";
 import { useFetcher, useNavigate } from "@remix-run/react";
-import { EntityType, LINK_INTENT, Note } from "@repo/db";
+import { type EntityType, LINK_INTENT, type Note } from "@repo/db";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
 import { RenderHtml } from "./render-html";
 

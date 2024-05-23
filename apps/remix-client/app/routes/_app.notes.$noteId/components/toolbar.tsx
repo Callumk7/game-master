@@ -7,7 +7,7 @@ import { Popover } from "~/components/ui/popover";
 import { DialogTrigger } from "react-aria-components";
 import { Dialog } from "~/components/ui/dialog";
 import { ComboBox, ComboBoxItem } from "~/components/ui/combobox";
-import { BasicEntity } from "@repo/db";
+import type { BasicEntity } from "@repo/db";
 import { NoteLinksSlideOver } from "./links-slideover";
 
 interface EditNoteToolbarProps {
@@ -30,11 +30,6 @@ export function EditNoteToolbar({
 			<ToggleButton isSelected={isEditing} onChange={setIsEditing} size="icon">
 				<Pencil1Icon />
 			</ToggleButton>
-			<Form method="DELETE" action={`/notes/${noteId}`}>
-				<Button variant="ghost" size="icon" type="submit">
-					<TrashIcon />
-				</Button>
-			</Form>
 			<DialogTrigger>
 				<Button variant="ghost" size="icon">
 					<BookmarkIcon />
@@ -58,6 +53,16 @@ export function EditNoteToolbar({
 				</Popover>
 			</DialogTrigger>
 			<NoteLinksSlideOver />
+			<Form method="DELETE" action={`/notes/${noteId}`}>
+				<Button
+					variant="ghost"
+					size="icon"
+					type="submit"
+					className={"hover:text-destructive-10"}
+				>
+					<TrashIcon />
+				</Button>
+			</Form>
 		</Toolbar>
 	);
 }

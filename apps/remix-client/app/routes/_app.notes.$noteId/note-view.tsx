@@ -1,5 +1,5 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import { loader } from "./route";
+import type { loader } from "./route";
 import { EditableText } from "~/components/editable-text";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { EditorPreview } from "~/components/editor-preview";
