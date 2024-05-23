@@ -1,5 +1,5 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import { loader } from "./route";
+import type { loader } from "./route";
 import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useNavigate } from "@remix-run/react";
@@ -7,7 +7,7 @@ import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-tabl
 import { TableBody } from "react-aria-components";
 import { useSortTable } from "~/hooks/sort-table";
 import { Tag, TagGroup } from "~/components/ui/tag-group";
-import { Note } from "@repo/db";
+import type { Note } from "@repo/db";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
 

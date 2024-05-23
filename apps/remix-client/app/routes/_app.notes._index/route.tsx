@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { typedjson } from "remix-typedjson";
 import { getUserId, getUserSession } from "~/lib/auth";
 import NotesView from "./notes-index-view";
