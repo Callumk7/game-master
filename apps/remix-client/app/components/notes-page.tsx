@@ -1,5 +1,5 @@
 import { Header } from "./typeography";
-import { useSortTable } from "~/hooks/sort-table";
+import { useSort } from "~/hooks/sort";
 import { Toolbar } from "./ui/toolbar";
 import { EditorContent } from "@tiptap/react";
 import { useSyncEditor } from "~/hooks/sync-editor";
@@ -18,7 +18,7 @@ interface NotePageProps {
 
 export function NotePage({ notes, entityId, entityType, action }: NotePageProps) {
 	// TODO: Should make this sort hook more generic for use in all collections
-	const sort = useSortTable(notes);
+	const sort = useSort(notes);
 	return (
 		<div className="space-y-4">
 			<QuickNoteSlideOver action={action} />

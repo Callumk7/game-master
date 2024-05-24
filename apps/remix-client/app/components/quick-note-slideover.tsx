@@ -19,7 +19,7 @@ export function QuickNoteSlideOver({ action, size }: QuickNoteSlideOverProps) {
 					<Pencil2Icon />
 				</Button>
 			</Tooltip>
-			<SlideOver isDismissable size={size}>
+			<SlideOver isDismissable size={size} className="p-6">
 				<Dialog className="h-full">
 					{({ close }) => <AddNoteForm action={action} close={close} />}
 				</Dialog>

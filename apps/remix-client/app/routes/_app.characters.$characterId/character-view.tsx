@@ -6,7 +6,6 @@ import { useTypedLoaderData } from "remix-typedjson";
 import { EntityHeader, EntityView, SidebarLayout } from "~/components/layout";
 import { NavigationLinks } from "~/components/navigation";
 import { Button } from "~/components/ui/button";
-import { Link } from "~/components/ui/link";
 import { Menu, MenuItem } from "~/components/ui/menu";
 import { CharacterSidebar } from "./components/character-sidebar";
 import type { loader } from "./route";
@@ -31,7 +30,7 @@ export function CharacterView() {
 			href: `/characters/${characterData.id}/links`,
 		},
 	];
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	return (
 		<SidebarLayout
 			isSidebarOpen={isSidebarOpen}

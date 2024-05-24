@@ -1,21 +1,17 @@
 import { TrashIcon } from "@radix-ui/react-icons";
-import { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { useSubmit } from "@remix-run/react";
-import {
+import type {
 	CharacterWithRaceAndFactions,
-	createDrizzleForTurso,
-	getAllUserCharacters,
 } from "@repo/db";
 import { Group, TableBody } from "react-aria-components";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { EntityFilter } from "~/components/entity-filter";
 import { Header } from "~/components/typeography";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
 import { Button } from "~/components/ui/button";
 import { Tag, TagGroup } from "~/components/ui/tag-group";
 import { Toolbar } from "~/components/ui/toolbar";
-import { useFilterByRelation } from "~/hooks/filter-by-relation";
-import { useSortTable } from "~/hooks/sort-table";
+import { useSort } from "~/hooks/sort";
 import { validateUser } from "~/lib/auth";
 import { createApi } from "~/lib/game-master";
 
@@ -49,7 +45,7 @@ interface CharacterTableProps {
 }
 
 function CharacterTable({ characters }: CharacterTableProps) {
-	const sort = useSortTable(characters, "name");
+	const sort = useSort(characters, "name");
 	const submit = useSubmit();
 	return (
 		<Table

@@ -5,8 +5,7 @@ import { Button } from "~/components/ui/button";
 import { useNavigate } from "@remix-run/react";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
 import { TableBody } from "react-aria-components";
-import { useSortTable } from "~/hooks/sort-table";
-import { Tag, TagGroup } from "~/components/ui/tag-group";
+import { useSort } from "~/hooks/sort";
 import type { Note } from "@repo/db";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
@@ -42,7 +41,7 @@ interface TableOfNotesProps {
 }
 
 export function TableOfNotes({ notes }: TableOfNotesProps) {
-	const sort = useSortTable(notes, "name");
+	const sort = useSort(notes, "name");
 
 	return (
 		<Table

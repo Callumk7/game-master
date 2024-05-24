@@ -6,6 +6,8 @@ import { SidebarLayout } from "~/components/layout";
 import { Sidebar } from "~/components/sidebar";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
 import { getAllUserData } from "./queries.server";
+import { Button } from "~/components/ui/button";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -72,7 +74,18 @@ export default function AppRoute() {
 				/>
 			}
 		>
-			<Outlet />
+			<div className="relative">
+				{!isSidebarOpen && (
+					<Button
+						size="icon-sm"
+						onPress={() => setIsSidebarOpen(true)}
+						className="absolute left-9 top-2 z-50"
+					>
+						<ChevronRightIcon />
+					</Button>
+				)}
+				<Outlet />
+			</div>
 		</SidebarLayout>
 	);
 }

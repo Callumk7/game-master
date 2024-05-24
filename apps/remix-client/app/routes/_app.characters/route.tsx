@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { Outlet } from "@remix-run/react";
 import { internalServerError, methodNotAllowed } from "@repo/db";
 import ky from "ky";
@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zx } from "zodix";
 import { MainContainer } from "~/components/layout";
 
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+export const action = async ({ request, context }: ActionFunctionArgs) => {
 	if (request.method === "DELETE") {
 		// handle delete character
 		const { characterId } = await zx.parseForm(request, { characterId: z.string() });

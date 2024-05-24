@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SortDescriptor } from "react-aria-components";
+import type { SortDescriptor } from "react-aria-components";
 
 // biome-ignore lint/suspicious/noExplicitAny:
 export const applySort = <T extends Record<string, any>>(
@@ -10,9 +10,11 @@ export const applySort = <T extends Record<string, any>>(
 		return items;
 	}
 	const sortedItems = items.sort((a, b) => {
+		// biome-ignore lint/style/noNonNullAssertion: Will have column
 		const first = a[sortDescriptor.column!];
+		// biome-ignore lint/style/noNonNullAssertion: Will have columm
 		const second = b[sortDescriptor.column!];
-		let cmp = (parseInt(first) || first) < (parseInt(second) || second) ? -1 : 1;
+		let cmp = (Number.parseInt(first) || first) < (Number.parseInt(second) || second) ? -1 : 1;
 		if (sortDescriptor.direction === "descending") {
 			cmp *= -1;
 		}
@@ -23,7 +25,7 @@ export const applySort = <T extends Record<string, any>>(
 };
 
 // biome-ignore lint/suspicious/noExplicitAny:
-export const useSortTable = <T extends Record<string, any>>(
+export const useSort = <T extends Record<string, any>>(
 	items: T[],
 	defaultColumn = "name",
 ) => {

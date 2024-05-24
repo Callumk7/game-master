@@ -19,10 +19,11 @@ export function AddNoteForm({ action, close }: AddNoteFormProps) {
 		>
 			<div className="flex relative flex-col gap-6 h-full">
 				<Input
-					defaultValue="Note Title.."
+          placeholder="Note Title.."
 					type="text"
 					name="name"
 					className={"text-3xl font-semibold h-16 grow-0"}
+          autoFocus
 				/>
 				<TextEditor editor={editor} />
 				{editor && <input type="hidden" value={editor.getHTML()} name="htmlContent" />}

@@ -2,12 +2,12 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import {
 	ListBox as AriaListBox,
 	ListBoxItem as AriaListBoxItem,
-	ListBoxProps as AriaListBoxProps,
+	type ListBoxProps as AriaListBoxProps,
 	Collection,
 	Header,
-	ListBoxItemProps,
+	type ListBoxItemProps,
 	Section,
-	SectionProps,
+	type SectionProps,
 	composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
@@ -34,7 +34,7 @@ export const itemStyles = tv({
 	base: "group relative flex items-center gap-8 cursor-default select-none py-1.5 px-2.5 rounded-md will-change-transform text-sm forced-color-adjust-none",
 	variants: {
 		isSelected: {
-			false: "text-grade-12 hover:bg-grade-4 -outline-offset-2",
+			false: "text-grade-12 hover:bg-primary-3 -outline-offset-2",
 			true: "bg-blue-600 text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText] [&:has(+[data-selected])]:rounded-b-none [&+[data-selected]]:rounded-t-none -outline-offset-4 outline-white dark:outline-white forced-colors:outline-[HighlightText]",
 		},
 		isDisabled: {

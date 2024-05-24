@@ -1,4 +1,4 @@
-import { BasicEntity, EntityType } from "@repo/db";
+import type { BasicEntity, EntityType } from "@repo/db";
 import { ListBox, ListBoxItem } from "./ui/list-box";
 
 interface EntityListBoxProps<T> {

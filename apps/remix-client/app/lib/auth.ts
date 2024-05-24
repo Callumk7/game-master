@@ -1,4 +1,4 @@
-import { Session, createCookie, redirect } from "@remix-run/cloudflare";
+import { type Session, createCookie, redirect } from "@remix-run/cloudflare";
 import { createCookieSessionStorage } from "@remix-run/cloudflare"; // or cloudflare/deno
 
 const secret = "5upErsEce7";
