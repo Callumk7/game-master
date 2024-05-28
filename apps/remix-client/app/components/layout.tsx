@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import { tv } from "tailwind-variants";
 import { EditableText } from "./editable-text";
-import { FormMethod } from "@remix-run/react";
+import type { FormMethod } from "@remix-run/react";
 import { INTENT } from "@repo/db";
 import { cn } from "callum-util";
 

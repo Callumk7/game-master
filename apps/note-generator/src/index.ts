@@ -13,8 +13,8 @@ export default {
 			return new Response("No q found.");
 		}
 		console.log(q)
-		const response = await env.AI.run("@cf/meta/llama-2-7b-chat-int8", {
-			prompt: "q",
+		const response = await env.AI.run("@hf/mistral/mistral-7b-instruct-v0.2", {
+			prompt: q,
 		});
 
 		return new Response(JSON.stringify(response));

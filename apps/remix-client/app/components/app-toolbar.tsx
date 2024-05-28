@@ -8,11 +8,8 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Toolbar } from "./ui/toolbar";
 import { Tooltip } from "./ui/tooltip";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
-import { ComboBox, ComboBoxItem } from "./ui/combobox";
-import { useAppData } from "~/routes/_app/route";
-import type { BasicEntity } from "@repo/db";
 
 interface AppToolbarProps {
 	isSidebarOpen: boolean;
