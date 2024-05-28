@@ -1,9 +1,4 @@
-import {
-	CaretSortIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	ExitIcon,
-} from "@radix-ui/react-icons";
+import { ChevronLeftIcon, ChevronRightIcon, ExitIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Toolbar } from "./ui/toolbar";
@@ -27,11 +22,6 @@ export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps)
 				<Separator orientation="vertical" />
 				<Tooltip content={"Create new..."}>
 					<QuickNoteSlideOver action="/notes/new" />
-				</Tooltip>
-				<Tooltip content={"Toggle Sort"}>
-					<Button variant="secondary" size="icon-sm" type="submit">
-						<CaretSortIcon />
-					</Button>
 				</Tooltip>
 				<Tooltip content={"Logout"}>
 					<Form method="POST" action="/logout">

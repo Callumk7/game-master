@@ -18,8 +18,8 @@ import {
 	type NoteInsert,
 	createNoteFromInsert,
 	charactersInSessions,
-    notesOnCharacters,
-    notesOnSessions,
+	notesOnCharacters,
+	notesOnSessions,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerError } from "~/utils";
@@ -102,8 +102,8 @@ sessionsRoute.put("/:sessionId/links", async (c) => {
 	return await handleBulkSessionLinking(db, sessionId, targetIds, intent);
 });
 
-// Here, we are letting the user create a note as to why the character is linked to the 
-// session. As such, it makes sense to also link the note to both the session and the 
+// Here, we are letting the user create a note as to why the character is linked to the
+// session. As such, it makes sense to also link the note to both the session and the
 // character.
 sessionsRoute.post("/:sessionId/characters/:characterId", async (c) => {
 	const { sessionId, characterId } = c.req.param();
@@ -135,14 +135,14 @@ sessionsRoute.post("/:sessionId/characters/:characterId", async (c) => {
 	// Here we are going to create the links between note and character/session
 	await db.insert(notesOnCharacters).values({
 		characterId,
-		noteId: newNote.id
-	})
-	// This last one might be weird.. because the note will appear in the note feed on the 
+		noteId: newNote.id,
+	});
+	// This last one might be weird.. because the note will appear in the note feed on the
 	// session view, which is probably a duplication of information
 	await db.insert(notesOnSessions).values({
 		sessionId,
-		noteId: newNote.id
-	})
+		noteId: newNote.id,
+	});
 
 	return c.json(newNote);
 });
