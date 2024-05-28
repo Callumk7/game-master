@@ -15,20 +15,20 @@ import type {
 	Plot,
 	Session,
 } from "@repo/db";
-import { Link } from "./ui/link";
-import { Button } from "./ui/button";
+import { Link } from "~/components/ui/link";
+import { Button } from "~/components/ui/button";
 import { Form, useNavigate } from "@remix-run/react";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { DialogTrigger } from "react-aria-components";
-import { Popover } from "./ui/popover";
-import { Dialog } from "./ui/dialog";
-import { TextField } from "./ui/text-field";
-import { AppToolbar } from "./app-toolbar";
-import { EntityListBox } from "./entity-listbox";
-import { Header } from "./typeography";
-import { NewSessionForm } from "./forms/new-session";
-import { NewCharacterForm } from "./forms/new-character";
-import { NewFactionForm } from "./forms/new-faction";
+import { Popover } from "~/components/ui/popover";
+import { Dialog } from "~/components/ui/dialog";
+import { TextField } from "~/components/ui/text-field";
+import { AppToolbar } from "~/components/app-toolbar";
+import { EntityListBox } from "~/components/entity-listbox";
+import { Header } from "~/components/typeography";
+import { NewSessionForm } from "~/components/forms/new-session";
+import { NewCharacterForm } from "~/components/forms/new-character";
+import { NewFactionForm } from "~/components/forms/new-faction";
 
 interface SidebarProps {
 	isSidebarOpen: boolean;

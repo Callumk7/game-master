@@ -4,23 +4,73 @@ import { Toolbar } from "./ui/toolbar";
 import { EditorContent } from "@tiptap/react";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { Button } from "./ui/button";
-import { useFetcher, useNavigate } from "@remix-run/react";
+import { useFetcher, useNavigate, useSubmit } from "@remix-run/react";
 import { type EntityType, LINK_INTENT, type Note } from "@repo/db";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
 import { RenderHtml } from "./render-html";
+import { Link1Icon } from "@radix-ui/react-icons";
+import { DialogTrigger, type Key } from "react-aria-components";
+import { Menu, MenuItem } from "./ui/menu";
+import { useAppData } from "~/routes/_app/route";
 
 interface NotePageProps {
 	entityId: string;
 	entityType: EntityType;
 	notes: Note[];
 	action?: string;
+	linkAction?: string;
 }
 
-export function NotePage({ notes, entityId, entityType, action }: NotePageProps) {
+export function NotePage({
+	notes,
+	entityId,
+	entityType,
+	action,
+	linkAction,
+}: NotePageProps) {
+	const { allNotes } = useAppData();
 	const sort = useSort(notes);
+	const submit = useSubmit();
+	let intent: LINK_INTENT;
+
+	switch (entityType) {
+		case "characters":
+			intent = LINK_INTENT.CHARACTERS;
+			break;
+		case "factions":
+			intent = LINK_INTENT.FACTIONS;
+			break;
+		case "plots":
+			intent = LINK_INTENT.PLOTS;
+			break;
+		case "notes":
+			intent = LINK_INTENT.NOTES;
+			break;
+		case "sessions":
+			intent = LINK_INTENT.SESSIONS;
+			break;
+		case "locations":
+			intent = LINK_INTENT.NOTES;
+			break;
+	}
+
+	const handleAction = (k: Key) => {
+		submit({ intent, noteId: k.toString() }, { method: "PUT", action: linkAction });
+	};
+
 	return (
 		<div className="space-y-4">
-			<QuickNoteSlideOver action={action} />
+			<Toolbar>
+				<QuickNoteSlideOver action={action} />
+				<DialogTrigger>
+					<Button size="icon-sm" variant="secondary">
+						<Link1Icon />
+					</Button>
+					<Menu onAction={handleAction} items={allNotes}>
+						{(item) => <MenuItem>{item.name}</MenuItem>}
+					</Menu>
+				</DialogTrigger>
+			</Toolbar>
 			{notes.length > 0 && (
 				<div className="p-4 rounded-lg border border-grade-6">
 					{sort.sortedItems.map((note) => (

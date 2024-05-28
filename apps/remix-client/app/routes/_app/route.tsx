@@ -3,11 +3,11 @@ import { Outlet } from "@remix-run/react";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { SidebarLayout } from "~/components/layout";
-import { Sidebar } from "~/components/sidebar";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
 import { getAllUserData } from "./queries.server";
 import { Button } from "~/components/ui/button";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { Sidebar } from "./components/sidebar";
 
 export const meta: MetaFunction = () => {
 	return [

@@ -83,6 +83,7 @@ notesRoute.post("/", async (c) => {
 	return c.json(newNote);
 });
 
+// post is for a single link
 notesRoute.post("/:noteId/links", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { intent, linkIds } = await zx.parseForm(c.req.raw, {

@@ -1,67 +1,62 @@
 import { useSessionRouteData } from "../_app.sessions.$sessionId/route";
-import { Form, json } from "@remix-run/react";
-import { useAppData } from "../_app/route";
-import { Card } from "~/components/card";
-import { Header } from "~/components/typeography";
-import { RenderHtml } from "~/components/render-html";
-import { Select, SelectItem } from "~/components/ui/select";
-import { Button } from "~/components/ui/button";
-import { SewingPinIcon } from "@radix-ui/react-icons";
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
+import { json, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
-import { patch } from "~/lib/game-master";
+import { patch, post } from "~/lib/game-master";
 import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from "~/components/ui/collapsible";
+	LINK_INTENT,
+	createDrizzleForTurso,
+	methodNotAllowed,
+	noContent,
+	sessions,
+} from "@repo/db";
+import { eq } from "drizzle-orm";
+import { PinnedNote } from "./components/pinned-note";
+import { NotePage } from "~/components/notes-page";
+import { validateUser } from "~/lib/auth";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
+	const userId = await validateUser(request);
 	const form = await request.formData();
-	const res = await patch(context, `sessions/${sessionId}`, form);
-	return json(await res.json());
+
+	if (request.method === "POST") {
+		// creating a note in the session view
+		form.append("userId", userId);
+		form.append("linkId", sessionId);
+		form.append("intent", LINK_INTENT.SESSIONS);
+		const res = await post(context, "notes", form);
+		return json(await res.json());
+	}
+
+	if (request.method === "PATCH") {
+		const res = await patch(context, `sessions/${sessionId}`, form);
+		return json(await res.json());
+	}
+
+	if (request.method === "PUT") {
+		const noteId = form.get("noteId");
+		form.append("linkIds", sessionId);
+		const res = await post(context, `notes/${noteId}/links`, form);
+		return json(await res.json());
+	}
+
+	if (request.method === "DELETE") {
+		const db = createDrizzleForTurso(context.cloudflare.env);
+		await db.update(sessions).set({ pinnedNoteId: "" }).where(eq(sessions.id, sessionId));
+		return noContent();
+	}
+	return methodNotAllowed();
 };
 
 export default function SessionViewIndex() {
 	const { session } = useSessionRouteData();
+	const notes = session.notes.map((note) => note.note);
 	return (
-		<div>
-			<PinnedNote pinnedNoteId={session.pinnedNoteId} />
+		<div className="space-y-16">
+			<PinnedNote pinnedNoteId={session.pinnedNoteId} sessionId={session.id} />
+			<NotePage notes={notes} entityId={session.id} entityType={"sessions"} action="" />
 		</div>
 	);
 }
 
-function PinnedNote({ pinnedNoteId }: { pinnedNoteId: string | null }) {
-	const { allNotes } = useAppData();
-	const note = allNotes.find((note) => note.id === pinnedNoteId);
-	if (!note) {
-		return (
-			<div className="max-w-md">
-				<Form method="POST" className="flex gap-2 items-center">
-					<Select name="pinnedNoteId" items={allNotes} placeholder="Select a note to pin">
-						{(item) => <SelectItem>{item.name}</SelectItem>}
-					</Select>
-					<Button type="submit" size="icon-sm">
-						<SewingPinIcon />
-					</Button>
-				</Form>
-			</div>
-		);
-	}
-
-	return (
-		<Card className="border-amber-6">
-			<Collapsible>
-				<CollapsibleTrigger>
-					<div className="w-full">
-						<Header style="h3">{note.name}</Header>
-					</div>
-				</CollapsibleTrigger>
-				<CollapsibleContent>
-					<RenderHtml content={note.htmlContent} />
-				</CollapsibleContent>
-			</Collapsible>
-		</Card>
-	);
-}
+// have to handle the case where we might want to remove the pinned note

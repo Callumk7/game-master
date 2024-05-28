@@ -1,12 +1,10 @@
-import { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
-import { z } from "zod";
-import { zx } from "zodix";
-import { SessionLayout } from "./session-layout";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { createDrizzleForTurso, getCompleteSession } from "@repo/db";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { extractParam } from "~/lib/zx-util";
+import { SessionLayout } from "./session-layout";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
 
 	const db = createDrizzleForTurso(context.cloudflare.env);

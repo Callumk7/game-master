@@ -35,7 +35,7 @@ export const itemStyles = tv({
 	variants: {
 		isSelected: {
 			false: "text-grade-12 hover:bg-primary-3 -outline-offset-2",
-			true: "bg-blue-600 text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText] [&:has(+[data-selected])]:rounded-b-none [&+[data-selected]]:rounded-t-none -outline-offset-4 outline-white dark:outline-white forced-colors:outline-[HighlightText]",
+			true: "bg-primary-10 text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText] [&:has(+[data-selected])]:rounded-b-none [&+[data-selected]]:rounded-t-none -outline-offset-4 outline-white dark:outline-white forced-colors:outline-[HighlightText]",
 		},
 		isDisabled: {
 			true: "text-grade-9 forced-colors:text-[GrayText]",
@@ -66,7 +66,7 @@ export const dropdownItemStyles = tv({
 			true: "text-grade-9 forced-colors:text-[GrayText]",
 		},
 		isFocused: {
-			true: "bg-blue-600 text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
+			true: "bg-primary-10 text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]",
 		},
 	},
 });

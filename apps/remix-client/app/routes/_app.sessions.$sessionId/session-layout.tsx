@@ -1,5 +1,5 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import { loader } from "./route";
+import type { loader } from "./route";
 import { Container, EntityHeader, EntityView } from "~/components/layout";
 import { Outlet } from "@remix-run/react";
 import { Menu, MenuItem } from "~/components/ui/menu";
@@ -12,7 +12,7 @@ export function SessionLayout() {
 	const links = [
 		{
 			name: "Notes",
-			href: `/sessions/${session.id}/notes`,
+			href: `/sessions/${session.id}`,
 		},
 		{
 			name: "Links",
