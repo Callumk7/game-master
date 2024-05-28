@@ -1,8 +1,8 @@
 import {
 	Popover as AriaPopover,
-	PopoverProps as AriaPopoverProps,
+	type PopoverProps as AriaPopoverProps,
 } from "react-aria-components";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { cn } from "callum-util";
 
 export interface PopoverProps extends Omit<AriaPopoverProps, "children"> {

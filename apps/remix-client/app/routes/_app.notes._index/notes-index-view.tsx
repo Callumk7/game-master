@@ -4,11 +4,13 @@ import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useNavigate } from "@remix-run/react";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
-import { TableBody } from "react-aria-components";
+import { DialogTrigger, SubmenuTrigger, TableBody } from "react-aria-components";
 import { useSort } from "~/hooks/sort";
 import type { Note } from "@repo/db";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
+import { Menu, MenuItem, MenuSection, MenuSeparator } from "~/components/ui/menu";
+import { useState } from "react";
 
 export default function NotesView() {
 	const { allNotes } = useTypedLoaderData<typeof loader>();
@@ -24,23 +26,34 @@ export default function NotesView() {
 
 	const navigate = useNavigate();
 
+	const [isSelecting, setIsSelecting] = useState(false);
+
 	return (
 		<div className="space-y-4">
 			<Header style="h1">All Notes</Header>
-      <Toolbar>
-        <SearchField />
-      </Toolbar>
-			<TableOfNotes notes={formattedNotes} />
-			<Button onPress={() => navigate("/notes/new")}>Add</Button>
+			<Toolbar>
+				<SearchField />
+				<DialogTrigger>
+					<Button size="sm">Menu</Button>
+					<Menu>
+						<MenuItem onAction={() => navigate("/notes/new")}>Create New</MenuItem>
+						<MenuItem onAction={() => setIsSelecting(!isSelecting)}>Select</MenuItem>
+						<MenuItem>Delete</MenuItem>
+						<MenuItem>Link To...</MenuItem>
+					</Menu>
+				</DialogTrigger>
+			</Toolbar>
+			<TableOfNotes notes={formattedNotes} isSelecting={isSelecting} />
 		</div>
 	);
 }
 
 interface TableOfNotesProps {
 	notes: Note[];
+	isSelecting: boolean;
 }
 
-export function TableOfNotes({ notes }: TableOfNotesProps) {
+export function TableOfNotes({ notes, isSelecting }: TableOfNotesProps) {
 	const sort = useSort(notes, "name");
 
 	return (
@@ -48,7 +61,7 @@ export function TableOfNotes({ notes }: TableOfNotesProps) {
 			sortDescriptor={sort.sortDescriptor}
 			onSortChange={sort.handleSortChange}
 			aria-label="note table"
-			selectionMode="multiple"
+			selectionMode={isSelecting ? "multiple" : "none"}
 		>
 			<TableHeader>
 				<Column id="name" isRowHeader width={"2fr"} allowsSorting>

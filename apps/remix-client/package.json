@@ -41,7 +41,7 @@
 		"miniflare": "^3.20240404.0",
 		"react": "^18.2.0",
 		"react-aria": "^3.32.1",
-		"react-aria-components": "^1.1.1",
+		"react-aria-components": "^1.2.1",
 		"react-dom": "^18.2.0",
 		"react-stately": "^3.30.1",
 		"remix-typedjson": "^0.4.1",

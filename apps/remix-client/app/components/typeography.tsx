@@ -42,9 +42,16 @@ export function Header({ className, style, colour, children }: HeaderProps) {
 interface HeaderLinkProps extends HeaderProps {
 	to: string;
 }
-export function HeaderLink({ className, style, link, children, to }: HeaderLinkProps) {
+export function HeaderLink({
+	className,
+	style,
+	colour,
+	link,
+	children,
+	to,
+}: HeaderLinkProps) {
 	return (
-		<Link to={to} className={typeStyles({ className, style, link })}>
+		<Link to={to} className={typeStyles({ className, style, colour, link })}>
 			{children}
 		</Link>
 	);

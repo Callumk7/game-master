@@ -1,15 +1,12 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { Form } from "@remix-run/react";
-import { noContent, type Character, OptionalEntitySchema, LINK_INTENT } from "@repo/db";
+import { noContent, type Character, LINK_INTENT } from "@repo/db";
 import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxGroup } from "~/components/ui/checkbox";
 import { extractParam } from "~/lib/zx-util";
 import { useAppData } from "../_app/route";
-import { getFormAndAppendUserId } from "~/lib/forms";
 import { post, put } from "~/lib/game-master";
-import { validateUser } from "~/lib/auth";
-import { zx } from "zodix";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const factionId = extractParam("factionId", params);

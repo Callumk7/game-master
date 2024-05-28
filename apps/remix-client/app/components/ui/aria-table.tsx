@@ -111,7 +111,7 @@ export function TableHeader<T extends object>(props: TableHeaderProps<T>) {
 
 const rowStyles = tv({
 	extend: focusRing,
-	base: "group/row relative cursor-default select-none -outline-offset-2 text-grade-12 disabled:text-grade-7 text-sm hover:bg-primary-2 selected:bg-blue-100 selected:hover:bg-blue-200 dark:selected:bg-blue-700/30 dark:selected:hover:bg-blue-700/40",
+	base: "group/row relative cursor-default select-none -outline-offset-2 text-grade-12 disabled:text-gray-300 dark:disabled:text-zinc-600 text-sm hover:bg-grade-3 selected:bg-blue-100 selected:hover:bg-blue-200 dark:selected:bg-blue-700/30 dark:selected:hover:bg-blue-700/40",
 });
 
 export function Row<T extends object>({

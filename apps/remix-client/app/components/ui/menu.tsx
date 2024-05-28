@@ -1,14 +1,18 @@
 import {
 	Menu as AriaMenu,
 	MenuItem as AriaMenuItem,
-	MenuProps as AriaMenuProps,
-	MenuItemProps,
+	type MenuProps as AriaMenuProps,
+	type MenuItemProps,
 	Separator,
-	SeparatorProps,
+	type SeparatorProps,
 	composeRenderProps,
 } from "react-aria-components";
-import { DropdownSection, DropdownSectionProps, dropdownItemStyles } from "./list-box";
-import { Popover, PopoverProps } from "./popover";
+import {
+	DropdownSection,
+	type DropdownSectionProps,
+	dropdownItemStyles,
+} from "./list-box";
+import { Popover, type PopoverProps } from "./popover";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 interface MenuProps<T> extends AriaMenuProps<T> {

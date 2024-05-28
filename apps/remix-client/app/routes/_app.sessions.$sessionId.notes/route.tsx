@@ -1,10 +1,10 @@
+import { LINK_INTENT, methodNotAllowed } from "@repo/db";
 import { NotePage } from "~/components/notes-page";
-import { useSessionRouteData } from "../_app.sessions.$sessionId/route";
-import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
-import { LINK_INTENT, createDrizzleForTurso, methodNotAllowed } from "@repo/db";
-import { extractParam } from "~/lib/zx-util";
-import { post } from "~/lib/game-master";
 import { validateUser } from "~/lib/auth";
+import { post } from "~/lib/game-master";
+import { extractParam } from "~/lib/zx-util";
+import { useSessionRouteData } from "../_app.sessions.$sessionId/route";
+import { type ActionFunctionArgs, json } from "@remix-run/cloudflare";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
@@ -13,7 +13,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		// creating a note in the session view
 		const form = await request.formData();
 		form.append("userId", userId);
-		form.append("link", sessionId);
+		form.append("linkId", sessionId);
 		form.append("intent", LINK_INTENT.SESSIONS);
 		const res = await post(context, "notes", form);
 		return json(await res.json());
@@ -26,5 +26,7 @@ export default function SessionNotesView() {
 	const { session } = useSessionRouteData();
 	const notes = session.notes.map((note) => note.note);
 
-	return <NotePage notes={notes} entityId={session.id} entityType={"sessions"} />;
+	return (
+		<NotePage notes={notes} entityId={session.id} entityType={"sessions"} action="" />
+	);
 }

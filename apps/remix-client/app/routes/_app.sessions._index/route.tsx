@@ -27,15 +27,17 @@ export default function SessionIndex() {
 	return (
 		<Container>
 			<Header>Sessions</Header>
-			{sessionsWithData.map((sesh) => (
-				<SessionCard
-					key={sesh.id}
-					session={sesh}
-					characters={sesh.characters.map((char) => char.character)}
-					factions={sesh.factions.map((fact) => fact.faction)}
-					notes={sesh.notes.map((note) => note.note)}
-				/>
-			))}
+			<div className="flex flex-col gap-y-7">
+				{sessionsWithData.map((sesh) => (
+					<SessionCard
+						key={sesh.id}
+						session={sesh}
+						characters={sesh.characters.map((char) => char.character)}
+						factions={sesh.factions.map((fact) => fact.faction)}
+						notes={sesh.notes.map((note) => note.note)}
+					/>
+				))}
+			</div>
 		</Container>
 	);
 }

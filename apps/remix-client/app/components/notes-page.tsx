@@ -17,21 +17,22 @@ interface NotePageProps {
 }
 
 export function NotePage({ notes, entityId, entityType, action }: NotePageProps) {
-	// TODO: Should make this sort hook more generic for use in all collections
 	const sort = useSort(notes);
 	return (
 		<div className="space-y-4">
 			<QuickNoteSlideOver action={action} />
-			<div className="p-4 rounded-lg border border-grade-6">
-				{sort.sortedItems.map((note) => (
-					<NoteBlock
-						key={note.id}
-						note={note}
-						entityId={entityId}
-						entityType={entityType}
-					/>
-				))}
-			</div>
+			{notes.length > 0 && (
+				<div className="p-4 rounded-lg border border-grade-6">
+					{sort.sortedItems.map((note) => (
+						<NoteBlock
+							key={note.id}
+							note={note}
+							entityId={entityId}
+							entityType={entityType}
+						/>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }
