@@ -171,9 +171,13 @@ charactersRoute.delete("/:characterId", async (c) => {
 		.where(eq(charactersInFactions.characterId, characterId));
 	const r3 = db
 		.delete(charactersInSessions)
-		.where(eq(charactersInSessions, characterId));
-	const r4 = db.delete(plotsOnCharacters).where(eq(plotsOnCharacters, characterId));
-	const r5 = db.delete(notesOnCharacters).where(eq(notesOnCharacters, characterId));
+		.where(eq(charactersInSessions.characterId, characterId));
+	const r4 = db
+		.delete(plotsOnCharacters)
+		.where(eq(plotsOnCharacters.characterId, characterId));
+	const r5 = db
+		.delete(notesOnCharacters)
+		.where(eq(notesOnCharacters.characterId, characterId));
 
 	await Promise.all([r1, r2, r3, r4, r5]);
 

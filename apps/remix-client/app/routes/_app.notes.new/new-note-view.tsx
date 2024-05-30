@@ -28,7 +28,7 @@ export function NewNoteView() {
 						defaultValue={searchParams.get("name") ?? "Note Title"}
 						type="text"
 						name="name"
-						className={"pl-0 text-3xl font-semibold bg-grade-2"}
+						className={"pl-0 text-3xl font-semibold"}
 						autoFocus
 					/>
 					<input type="hidden" name="htmlContent" value={editor?.getHTML()} />

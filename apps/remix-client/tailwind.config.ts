@@ -24,6 +24,9 @@ export default {
 				jade: getColorScale("jade"),
 				destructive: getColorScale("red"),
 			},
+			fontFamily: {
+				tanker: ["Tanker", "sans-serif"],
+			},
 		},
 	},
 	plugins: [

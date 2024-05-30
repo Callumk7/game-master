@@ -22,11 +22,7 @@ export default function SessionLinksView() {
 	const { session } = useSessionRouteData();
 	return (
 		<div>
-			<LinkTabsView
-				sessionName={session.name}
-				characters={session.characters}
-				factions={session.factions}
-			/>
+      <h1>Links View</h1>
 		</div>
 	);
 }

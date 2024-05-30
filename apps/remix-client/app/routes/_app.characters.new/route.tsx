@@ -1,10 +1,10 @@
-import { ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { MainContainer } from "~/components/layout";
 import { validateUser } from "~/lib/auth";
 import { NewCharacterForm } from "~/components/forms/new-character";
 import { post } from "~/lib/game-master";
 import { objectToFormData } from "~/lib/obj-to-form";
-import { BasicEntity, createDrizzleForTurso } from "@repo/db";
+import { type BasicEntity, createDrizzleForTurso } from "@repo/db";
 import { getRaceId } from "./queries.server";
 import { redirect } from "remix-typedjson";
 

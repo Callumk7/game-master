@@ -114,10 +114,10 @@ export function EntityHeader({
 					fieldName={"name"}
 					value={title}
 					inputClassName={
-						"text-3xl font-bold mb-5 focus:outline-none bg-inherit text-grade-12"
+						"text-5xl font-bold mb-5 font-tanker focus:outline-none bg-inherit text-grade-12"
 					}
 					inputLabel={"note name input"}
-					buttonClassName={"text-3xl font-bold mb-5 text-left"}
+					buttonClassName={"text-5xl font-bold font-tanker mb-5 text-left"}
 					buttonLabel={"note name button"}
 					method={updateTitleMethod ? updateTitleMethod : "patch"}
 					action={updateTitleAction}

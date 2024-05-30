@@ -1,11 +1,11 @@
 import { Link } from "@remix-run/react";
-import { ReactNode } from "react";
-import { VariantProps, tv } from "tailwind-variants";
+import type { ReactNode } from "react";
+import { type VariantProps, tv } from "tailwind-variants";
 
 export const typeStyles = tv({
 	variants: {
 		style: {
-			h1: "text-3xl font-bold mb-5",
+			h1: "text-3xl font-bold mb-5 font-tanker",
 			h2: "text-2xl font-semibold",
 			h3: "text-lg font-semibold",
 			h4: "font-semibold text-primary-11",

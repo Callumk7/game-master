@@ -30,8 +30,6 @@ export const sessionsRelations = relations(sessions, ({ one, many }) => ({
 		fields: [sessions.pinnedNoteId],
 		references: [notes.id],
 	}),
-
-	// logs: many(logs),
 }));
 
 export const charactersInSessions = sqliteTable(

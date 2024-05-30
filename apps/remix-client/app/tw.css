@@ -13,6 +13,14 @@
 @import '@radix-ui/colors/amber.css';
 @import '@radix-ui/colors/amber-dark.css';
 
+@font-face {
+    font-family: 'Tanker';
+    src: url('/fonts/Tanker-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

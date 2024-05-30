@@ -6,18 +6,10 @@ import {
 	Pencil1Icon,
 } from "@radix-ui/react-icons";
 import type { ReactNode } from "react";
-import type {
-	Character,
-	Faction,
-	FolderWithNotes,
-	NamedPlot,
-	Note,
-	Plot,
-	Session,
-} from "@repo/db";
+import type { Character, Faction, FolderWithNotes, Note, Session } from "@repo/db";
 import { Link } from "~/components/ui/link";
 import { Button } from "~/components/ui/button";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { DialogTrigger } from "react-aria-components";
 import { Popover } from "~/components/ui/popover";
@@ -49,7 +41,7 @@ export function Sidebar({
 	sessions,
 }: SidebarProps) {
 	return (
-		<div className="fixed pt-4 h-full min-h-screen max-h-screen border-r bg-primary-1 min-w-[15vw] max-w-56 border-grade-5">
+		<div className="fixed pt-4 pr-2 pl-4 h-full min-h-screen max-h-screen border-r bg-primary-1 min-w-[15vw] max-w-56 border-grade-5">
 			<ScrollArea className="h-full">
 				<AppToolbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 				<div className="p-2 space-y-4 border-b border-grade-6">
@@ -61,35 +53,7 @@ export function Sidebar({
 					>
 						<EntityListBox type="sessions" items={sessions} className="border-0" />
 					</SidebarSection>
-					<SidebarSection
-						title="Notes"
-						icon={<Pencil1Icon />}
-						href="/notes"
-						popover={
-							<Dialog>
-								{({ close }) => (
-									<Form method="GET" action="/notes/new" onSubmit={() => close()}>
-										<TextField label="Note Title" name="name" />
-									</Form>
-								)}
-							</Dialog>
-						}
-					>
-						{folders.map((folder) => (
-							<div key={folder.id}>
-								<Header style="h5" className="ml-1" colour="muted">
-									{folder.name}
-								</Header>
-								<EntityListBox type="notes" items={folder.notes} className="border-0" />
-							</div>
-						))}
-						<div>
-							<Header style="h5" colour="muted">
-								Unsorted
-							</Header>
-							<EntityListBox type="notes" items={notes} className="border-0" />
-						</div>
-					</SidebarSection>
+					<NoteSectionWithFolders folders={folders} unsortedNotes={notes} />
 					<SidebarSection
 						title="Characters"
 						icon={<PersonIcon />}
@@ -120,7 +84,6 @@ interface SidebarSectionProps {
 	children: ReactNode;
 	popover: ReactNode;
 }
-// TODO: there is no empty title validation on the create popover
 export function SidebarSection({
 	title,
 	href,
@@ -131,11 +94,7 @@ export function SidebarSection({
 	return (
 		<div className="relative py-3 w-full">
 			<div className="flex justify-between">
-				<Link
-					href={href}
-					size="sm"
-					className="flex gap-3 items-center font-semibold text-grade-11"
-				>
+				<Link href={href} size="sm" className="flex gap-3 items-center">
 					{icon}
 					<span>{title}</span>
 				</Link>
@@ -153,54 +112,49 @@ export function SidebarSection({
 
 // A section for each entity in the application.
 interface NoteSectionWithFoldersProps {
-	title: string;
-	href: string;
-	icon: ReactNode;
-	children: ReactNode;
-	isNoteSection?: boolean;
+	folders: FolderWithNotes[];
+	unsortedNotes: Note[];
 }
 // TODO: there is no empty title validation on the create popover
 export function NoteSectionWithFolders({
-	title,
-	href,
-	icon,
-	children,
-	isNoteSection,
+	folders,
+	unsortedNotes,
 }: NoteSectionWithFoldersProps) {
-	const navigate = useNavigate();
 	return (
-		<div className="relative py-3 w-full">
-			<div className="flex justify-between">
-				<Link
-					href={href}
-					size="sm"
-					className="flex gap-3 items-center font-semibold text-grade-11"
-				>
-					{icon}
-					<span>{title}</span>
-				</Link>
-				{isNoteSection ? (
-					<DialogTrigger>
-						<Button variant="ghost" size="icon-sm">
-							<PlusCircledIcon />
-						</Button>
-						<Popover>
-							<Dialog>
-								{({ close }) => (
-									<Form method="GET" action={`${href}/new`} onSubmit={() => close()}>
-										<TextField label="Note Title" name="name" />
-									</Form>
-								)}
-							</Dialog>
-						</Popover>
-					</DialogTrigger>
-				) : (
-					<Button variant="ghost" size="icon-sm" onPress={() => navigate(`${href}/new`)}>
-						<PlusCircledIcon />
-					</Button>
-				)}
+		<SidebarSection
+			title="Notes"
+			icon={<Pencil1Icon />}
+			href="/notes"
+			popover={
+				<Dialog>
+					{({ close }) => (
+						<Form method="GET" action="/notes/new" onSubmit={() => close()}>
+							<TextField label="Note Title" name="name" />
+						</Form>
+					)}
+				</Dialog>
+			}
+		>
+			<div className="space-y-4">
+				{folders.map((folder) => {
+					if (folder.notes.length > 0) {
+						return (
+							<div key={folder.id}>
+								<Header style="h5" className="ml-3" colour="amber">
+									{folder.name}
+								</Header>
+								<EntityListBox type="notes" items={folder.notes} className="border-0" />
+							</div>
+						);
+					}
+				})}
+				<div>
+					<Header style="h5" className="ml-3" colour="amber">
+						Unsorted
+					</Header>
+					<EntityListBox type="notes" items={unsortedNotes} className="border-0" />
+				</div>
 			</div>
-			{children}
-		</div>
+		</SidebarSection>
 	);
 }

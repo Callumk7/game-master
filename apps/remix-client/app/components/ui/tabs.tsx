@@ -3,10 +3,10 @@ import {
 	TabList as RACTabList,
 	TabPanel as RACTabPanel,
 	Tabs as RACTabs,
-	TabListProps,
-	TabPanelProps,
-	TabProps,
-	TabsProps,
+	type TabListProps,
+	type TabPanelProps,
+	type TabProps,
+	type TabsProps,
 	composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
@@ -56,12 +56,12 @@ export function TabList<T extends object>(props: TabListProps<T>) {
 
 const tabProps = tv({
 	extend: focusRing,
-	base: "flex items-center cursor-default rounded-full px-4 py-1.5 text-sm font-medium transition forced-color-adjust-none",
+	base: "flex items-center cursor-default rounded-lg px-4 py-1.5 text-sm font-medium transition forced-color-adjust-none",
 	variants: {
 		isSelected: {
 			false:
-				"text-gray-600 dark:text-zinc-300 hover:text-gray-700 pressed:text-gray-700 dark:hover:text-zinc-200 dark:pressed:text-zinc-200 hover:bg-gray-200 dark:hover:bg-zinc-800 pressed:bg-gray-200 dark:pressed:bg-zinc-800",
-			true: "text-white dark:text-black forced-colors:text-[HighlightText] bg-gray-800 dark:bg-zinc-200 forced-colors:bg-[Highlight]",
+				"text-grade-11 hover:text-grade-12 pressed:text-grade-12 hover:bg-grade-4 pressed:bg-grade-5",
+			true: "text-grade-1 forced-colors:text-[HighlightText] bg-primary-12 forced-colors:bg-[Highlight]",
 		},
 		isDisabled: {
 			true: "text-gray-200 dark:text-zinc-600 forced-colors:text-[GrayText] selected:text-gray-300 dark:selected:text-zinc-500 forced-colors:selected:text-[HighlightText] selected:bg-gray-200 dark:selected:bg-zinc-600 forced-colors:selected:bg-[GrayText]",
