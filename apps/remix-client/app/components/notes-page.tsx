@@ -110,7 +110,7 @@ export function NoteBlock({ note, entityId, entityType }: NoteBlockProps) {
 			<span className="text-sm italic font-light text-grade-9">
 				{note.createdAt.toLocaleString("gmt")}
 			</span>
-			<Header style="h3" colour="amber">
+			<Header style="h2" colour="amber" tanker>
 				{note.name}
 			</Header>
 			{isEditing ? (

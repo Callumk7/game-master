@@ -23,7 +23,7 @@ const button = tv({
 			destructive:
 				"bg-destructive-6 hover:bg-destructive-8 pressed:bg-destructive-9 text-grade-12 border border-destructive-8 shadow shadow-red-800/10",
 			ghost:
-				"hover:bg-grade-5 text-primary-11 hover:text-grade-12 border border-transparent pressed:text-primary-12 pressed:bg-grade-6",
+				"hover:bg-primary-5 text-primary-11 hover:text-grade-12 border border-transparent pressed:text-primary-12 pressed:bg-grade-6",
 			outline:
 				"bg-grade-2 hover:bg-primary-3 pressed:bg-primary-4 text-grade-12 border border-grade-7",
 			"hover-destructive":

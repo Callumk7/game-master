@@ -20,6 +20,9 @@ export const typeStyles = tv({
 			warning: "text-destructive-10",
 			muted: "text-grade-10",
 		},
+		tanker: {
+			true: "font-tanker",
+		},
 		link: {
 			primary: "text-primary-10 hover:text-primary-11",
 		},
@@ -35,8 +38,8 @@ interface HeaderProps extends VariantProps<typeof typeStyles> {
 	className?: string;
 }
 
-export function Header({ className, style, colour, children }: HeaderProps) {
-	return <h1 className={typeStyles({ className, style, colour })}>{children}</h1>;
+export function Header({ className, style, colour, tanker, children }: HeaderProps) {
+	return <h1 className={typeStyles({ className, style, colour, tanker })}>{children}</h1>;
 }
 
 interface HeaderLinkProps extends HeaderProps {
