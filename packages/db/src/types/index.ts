@@ -176,6 +176,11 @@ export type CompleteNote = Note & {
 export type SessionWithCompleteNotes = Session & {
 	notes: CompleteNote[];
 };
+export type SessionWithFullRelations = Session & {
+	characters: Character[];
+	factions: Faction[];
+	notes: Note[];
+};
 
 // Custom Zod schemas
 export const allUserDataSchema = z.object({

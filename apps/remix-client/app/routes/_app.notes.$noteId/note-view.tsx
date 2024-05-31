@@ -26,10 +26,10 @@ export default function NoteView() {
 					fieldName={"name"}
 					value={noteData.name}
 					inputClassName={
-						"text-3xl font-bold mb-5 focus:outline-none bg-inherit text-grade-12"
+						"text-5xl font-tanker font-bold mb-5 focus:outline-none bg-inherit text-grade-12"
 					}
 					inputLabel={"note name input"}
-					buttonClassName={"text-3xl font-bold mb-5"}
+					buttonClassName={"text-5xl font-tanker font-bold mb-5"}
 					buttonLabel={"note name button"}
 					method="patch"
 				>

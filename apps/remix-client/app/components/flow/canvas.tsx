@@ -6,8 +6,8 @@ import ReactFlow, {
 	useNodesState,
 	type NodeProps,
 } from "reactflow";
-import { MainNode } from "./node";
 import type { Edge, NodeType, Node } from "./utils";
+import { CharacterNode, FactionNode, NoteNode, SessionNode } from "./nodes";
 
 interface NodeCanvasProps {
 	initNodes: Node[];
@@ -17,10 +17,10 @@ interface NodeCanvasProps {
 
 type NodeFunction = FC<NodeProps>;
 const nodeTypes: Record<NodeType, NodeFunction> = {
-	factionNode: MainNode,
-	characterNode: MainNode,
-	noteNode: MainNode,
-	sessionNode: MainNode,
+	factionNode: FactionNode,
+	characterNode: CharacterNode,
+	noteNode: NoteNode,
+	sessionNode: SessionNode,
 };
 
 export function NodeCanvas({ initNodes, initEdges, children }: NodeCanvasProps) {

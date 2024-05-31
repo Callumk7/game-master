@@ -1,4 +1,9 @@
-import type { BasicEntity, EntityType, FactionWithMembers } from "@repo/db";
+import type {
+	BasicEntity,
+	EntityType,
+	FactionWithMembers,
+	SessionWithFullRelations,
+} from "@repo/db";
 
 export type Node = {
 	id: string;
@@ -6,14 +11,15 @@ export type Node = {
 		x: number;
 		y: number;
 	};
-	data: {
-		label: string;
-		entityType: EntityType;
-	};
+	data: NodeData;
 	type?: NodeType;
 };
 
 export type NodeType = "factionNode" | "characterNode" | "noteNode" | "sessionNode";
+export type NodeData = {
+	label: string;
+	entityType: EntityType;
+};
 
 export type Edge = {
 	id: string;
@@ -54,7 +60,7 @@ export const createNodes = (
 export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) => {
 	let xPosition = 0;
 	let yPosition = 200;
-	const initNodes: Node[] = createNodes(factionData, "factions", "factionNode");
+	const initNodes: Node[] = [];
 	const initEdges: Edge[] = [];
 
 	for (const faction of factionData) {
@@ -83,6 +89,7 @@ export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) =
 					label: member.character.name,
 					entityType: "characters",
 				},
+				type: "characterNode",
 			});
 
 			initEdges.push({
@@ -94,6 +101,108 @@ export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) =
 
 			yPosition = yPosition + 60;
 			memXPosition = memXPosition + 50;
+		}
+		yPosition = 200;
+		xPosition = xPosition + 400;
+	}
+
+	return {
+		initNodes,
+		initEdges,
+	};
+};
+
+export const createSessionAndRelationNodes = (
+	sessionData: SessionWithFullRelations[],
+) => {
+	let xPosition = 0;
+	let yPosition = 200;
+	const initNodes: Node[] = [];
+	const initEdges: Edge[] = [];
+
+	for (const session of sessionData) {
+		initNodes.push({
+			id: session.id,
+			position: {
+				x: xPosition,
+				y: 0,
+			},
+			data: {
+				label: session.name,
+				entityType: "sessions",
+			},
+			type: "sessionNode",
+		});
+
+		let memXPosition = xPosition;
+		for (const character of session.characters) {
+			initNodes.push({
+				id: character.id,
+				position: {
+					x: memXPosition,
+					y: yPosition,
+				},
+				data: {
+					label: character.name,
+					entityType: "characters",
+				},
+				type: "characterNode",
+			});
+
+			initEdges.push({
+				id: `${character.id}-${session.id}`,
+				source: session.id,
+				target: character.id,
+				animated: true,
+			});
+
+			memXPosition = memXPosition + 100;
+		}
+		for (const faction of session.factions) {
+			initNodes.push({
+				id: faction.id,
+				position: {
+					x: memXPosition,
+					y: yPosition,
+				},
+				data: {
+					label: faction.name,
+					entityType: "factions",
+				},
+				type: "factionNode",
+			});
+
+			initEdges.push({
+				id: `${faction.id}-${session.id}`,
+				source: session.id,
+				target: faction.id,
+				animated: true,
+			});
+
+			memXPosition = memXPosition + 100;
+		}
+		for (const note of session.notes) {
+			initNodes.push({
+				id: note.id,
+				position: {
+					x: memXPosition,
+					y: yPosition,
+				},
+				data: {
+					label: note.name,
+					entityType: "notes",
+				},
+				type: "noteNode",
+			});
+
+			initEdges.push({
+				id: `${note.id}-${session.id}`,
+				source: session.id,
+				target: note.id,
+				animated: true,
+			});
+
+			memXPosition = memXPosition + 100;
 		}
 		yPosition = 200;
 		xPosition = xPosition + 400;

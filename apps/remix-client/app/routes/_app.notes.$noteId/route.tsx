@@ -11,12 +11,10 @@ import {
 	methodNotAllowed,
 } from "@repo/db";
 import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
-import { z } from "zod";
-import { zx } from "zodix";
 import { validateUser } from "~/lib/auth";
 import NoteView from "./note-view";
 import { extractParam } from "~/lib/zx-util";
-import { patch, post, put } from "~/lib/game-master";
+import { patch } from "~/lib/game-master";
 import { handleBulkLinkToNote, handleLinkNoteToFolder } from "./queries.server";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {

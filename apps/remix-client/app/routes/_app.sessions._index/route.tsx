@@ -1,11 +1,11 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { createDrizzleForTurso, sessions } from "@repo/db";
 import { eq } from "drizzle-orm";
-import { Container } from "~/components/layout";
-import { Header } from "~/components/typeography";
 import { validateUser } from "~/lib/auth";
-import { SessionCard } from "./components/session-cards";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { createSessionAndRelationNodes } from "~/components/flow/utils";
+import { NodeCanvas } from "~/components/flow/canvas";
+import "reactflow/dist/style.css";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -19,25 +19,22 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 		},
 	});
 
-	return typedjson({ sessionsWithData });
+	const sessionData = sessionsWithData.map((session) => ({
+		...session,
+		characters: session.characters.map((c) => c.character),
+		factions: session.factions.map((f) => f.faction),
+		notes: session.notes.map((n) => n.note),
+	}));
+
+	return typedjson({ sessionData });
 };
 
 export default function SessionIndex() {
-	const { sessionsWithData } = useTypedLoaderData<typeof loader>();
+	const { sessionData } = useTypedLoaderData<typeof loader>();
+	const { initNodes, initEdges } = createSessionAndRelationNodes(sessionData);
 	return (
-		<Container>
-			<Header>Sessions</Header>
-			<div className="flex flex-col gap-y-7">
-				{sessionsWithData.map((sesh) => (
-					<SessionCard
-						key={sesh.id}
-						session={sesh}
-						characters={sesh.characters.map((char) => char.character)}
-						factions={sesh.factions.map((fact) => fact.faction)}
-						notes={sesh.notes.map((note) => note.note)}
-					/>
-				))}
-			</div>
-		</Container>
+		<div className="w-full h-screen relative">
+			<NodeCanvas initNodes={initNodes} initEdges={initEdges} />
+		</div>
 	);
 }
