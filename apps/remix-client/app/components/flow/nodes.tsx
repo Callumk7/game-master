@@ -1,12 +1,14 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import { Link } from "../ui/link";
 import type { NodeData } from "./utils";
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 
 export function FactionNode(props: NodeProps<NodeData>) {
 	return (
 		<>
 			<Handle type="target" position={Position.Top} />
-			<div className="p-3 border rounded-lg border-amber-9">
+			<div className="p-3 pr-6 border rounded-lg border-amber-9 relative">
+				<DragHandleDots2Icon className="absolute top-2 w-5 h-5 right-2 drag-handle" />
 				<p className="text-xs font-thin text-grade-10 italic py-1">Faction</p>
 				<Link className={"text-sm"} href={`/${props.data.entityType}/${props.id}`}>
 					{props.data.label}
@@ -21,7 +23,8 @@ export function CharacterNode(props: NodeProps<NodeData>) {
 	return (
 		<>
 			<Handle type="target" position={Position.Top} />
-			<div className="p-3 border rounded-lg border-jade-9">
+			<div className="p-3 pr-6 border rounded-lg border-jade-9">
+				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
 				<p className="text-xs font-thin text-grade-10 italic py-1">Character</p>
 				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
 			</div>
@@ -32,7 +35,8 @@ export function CharacterNode(props: NodeProps<NodeData>) {
 export function SessionNode(props: NodeProps<NodeData>) {
 	return (
 		<>
-			<div className="p-3 border rounded-lg border-primary-9">
+			<div className="p-3 pr-6 border relative rounded-lg border-primary-9">
+				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
 				<p className="text-xs font-thin text-grade-10 italic py-1">Session</p>
 				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
 			</div>
@@ -44,7 +48,8 @@ export function NoteNode(props: NodeProps<NodeData>) {
 	return (
 		<>
 			<Handle type="target" position={Position.Top} />
-			<div className="p-3 border rounded-lg border-primary-7">
+			<div className="p-3 pr-6 border relative rounded-lg border-primary-7">
+				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
 				<p className="text-xs font-thin text-grade-10 italic py-1">Note</p>
 				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
 			</div>

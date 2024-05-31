@@ -13,6 +13,7 @@ export type Node = {
 	};
 	data: NodeData;
 	type?: NodeType;
+	dragHandle?: string;
 };
 
 export type NodeType = "factionNode" | "characterNode" | "noteNode" | "sessionNode";
@@ -132,6 +133,7 @@ export const createSessionAndRelationNodes = (
 				entityType: "sessions",
 			},
 			type: "sessionNode",
+			dragHandle: ".drag-handle",
 		});
 
 		let memXPosition = xPosition;
@@ -147,6 +149,7 @@ export const createSessionAndRelationNodes = (
 					entityType: "characters",
 				},
 				type: "characterNode",
+				dragHandle: ".drag-handle",
 			});
 
 			initEdges.push({
@@ -170,6 +173,7 @@ export const createSessionAndRelationNodes = (
 					entityType: "factions",
 				},
 				type: "factionNode",
+				dragHandle: ".drag-handle",
 			});
 
 			initEdges.push({
@@ -193,6 +197,7 @@ export const createSessionAndRelationNodes = (
 					entityType: "notes",
 				},
 				type: "noteNode",
+				dragHandle: ".drag-handle",
 			});
 
 			initEdges.push({
