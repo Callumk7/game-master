@@ -27,7 +27,7 @@ export function NewCharacterForm({ action, close }: NewCharacterFormProps) {
 function RaceComboBox({ name }: { name: string }) {
 	const { allRaces } = useAppData();
 	return (
-		<ComboBox items={allRaces} allowsCustomValue name={name}>
+		<ComboBox items={allRaces} allowsCustomValue name={name} label="Race">
 			{(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
 		</ComboBox>
 	);

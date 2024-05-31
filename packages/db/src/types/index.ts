@@ -150,6 +150,9 @@ export type PlotsInSessionsInsert = z.infer<typeof plotsInSessionsInsertSchema>;
 export type CharacterWithRace = Character & {
 	race: Race;
 };
+export type CharacterWithFactions = Character & {
+	factions: CharactersInFactions[];
+};
 export type CharacterWithRaceAndFactions = CharacterWithRace & {
 	factions: Faction[];
 };
@@ -157,10 +160,13 @@ export type CharactersInSessionsWithCharacterNote = CharactersInSessions & {
 	character: Character;
 	note: Note | null;
 };
+export type FactionWithMembers = Faction & {
+	members: (CharactersInFactions & { character: Character })[];
+};
 export type FactionsInSessionsWithFactionNote = FactionsInSessions & {
 	faction: Faction;
 	note: Note | null;
-}
+};
 export type CompleteNote = Note & {
 	characters: Character[];
 	factions: Faction[];

@@ -3,7 +3,7 @@ import { MainContainer } from "~/components/layout";
 
 export default function FactionRoute() {
 	return (
-		<MainContainer>
+		<MainContainer width="max">
 			<Outlet />
 		</MainContainer>
 	);

@@ -1,6 +1,6 @@
 import {
-	ActionFunctionArgs,
-	LoaderFunctionArgs,
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
 	json,
 	redirect,
 } from "@remix-run/cloudflare";
@@ -90,7 +90,9 @@ export default function LoginRoute() {
 						isRequired
 						errorMessage={passwordError}
 					/>
-					<Button type="submit">Login</Button>
+					<Button type="submit" onPress={() => console.log("Login button pressed")}>
+						Login
+					</Button>
 					<Button onPress={() => navigate("/signup")} variant="outline">
 						Need an account? Sign up!
 					</Button>
