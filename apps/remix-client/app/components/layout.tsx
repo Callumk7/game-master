@@ -73,7 +73,7 @@ interface EntityViewProps {
 }
 
 /**
- * This is simply adding vertical spacing.
+ * This is simply adding vertical spacing. Nice.
  */
 export function EntityView({ children, margin, top, className }: EntityViewProps) {
 	return (
