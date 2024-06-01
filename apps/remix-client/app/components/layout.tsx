@@ -114,10 +114,10 @@ export function EntityHeader({
 					fieldName={"name"}
 					value={title}
 					inputClassName={
-						"text-5xl font-bold mb-5 font-tanker focus:outline-none bg-inherit text-grade-12"
+						"text-5xl font-bold mb-5 font-tanker w-full focus:outline-none bg-inherit text-grade-12"
 					}
 					inputLabel={"note name input"}
-					buttonClassName={"text-5xl font-bold font-tanker mb-5 text-left"}
+					buttonClassName={"text-5xl font-bold font-tanker w-full mb-5 text-left"}
 					buttonLabel={"note name button"}
 					method={updateTitleMethod ? updateTitleMethod : "patch"}
 					action={updateTitleAction}
@@ -159,6 +159,18 @@ export function SidebarLayout({ children, sidebar, isSidebarOpen }: SidebarLayou
 				</>
 			)}
 			<div className="self-stretch w-full">{children}</div>
+		</div>
+	);
+}
+
+export function TwoColumnView({
+	children,
+	aside,
+}: { children: ReactNode; aside: ReactNode }) {
+	return (
+		<div className="grid grid-cols-3 gap-4">
+			<div className="col-span-2 space-y-4">{children}</div>
+			<div className="pl-16 space-y-10">{aside}</div>
 		</div>
 	);
 }

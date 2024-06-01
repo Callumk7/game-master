@@ -3,7 +3,7 @@ import { MainContainer } from "~/components/layout";
 
 export default function NotesRoute() {
 	return (
-		<MainContainer>
+		<MainContainer width="max">
 			<Outlet />
 		</MainContainer>
 	);

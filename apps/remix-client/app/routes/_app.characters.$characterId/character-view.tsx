@@ -30,22 +30,16 @@ export function CharacterView() {
 			href: `/characters/${characterData.id}/links`,
 		},
 	];
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	return (
-		<SidebarLayout
-			isSidebarOpen={isSidebarOpen}
-			sidebar={<CharacterSidebar notes={noteTree} />}
-		>
-			<EntityView top className="px-6">
-				<EntityHeader
-					title={characterData.name}
-					menu={<CharacterMenu characterId={characterData.id} />}
-				>
-					<NavigationLinks links={links} />
-				</EntityHeader>
-				<Outlet />
-			</EntityView>
-		</SidebarLayout>
+		<EntityView top className="px-6" margin>
+			<EntityHeader
+				title={characterData.name}
+				menu={<CharacterMenu characterId={characterData.id} />}
+			>
+				<NavigationLinks links={links} />
+			</EntityHeader>
+			<Outlet />
+		</EntityView>
 	);
 }
 
