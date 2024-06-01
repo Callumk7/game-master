@@ -5,7 +5,7 @@ import { useSyncEditor } from "~/hooks/sync-editor";
 import { EditorPreview } from "~/components/editor-preview";
 import { INTENT } from "@repo/db";
 import { EditNoteToolbar } from "./components/toolbar";
-import { LinksAside } from "./components/links-aside";
+import { LinksAside } from "~/components/links-aside";
 
 export default function NoteView() {
 	const { noteData, folders } = useTypedLoaderData<typeof loader>();

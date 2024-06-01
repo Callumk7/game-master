@@ -9,12 +9,7 @@ import ReactFlow, {
 import type { Edge, NodeType, Node } from "./utils";
 import { CharacterNode, FactionNode, NoteNode, SessionNode } from "./nodes";
 
-interface NodeCanvasProps {
-	initNodes: Node[];
-	initEdges: Edge[];
-	children?: ReactNode;
-}
-
+// Defined up here so they are not re-rendered by react (could also be memoed in the component)
 type NodeFunction = FC<NodeProps>;
 const nodeTypes: Record<NodeType, NodeFunction> = {
 	factionNode: FactionNode,
@@ -23,7 +18,13 @@ const nodeTypes: Record<NodeType, NodeFunction> = {
 	sessionNode: SessionNode,
 };
 
-export function NodeCanvas({ initNodes, initEdges, children }: NodeCanvasProps) {
+interface NodeCanvasProps {
+	initNodes: Node[];
+	initEdges: Edge[];
+	children?: ReactNode;
+	fitView?: boolean;
+}
+export function NodeCanvas({ initNodes, initEdges, children, fitView }: NodeCanvasProps) {
 	// These are prototype state managers from React Node; consider using zustand
 	// when the design in finalised
 	const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
@@ -46,6 +47,8 @@ export function NodeCanvas({ initNodes, initEdges, children }: NodeCanvasProps) 
 					onEdgesChange={onEdgesChange}
 					onConnect={onConnect}
 					nodeTypes={nodeTypes}
+					fitView={fitView}
+					proOptions={{ hideAttribution: true }}
 				/>
 			</div>
 		</div>

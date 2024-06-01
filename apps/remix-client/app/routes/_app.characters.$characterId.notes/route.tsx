@@ -1,6 +1,6 @@
 import { NotePage } from "~/components/notes-page";
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { validateUser } from "~/lib/auth";
 import { zx } from "zodix";
 import { z } from "zod";
@@ -29,6 +29,7 @@ export default function CharacterNotesView() {
 			entityType="characters"
 			notes={characterNotes}
 			action=""
+			linkAction=""
 		/>
 	);
 }

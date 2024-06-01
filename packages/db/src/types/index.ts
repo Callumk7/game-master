@@ -170,8 +170,9 @@ export type CharactersInSessionsWithCharacterNote = CharactersInSessions & {
 export type FactionWithMembers = Faction & {
 	members: (CharactersInFactions & { character: Character })[];
 };
-export type FactionWithMembersAndNotes = FactionWithMembers & {
+export type FactionWithMembersAndNotes = Faction & {
 	notes: (NotesOnFactions & { note: Note })[];
+	members: (CharactersInFactions & { character: Character })[];
 };
 export type FactionsInSessionsWithFactionNote = FactionsInSessions & {
 	faction: Faction;

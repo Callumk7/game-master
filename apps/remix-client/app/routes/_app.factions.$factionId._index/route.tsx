@@ -7,7 +7,7 @@ export default function FactionIndex() {
 	const { nodes, edges } = createFactionWithMemberNodes(faction);
 	return (
 		<div className="w-full h-screen relative">
-			<NodeCanvas initNodes={nodes} initEdges={edges} />
+			<NodeCanvas initNodes={nodes} initEdges={edges} fitView />
 		</div>
 	);
 }

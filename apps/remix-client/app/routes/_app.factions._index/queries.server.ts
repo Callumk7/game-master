@@ -17,6 +17,11 @@ export const getFactionsAndMembers = async (
 					character: true,
 				},
 			},
+			notes: {
+				with: {
+					note: true,
+				},
+			},
 		},
 	});
 

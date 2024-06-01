@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { getFactionsAndMembers } from "./queries.server";
 import { useLoaderData } from "@remix-run/react";
-import { createFactionAndMemberNodes } from "~/components/flow/utils";
+import { createAllFactionWithMemberNodes } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
@@ -13,7 +13,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 export default function FactionIndex() {
 	const { factionData } = useLoaderData<typeof loader>();
 
-	const { nodes, edges } = createFactionAndMemberNodes(factionData);
+	const { nodes, edges } = createAllFactionWithMemberNodes(factionData);
 
 	return (
 		<div className="w-full h-screen relative">

@@ -10,10 +10,12 @@ export default function FactionView() {
 	const { faction } = useFactionRouteData();
 	return (
 		<EntityView>
-			<FactionMenu factionId={faction.id} />
-			<EntityHeader title={faction.name}>
-				<LeaderSelect />
-			</EntityHeader>
+			<div className="w-11/12 mx-auto">
+				<FactionMenu factionId={faction.id} />
+				<EntityHeader title={faction.name}>
+					<LeaderSelect />
+				</EntityHeader>
+			</div>
 			<Outlet />
 		</EntityView>
 	);

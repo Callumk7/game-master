@@ -1,27 +1,14 @@
-import { EntityListBox } from "~/components/entity-listbox";
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
 import { EditorPreview } from "~/components/editor-preview";
 import { Header, HeaderLink } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { Pencil1Icon, PlusCircledIcon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import { type ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
-import { Card } from "~/components/card";
-import {
-	BasicEntity,
-	CharacterWithRaceAndFactions,
-	EntityType,
-	LINK_INTENT,
-	LinkIntentSchema,
-} from "@repo/db";
-import { DialogTrigger } from "react-aria-components";
-import { Popover } from "~/components/ui/popover";
-import { useSubmit } from "@remix-run/react";
 import { useAppData } from "../_app/route";
-import { ListBox, ListBoxItem } from "~/components/ui/list-box";
-import { createApi, post, put } from "~/lib/game-master";
-import { validateUser } from "~/lib/auth";
+import { post } from "~/lib/game-master";
+import { LinksAside } from "~/components/links-aside";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	// On the character page, we can add links to other entities, we do this
@@ -59,79 +46,12 @@ export default function CharacterIndex() {
 				/>
 			</div>
 			<div className="pl-16 space-y-10">
-				<LinkAside
-					type="factions"
-					header="Factions"
-					items={characterData.factions.map((f) => f.faction)}
-					allItems={allFactions}
-					intent={LINK_INTENT.FACTIONS}
-				/>
-				<LinkAside
-					type="sessions"
-					header="Sessions"
-					items={characterData.sessions.map((s) => s.session)}
-					allItems={allSessions}
-					intent={LINK_INTENT.SESSIONS}
+				<LinksAside
+					notes={characterData.notes.map((n) => n.note)}
+					factions={characterData.factions.map((f) => f.faction)}
+					sessions={characterData.sessions.map((s) => s.session)}
 				/>
 			</div>
 		</div>
-	);
-}
-
-interface LinkAsideProps<T> {
-	header: string;
-	items: T[];
-	allItems: T[];
-	type: EntityType;
-	intent: LINK_INTENT;
-}
-function LinkAside<T extends BasicEntity>({
-	header,
-	items,
-	allItems,
-	type,
-	intent,
-}: LinkAsideProps<T>) {
-	return (
-		<Card>
-			<div className="flex justify-between items-center w-full">
-				<HeaderLink to={`/${type}`} style="h4" className="pl-3 mb-3">
-					{header}
-				</HeaderLink>
-				<LinkEntityDropdown items={allItems} intent={intent} />
-			</div>
-			<EntityListBox items={items} type={type} className="border-0" />
-		</Card>
-	);
-}
-
-interface LinkEntityDropdownProps<T> {
-	items: T[];
-	action?: string;
-	intent: LINK_INTENT;
-}
-function LinkEntityDropdown<T extends BasicEntity>({
-	items,
-	action,
-	intent,
-}: LinkEntityDropdownProps<T>) {
-	const submit = useSubmit();
-	return (
-		<DialogTrigger>
-			<Button variant="ghost" size="icon-sm">
-				<PlusCircledIcon />
-			</Button>
-			<Popover>
-				<ListBox
-					items={items}
-					onAction={(k) =>
-						submit({ targetId: k.toString(), intent }, { method: "POST", action })
-					}
-					className={"border-0"}
-				>
-					{(item) => <ListBoxItem>{item.name}</ListBoxItem>}
-				</ListBox>
-			</Popover>
-		</DialogTrigger>
 	);
 }

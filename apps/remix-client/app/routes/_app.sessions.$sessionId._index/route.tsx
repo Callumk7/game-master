@@ -58,5 +58,3 @@ export default function SessionViewIndex() {
 		</div>
 	);
 }
-
-// have to handle the case where we might want to remove the pinned note

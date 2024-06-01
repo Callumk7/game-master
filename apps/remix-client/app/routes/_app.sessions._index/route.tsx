@@ -5,7 +5,10 @@ import { validateUser } from "~/lib/auth";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { createAllSessionAndRelationNodesAndEdges } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
+import { EntityHeader, EntityView } from "~/components/layout";
+import { Header } from "~/components/typeography";
 
+// TODO: extract these functions and make the loader more declarative to read
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
 	const db = createDrizzleForTurso(context.cloudflare.env);
@@ -32,8 +35,13 @@ export default function SessionIndex() {
 	const { sessionData } = useTypedLoaderData<typeof loader>();
 	const { nodes, edges } = createAllSessionAndRelationNodesAndEdges(sessionData);
 	return (
-		<div className="w-full h-screen relative">
-			<NodeCanvas initNodes={nodes} initEdges={edges} />
-		</div>
+		<EntityView top>
+			<div className="mx-auto w-11/12">
+				<Header style="h1">All Sessions</Header>
+			</div>
+			<div className="w-full h-screen relative">
+				<NodeCanvas initNodes={nodes} initEdges={edges} fitView />
+			</div>
+		</EntityView>
 	);
 }
