@@ -218,3 +218,104 @@ export const createSessionAndRelationNodes = (
 		initEdges,
 	};
 };
+
+export const getCompleteSessionNodesAndEdges = (session: SessionWithFullRelations) => {
+	let xPosition = 0;
+	let yPosition = 200;
+	const initNodes: Node[] = [];
+	const initEdges: Edge[] = [];
+	initNodes.push({
+		id: session.id,
+		position: {
+			x: xPosition,
+			y: 0,
+		},
+		data: {
+			label: session.name,
+			entityType: "sessions",
+		},
+		type: "sessionNode",
+		dragHandle: ".drag-handle",
+	});
+
+	let memXPosition = xPosition;
+	for (const character of session.characters) {
+		initNodes.push({
+			id: character.id,
+			position: {
+				x: memXPosition,
+				y: yPosition,
+			},
+			data: {
+				label: character.name,
+				entityType: "characters",
+			},
+			type: "characterNode",
+			dragHandle: ".drag-handle",
+		});
+
+		initEdges.push({
+			id: `${character.id}-${session.id}`,
+			source: session.id,
+			target: character.id,
+			animated: true,
+		});
+
+		memXPosition = memXPosition + 100;
+	}
+	for (const faction of session.factions) {
+		initNodes.push({
+			id: faction.id,
+			position: {
+				x: memXPosition,
+				y: yPosition,
+			},
+			data: {
+				label: faction.name,
+				entityType: "factions",
+			},
+			type: "factionNode",
+			dragHandle: ".drag-handle",
+		});
+
+		initEdges.push({
+			id: `${faction.id}-${session.id}`,
+			source: session.id,
+			target: faction.id,
+			animated: true,
+		});
+
+		memXPosition = memXPosition + 100;
+	}
+	for (const note of session.notes) {
+		initNodes.push({
+			id: note.id,
+			position: {
+				x: memXPosition,
+				y: yPosition,
+			},
+			data: {
+				label: note.name,
+				entityType: "notes",
+			},
+			type: "noteNode",
+			dragHandle: ".drag-handle",
+		});
+
+		initEdges.push({
+			id: `${note.id}-${session.id}`,
+			source: session.id,
+			target: note.id,
+			animated: true,
+		});
+
+		memXPosition = memXPosition + 100;
+	}
+	yPosition = 200;
+	xPosition = xPosition + 400;
+
+	return {
+		initNodes,
+		initEdges,
+	};
+};

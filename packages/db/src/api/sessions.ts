@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { DB } from "../db";
+import type { DB } from "../db";
 import { notesOnSessions } from "../db/schemas/notes";
 import {
 	sessions,
@@ -7,8 +7,8 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { CompleteNote, MultiSelectString, Session, SessionInsert } from "../types";
-import { LINK_INTENT } from "./util";
+import type { CompleteNote, MultiSelectString, Session, SessionInsert } from "../types";
+import type { LINK_INTENT } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
 export const getUserSessions = async (db: DB, userId: string) => {
@@ -33,7 +33,11 @@ export const getCompleteSession = async (db: DB, sessionId: string) => {
 					note: {
 						with: {
 							characters: {
-								with: { character: true },
+								with: {
+									character: {
+										with: { factions: true, sessions: true },
+									},
+								},
 							},
 							factions: {
 								with: { faction: true },

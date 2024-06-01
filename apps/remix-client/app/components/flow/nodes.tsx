@@ -2,58 +2,65 @@ import { Handle, Position, type NodeProps } from "reactflow";
 import { Link } from "../ui/link";
 import type { NodeData } from "./utils";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+import { cn } from "callum-util";
 
-export function FactionNode(props: NodeProps<NodeData>) {
+interface BaseNodeProps extends NodeProps<NodeData> {
+	className?: string;
+	label: string;
+	topHandle?: boolean;
+	bottomHandle?: boolean;
+}
+
+function BaseNode({
+	className,
+	label,
+	topHandle,
+	bottomHandle,
+	...props
+}: BaseNodeProps) {
 	return (
 		<>
-			<Handle type="target" position={Position.Top} />
-			<div className="p-3 pr-6 border rounded-lg border-amber-9 relative">
+			{topHandle && <Handle type="target" position={Position.Top} />}
+			<div
+				className={cn("p-3 pr-6 border rounded-lg border-amber-9 relative", className)}
+			>
 				<DragHandleDots2Icon className="absolute top-2 w-5 h-5 right-2 drag-handle" />
-				<p className="text-xs font-thin text-grade-10 italic py-1">Faction</p>
+				<p className="text-xs font-thin text-grade-10 italic py-1">{label}</p>
 				<Link className={"text-sm"} href={`/${props.data.entityType}/${props.id}`}>
 					{props.data.label}
 				</Link>
 			</div>
-			<Handle type="source" position={Position.Bottom} />
+			{bottomHandle && <Handle type="source" position={Position.Bottom} />}
 		</>
+	);
+}
+
+export function FactionNode(props: NodeProps<NodeData>) {
+	return (
+		<BaseNode
+			label="Faction"
+			topHandle
+			bottomHandle
+			className="border-primary-9"
+			{...props}
+		/>
 	);
 }
 
 export function CharacterNode(props: NodeProps<NodeData>) {
 	return (
-		<>
-			<Handle type="target" position={Position.Top} />
-			<div className="p-3 pr-6 border rounded-lg border-jade-9">
-				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
-				<p className="text-xs font-thin text-grade-10 italic py-1">Character</p>
-				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
-			</div>
-			<Handle type="source" position={Position.Bottom} />
-		</>
+		<BaseNode
+			label="Character"
+			topHandle
+			bottomHandle
+			className="border-jade-9"
+			{...props}
+		/>
 	);
 }
 export function SessionNode(props: NodeProps<NodeData>) {
-	return (
-		<>
-			<div className="p-3 pr-6 border relative rounded-lg border-primary-9">
-				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
-				<p className="text-xs font-thin text-grade-10 italic py-1">Session</p>
-				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
-			</div>
-			<Handle type="source" position={Position.Bottom} />
-		</>
-	);
+	return <BaseNode label="Session" bottomHandle {...props} />;
 }
 export function NoteNode(props: NodeProps<NodeData>) {
-	return (
-		<>
-			<Handle type="target" position={Position.Top} />
-			<div className="p-3 pr-6 border relative rounded-lg border-primary-7">
-				<DragHandleDots2Icon className="absolute w-5 h-5 top-2 right-2 drag-handle" />
-				<p className="text-xs font-thin text-grade-10 italic py-1">Note</p>
-				<Link href={`/${props.data.entityType}/${props.id}`}>{props.data.label}</Link>
-			</div>
-			<Handle type="source" position={Position.Bottom} />
-		</>
-	);
+	return <BaseNode label="Note" topHandle bottomHandle {...props} />;
 }
