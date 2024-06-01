@@ -22,7 +22,10 @@ function BaseNode({
 		<>
 			{topHandle && <Handle type="target" position={Position.Top} />}
 			<div
-				className={cn("p-3 pr-6 border rounded-lg border-amber-9 relative", className)}
+				className={cn(
+					"p-3 pr-6 border rounded-lg bg-grade-1 border-amber-9 relative",
+					className,
+				)}
 			>
 				<DragHandleDots2Icon className="absolute top-2 w-5 h-5 right-2 drag-handle" />
 				<p className="text-xs font-thin text-grade-10 italic py-1">{label}</p>

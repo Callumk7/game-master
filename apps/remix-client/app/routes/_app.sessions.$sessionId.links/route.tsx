@@ -4,9 +4,8 @@ import { getFormAndAppendUserId } from "~/lib/forms";
 import { badRequest } from "@repo/db";
 import { post } from "~/lib/game-master";
 import { extractParam } from "~/lib/zx-util";
-import { getCompleteSessionNodesAndEdges } from "~/components/flow/utils";
+import { createSessionAndRelationNodesAndEdges } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
-import "reactflow/dist/style.css";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
@@ -22,7 +21,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 export default function SessionLinksView() {
 	const { session } = useSessionRouteData();
-	const { initNodes, initEdges } = getCompleteSessionNodesAndEdges({
+	const { nodes, edges } = createSessionAndRelationNodesAndEdges({
 		...session,
 		characters: session.characters.map((c) => c.character),
 		factions: session.factions.map((f) => f.faction),
@@ -30,7 +29,7 @@ export default function SessionLinksView() {
 	});
 	return (
 		<div className="w-full h-screen relative">
-			<NodeCanvas initNodes={initNodes} initEdges={initEdges} />
+			<NodeCanvas initNodes={nodes} initEdges={edges} />
 		</div>
 	);
 }

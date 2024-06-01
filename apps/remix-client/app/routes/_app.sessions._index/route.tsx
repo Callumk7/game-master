@@ -3,9 +3,8 @@ import { createDrizzleForTurso, sessions } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { validateUser } from "~/lib/auth";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { createSessionAndRelationNodes } from "~/components/flow/utils";
+import { createAllSessionAndRelationNodesAndEdges } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
-import "reactflow/dist/style.css";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -31,10 +30,10 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 
 export default function SessionIndex() {
 	const { sessionData } = useTypedLoaderData<typeof loader>();
-	const { initNodes, initEdges } = createSessionAndRelationNodes(sessionData);
+	const { nodes, edges } = createAllSessionAndRelationNodesAndEdges(sessionData);
 	return (
 		<div className="w-full h-screen relative">
-			<NodeCanvas initNodes={initNodes} initEdges={initEdges} />
+			<NodeCanvas initNodes={nodes} initEdges={edges} />
 		</div>
 	);
 }

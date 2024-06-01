@@ -8,6 +8,7 @@ import { getAllUserData } from "./queries.server";
 import { Button } from "~/components/ui/button";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { Sidebar } from "./components/sidebar";
+import "reactflow/dist/style.css";
 
 export const meta: MetaFunction = () => {
 	return [

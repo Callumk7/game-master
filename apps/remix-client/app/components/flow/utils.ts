@@ -29,293 +29,200 @@ export type Edge = {
 	animated?: boolean;
 };
 
-export const createNodes = (
-	data: BasicEntity[],
-	entityType: EntityType,
-	nodeType?: NodeType,
-	initX?: number,
-	initY?: number,
-) => {
+type CreateNodesArgs = {
+	data: BasicEntity[];
+	initNodes?: Node[];
+	entityType: EntityType;
+	nodeType?: NodeType;
+	initX?: number;
+	initY?: number;
+};
+const createNodes = ({
+	data,
+	initNodes,
+	entityType,
+	nodeType,
+	initX,
+	initY,
+}: CreateNodesArgs) => {
 	let xPosition = initX ?? 0;
 	const yPosition = initY ?? 0;
-	const nodes: Node[] = [];
+	const nodes: Node[] = initNodes ?? [];
 	for (const n of data) {
-		nodes.push({
-			id: n.id,
-			position: {
-				x: xPosition,
-				y: yPosition,
-			},
-			data: {
-				label: n.name,
-				entityType,
-			},
-			type: nodeType,
-		});
-		xPosition = xPosition + 400;
+		if (!nodes.find((node) => node.id === n.id)) {
+			pushEntity(
+				nodes,
+				n,
+				xPosition,
+				yPosition,
+				{ label: n.name, entityType },
+				nodeType,
+			);
+		}
+		xPosition = xPosition + 300;
 	}
 
 	return nodes;
 };
-
-export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) => {
-	let xPosition = 0;
-	let yPosition = 200;
-	const initNodes: Node[] = [];
-	const initEdges: Edge[] = [];
-
-	for (const faction of factionData) {
-		initNodes.push({
-			id: faction.id,
-			position: {
-				x: xPosition,
-				y: 0,
-			},
-			data: {
-				label: faction.name,
-				entityType: "factions",
-			},
-			type: "factionNode",
-		});
-
-		let memXPosition = xPosition;
-		for (const member of faction.members) {
-			initNodes.push({
-				id: member.characterId,
-				position: {
-					x: memXPosition,
-					y: yPosition,
-				},
-				data: {
-					label: member.character.name,
-					entityType: "characters",
-				},
-				type: "characterNode",
-			});
-
-			initEdges.push({
-				id: `${member.characterId}-${faction.id}`,
-				source: faction.id,
-				target: member.characterId,
-				animated: true,
-			});
-
-			yPosition = yPosition + 60;
-			memXPosition = memXPosition + 50;
-		}
-		yPosition = 200;
-		xPosition = xPosition + 400;
-	}
-
-	return {
-		initNodes,
-		initEdges,
-	};
-};
-
-export const createSessionAndRelationNodes = (
-	sessionData: SessionWithFullRelations[],
+const pushEntity = (
+	nodes: Node[],
+	entity: BasicEntity,
+	xPosition: number,
+	yPosition: number,
+	data: NodeData,
+	type?: NodeType,
 ) => {
-	let xPosition = 0;
-	let yPosition = 200;
-	const initNodes: Node[] = [];
-	const initEdges: Edge[] = [];
-
-	for (const session of sessionData) {
-		initNodes.push({
-			id: session.id,
-			position: {
-				x: xPosition,
-				y: 0,
-			},
-			data: {
-				label: session.name,
-				entityType: "sessions",
-			},
-			type: "sessionNode",
-			dragHandle: ".drag-handle",
-		});
-
-		let memXPosition = xPosition;
-		for (const character of session.characters) {
-			initNodes.push({
-				id: character.id,
-				position: {
-					x: memXPosition,
-					y: yPosition,
-				},
-				data: {
-					label: character.name,
-					entityType: "characters",
-				},
-				type: "characterNode",
-				dragHandle: ".drag-handle",
-			});
-
-			initEdges.push({
-				id: `${character.id}-${session.id}`,
-				source: session.id,
-				target: character.id,
-				animated: true,
-			});
-
-			memXPosition = memXPosition + 100;
-		}
-		for (const faction of session.factions) {
-			initNodes.push({
-				id: faction.id,
-				position: {
-					x: memXPosition,
-					y: yPosition,
-				},
-				data: {
-					label: faction.name,
-					entityType: "factions",
-				},
-				type: "factionNode",
-				dragHandle: ".drag-handle",
-			});
-
-			initEdges.push({
-				id: `${faction.id}-${session.id}`,
-				source: session.id,
-				target: faction.id,
-				animated: true,
-			});
-
-			memXPosition = memXPosition + 100;
-		}
-		for (const note of session.notes) {
-			initNodes.push({
-				id: note.id,
-				position: {
-					x: memXPosition,
-					y: yPosition,
-				},
-				data: {
-					label: note.name,
-					entityType: "notes",
-				},
-				type: "noteNode",
-				dragHandle: ".drag-handle",
-			});
-
-			initEdges.push({
-				id: `${note.id}-${session.id}`,
-				source: session.id,
-				target: note.id,
-				animated: true,
-			});
-
-			memXPosition = memXPosition + 100;
-		}
-		yPosition = 200;
-		xPosition = xPosition + 400;
-	}
-
-	return {
-		initNodes,
-		initEdges,
-	};
-};
-
-export const getCompleteSessionNodesAndEdges = (session: SessionWithFullRelations) => {
-	let xPosition = 0;
-	let yPosition = 200;
-	const initNodes: Node[] = [];
-	const initEdges: Edge[] = [];
-	initNodes.push({
-		id: session.id,
+	nodes.push({
+		id: entity.id,
 		position: {
 			x: xPosition,
-			y: 0,
+			y: yPosition,
 		},
-		data: {
+		data,
+		type,
+		dragHandle: ".drag-handle",
+	});
+};
+
+const createEdges = (
+	data: { sourceId: string; targetId: string }[],
+	initEdges: Edge[] = [],
+) => {
+	for (const e of data) {
+		initEdges.push({
+			id: `${e.sourceId}-${e.targetId}`,
+			source: e.sourceId,
+			target: e.targetId,
+			animated: true,
+		});
+	}
+	return initEdges;
+};
+
+export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) => {
+	let nodes = createNodes({
+		data: factionData,
+		entityType: "factions",
+		nodeType: "factionNode",
+		initX: 0,
+		initY: 0,
+	});
+
+	let edges: Edge[] = [];
+
+	let y = 180;
+	for (const faction of factionData) {
+		nodes = createNodes({
+			data: faction.members.map((m) => m.character),
+			initNodes: nodes,
+			nodeType: "characterNode",
+			entityType: "characters",
+			initX: nodes.find((n) => n.id === faction.id)?.position.x,
+			initY: y,
+		});
+
+		const data = faction.members.map((char) => ({
+			sourceId: char.factionId,
+			targetId: char.characterId,
+		}));
+
+		edges = createEdges(data, edges);
+		y += 100;
+	}
+
+	return {
+		nodes,
+		edges,
+	};
+};
+
+export const createSessionAndRelationNodesAndEdges = (
+	session: SessionWithFullRelations,
+	initNodes: Node[] = [],
+	initEdges: Edge[] = [],
+	initX = 0,
+	initY = 0,
+) => {
+	let nodes: Node[] = initNodes;
+	let edges: Edge[] = initEdges;
+
+	let x = initX;
+	let y = initY;
+	pushEntity(
+		nodes,
+		session,
+		x,
+		0,
+		{
 			label: session.name,
 			entityType: "sessions",
 		},
-		type: "sessionNode",
-		dragHandle: ".drag-handle",
+		"sessionNode",
+	);
+	x += 300;
+	nodes = createNodes({
+		data: session.factions,
+		initNodes: nodes,
+		nodeType: "factionNode",
+		entityType: "factions",
+		initX: nodes.find((n) => n.id === session.id)?.position.x,
+		initY: y,
 	});
-
-	let memXPosition = xPosition;
-	for (const character of session.characters) {
-		initNodes.push({
-			id: character.id,
-			position: {
-				x: memXPosition,
-				y: yPosition,
-			},
-			data: {
-				label: character.name,
-				entityType: "characters",
-			},
-			type: "characterNode",
-			dragHandle: ".drag-handle",
-		});
-
-		initEdges.push({
-			id: `${character.id}-${session.id}`,
-			source: session.id,
-			target: character.id,
-			animated: true,
-		});
-
-		memXPosition = memXPosition + 100;
-	}
-	for (const faction of session.factions) {
-		initNodes.push({
-			id: faction.id,
-			position: {
-				x: memXPosition,
-				y: yPosition,
-			},
-			data: {
-				label: faction.name,
-				entityType: "factions",
-			},
-			type: "factionNode",
-			dragHandle: ".drag-handle",
-		});
-
-		initEdges.push({
-			id: `${faction.id}-${session.id}`,
-			source: session.id,
-			target: faction.id,
-			animated: true,
-		});
-
-		memXPosition = memXPosition + 100;
-	}
-	for (const note of session.notes) {
-		initNodes.push({
-			id: note.id,
-			position: {
-				x: memXPosition,
-				y: yPosition,
-			},
-			data: {
-				label: note.name,
-				entityType: "notes",
-			},
-			type: "noteNode",
-			dragHandle: ".drag-handle",
-		});
-
-		initEdges.push({
-			id: `${note.id}-${session.id}`,
-			source: session.id,
-			target: note.id,
-			animated: true,
-		});
-
-		memXPosition = memXPosition + 100;
-	}
-	yPosition = 200;
-	xPosition = xPosition + 400;
+	const factionEdges = session.factions.map((faction) => ({
+		sourceId: session.id,
+		targetId: faction.id,
+	}));
+	edges = createEdges(factionEdges, edges);
+	y += 80;
+	nodes = createNodes({
+		data: session.characters,
+		initNodes: nodes,
+		entityType: "characters",
+		nodeType: "characterNode",
+		initX: nodes.find((n) => n.id === session.id)?.position.x,
+		initY: y,
+	});
+	const characterEdges = session.characters.map((char) => ({
+		sourceId: session.id,
+		targetId: char.id,
+	}));
+	edges = createEdges(characterEdges, edges);
+	y += 80;
+	nodes = createNodes({
+		data: session.notes,
+		initNodes: nodes,
+		entityType: "notes",
+		nodeType: "noteNode",
+		initX: nodes.find((n) => n.id === session.id)?.position.x,
+		initY: y,
+	});
+	const noteEdges = session.notes.map((note) => ({
+		sourceId: session.id,
+		targetId: note.id,
+	}));
+	edges = createEdges(noteEdges, edges);
+	y += 80;
 
 	return {
-		initNodes,
-		initEdges,
+		nodes,
+		edges,
+	};
+};
+
+export const createAllSessionAndRelationNodesAndEdges = (
+	sessionData: SessionWithFullRelations[],
+) => {
+	const nodes: Node[] = [];
+	const edges: Edge[] = [];
+
+	for (const session of sessionData) {
+		const data = createSessionAndRelationNodesAndEdges(session, nodes, edges);
+		nodes.concat(data.nodes);
+		edges.concat(data.edges);
+	}
+
+	return {
+		nodes,
+		edges,
 	};
 };
