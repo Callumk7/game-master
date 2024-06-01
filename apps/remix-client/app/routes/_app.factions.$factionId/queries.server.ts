@@ -1,7 +1,7 @@
 import { json } from "@remix-run/cloudflare";
 import {
-	DB,
-	Faction,
+	type DB,
+	type Faction,
 	INTENT,
 	badRequest,
 	getAllUserCharacters,

@@ -2,6 +2,7 @@ import type {
 	BasicEntity,
 	EntityType,
 	FactionWithMembers,
+	FactionWithMembersAndNotes,
 	SessionWithFullRelations,
 } from "@repo/db";
 
@@ -17,6 +18,7 @@ export type Node = {
 };
 
 export type NodeType = "factionNode" | "characterNode" | "noteNode" | "sessionNode";
+
 export type NodeData = {
 	label: string;
 	entityType: EntityType;
@@ -99,35 +101,80 @@ const createEdges = (
 	return initEdges;
 };
 
-export const createFactionAndMemberNodes = (factionData: FactionWithMembers[]) => {
-	let nodes = createNodes({
-		data: factionData,
-		entityType: "factions",
-		nodeType: "factionNode",
-		initX: 0,
-		initY: 0,
+export const createFactionWithMemberNodes = (
+	faction: FactionWithMembersAndNotes,
+	initNodes: Node[] = [],
+	initEdges: Edge[] = [],
+	initX = 0,
+	initY = 0,
+) => {
+	let nodes: Node[] = initNodes;
+	let edges: Edge[] = initEdges;
+
+	let x = initX;
+	let y = initY;
+
+	pushEntity(
+		nodes,
+		faction,
+		x,
+		y,
+		{
+			label: faction.name,
+			entityType: "factions",
+		},
+		"factionNode",
+	);
+	x += 300;
+	y += 100;
+	nodes = createNodes({
+		data: faction.members.map((m) => m.character),
+		initNodes: nodes,
+		nodeType: "characterNode",
+		entityType: "characters",
+		initX: nodes.find((n) => n.id === faction.id)?.position.x,
+		initY: y,
 	});
 
-	let edges: Edge[] = [];
+	const memberData = faction.members.map((char) => ({
+		sourceId: char.factionId,
+		targetId: char.characterId,
+	}));
 
-	let y = 180;
+	edges = createEdges(memberData, edges);
+	x += 300;
+	y += 100;
+	nodes = createNodes({
+		data: faction.notes.map((n) => n.note),
+		initNodes: nodes,
+		nodeType: "noteNode",
+		entityType: "notes",
+		initX: nodes.find((n) => n.id === faction.id)?.position.x,
+		initY: y,
+	});
+
+	const noteData = faction.notes.map((char) => ({
+		sourceId: char.factionId,
+		targetId: char.noteId,
+	}));
+
+	edges = createEdges(noteData, edges);
+
+	return {
+		nodes,
+		edges,
+	};
+};
+
+export const createAllFactionWithMemberNodes = (
+	factionData: FactionWithMembersAndNotes[],
+) => {
+	const nodes: Node[] = [];
+	const edges: Edge[] = [];
 	for (const faction of factionData) {
-		nodes = createNodes({
-			data: faction.members.map((m) => m.character),
-			initNodes: nodes,
-			nodeType: "characterNode",
-			entityType: "characters",
-			initX: nodes.find((n) => n.id === faction.id)?.position.x,
-			initY: y,
-		});
-
-		const data = faction.members.map((char) => ({
-			sourceId: char.factionId,
-			targetId: char.characterId,
-		}));
-
-		edges = createEdges(data, edges);
-		y += 100;
+		const data = createFactionWithMemberNodes(faction, nodes, edges);
+		nodes.concat(data.nodes);
+		edges.concat(data.edges);
 	}
 
 	return {

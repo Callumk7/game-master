@@ -16,6 +16,7 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 	locations,
+	notesOnFactions,
 } from "../db/schemas";
 
 export * from "./http";
@@ -116,6 +117,12 @@ export type CharactersInFactionsInsert = z.infer<typeof charactersInFactionsInse
 export const plotInsertSchema = createInsertSchema(plots);
 export const plotSelectSchema = createSelectSchema(plots);
 
+export const notesOnFactionsInsertSchema = createInsertSchema(notesOnFactions);
+export const notesOnFactionsSelectSchema = createSelectSchema(notesOnFactions);
+
+export type NotesOnFactions = z.infer<typeof notesOnFactionsSelectSchema>;
+export type NotesOnFactionsInsert = z.infer<typeof notesOnFactionsInsertSchema>;
+
 export type Plot = z.infer<typeof plotSelectSchema>;
 export type NamedPlot = Plot & {
 	name: string;
@@ -162,6 +169,9 @@ export type CharactersInSessionsWithCharacterNote = CharactersInSessions & {
 };
 export type FactionWithMembers = Faction & {
 	members: (CharactersInFactions & { character: Character })[];
+};
+export type FactionWithMembersAndNotes = FactionWithMembers & {
+	notes: (NotesOnFactions & { note: Note })[];
 };
 export type FactionsInSessionsWithFactionNote = FactionsInSessions & {
 	faction: Faction;
