@@ -22,7 +22,9 @@ export const useSyncEditor = (options: SyncEditorOptions) => {
 	let optimisticContent = options.initContent;
 
 	if (fetcher.formData?.has("htmlContent")) {
+		console.log("found htmlContent for optimisticContent")
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
+		console.log(optimisticContent)
 	}
 
 	const editor = useDefaultEditor(optimisticContent);

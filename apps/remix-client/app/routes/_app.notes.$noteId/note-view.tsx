@@ -11,7 +11,7 @@ import { Container, TwoColumnView } from "~/components/layout";
 export default function NoteView() {
 	const { noteData, folders } = useTypedLoaderData<typeof loader>();
 
-	const { editor, isEditing, setIsEditing } = useSyncEditor({
+	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
 		initContent: noteData.htmlContent,
 	});
 
@@ -58,7 +58,7 @@ export default function NoteView() {
 				<EditorPreview
 					isEditing={isEditing}
 					editor={editor}
-					htmlContent={noteData.htmlContent}
+					htmlContent={optimisticContent}
 				/>
 			</TwoColumnView>
 		</Container>

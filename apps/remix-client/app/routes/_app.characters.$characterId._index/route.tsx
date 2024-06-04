@@ -1,12 +1,11 @@
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
 import { EditorPreview } from "~/components/editor-preview";
-import { Header, HeaderLink } from "~/components/typeography";
+import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useSyncEditor } from "~/hooks/sync-editor";
-import { Pencil1Icon, PlusCircledIcon, TriangleUpIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { type ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
-import { useAppData } from "../_app/route";
 import { post } from "~/lib/game-master";
 import { LinksAside } from "~/components/links-aside";
 import { TwoColumnView } from "~/components/layout";
@@ -26,7 +25,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 
 export default function CharacterIndex() {
 	const { characterData } = useCharacterRouteData();
-	const { editor, isEditing, setIsEditing } = useSyncEditor({
+	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
 		initContent: characterData.bio,
 		action: `/characters/${characterData.id}`,
 	});
@@ -49,7 +48,7 @@ export default function CharacterIndex() {
 			<EditorPreview
 				editor={editor}
 				isEditing={isEditing}
-				htmlContent={characterData.bio}
+				htmlContent={optimisticContent}
 			/>
 		</TwoColumnView>
 	);

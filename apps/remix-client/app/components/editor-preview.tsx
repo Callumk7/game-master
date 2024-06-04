@@ -1,4 +1,4 @@
-import { Editor, EditorContent } from "@tiptap/react";
+import { type Editor, EditorContent } from "@tiptap/react";
 import { RenderHtml } from "./render-html";
 
 interface EditorPreviewProps {
