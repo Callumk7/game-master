@@ -21,7 +21,7 @@ export default function NoteView() {
 	return (
 		<Container width="wide">
 			{noteData.folder && (
-				<p className="py-1 px-2 mb-4 text-xs rounded-full bg-primary-7 text-primary-12 w-fit">
+				<p className="py-1 px-2 mb-4 text-xs rounded-full bg-primary-7 border border-primary-9 text-primary-12 w-fit">
 					{noteData.folder.name}
 				</p>
 			)}

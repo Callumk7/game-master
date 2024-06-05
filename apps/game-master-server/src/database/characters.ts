@@ -8,7 +8,11 @@ export const getCharacterFactions = async (
 	const result = await db.query.charactersInFactions.findMany({
 		where: eq(charactersInFactions.characterId, characterId),
 		with: {
-			faction: true,
+			faction: {
+				with: {
+					members: true,
+				},
+			},
 		},
 	});
 

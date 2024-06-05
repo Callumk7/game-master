@@ -10,11 +10,14 @@ import { racesRoute } from "./routes/races";
 import { sessionsRoute } from "./routes/sessions";
 import { badRequest, createDrizzleForTurso, getAllUserEntities } from "@repo/db";
 import { getUserIdQueryParam } from "./utils";
+import { uploadsRoute } from "./routes/uploads";
 
 export type Bindings = {
 	TURSO_CONNECTION_URL: string;
 	TURSO_AUTH_TOKEN: string;
 	AUTH_KEY: string;
+	S3_ACCESS_KEY: string;
+	S3_SECRET_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -40,5 +43,6 @@ app.route("/sessions", sessionsRoute);
 app.route("/locations", locationsRoute);
 app.route("/folders", foldersRoute);
 app.route("/races", racesRoute);
+app.route("/uploads", uploadsRoute);
 
 export default app;

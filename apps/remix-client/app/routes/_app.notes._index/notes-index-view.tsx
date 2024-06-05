@@ -4,13 +4,14 @@ import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useNavigate } from "@remix-run/react";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
-import { DialogTrigger, SubmenuTrigger, TableBody } from "react-aria-components";
+import { DialogTrigger, TableBody } from "react-aria-components";
 import { useSort } from "~/hooks/sort";
 import type { Note } from "@repo/db";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
-import { Menu, MenuItem, MenuSection, MenuSeparator } from "~/components/ui/menu";
+import { Menu, MenuItem } from "~/components/ui/menu";
 import { useState } from "react";
+import { Container } from "~/components/layout";
 
 export default function NotesView() {
 	const { allNotes } = useTypedLoaderData<typeof loader>();
@@ -29,7 +30,7 @@ export default function NotesView() {
 	const [isSelecting, setIsSelecting] = useState(false);
 
 	return (
-		<div className="space-y-4">
+		<Container className="space-y-4">
 			<Header style="h1">All Notes</Header>
 			<Toolbar>
 				<SearchField />
@@ -44,7 +45,7 @@ export default function NotesView() {
 				</DialogTrigger>
 			</Toolbar>
 			<TableOfNotes notes={formattedNotes} isSelecting={isSelecting} />
-		</div>
+		</Container>
 	);
 }
 

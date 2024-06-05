@@ -10,7 +10,6 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const db = createDrizzleForTurso(context.cloudflare.env);
 
 	const allNotes = await getAllNotesWithRelations(db, userId);
-	// getting all notes for now, but I need to sort out a flow for user auth
 	return typedjson({ allNotes });
 };
 

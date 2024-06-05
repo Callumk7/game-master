@@ -6,6 +6,7 @@ import type {
 	BasicEntity,
 	EntityType,
 } from "@repo/db";
+import { cn } from "callum-util";
 import { Card } from "~/components/card";
 import { Header } from "~/components/typeography";
 import { Link } from "~/components/ui/link";
@@ -16,8 +17,15 @@ interface LinksAsideProps {
 	factions?: Faction[];
 	sessions?: Session[];
 	notes?: Note[];
+	className?: string;
 }
-export function LinksAside({ characters, factions, sessions, notes }: LinksAsideProps) {
+export function LinksAside({
+	characters,
+	factions,
+	sessions,
+	notes,
+	className,
+}: LinksAsideProps) {
 	if (
 		(!characters || characters.length === 0) &&
 		(!factions || factions.length === 0) &&
@@ -27,7 +35,7 @@ export function LinksAside({ characters, factions, sessions, notes }: LinksAside
 		return null;
 	}
 	return (
-		<div className="pl-7 space-y-7">
+		<div className={cn("pl-7 space-y-7", className)}>
 			<Card>
 				<div className="flex justify-between items-center mb-2 w-full">
 					<Header style="h2" tanker>

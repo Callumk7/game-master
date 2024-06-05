@@ -1,6 +1,6 @@
 import { uuidv4 } from "callum-util";
 import { and, eq } from "drizzle-orm";
-import { DB } from "../db";
+import type { DB } from "../db";
 import { charactersInFactions } from "../db/schemas/characters";
 import {
 	notes,
@@ -16,8 +16,8 @@ import {
 	factionsInSessions,
 	plotsInSessions,
 } from "../db/schemas/sessions";
-import { LinkedNoteInsert, MultiSelectString, NoteInsert } from "../types";
-import { LINK_INTENT, internalServerError, noContent } from "./util";
+import type { LinkedNoteInsert, MultiSelectString, NoteInsert } from "../types";
+import { type LINK_INTENT, internalServerError, noContent } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
 export const getAllNotesWithRelations = async (db: DB, userId: string) => {

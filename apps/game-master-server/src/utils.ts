@@ -4,7 +4,6 @@ import { HTTPException } from "hono/http-exception";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { z } from "zod";
 import { zx } from "zodix";
-import { convert } from "html-to-text";
 
 export const itemOrArrayToArray = <T>(input: T | T[] | undefined): T[] => {
 	let output: T[] = [];

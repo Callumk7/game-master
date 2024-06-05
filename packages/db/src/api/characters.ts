@@ -415,3 +415,43 @@ export const handleAddLinkToCharacter = async (
 		plots: linkPlotsToCharacter,
 	});
 };
+
+export const getCharacterFactions = async (db: DB, characterId: string) => {
+	const result = await db.query.charactersInFactions.findMany({
+		where: eq(charactersInFactions.characterId, characterId),
+		with: {
+			faction: {
+				with: {
+					members: true,
+				},
+			},
+		},
+	});
+
+	return result.map((row) => row.faction);
+};
+
+export const getCharacterFactionsWithMembersAndNotes = async (
+	db: DB,
+	characterId: string,
+) => {
+	const result = await db.query.charactersInFactions.findMany({
+		where: eq(charactersInFactions.characterId, characterId),
+		with: {
+			faction: {
+				with: {
+					members: {
+						with: {
+							character: true,
+						},
+					},
+					notes: {
+						with: { note: true },
+					},
+				},
+			},
+		},
+	});
+
+	return result.map((row) => row.faction);
+};

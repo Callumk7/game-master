@@ -12,7 +12,7 @@ interface AppToolbarProps {
 }
 export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps) {
 	return (
-		<div className="space-y-3 p-4">
+		<div className="sticky space-y-3 p-4">
 			<Toolbar>
 				<Tooltip content={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}>
 					<Button size="icon-sm" onPress={() => setIsSidebarOpen(!isSidebarOpen)}>

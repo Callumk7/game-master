@@ -168,9 +168,9 @@ export function TwoColumnView({
 	aside,
 }: { children: ReactNode; aside: ReactNode }) {
 	return (
-		<div className="grid grid-cols-3 gap-4">
+		<div className="grid grid-cols-3 gap-4 w-full">
 			<div className="col-span-2 space-y-4">{children}</div>
-			<div className="pl-16 space-y-10">{aside}</div>
+			<div className="pl-16 space-y-10 relative">{aside}</div>
 		</div>
 	);
 }
