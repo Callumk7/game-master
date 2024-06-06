@@ -18,7 +18,7 @@ uploadsRoute.post("/", async (c) => {
 		Bucket: BUCKET_NAME,
 		Key: key,
 		Body: buffer,
-		ContentType: "image/jpg",
+		ContentType: "image/png",
 	};
 	const s3 = createS3Client(c.env);
 	await s3.send(new PutObjectCommand(params));

@@ -47,13 +47,14 @@ charactersRoute.get("/:characterId", async (c) => {
 
 	// The user can provide some parameters for additional information
 	// about the specified character:
-
 	const isComplete = c.req.query("complete");
+
 	if (isComplete) {
 		const fullCharacter = await getFullCharacterData(db, characterId);
 		return c.json(fullCharacter);
 	}
 
+	// TODO: isn't this a function?
 	const baseCharacter = await db
 		.select()
 		.from(characters)

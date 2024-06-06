@@ -11,8 +11,11 @@ import { validateUser } from "~/lib/auth";
 import { createApi } from "~/lib/game-master";
 import { CharacterTable } from "./components/character-table";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
+  // TODO: We don't do this anywhere else in the app. It is not a good idea to use the userId in the
+  // search params. This should be part of the form data I imagine, or we can query the database 
+  // directly for gets..
 	const api = createApi(context);
 	const allCharacters = (await api
 		.get("characters", {

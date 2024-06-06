@@ -1,9 +1,8 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Outlet, useSubmit } from "@remix-run/react";
-import { useState } from "react";
 import { DialogTrigger } from "react-aria-components";
 import { useTypedLoaderData } from "remix-typedjson";
-import { EntityHeader, EntityView, SidebarLayout } from "~/components/layout";
+import { EntityHeader, EntityView } from "~/components/layout";
 import { NavigationLinks } from "~/components/navigation";
 import { Button } from "~/components/ui/button";
 import { Menu, MenuItem } from "~/components/ui/menu";
