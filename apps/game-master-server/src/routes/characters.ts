@@ -27,6 +27,7 @@ import { eq } from "drizzle-orm";
 import { zx } from "zodix";
 import { getCharacterFactions, getCharacterSessions } from "~/database/characters";
 import { z } from "zod";
+import { uploadToS3, validateUpload } from "~/services/s3";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -183,4 +184,19 @@ charactersRoute.delete("/:characterId", async (c) => {
 	await Promise.all([r1, r2, r3, r4, r5]);
 
 	return noContent();
+});
+
+charactersRoute.post("/:characterId/uploads", async (c) => {
+	const characterId = c.req.param("characterId");
+	const file = await validateUpload(c.req);
+	const key = await uploadToS3(c.env, file);
+	const imageUrl = `https://game-master-images.s3.eu-west-2.amazonaws.com/${key}`;
+	const db = createDrizzleForTurso(c.env);
+	await db
+		.update(characters)
+		.set({
+			image: imageUrl,
+		})
+		.where(eq(characters.id, characterId));
+	return c.json({ characterId, key });
 });

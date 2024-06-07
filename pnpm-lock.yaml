@@ -90,6 +90,9 @@ importers:
 
   apps/remix-client:
     dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.590.0
+        version: 3.590.0
       '@libsql/client':
         specifier: ^0.5.6
         version: 0.5.6

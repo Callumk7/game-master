@@ -9,7 +9,7 @@ import { extractParam } from "~/lib/zx-util";
 import { post } from "~/lib/game-master";
 import { LinksAside } from "~/components/links-aside";
 import { TwoColumnView } from "~/components/layout";
-import { Form } from "@remix-run/react";
+import { Form, useFetcher } from "@remix-run/react";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	// On the character page, we can add links to other entities, we do this
@@ -19,7 +19,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		const characterId = extractParam("characterId", params);
 		const form = await request.formData();
 		const res = await post(context, `characters/${characterId}/links`, form);
-		return res.clone()
+		return res.clone();
 	}
 };
 
@@ -29,6 +29,7 @@ export default function CharacterIndex() {
 		initContent: characterData.bio,
 		action: `/characters/${characterData.id}`,
 	});
+	const fetcher = useFetcher();
 	return (
 		<TwoColumnView
 			aside={
@@ -50,12 +51,14 @@ export default function CharacterIndex() {
 				isEditing={isEditing}
 				htmlContent={optimisticContent}
 			/>
-      <div className="mt-16">
-        <Form action="/upload" method="POST">
-          <input type="file" name="image" />
-          <button type="submit">Send file</button>
-        </Form>
-      </div>
+			<div className="mt-16">
+				<fetcher.Form action="uploads" method="POST" encType="multipart/form-data">
+					<input type="file" name="image" />
+					<Button type="submit" name="_action">
+						Submit
+					</Button>
+				</fetcher.Form>
+			</div>
 		</TwoColumnView>
 	);
 }

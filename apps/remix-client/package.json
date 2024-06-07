@@ -13,6 +13,7 @@
 		"typegen": "wrangler types"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.590.0",
 		"@libsql/client": "^0.5.6",
 		"@radix-ui/colors": "^3.0.0",
 		"@radix-ui/react-accordion": "^1.1.2",
