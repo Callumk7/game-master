@@ -30,7 +30,7 @@ const button = tv({
 				"bg-grade-2 hover:bg-destructive-6 pressed:bg-destructive-7 text-grade-12 border border-grade-7",
 		},
 		size: {
-			sm: "h-9 px-3",
+			sm: "h-8 px-3",
 			md: "h-10 px-4 py-2",
 			icon: "w-10 h-10",
 			"icon-sm": "w-8 h-8",

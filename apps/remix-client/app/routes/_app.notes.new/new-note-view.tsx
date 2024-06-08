@@ -1,4 +1,5 @@
 import { Form, useNavigate, useSearchParams } from "@remix-run/react";
+import { Container } from "~/components/layout";
 import { TextEditor, useDefaultEditor } from "~/components/tiptap";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/field";
@@ -9,7 +10,7 @@ export function NewNoteView() {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	return (
-		<div className="mt-10">
+		<Container>
 			<Form method="POST">
 				<div className="flex flex-col gap-5">
 					<Toolbar>
@@ -35,6 +36,6 @@ export function NewNoteView() {
 				</div>
 			</Form>
 			<TextEditor editor={editor} />
-		</div>
+		</Container>
 	);
 }

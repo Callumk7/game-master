@@ -30,7 +30,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 
 	return typedjson(
 		{
-			userId,
+			session,
 			error,
 			...userData,
 		},
@@ -55,7 +55,7 @@ export function useAppData() {
 }
 
 export default function AppRoute() {
-	const { allCharacters, allFactions, allFolders, allSessions, unsortedNotes } =
+	const { allCharacters, allFactions, allFolders, allSessions, unsortedNotes, session } =
 		useTypedLoaderData<typeof loader>();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -75,6 +75,9 @@ export default function AppRoute() {
 				/>
 			}
 		>
+			<Button className={"absolute top-2 right-2"} size="sm" variant="ghost">
+				{session.data.username}
+			</Button>
 			<div className="relative">
 				{!isSidebarOpen && (
 					<Button

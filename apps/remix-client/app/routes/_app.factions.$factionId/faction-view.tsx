@@ -9,13 +9,10 @@ import { Menu, MenuItem } from "~/components/ui/menu";
 export default function FactionView() {
 	const { faction } = useFactionRouteData();
 	return (
-		<EntityView>
-			<div className="w-11/12 mx-auto">
-				<FactionMenu factionId={faction.id} />
-				<EntityHeader title={faction.name}>
-					<LeaderSelect />
-				</EntityHeader>
-			</div>
+		<EntityView margin menu={<FactionMenu factionId={faction.id} />}>
+			<EntityHeader title={faction.name}>
+				<LeaderSelect />
+			</EntityHeader>
 			<Outlet />
 		</EntityView>
 	);

@@ -21,8 +21,7 @@ export function SessionLayout() {
 	];
 	return (
 		<Container>
-			<EntityView>
-				<SessionMenu />
+			<EntityView menu={<SessionMenu />}>
 				<EntityHeader title={session.name} />
 				<NavigationLinks links={links} />
 				<Outlet />
@@ -34,9 +33,7 @@ export function SessionLayout() {
 function SessionMenu() {
 	return (
 		<DialogTrigger>
-			<Button variant="secondary" size="sm">
-				Menu
-			</Button>
+			<Button>Menu</Button>
 			<Menu>
 				<MenuItem>Delete</MenuItem>
 				<MenuItem>Pin</MenuItem>

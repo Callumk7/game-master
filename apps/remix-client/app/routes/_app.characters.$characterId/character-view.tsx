@@ -29,11 +29,8 @@ export function CharacterView() {
 		},
 	];
 	return (
-		<EntityView top className="px-6" margin>
-			<EntityHeader
-				title={characterData.name}
-				menu={<CharacterMenu characterId={characterData.id} />}
-			>
+		<EntityView top margin menu={<CharacterMenu characterId={characterData.id} />}>
+			<EntityHeader title={characterData.name}>
 				<NavigationLinks links={links} />
 			</EntityHeader>
 			<Outlet />
@@ -45,9 +42,7 @@ function CharacterMenu({ characterId }: { characterId: string }) {
 	const submit = useSubmit();
 	return (
 		<DialogTrigger>
-			<Button variant="ghost" size="icon">
-				<DotsHorizontalIcon />
-			</Button>
+			<Button>Menu</Button>
 			<Menu>
 				<MenuItem
 					onAction={() =>

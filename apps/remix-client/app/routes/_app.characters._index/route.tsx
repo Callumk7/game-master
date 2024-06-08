@@ -10,12 +10,13 @@ import { Popover } from "~/components/ui/popover";
 import { validateUser } from "~/lib/auth";
 import { createApi } from "~/lib/game-master";
 import { CharacterTable } from "./components/character-table";
+import { Container } from "~/components/layout";
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
-  // TODO: We don't do this anywhere else in the app. It is not a good idea to use the userId in the
-  // search params. This should be part of the form data I imagine, or we can query the database 
-  // directly for gets..
+	// TODO: We don't do this anywhere else in the app. It is not a good idea to use the userId in the
+	// search params. This should be part of the form data I imagine, or we can query the database
+	// directly for gets..
 	const api = createApi(context);
 	const allCharacters = (await api
 		.get("characters", {
@@ -28,7 +29,7 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 export default function CharacterIndex() {
 	const { allCharacters } = useTypedLoaderData<typeof loader>();
 	return (
-		<div className="mx-auto mt-10 space-y-4 w-4/5">
+		<Container>
 			<Header style="h1">All Characters</Header>
 			<div className="mb-5">
 				<CharacterTable characters={allCharacters} />
@@ -39,6 +40,6 @@ export default function CharacterIndex() {
 					<Dialog>{({ close }) => <NewCharacterForm close={close} />}</Dialog>
 				</Popover>
 			</DialogTrigger>
-		</div>
+		</Container>
 	);
 }

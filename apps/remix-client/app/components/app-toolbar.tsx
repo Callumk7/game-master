@@ -5,6 +5,7 @@ import { Toolbar } from "./ui/toolbar";
 import { Tooltip } from "./ui/tooltip";
 import { Form } from "@remix-run/react";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
+import { useAppData } from "~/routes/_app/route";
 
 interface AppToolbarProps {
 	isSidebarOpen: boolean;
@@ -24,7 +25,7 @@ export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps)
 					<QuickNoteSlideOver action="/notes/new" />
 				</Tooltip>
 				<Tooltip content={"Logout"}>
-					<Form method="POST" action="/logout">
+					<Form method="POST" action="/logout" className="flex items-center">
 						<Button variant="secondary" size="icon-sm" type="submit">
 							<ExitIcon />
 						</Button>

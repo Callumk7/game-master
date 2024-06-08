@@ -33,11 +33,13 @@ export default function CharacterIndex() {
 	return (
 		<TwoColumnView
 			aside={
-				<LinksAside
-					notes={characterData.notes.map((n) => n.note)}
-					factions={characterData.factions.map((f) => f.faction)}
-					sessions={characterData.sessions.map((s) => s.session)}
-				/>
+				<div>
+					<LinksAside
+						notes={characterData.notes.map((n) => n.note)}
+						factions={characterData.factions.map((f) => f.faction)}
+						sessions={characterData.sessions.map((s) => s.session)}
+					/>
+				</div>
 			}
 		>
 			<div className="flex gap-x-6 items-center">
@@ -46,6 +48,7 @@ export default function CharacterIndex() {
 					{isEditing ? <TriangleUpIcon /> : <Pencil1Icon />}
 				</Button>
 			</div>
+			<ProfileCard src={characterData.image} />
 			<EditorPreview
 				editor={editor}
 				isEditing={isEditing}
@@ -60,5 +63,20 @@ export default function CharacterIndex() {
 				</fetcher.Form>
 			</div>
 		</TwoColumnView>
+	);
+}
+
+interface ProfileCardProps {
+	src: string | null;
+}
+function ProfileCard({ src }: ProfileCardProps) {
+	return (
+		<>
+			{src && (
+				<div className="rounded-2xl border border-grade-6 overflow-hidden">
+					<img src={src} alt="Character profile" className="object-fill object-center" />
+				</div>
+			)}
+		</>
 	);
 }

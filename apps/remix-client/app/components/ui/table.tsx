@@ -1,5 +1,10 @@
 import { cn } from "callum-util";
-import { forwardRef, HTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from "react";
+import {
+	forwardRef,
+	type HTMLAttributes,
+	type ThHTMLAttributes,
+	type TdHTMLAttributes,
+} from "react";
 
 const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
 	({ className, ...props }, ref) => (

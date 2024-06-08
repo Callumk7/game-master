@@ -67,6 +67,7 @@ export function Container({
 
 interface EntityViewProps {
 	children: ReactNode;
+	menu?: ReactNode;
 	margin?: boolean;
 	top?: boolean;
 	className?: string;
@@ -75,16 +76,19 @@ interface EntityViewProps {
 /**
  * This is simply adding vertical spacing. Nice.
  */
-export function EntityView({ children, margin, top, className }: EntityViewProps) {
+export function EntityView({ children, menu, margin, top, className }: EntityViewProps) {
 	return (
-		<div
-			className={cn(
-				`space-y-7 ${margin ? "w-11/12 mx-auto" : "w-full"} ${top && "mt-12"}`,
-				className,
-			)}
-		>
-			{children}
-		</div>
+		<>
+			<div
+				className={cn(
+					`space-y-7 ${margin ? "w-11/12 mx-auto" : "w-full"} ${top && "mt-12"}`,
+					className,
+				)}
+			>
+				<div className="mb-6">{menu}</div>
+				{children}
+			</div>
+		</>
 	);
 }
 
