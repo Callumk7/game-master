@@ -20,13 +20,11 @@ export function SessionLayout() {
 		},
 	];
 	return (
-		<Container>
-			<EntityView menu={<SessionMenu />}>
-				<EntityHeader title={session.name} />
-				<NavigationLinks links={links} />
-				<Outlet />
-			</EntityView>
-		</Container>
+		<EntityView top margin menu={<SessionMenu />}>
+			<EntityHeader title={session.name} />
+			<NavigationLinks links={links} />
+			<Outlet />
+		</EntityView>
 	);
 }
 

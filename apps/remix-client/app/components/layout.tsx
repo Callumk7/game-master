@@ -112,7 +112,7 @@ export function EntityHeader({
 	menu,
 }: EntityHeaderProps) {
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-1">
 			<div className="flex gap-4 items-baseline">
 				<EditableText
 					fieldName={"name"}

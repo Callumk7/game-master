@@ -6,7 +6,10 @@ import { EditorPreview } from "~/components/editor-preview";
 import { INTENT } from "@repo/db";
 import { EditNoteToolbar } from "./components/toolbar";
 import { LinksAside } from "~/components/links-aside";
-import { Container, TwoColumnView } from "~/components/layout";
+import { Container, EntityHeader, EntityView, TwoColumnView } from "~/components/layout";
+import { DialogTrigger } from "react-aria-components";
+import { Button } from "~/components/ui/button";
+import { Menu, MenuItem } from "~/components/ui/menu";
 
 export default function NoteView() {
 	const { noteData, folders } = useTypedLoaderData<typeof loader>();
@@ -19,33 +22,20 @@ export default function NoteView() {
 	// TODO: This should probably be an entityView? Not sure why it isn't
 
 	return (
-		<Container width="wide">
+		<EntityView top margin menu={<NoteMenu noteId={noteData.id} />}>
 			{noteData.folder && (
 				<p className="py-1 px-2 mb-4 text-xs rounded-full bg-primary-7 border border-primary-9 text-primary-12 w-fit">
 					{noteData.folder.name}
 				</p>
 			)}
-			<EditableText
-				fieldName={"name"}
-				value={noteData.name}
-				inputClassName={
-					"text-5xl font-bold mb-5 font-tanker w-full focus:outline-none bg-inherit text-grade-12"
-				}
-				inputLabel={"note name input"}
-				buttonClassName={"text-5xl font-bold font-tanker w-full mb-5 text-left"}
-				buttonLabel={"note name button"}
-				method="patch"
-			>
-				<input type="hidden" name="intent" value={INTENT.UPDATE_NAME} />
-			</EditableText>
-			<div className="mb-5">
+			<EntityHeader title={noteData.name}>
 				<EditNoteToolbar
 					isEditing={isEditing}
 					setIsEditing={setIsEditing}
 					noteId={noteData.id}
 					folders={folders}
 				/>
-			</div>
+			</EntityHeader>
 			<TwoColumnView
 				aside={
 					<LinksAside
@@ -61,6 +51,17 @@ export default function NoteView() {
 					htmlContent={optimisticContent}
 				/>
 			</TwoColumnView>
-		</Container>
+		</EntityView>
+	);
+}
+
+function NoteMenu({ noteId }: { noteId: string }) {
+	return (
+		<DialogTrigger>
+			<Button>Menu</Button>
+			<Menu>
+				<MenuItem>Delete</MenuItem>
+			</Menu>
+		</DialogTrigger>
 	);
 }
