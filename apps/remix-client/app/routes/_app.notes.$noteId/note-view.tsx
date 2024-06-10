@@ -18,9 +18,6 @@ export default function NoteView() {
 		initContent: noteData.htmlContent,
 	});
 
-	// BUG:
-	// TODO: This should probably be an entityView? Not sure why it isn't
-
 	return (
 		<EntityView top margin menu={<NoteMenu noteId={noteData.id} />}>
 			{noteData.folder && (
