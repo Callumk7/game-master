@@ -1,25 +1,40 @@
 import {
 	Popover as AriaPopover,
 	type PopoverProps as AriaPopoverProps,
+	composeRenderProps,
+	PopoverContext,
+	useSlottedContext,
 } from "react-aria-components";
-import type { ReactNode } from "react";
-import { cn } from "callum-util";
+import { tv } from "tailwind-variants";
 
 export interface PopoverProps extends Omit<AriaPopoverProps, "children"> {
-	children: ReactNode;
+	children: React.ReactNode;
 }
 
+const styles = tv({
+	base: "bg-white dark:bg-zinc-900/70 dark:backdrop-blur-2xl dark:backdrop-saturate-200 forced-colors:bg-[Canvas] shadow-2xl rounded-xl bg-clip-padding border border-black/10 dark:border-white/[15%] text-slate-700 dark:text-zinc-300",
+	variants: {
+		isEntering: {
+			true: "animate-in fade-in placement-bottom:slide-in-from-top-1 placement-top:slide-in-from-bottom-1 placement-left:slide-in-from-right-1 placement-right:slide-in-from-left-1 ease-out duration-200",
+		},
+		isExiting: {
+			true: "animate-out fade-out placement-bottom:slide-out-to-top-1 placement-top:slide-out-to-bottom-1 placement-left:slide-out-to-right-1 placement-right:slide-out-to-left-1 ease-in duration-150",
+		},
+	},
+});
+
 export function Popover({ children, className, ...props }: PopoverProps) {
+	const popoverContext = useSlottedContext(PopoverContext);
+	const isSubmenu = popoverContext?.trigger === "SubmenuTrigger";
+	let offset = 8;
+	offset = isSubmenu ? offset - 6 : offset;
 	return (
 		<AriaPopover
-			offset={8}
+			offset={offset}
 			{...props}
-			className={(values) =>
-				cn(
-					"z-50 overflow-y-auto rounded-md border border-grade-6 backdrop-blur-2xl backdrop-saturate-200 bg-grade-1/10 text-grade-11 shadow-md outline-none data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
-					typeof className === "function" ? className(values) : className,
-				)
-			}
+			className={composeRenderProps(className, (className, renderProps) =>
+				styles({ ...renderProps, className }),
+			)}
 		>
 			{children}
 		</AriaPopover>
