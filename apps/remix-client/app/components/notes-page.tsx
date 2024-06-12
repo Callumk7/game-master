@@ -9,7 +9,7 @@ import { type EntityType, LINK_INTENT, type Note } from "@repo/db";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
 import { RenderHtml } from "./render-html";
 import { Link1Icon } from "@radix-ui/react-icons";
-import { DialogTrigger, type Key } from "react-aria-components";
+import { DialogTrigger, MenuTrigger, type Key } from "react-aria-components";
 import { Menu, MenuItem } from "./ui/menu";
 import { useAppData } from "~/routes/_app/route";
 
@@ -62,14 +62,14 @@ export function NotePage({
 		<div className="space-y-4">
 			<Toolbar>
 				<QuickNoteSlideOver action={action} />
-				<DialogTrigger>
+				<MenuTrigger>
 					<Button size="icon-sm" variant="secondary">
 						<Link1Icon />
 					</Button>
 					<Menu onAction={handleAction} items={allNotes}>
 						{(item) => <MenuItem>{item.name}</MenuItem>}
 					</Menu>
-				</DialogTrigger>
+				</MenuTrigger>
 			</Toolbar>
 			{notes.length > 0 && (
 				<div className="p-4 rounded-lg border border-grade-6">

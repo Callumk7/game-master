@@ -7,7 +7,6 @@ import { z } from "zod";
 import { LINK_INTENT } from "@repo/db";
 import { post } from "~/lib/game-master";
 
-// formData shape...
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
 	const { characterId } = zx.parseParams(params, { characterId: z.string() });

@@ -1,8 +1,8 @@
-import { DialogTrigger, Key, Selection } from "react-aria-components";
+import { type Key, MenuTrigger, type Selection } from "react-aria-components";
 import { Toolbar } from "./ui/toolbar";
 import { Button } from "./ui/button";
 import { Menu, MenuItem } from "./ui/menu";
-import { BasicEntity } from "@repo/db";
+import type { BasicEntity } from "@repo/db";
 
 export function EntityFilter({
 	allChars,
@@ -29,7 +29,7 @@ export function EntityFilter({
 }) {
 	return (
 		<Toolbar>
-			<DialogTrigger>
+			<MenuTrigger>
 				<Button size="sm">Character Filter</Button>
 				<Menu
 					items={allChars}
@@ -39,8 +39,8 @@ export function EntityFilter({
 				>
 					{(char) => <MenuItem>{char.name}</MenuItem>}
 				</Menu>
-			</DialogTrigger>
-			<DialogTrigger>
+			</MenuTrigger>
+			<MenuTrigger>
 				<Button size="sm">Faction Filter</Button>
 				<Menu
 					items={allFactions}
@@ -50,8 +50,8 @@ export function EntityFilter({
 				>
 					{(faction) => <MenuItem>{faction.name}</MenuItem>}
 				</Menu>
-			</DialogTrigger>
-			<DialogTrigger>
+			</MenuTrigger>
+			<MenuTrigger>
 				<Button size="sm">Session Filter</Button>
 				<Menu
 					items={allSessions}
@@ -61,7 +61,7 @@ export function EntityFilter({
 				>
 					{(char) => <MenuItem>{char.name}</MenuItem>}
 				</Menu>
-			</DialogTrigger>
+			</MenuTrigger>
 			<Button variant="destructive" size="sm" onPress={() => handleClearAllFilters()}>
 				Clear
 			</Button>

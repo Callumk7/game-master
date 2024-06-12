@@ -17,8 +17,10 @@ import {
 	getFullCharacterData,
 	handleAddLinkToCharacter,
 	handleBulkCharacterLinking,
+	internalServerError,
 	linkFactionsToCharacter,
 	noContent,
+	notFound,
 	notesOnCharacters,
 	plotsOnCharacters,
 } from "@repo/db";
@@ -27,7 +29,7 @@ import { eq } from "drizzle-orm";
 import { zx } from "zodix";
 import { getCharacterFactions, getCharacterSessions } from "~/database/characters";
 import { z } from "zod";
-import { uploadToS3, validateUpload } from "~/services/s3";
+import { deleteFromS3, uploadToS3, validateUpload } from "~/services/s3";
 
 export const charactersRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -199,4 +201,39 @@ charactersRoute.post("/:characterId/uploads", async (c) => {
 		})
 		.where(eq(characters.id, characterId));
 	return c.json({ characterId, key });
+});
+
+charactersRoute.delete("/:characterId/uploads", async (c) => {
+	const characterId = c.req.param("characterId");
+	const db = createDrizzleForTurso(c.env);
+	const result = await db
+		.select({ image: characters.image })
+		.from(characters)
+		.where(eq(characters.id, characterId))
+		.then((row) => row[0]);
+
+	if (!result.image) {
+		return notFound();
+	}
+
+	const key = result.image.split("/").pop();
+	console.log(key);
+
+	if (!key) {
+		return internalServerError();
+	}
+
+	try {
+		await deleteFromS3(c.env, key);
+	} catch (err) {
+		console.error(err);
+	}
+
+	await db
+		.update(characters)
+		.set({
+			image: null,
+		})
+		.where(eq(characters.id, characterId));
+	return noContent();
 });

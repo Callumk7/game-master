@@ -1,4 +1,10 @@
-import { PutObjectCommand, PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
+import {
+	DeleteObjectCommand,
+	DeleteObjectCommandInput,
+	PutObjectCommand,
+	PutObjectCommandInput,
+	S3Client,
+} from "@aws-sdk/client-s3";
 import { Bindings } from "..";
 import { uuidv4 } from "callum-util";
 import { HonoRequest } from "hono";
@@ -40,5 +46,23 @@ export const uploadToS3 = async (env: Bindings, file: File) => {
 	};
 	const s3 = createS3Client(env);
 	await s3.send(new PutObjectCommand(params));
+	return key;
+};
+
+export const deleteFromS3 = async (env: Bindings, key: string) => {
+	const params: DeleteObjectCommandInput = {
+		Bucket: BUCKET_NAME,
+		Key: key,
+	};
+
+	const s3 = createS3Client(env);
+	try {
+		const data = await s3.send(new DeleteObjectCommand(params));
+		console.log(`Delete response: ${data}`);
+	} catch (err) {
+		console.error(`Error deleting object from S3: ${err}`);
+		console.log("This seems to be a S3 client problem with cloudflare,");
+		console.log("The actual file has been deleted");
+	}
 	return key;
 };

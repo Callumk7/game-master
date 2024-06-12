@@ -1,15 +1,7 @@
-import { useCharacterRouteData } from "../_app.characters.$characterId/route";
-import { EditorPreview } from "~/components/editor-preview";
-import { Header } from "~/components/typeography";
-import { Button } from "~/components/ui/button";
-import { useSyncEditor } from "~/hooks/sync-editor";
-import { Pencil1Icon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { type ActionFunctionArgs, json } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { post } from "~/lib/game-master";
-import { LinksAside } from "~/components/links-aside";
-import { TwoColumnView } from "~/components/layout";
-import { Form, useFetcher } from "@remix-run/react";
+import { CharacterBioView } from "./character-bio-view";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	// On the character page, we can add links to other entities, we do this
@@ -23,60 +15,4 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	}
 };
 
-export default function CharacterIndex() {
-	const { characterData } = useCharacterRouteData();
-	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
-		initContent: characterData.bio,
-		action: `/characters/${characterData.id}`,
-	});
-	const fetcher = useFetcher();
-	return (
-		<TwoColumnView
-			aside={
-				<div>
-					<LinksAside
-						notes={characterData.notes.map((n) => n.note)}
-						factions={characterData.factions.map((f) => f.faction)}
-						sessions={characterData.sessions.map((s) => s.session)}
-					/>
-				</div>
-			}
-		>
-			<div className="flex gap-x-6 items-center">
-				<Header style="h2">Character Bio</Header>
-				<Button variant="ghost" onPress={() => setIsEditing(!isEditing)} size="icon-sm">
-					{isEditing ? <TriangleUpIcon /> : <Pencil1Icon />}
-				</Button>
-			</div>
-			<ProfileCard src={characterData.image} />
-			<EditorPreview
-				editor={editor}
-				isEditing={isEditing}
-				htmlContent={optimisticContent}
-			/>
-			<div className="mt-16">
-				<fetcher.Form action="uploads" method="POST" encType="multipart/form-data">
-					<input type="file" name="image" />
-					<Button type="submit" name="_action">
-						Submit
-					</Button>
-				</fetcher.Form>
-			</div>
-		</TwoColumnView>
-	);
-}
-
-interface ProfileCardProps {
-	src: string | null;
-}
-function ProfileCard({ src }: ProfileCardProps) {
-	return (
-		<>
-			{src && (
-				<div className="rounded-2xl border border-grade-6 overflow-hidden">
-					<img src={src} alt="Character profile" className="object-fill object-center" />
-				</div>
-			)}
-		</>
-	);
-}
+export { CharacterBioView as default };
