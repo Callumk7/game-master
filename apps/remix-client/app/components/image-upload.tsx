@@ -16,7 +16,7 @@ export function ImageUpload({ imageSrc, alt }: ImageUploadProps) {
 
 	if (imageSrc) {
 		return (
-			<div className="group rounded-2xl border relative border-grade-6 overflow-hidden">
+			<div className="group rounded-2xl border relative border-grade-6 w-fit overflow-hidden">
 				<img
 					src={imageSrc}
 					alt={alt ?? "User uploaded image"}
@@ -44,7 +44,10 @@ export function ImageUpload({ imageSrc, alt }: ImageUploadProps) {
 				ref={fileInputRef}
 			/>
 			{fileName ? (
-				<Button type="submit">Submit</Button>
+				<div className="flex items-center gap-2">
+					<Button type="submit">Submit</Button>
+					<span className="text-xs font-light text-grade-10">{fileName}</span>
+				</div>
 			) : (
 				<Button onPress={handleInputClick} variant="secondary">
 					Upload File

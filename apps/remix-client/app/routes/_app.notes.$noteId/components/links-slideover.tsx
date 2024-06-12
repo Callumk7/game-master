@@ -1,5 +1,4 @@
-import { DialogTrigger, Key } from "react-aria-components";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import type { Key } from "react-aria-components";
 import { useState } from "react";
 import { useNoteIdLoaderData } from "~/routes/_app.notes.$noteId/route";
 import { useStateSync } from "~/hooks/sync-state";
@@ -12,9 +11,13 @@ import { LINK_INTENT } from "@repo/db";
 
 interface NotesLinksSlideOverProps {
 	className?: string;
+	isSidebarOpen: boolean;
+	setIsSidebarOpen: (isOpen: boolean) => void;
 }
-export function NoteLinksSlideOver({ className }: NotesLinksSlideOverProps) {
-	// Data from the _app layout route
+export function NoteLinksSlideOver({
+	isSidebarOpen,
+	setIsSidebarOpen,
+}: NotesLinksSlideOverProps) {
 	const { allCharacters, allFactions, allSessions } = useAppData();
 	const { noteData } = useNoteIdLoaderData();
 
@@ -33,46 +36,46 @@ export function NoteLinksSlideOver({ className }: NotesLinksSlideOverProps) {
 	});
 
 	return (
-		<DialogTrigger>
-			<Button size="icon" variant="ghost" className={className}>
-				<PlusCircledIcon />
-			</Button>
-			<SlideOver isDismissable size="narrow">
-				<Dialog>
-					{({ close }) => (
-						<div className="space-y-5">
-							<Button onPress={() => close()}>Close</Button>
-							<EntitySelectCard
-								targetEntityId={noteData.id}
-								targetEntityType={"notes"}
-								allEntities={allCharacters}
-								selectedEntities={linkedCharacters}
-								setSelectedEntites={setLinkedCharacters}
-								intent={LINK_INTENT.CHARACTERS}
-								action=""
-							/>
-							<EntitySelectCard
-								targetEntityId={noteData.id}
-								targetEntityType={"notes"}
-								allEntities={allFactions}
-								selectedEntities={linkedFactions}
-								setSelectedEntites={setLinkedFactions}
-								intent={LINK_INTENT.FACTIONS}
-								action=""
-							/>
-							<EntitySelectCard
-								targetEntityId={noteData.id}
-								targetEntityType={"notes"}
-								allEntities={allSessions}
-								selectedEntities={linkedSessions}
-								setSelectedEntites={setLinkedSessions}
-								intent={LINK_INTENT.SESSIONS}
-								action=""
-							/>
-						</div>
-					)}
-				</Dialog>
-			</SlideOver>
-		</DialogTrigger>
+		<SlideOver
+			isDismissable
+			size="narrow"
+			isOpen={isSidebarOpen}
+			onOpenChange={setIsSidebarOpen}
+		>
+			<Dialog>
+				{({ close }) => (
+					<div className="space-y-5">
+						<Button onPress={() => close()}>Close</Button>
+						<EntitySelectCard
+							targetEntityId={noteData.id}
+							targetEntityType={"notes"}
+							allEntities={allCharacters}
+							selectedEntities={linkedCharacters}
+							setSelectedEntites={setLinkedCharacters}
+							intent={LINK_INTENT.CHARACTERS}
+							action=""
+						/>
+						<EntitySelectCard
+							targetEntityId={noteData.id}
+							targetEntityType={"notes"}
+							allEntities={allFactions}
+							selectedEntities={linkedFactions}
+							setSelectedEntites={setLinkedFactions}
+							intent={LINK_INTENT.FACTIONS}
+							action=""
+						/>
+						<EntitySelectCard
+							targetEntityId={noteData.id}
+							targetEntityType={"notes"}
+							allEntities={allSessions}
+							selectedEntities={linkedSessions}
+							setSelectedEntites={setLinkedSessions}
+							intent={LINK_INTENT.SESSIONS}
+							action=""
+						/>
+					</div>
+				)}
+			</Dialog>
+		</SlideOver>
 	);
 }

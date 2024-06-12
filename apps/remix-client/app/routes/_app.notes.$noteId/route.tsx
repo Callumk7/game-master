@@ -9,6 +9,8 @@ import {
 	getUserFolders,
 	handleDeleteNote,
 	methodNotAllowed,
+	noContent,
+	updateNote,
 } from "@repo/db";
 import { typedjson, redirect, useTypedRouteLoaderData } from "remix-typedjson";
 import { validateUser } from "~/lib/auth";
@@ -16,6 +18,10 @@ import NoteView from "./note-view";
 import { extractParam } from "~/lib/zx-util";
 import { patch } from "~/lib/game-master";
 import { handleBulkLinkToNote, handleLinkNoteToFolder } from "./queries.server";
+import { zx } from "zodix";
+import { z } from "zod";
+import { DeleteFolderSchema } from "./components/folder-pill";
+import { DeleteNoteSchema } from "./components/toolbar";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -39,8 +45,19 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 	}
 
 	if (request.method === "DELETE") {
+		const submission = await zx.parseForm(
+			request,
+			z.discriminatedUnion("intent", [DeleteFolderSchema, DeleteNoteSchema]),
+		);
+
 		const db = createDrizzleForTurso(context.cloudflare.env);
-		return await handleDeleteNote(db, noteId);
+		if (submission.intent === "DELETE_NOTE") {
+			return await handleDeleteNote(db, noteId);
+		}
+		if (submission.intent === "DELETE_FOLDER") {
+			await updateNote(db, noteId, { folderId: "NONE" });
+			return noContent();
+		}
 	}
 	return methodNotAllowed();
 };

@@ -413,6 +413,10 @@ export const deleteNoteJoins = async (db: DB, noteId: string) => {
 	}
 };
 
+export const updateNote = async (db: DB, noteId: string, update: Partial<NoteInsert>) => {
+	return await db.update(notes).set(update).where(eq(notes.id, noteId)).returning();
+};
+
 export const updateNoteContent = async (db: DB, noteId: string, htmlContent: string) => {
 	return await db
 		.update(notes)
@@ -437,7 +441,7 @@ export const handleDeleteNote = async (db: DB, noteId: string) => {
 	// TODO: This try catch has a number of problems:
 	// Not in parallel
 	// Do not have a process for completing the process.
-	// We will be left with bad data in the database if it fails halfway through
+	// BUG: We will be left with bad data in the database if it fails halfway through
 	try {
 		await db.delete(notes).where(eq(notes.id, noteId));
 		await db.delete(notesOnFactions).where(eq(notesOnFactions.noteId, noteId));

@@ -1,13 +1,11 @@
 import { useSyncEditor } from "~/hooks/sync-editor";
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
-import { useFetcher } from "@remix-run/react";
 import { TwoColumnView } from "~/components/layout";
 import { LinksAside } from "~/components/links-aside";
 import { Header } from "~/components/typeography";
 import { Pencil1Icon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
 import { EditorPreview } from "~/components/editor-preview";
-import { type ChangeEvent, useRef, useState } from "react";
 import { ImageUpload } from "~/components/image-upload";
 
 export function CharacterBioView() {
