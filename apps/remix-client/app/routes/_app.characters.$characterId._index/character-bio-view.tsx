@@ -7,12 +7,20 @@ import { Pencil1Icon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
 import { EditorPreview } from "~/components/editor-preview";
 import { ImageUpload } from "~/components/image-upload";
+import { z } from "zod";
+import { INTENT } from "@repo/db";
+
+export const UpdateCharacterBioSchema = z.object({
+	intent: z.literal(INTENT.UPDATE_BIO),
+	htmlContent: z.string(),
+});
 
 export function CharacterBioView() {
 	const { characterData } = useCharacterRouteData();
 	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
 		initContent: characterData.bio,
 		action: `/characters/${characterData.id}`,
+		intent: INTENT.UPDATE_BIO,
 	});
 	return (
 		<TwoColumnView

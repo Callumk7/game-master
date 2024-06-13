@@ -56,6 +56,16 @@ export function NoteMenu({
 				<MenuItem onAction={() => setIsSidebarOpen(!isSidebarOpen)}>
 					Link to Entities
 				</MenuItem>
+				<MenuItem
+					onAction={() =>
+						submit(
+							{ intent: "DELETE_NOTE" },
+							{ method: "DELETE", action: `/notes/${noteId}` },
+						)
+					}
+				>
+					Delete Note
+				</MenuItem>
 			</Menu>
 		</MenuTrigger>
 	);

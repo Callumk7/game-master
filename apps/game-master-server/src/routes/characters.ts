@@ -101,10 +101,23 @@ charactersRoute.patch("/:characterId", async (c) => {
 				.where(eq(characters.id, characterId));
 			break;
 		}
-		case INTENT.UPDATE_NAME:
-		case INTENT.UPDATE_CONNECTIONS:
-		case INTENT.UPDATE_BIO:
+		case INTENT.UPDATE_NAME: {
+			const { name } = await zx.parseForm(c.req.raw, { name: z.string() });
+			await db
+				.update(characters)
+				.set({ name })
+				.where(eq(characters.id, characterId));
 			break;
+		}
+		case INTENT.UPDATE_CONNECTIONS:
+		case INTENT.UPDATE_BIO: {
+			const { bio } = await zx.parseForm(c.req.raw, { bio: z.string() });
+			await db
+				.update(characters)
+				.set({ bio })
+				.where(eq(characters.id, characterId));
+			break;
+		}
 
 		default:
 			break;

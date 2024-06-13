@@ -1,22 +1,22 @@
 import { NotePage } from "~/components/notes-page";
 import { useCharacterRouteData } from "../_app.characters.$characterId/route";
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
-import { validateUser } from "~/lib/auth";
 import { zx } from "zodix";
 import { z } from "zod";
-import { LINK_INTENT } from "@repo/db";
-import { post } from "~/lib/game-master";
+import { createNoteAndLinkToCharacter, linkNotesToCharacter } from "./queries.server";
+import { methodNotAllowed } from "@repo/db";
+import { validateUser } from "~/lib/auth";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
 	const { characterId } = zx.parseParams(params, { characterId: z.string() });
-	const form = await request.formData();
-	form.append("userId", userId);
-	form.append("intent", LINK_INTENT.CHARACTERS);
-	form.append("linkId", characterId);
-	console.log(form);
-	const res = await post(context, "notes", form);
-	return await res.json();
+	if (request.method === "POST") {
+		return await createNoteAndLinkToCharacter(request, context, userId, characterId);
+	}
+	if (request.method === "PUT") {
+		return await linkNotesToCharacter(request, context, characterId);
+	}
+	return methodNotAllowed();
 };
 
 export default function CharacterNotesView() {

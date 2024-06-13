@@ -9,7 +9,7 @@ import { type EntityType, LINK_INTENT, type Note } from "@repo/db";
 import { QuickNoteSlideOver } from "./quick-note-slideover";
 import { RenderHtml } from "./render-html";
 import { Link1Icon } from "@radix-ui/react-icons";
-import { DialogTrigger, MenuTrigger, type Key } from "react-aria-components";
+import { MenuTrigger, type Key } from "react-aria-components";
 import { Menu, MenuItem } from "./ui/menu";
 import { useAppData } from "~/routes/_app/route";
 

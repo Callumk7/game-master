@@ -66,7 +66,7 @@ const createNodes = ({
 
 	return nodes;
 };
-const pushEntity = (
+export const pushEntity = (
 	nodes: Node[],
 	entity: BasicEntity,
 	xPosition: number,

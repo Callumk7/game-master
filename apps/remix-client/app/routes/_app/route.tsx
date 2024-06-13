@@ -1,14 +1,9 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
-import { Outlet } from "@remix-run/react";
-import { useState } from "react";
-import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
-import { SidebarLayout } from "~/components/layout";
+import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { validateUserSession, getUserId, commitSession } from "~/lib/auth";
 import { getAllUserData } from "./queries.server";
-import { Button } from "~/components/ui/button";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { Sidebar } from "./components/sidebar";
 import "reactflow/dist/style.css";
+import { AppRoute } from "./app-layout";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -24,6 +19,9 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 	const session = await validateUserSession(request);
 	const userId = getUserId(session);
 
+	// TODO: This should be split out to other routes as every invalidation made
+	// by mutations will cause all data to be refetched. This should be cached
+	// and updated, or instead split out into specific routes that require it
 	const userData = await getAllUserData(userId, context);
 
 	const error = session.get("error") || null;
@@ -54,42 +52,4 @@ export function useAppData() {
 	return data;
 }
 
-export default function AppRoute() {
-	const { allCharacters, allFactions, allFolders, allSessions, unsortedNotes, session } =
-		useTypedLoaderData<typeof loader>();
-
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-	return (
-		<SidebarLayout
-			isSidebarOpen={isSidebarOpen}
-			sidebar={
-				<Sidebar
-					isSidebarOpen={isSidebarOpen}
-					setIsSidebarOpen={setIsSidebarOpen}
-					characters={allCharacters}
-					factions={allFactions}
-					notes={unsortedNotes}
-					folders={allFolders}
-					sessions={allSessions}
-				/>
-			}
-		>
-			<Button className={"absolute top-2 right-2"} size="sm" variant="ghost">
-				{session.data.username}
-			</Button>
-			<div className="relative">
-				{!isSidebarOpen && (
-					<Button
-						size="icon-sm"
-						onPress={() => setIsSidebarOpen(true)}
-						className="absolute left-9 top-2 z-50"
-					>
-						<ChevronRightIcon />
-					</Button>
-				)}
-				<Outlet />
-			</div>
-		</SidebarLayout>
-	);
-}
+export { AppRoute as default };

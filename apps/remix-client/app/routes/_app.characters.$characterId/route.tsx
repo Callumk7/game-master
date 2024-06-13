@@ -1,27 +1,47 @@
-import {
-	type ActionFunctionArgs,
-	type LoaderFunctionArgs,
-	json,
-} from "@remix-run/cloudflare";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
-import { CharacterView } from "./character-view";
-import { createDrizzleForTurso, getFullCharacterData, notes } from "@repo/db";
+import { CharacterView, UpdateCharacterNameSchema } from "./character-view";
+import {
+	INTENT,
+	createDrizzleForTurso,
+	getFullCharacterData,
+	methodNotAllowed,
+} from "@repo/db";
 import { extractParam } from "~/lib/zx-util";
-import { patch } from "~/lib/game-master";
+import {
+	handleDeleteCharacter,
+	handleForwardUpdateCharacterRequest,
+	handleUpdateCharacterBio,
+} from "./components/queries.server";
+import { UpdateCharacterBioSchema } from "../_app.characters.$characterId._index/character-bio-view";
 
 // This is for updating stuff, like name and bio.
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const characterId = extractParam("characterId", params);
-	const form = await request.formData();
-	if (request.method === "PATCH") {
-		const bio = String(form.get("htmlContent"));
-		form.append("bio", bio);
-		const res = await patch(context, `characters/${characterId}`, form);
-
-		return json({ success: "sure" });
+	// Handle delete character
+	if (request.method === "DELETE") {
+		return await handleDeleteCharacter(context, characterId, request);
 	}
+	// Handle update character bio - should be be updated to handle intent, and other
+	// forms of character update
+	if (request.method === "PATCH") {
+		const submission = await zx.parseForm(
+			request,
+			z.discriminatedUnion("intent", [
+				UpdateCharacterNameSchema,
+				UpdateCharacterBioSchema,
+			]),
+		);
+		// The form for the body in the editor needs to be updated (see handleUpdateCharacterBio)
+		if (submission.intent === INTENT.UPDATE_BIO) {
+			return await handleUpdateCharacterBio(context, characterId, request);
+		}
+		// Server handles all other updates
+		return await handleForwardUpdateCharacterRequest(context, characterId, request);
+	}
+	return methodNotAllowed();
 };
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {

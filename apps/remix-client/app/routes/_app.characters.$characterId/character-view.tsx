@@ -1,4 +1,3 @@
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Outlet, useSubmit } from "@remix-run/react";
 import { DialogTrigger } from "react-aria-components";
 import { useTypedLoaderData } from "remix-typedjson";
@@ -7,6 +6,13 @@ import { NavigationLinks } from "~/components/navigation";
 import { Button } from "~/components/ui/button";
 import { Menu, MenuItem } from "~/components/ui/menu";
 import type { loader } from "./route";
+import { z } from "zod";
+import { INTENT } from "@repo/db";
+
+export const UpdateCharacterNameSchema = z.object({
+	intent: z.literal(INTENT.UPDATE_NAME),
+	name: z.string(),
+});
 
 export function CharacterView() {
 	const { characterData } = useTypedLoaderData<typeof loader>();
@@ -46,7 +52,7 @@ function CharacterMenu({ characterId }: { characterId: string }) {
 			<Menu>
 				<MenuItem
 					onAction={() =>
-						submit({ characterId }, { method: "DELETE", action: "/characters" })
+						submit({}, { method: "DELETE", action: `/characters/${characterId}` })
 					}
 				>
 					Delete
