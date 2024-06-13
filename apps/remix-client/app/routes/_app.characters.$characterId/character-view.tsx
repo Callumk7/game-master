@@ -9,7 +9,7 @@ import { Menu, MenuItem } from "~/components/ui/menu";
 import type { loader } from "./route";
 
 export function CharacterView() {
-	const { characterData, noteTree } = useTypedLoaderData<typeof loader>();
+	const { characterData } = useTypedLoaderData<typeof loader>();
 	const links = [
 		{
 			name: "Home",

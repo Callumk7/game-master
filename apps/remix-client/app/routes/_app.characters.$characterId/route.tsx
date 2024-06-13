@@ -10,7 +10,6 @@ import { CharacterView } from "./character-view";
 import { createDrizzleForTurso, getFullCharacterData, notes } from "@repo/db";
 import { extractParam } from "~/lib/zx-util";
 import { patch } from "~/lib/game-master";
-import { inArray } from "drizzle-orm";
 
 // This is for updating stuff, like name and bio.
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
@@ -34,23 +33,7 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 		return redirect("/characters");
 	}
 
-	const noteIds = characterData.notes.map((note) => note.noteId);
-	if (noteIds.length > 0) {
-		const fetchedNotes = await db.query.notes.findMany({
-			where: inArray(notes.id, noteIds),
-			with: {
-				characters: { with: { character: true } },
-				factions: { with: { faction: true } },
-			},
-		});
-		const noteTree = fetchedNotes.map((note) => ({
-			...note,
-			characters: note.characters.map((char) => char.character),
-			factions: note.factions.map((faction) => faction.faction),
-		}));
-		return typedjson({ characterData, noteTree });
-	}
-	return typedjson({ characterData, noteTree: [] });
+	return typedjson({ characterData });
 };
 
 export const useCharacterRouteData = () => {
