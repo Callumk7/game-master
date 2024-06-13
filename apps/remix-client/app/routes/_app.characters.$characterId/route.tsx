@@ -11,15 +11,20 @@ import {
 } from "@repo/db";
 import { extractParam } from "~/lib/zx-util";
 import {
+	handleBulkLinkToCharacter,
 	handleDeleteCharacter,
 	handleForwardUpdateCharacterRequest,
 	handleUpdateCharacterBio,
-} from "./components/queries.server";
+} from "./queries.server";
 import { UpdateCharacterBioSchema } from "../_app.characters.$characterId._index/character-bio-view";
 
 // This is for updating stuff, like name and bio.
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const characterId = extractParam("characterId", params);
+	// Handle link entities to this character
+	if (request.method === "PUT") {
+		return await handleBulkLinkToCharacter(request, context, characterId);
+	}
 	// Handle delete character
 	if (request.method === "DELETE") {
 		return await handleDeleteCharacter(context, characterId, request);

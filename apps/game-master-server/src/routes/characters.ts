@@ -143,13 +143,13 @@ charactersRoute.post("/:characterId/links", async (c) => {
 charactersRoute.put("/:characterId/links", async (c) => {
 	const characterId = c.req.param("characterId");
 
-	const { intent, targetIds } = await zx.parseForm(c.req.raw, {
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
 		intent: LinkIntentSchema,
-		targetIds: OptionalEntitySchema,
+		linkIds: OptionalEntitySchema,
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	return await handleBulkCharacterLinking(db, characterId, targetIds, intent);
+	return await handleBulkCharacterLinking(db, characterId, linkIds, intent);
 });
 
 charactersRoute.get("/:characterId/factions", async (c) => {

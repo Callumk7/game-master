@@ -4,9 +4,9 @@ import { Card } from "./card";
 import { Button } from "./ui/button";
 import { GridList, GridListItem } from "./ui/grid-list";
 import { Header } from "./typeography";
-import { Key, Selection } from "react-stately";
+import type { Key, Selection } from "react-stately";
 import { Link } from "./ui/link";
-import { BasicEntity, EntityType, LINK_INTENT } from "@repo/db";
+import { type BasicEntity, type EntityType, LINK_INTENT } from "@repo/db";
 
 interface EntitySelectCardProps<T extends BasicEntity> {
 	targetEntityId: string;
@@ -16,6 +16,7 @@ interface EntitySelectCardProps<T extends BasicEntity> {
 	setSelectedEntites: (selected: Set<Key>) => void;
 	intent: LINK_INTENT;
 	action?: string;
+	close?: () => void;
 }
 
 export function EntitySelectCard<T extends BasicEntity>({
@@ -26,12 +27,13 @@ export function EntitySelectCard<T extends BasicEntity>({
 	setSelectedEntites,
 	intent,
 	action,
+	close,
 }: EntitySelectCardProps<T>) {
 	const fetcher = useFetcher();
 
 	// Component state
 	const [list, setList] = useState(allEntities.filter((e) => selectedEntities.has(e.id)));
-	const [selectionMode, setSelectionMode] = useState<undefined | "multiple">();
+	const [selectionMode, setSelectionMode] = useState<undefined | "multiple">(); // React Aria Components
 
 	const handleSelectionChange = (keys: Selection) => {
 		if (keys !== "all") {
@@ -64,6 +66,9 @@ export function EntitySelectCard<T extends BasicEntity>({
 			});
 			setList(allEntities.filter((e) => selectedEntities.has(e.id)));
 			setSelectionMode(undefined);
+			if (close) {
+				close();
+			}
 		} else {
 			setList(allEntities);
 			setSelectionMode("multiple");

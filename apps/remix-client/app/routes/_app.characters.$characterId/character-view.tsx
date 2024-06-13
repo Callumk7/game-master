@@ -1,13 +1,11 @@
-import { Outlet, useSubmit } from "@remix-run/react";
-import { DialogTrigger } from "react-aria-components";
+import { Outlet } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { EntityHeader, EntityView } from "~/components/layout";
 import { NavigationLinks } from "~/components/navigation";
-import { Button } from "~/components/ui/button";
-import { Menu, MenuItem } from "~/components/ui/menu";
 import type { loader } from "./route";
 import { z } from "zod";
 import { INTENT } from "@repo/db";
+import { CharacterMenu } from "./components/character-menu";
 
 export const UpdateCharacterNameSchema = z.object({
 	intent: z.literal(INTENT.UPDATE_NAME),
@@ -41,24 +39,5 @@ export function CharacterView() {
 			</EntityHeader>
 			<Outlet />
 		</EntityView>
-	);
-}
-
-function CharacterMenu({ characterId }: { characterId: string }) {
-	const submit = useSubmit();
-	return (
-		<DialogTrigger>
-			<Button>Menu</Button>
-			<Menu>
-				<MenuItem
-					onAction={() =>
-						submit({}, { method: "DELETE", action: `/characters/${characterId}` })
-					}
-				>
-					Delete
-				</MenuItem>
-				<MenuItem>Duplicate</MenuItem>
-			</Menu>
-		</DialogTrigger>
 	);
 }

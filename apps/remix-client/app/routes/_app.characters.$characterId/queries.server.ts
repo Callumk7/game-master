@@ -1,8 +1,7 @@
 import { json, type AppLoadContext } from "@remix-run/cloudflare";
 import { internalServerError, noContent } from "@repo/db";
-import { patch, postDelete } from "~/lib/game-master";
+import { patch, postDelete, put } from "~/lib/game-master";
 
-// WARN: This logic has now been moved to the server.
 export const handleUpdateCharacterBio = async (
 	context: AppLoadContext,
 	characterId: string,
@@ -20,23 +19,21 @@ export const handleUpdateCharacterBio = async (
 	return internalServerError();
 };
 
-// WARN: This logic has now been moved to the server.
-export const handleUpdateCharacterName = async (
-	context: AppLoadContext,
-	characterId: string,
-	request: Request,
-) => {
-	const form = await request.formData();
-	const res = await patch(context, `characters/${characterId}`, form);
+// export const handleUpdateCharacterName = async (
+// 	context: AppLoadContext,
+// 	characterId: string,
+// 	request: Request,
+// ) => {
+// 	const form = await request.formData();
+// 	const res = await patch(context, `characters/${characterId}`, form);
+//
+// 	if (res.ok) {
+// 		return json(await res.json());
+// 	}
+//
+// 	return internalServerError();
+// };
 
-	if (res.ok) {
-		return json(await res.json());
-	}
-
-	return internalServerError();
-};
-
-// NOTE: This is all that is required: 2024-06-13
 export const handleForwardUpdateCharacterRequest = async (
 	context: AppLoadContext,
 	characterId: string,
@@ -63,4 +60,14 @@ export const handleDeleteCharacter = async (
 		return noContent();
 	}
 	return internalServerError();
+};
+
+export const handleBulkLinkToCharacter = async (
+	request: Request,
+	context: AppLoadContext,
+	characterId: string,
+) => {
+	const form = await request.formData();
+	const res = await put(context, `characters/${characterId}/links`, form);
+	return json(await res.json());
 };

@@ -1,9 +1,9 @@
 import {
 	ModalOverlay,
-	ModalOverlayProps,
+	type ModalOverlayProps,
 	Modal as RACModal,
 } from "react-aria-components";
-import { VariantProps, tv } from "tailwind-variants";
+import { type VariantProps, tv } from "tailwind-variants";
 
 const overlayStyles = tv({
 	base: "fixed top-0 left-0 w-full h-[--visual-viewport-height] isolate z-20 bg-black/[15%] flex items-center justify-center p-4 text-center backdrop-blur-lg",
@@ -18,7 +18,7 @@ const overlayStyles = tv({
 });
 
 const modalStyles = tv({
-	base: "min-w-sm rounded-2xl bg-grade-1 backdrop-blur-2xl backdrop-saturate-200 forced-colors:bg-[Canvas] text-left align-middle text-grade-12 shadow-2xl bg-clip-padding border border-grade-6",
+	base: "min-w-[40vw] rounded-2xl bg-grade-1 backdrop-blur-2xl backdrop-saturate-200 forced-colors:bg-[Canvas] text-left align-middle text-grade-12 shadow-2xl bg-clip-padding border border-grade-6",
 	variants: {
 		width: {
 			fit: "w-fit",
