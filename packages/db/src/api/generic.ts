@@ -1,7 +1,7 @@
-import { ResultSet } from "@libsql/client/.";
+import type { ResultSet } from "@libsql/client/.";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
-import { DB } from "../db";
-import { MultiSelectString } from "../types";
+import type { DB } from "../db";
+import type { MultiSelectString } from "../types";
 import { LINK_INTENT, badRequest } from "./util";
 import { itemOrArrayToArray } from "../utils";
 
@@ -260,4 +260,69 @@ export const handleLinkingByIntent = async <C, A, E, F, S, N, P>(
 		}),
 		{ status: StatusCodes.CREATED, statusText: ReasonPhrases.CREATED },
 	);
+};
+
+type RemoveLinkFunction = (
+	db: DB,
+	targetId: string,
+	entityIds: string[],
+) => Promise<ResultSet>;
+type RemoveLinkFunctions = {
+	characters?: RemoveLinkFunction;
+	allies?: RemoveLinkFunction;
+	enemies?: RemoveLinkFunction;
+	factions?: RemoveLinkFunction;
+	sessions?: RemoveLinkFunction;
+	notes?: RemoveLinkFunction;
+	plots?: RemoveLinkFunction;
+};
+export const handleRemoveLinkByIntent = async (
+	db: DB,
+	targetId: string,
+	entityIds: MultiSelectString,
+	intent: LINK_INTENT,
+	removeFunctions: RemoveLinkFunctions,
+) => {
+	const ids = itemOrArrayToArray(entityIds);
+	switch (intent) {
+		case LINK_INTENT.CHARACTERS:
+			if (removeFunctions.characters) {
+				await removeFunctions.characters(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.ALLIES:
+			if (removeFunctions.allies) {
+				await removeFunctions.allies(db, targetId, ids);
+			}
+			break;
+
+		case LINK_INTENT.ENEMIES:
+			if (removeFunctions.enemies) {
+				await removeFunctions.enemies(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.NOTES:
+			if (removeFunctions.notes) {
+				await removeFunctions.notes(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.FACTIONS:
+			if (removeFunctions.factions) {
+				await removeFunctions.factions(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.PLOTS:
+			if (removeFunctions.plots) {
+				await removeFunctions.plots(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.SESSIONS:
+			if (removeFunctions.sessions) {
+				await removeFunctions.sessions(db, targetId, ids);
+			}
+			break;
+		case LINK_INTENT.ALL:
+			console.log("Link intent not currently supported");
+			break;
+	}
 };

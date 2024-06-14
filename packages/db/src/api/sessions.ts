@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import type { DB } from "../db";
 import { notesOnSessions } from "../db/schemas/notes";
 import {
@@ -171,6 +171,52 @@ export const deletePlotJoinsOnSession = async (db: DB, sessionId: string) => {
 	return await db
 		.delete(plotsInSessions)
 		.where(eq(plotsInSessions.sessionId, sessionId));
+};
+
+export const deleteNotesFromSession = async (
+	db: DB,
+	sessionId: string,
+	noteIds: string[],
+) => {
+	return await db
+		.delete(notesOnSessions)
+		.where(
+			and(
+				eq(notesOnSessions.sessionId, sessionId),
+				inArray(notesOnSessions.noteId, noteIds),
+			),
+		)
+		.returning();
+};
+export const deleteCharactersFromSession = async (
+	db: DB,
+	sessionId: string,
+	characterIds: string[],
+) => {
+	return await db
+		.delete(charactersInSessions)
+		.where(
+			and(
+				eq(charactersInSessions.sessionId, sessionId),
+				inArray(charactersInSessions.characterId, characterIds),
+			),
+		)
+		.returning();
+};
+export const deleteFactionsFromSession = async (
+	db: DB,
+	sessionId: string,
+	factionIds: string[],
+) => {
+	return await db
+		.delete(factionsInSessions)
+		.where(
+			and(
+				eq(factionsInSessions.sessionId, sessionId),
+				inArray(factionsInSessions.factionId, factionIds),
+			),
+		)
+		.returning();
 };
 
 export const linkNotesToSession = async (

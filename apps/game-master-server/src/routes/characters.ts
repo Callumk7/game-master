@@ -13,10 +13,14 @@ import {
 	charactersInsertSchema,
 	createCharacter,
 	createDrizzleForTurso,
+	deleteFactionJoinsFromChar,
+	deleteNotesFromCharacter,
+	deleteSessionJoinsFromChar,
 	getAllUserCharacters,
 	getFullCharacterData,
 	handleAddLinkToCharacter,
 	handleBulkCharacterLinking,
+	handleRemoveLinkByIntent,
 	internalServerError,
 	linkFactionsToCharacter,
 	noContent,
@@ -150,6 +154,24 @@ charactersRoute.put("/:characterId/links", async (c) => {
 
 	const db = createDrizzleForTurso(c.env);
 	return await handleBulkCharacterLinking(db, characterId, linkIds, intent);
+});
+
+charactersRoute.delete("/:characterId/links", async (c) => {
+	const characterId = c.req.param("characterId");
+
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		linkIds: OptionalEntitySchema,
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	await handleRemoveLinkByIntent(db, characterId, linkIds, intent, {
+		notes: deleteNotesFromCharacter,
+		factions: deleteFactionJoinsFromChar,
+		sessions: deleteSessionJoinsFromChar,
+	});
+
+	return c.text("The route has fired, and something has happened");
 });
 
 charactersRoute.get("/:characterId/factions", async (c) => {

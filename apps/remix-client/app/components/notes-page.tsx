@@ -12,6 +12,7 @@ import { Link1Icon } from "@radix-ui/react-icons";
 import { MenuTrigger, type Key } from "react-aria-components";
 import { Menu, MenuItem } from "./ui/menu";
 import { useAppData } from "~/routes/_app/route";
+import { z } from "zod";
 
 interface NotePageProps {
 	entityId: string;
@@ -122,12 +123,18 @@ export function NoteBlock({ note, entityId, entityType }: NoteBlockProps) {
 	);
 }
 
+export const UnlinkNoteSchema = z.object({
+	intent: z.literal(LINK_INTENT.NOTES),
+	entityId: z.string(),
+});
+
 interface NoteBlockToolbarProps {
 	entityId: string;
 	entityType: EntityType;
 	noteId: string;
 	isEditing: boolean;
 	setIsEditing: (isEditing: boolean) => void;
+	action?: string;
 }
 function NoteBlockToolbar({
 	noteId,
@@ -135,6 +142,7 @@ function NoteBlockToolbar({
 	isEditing,
 	setIsEditing,
 	entityId,
+	action,
 }: NoteBlockToolbarProps) {
 	const fetcher = useFetcher();
 	const navigate = useNavigate();
@@ -153,8 +161,8 @@ function NoteBlockToolbar({
 				size="sm"
 				onPress={() => {
 					fetcher.submit(
-						{ entity_id: noteId, intent: LINK_INTENT.NOTES },
-						{ method: "DELETE", action: `/${entityType}/${entityId}/links` },
+						{ linkIds: noteId, intent: LINK_INTENT.NOTES },
+						{ method: "DELETE", action: action ?? `/${entityType}/${entityId}/links` },
 					);
 				}}
 			>

@@ -20,6 +20,10 @@ import {
 	charactersInSessions,
 	notesOnCharacters,
 	notesOnSessions,
+	handleRemoveLinkByIntent,
+	deleteNotesFromSession,
+	deleteFactionsFromSession,
+	deleteCharactersFromSession,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerError } from "~/utils";
@@ -100,6 +104,24 @@ sessionsRoute.put("/:sessionId/links", async (c) => {
 
 	const db = createDrizzleForTurso(c.env);
 	return await handleBulkSessionLinking(db, sessionId, targetIds, intent);
+});
+
+sessionsRoute.delete("/:sessionId/links", async (c) => {
+	const sessionId = c.req.param("sessionId");
+
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		linkIds: OptionalEntitySchema,
+	});
+
+	const db = createDrizzleForTurso(c.env);
+	await handleRemoveLinkByIntent(db, sessionId, linkIds, intent, {
+		notes: deleteNotesFromSession,
+		factions: deleteFactionsFromSession,
+		characters: deleteCharactersFromSession,
+	});
+
+	return c.text("The route has fired, and something has happened");
 });
 
 // Here, we are letting the user create a note as to why the character is linked to the

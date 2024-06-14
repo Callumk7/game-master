@@ -135,7 +135,6 @@ export const createNoteFromInsert = async (db: DB, noteInsert: NoteInsert) => {
 		.then((row) => row[0]);
 };
 
-// PUT
 export const deleteCharacterJoinsFromNote = async (db: DB, noteId: string) => {
 	return await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
 };
@@ -496,4 +495,36 @@ export const handleNoteLinking = async (
 		factions: linkFactionsToNote,
 		sessions: linkSessionsToNote,
 	});
+};
+
+// remove links from notes
+export const handleRemoveCharLinkFromNote = async (
+	db: DB,
+	noteId: string,
+	characterId: string,
+) => {
+	return await db
+		.delete(notesOnCharacters)
+		.where(
+			and(
+				eq(notesOnCharacters.noteId, noteId),
+				eq(notesOnCharacters.characterId, characterId),
+			),
+		)
+		.returning();
+};
+export const handleRemoveFactionLinkFromNote = async (
+	db: DB,
+	noteId: string,
+	factionId: string,
+) => {
+	return await db
+		.delete(notesOnFactions)
+		.where(
+			and(
+				eq(notesOnFactions.noteId, noteId),
+				eq(notesOnFactions.factionId, factionId),
+			),
+		)
+		.returning();
 };

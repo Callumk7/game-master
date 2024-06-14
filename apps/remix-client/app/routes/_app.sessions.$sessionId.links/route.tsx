@@ -1,14 +1,20 @@
 import { useSessionRouteData } from "../_app.sessions.$sessionId/route";
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { getFormAndAppendUserId } from "~/lib/forms";
-import { badRequest } from "@repo/db";
-import { post } from "~/lib/game-master";
+import { badRequest, noContent } from "@repo/db";
+import { post, postDelete } from "~/lib/game-master";
 import { extractParam } from "~/lib/zx-util";
 import { createSessionAndRelationNodesAndEdges } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
+	if (request.method === "DELETE") {
+		const form = await request.formData();
+		const res = await postDelete(context, `sessions/${sessionId}/links`, form);
+		return noContent();
+	}
+	// WARN: I am not sure if this code is actually used by the client..
 	const form = await getFormAndAppendUserId(request);
 	const linkId = form.get("linkId");
 	const linkType = form.get("linkType");

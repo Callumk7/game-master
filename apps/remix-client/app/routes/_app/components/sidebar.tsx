@@ -139,7 +139,7 @@ export function NoteSectionWithFolders({
 				{folders.map((folder) => {
 					if (folder.notes.length > 0) {
 						return (
-							<div key={folder.id}>
+							<div key={folder.id} className="border-l border-amber-12">
 								<Header style="h5" className="ml-3" colour="amber">
 									{folder.name}
 								</Header>
@@ -148,7 +148,7 @@ export function NoteSectionWithFolders({
 						);
 					}
 				})}
-				<div>
+				<div className="border-l border-amber-12">
 					<Header style="h5" className="ml-3" colour="amber">
 						Unsorted
 					</Header>

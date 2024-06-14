@@ -295,14 +295,15 @@ export const deleteNotesFromCharacter = async (
 	characterId: string,
 	noteIds: string[],
 ) => {
-	await db
+	return await db
 		.delete(notesOnCharacters)
 		.where(
 			and(
 				eq(notesOnCharacters.characterId, characterId),
 				inArray(notesOnCharacters.noteId, noteIds),
 			),
-		);
+		)
+		.returning();
 };
 export const deletePlotsFromCharacter = async (
 	db: DB,

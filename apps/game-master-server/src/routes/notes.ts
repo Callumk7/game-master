@@ -32,19 +32,6 @@ type Variables = {
 
 export const notesRoute = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-notesRoute.get("/:id", async (c) => {
-	const db = createDrizzleForTurso(c.env);
-	const noteId = c.req.param("id");
-
-	const queryParams = c.req.query();
-	if (queryParams.withRelations === "true") {
-		const userNotes = await getNoteAndLinkedEntities(db, noteId);
-		return c.json(userNotes);
-	}
-	const note = await getNote(db, noteId);
-	return c.json(note);
-});
-
 notesRoute.post("/", async (c) => {
 	const newNoteData = await zx.parseForm(
 		c.req.raw,
@@ -83,6 +70,19 @@ notesRoute.post("/", async (c) => {
 	return c.json(newNote);
 });
 
+notesRoute.get("/:id", async (c) => {
+	const db = createDrizzleForTurso(c.env);
+	const noteId = c.req.param("id");
+
+	const queryParams = c.req.query();
+	if (queryParams.withRelations === "true") {
+		const userNotes = await getNoteAndLinkedEntities(db, noteId);
+		return c.json(userNotes);
+	}
+	const note = await getNote(db, noteId);
+	return c.json(note);
+});
+
 // post is for a single link
 notesRoute.post("/:noteId/links", async (c) => {
 	const noteId = c.req.param("noteId");
@@ -108,6 +108,16 @@ notesRoute.put("/:noteId/links", async (c) => {
 
 	const db = createDrizzleForTurso(c.env);
 	return await handleBulkNoteLinking(db, noteId, linkIds, intent);
+});
+
+notesRoute.delete("/:noteId/links", async (c) => {
+	const noteId = c.req.param("noteId");
+	// the incoming request will have an intent (which entity type to remove),
+	// an ID of the entity. We need to remove it from the correct database.
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
+		intent: LinkIntentSchema,
+		linkIds: OptionalEntitySchema,
+	});
 });
 
 notesRoute.patch("/:noteId", async (c) => {
