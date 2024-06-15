@@ -115,7 +115,6 @@ interface NoteSectionWithFoldersProps {
 	folders: FolderWithNotes[];
 	unsortedNotes: Note[];
 }
-// TODO: there is no empty title validation on the create popover
 export function NoteSectionWithFolders({
 	folders,
 	unsortedNotes,
@@ -148,12 +147,14 @@ export function NoteSectionWithFolders({
 						);
 					}
 				})}
-				<div className="border-l border-amber-12">
-					<Header style="h5" className="ml-3" colour="amber">
-						Unsorted
-					</Header>
-					<EntityListBox type="notes" items={unsortedNotes} className="border-0" />
-				</div>
+				{unsortedNotes.length > 0 && (
+					<div className="border-l border-amber-12">
+						<Header style="h5" className="ml-3" colour="amber">
+							Unsorted
+						</Header>
+						<EntityListBox type="notes" items={unsortedNotes} className="border-0" />
+					</div>
+				)}
 			</div>
 		</SidebarSection>
 	);

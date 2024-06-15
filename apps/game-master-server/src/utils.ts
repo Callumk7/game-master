@@ -25,7 +25,7 @@ export const getIntentOrThrow = async (request: Request): Promise<INTENT> => {
 	});
 
 	if (!result.success) {
-		throw internalServerError();
+		throw internalServerErrorExeption();
 	}
 
 	let validIntent: INTENT;
@@ -33,13 +33,13 @@ export const getIntentOrThrow = async (request: Request): Promise<INTENT> => {
 	try {
 		validIntent = IntentSchema.parse(result.data.intent);
 	} catch (err) {
-		throw internalServerError();
+		throw internalServerErrorExeption();
 	}
 
 	return validIntent;
 };
 
-export function internalServerError() {
+export function internalServerErrorExeption() {
 	return new HTTPException(StatusCodes.INTERNAL_SERVER_ERROR, {
 		message: ReasonPhrases.INTERNAL_SERVER_ERROR,
 	});

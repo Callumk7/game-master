@@ -26,7 +26,7 @@ import {
 	deleteCharactersFromSession,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
-import { internalServerError } from "~/utils";
+import { internalServerErrorExeption } from "~/utils";
 import { z } from "zod";
 import { and } from "drizzle-orm/sql";
 import { eq } from "drizzle-orm/expressions";
@@ -82,7 +82,7 @@ sessionsRoute.delete("/:sessionId", async (c) => {
 	if (result.success) {
 		return c.text("Session successfully deleted");
 	}
-	throw internalServerError();
+	throw internalServerErrorExeption();
 });
 
 sessionsRoute.post("/:sessionId/links", async (c) => {

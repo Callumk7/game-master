@@ -35,14 +35,23 @@ import { getCharacterFactions, getCharacterSessions } from "~/database/character
 import { z } from "zod";
 import { deleteFromS3, uploadToS3, validateUpload } from "~/services/s3";
 
-export const charactersRoute = new Hono<{ Bindings: Bindings }>();
+export const charactersRoute = new Hono<{
+	Bindings: Bindings;
+	Variables: { userId: string };
+}>();
 
-// User specific characters
+// THIS IS PROBABLY A BAD IDEA
+// charactersRoute.use("*", async (c, next) => {
+// 	const submission = await zx.parseFormSafe(c.req.raw, { userId: z.string() });
+// 	if (!submission.success) {
+// 		throw internalServerErrorExeption();
+// 	}
+// 	c.set("userId", submission.data.userId);
+// 	await next();
+// });
+
 charactersRoute.get("/", async (c) => {
 	const { userId } = c.req.query();
-	if (!userId) {
-		return badRequest("No userId provided");
-	}
 	const db = createDrizzleForTurso(c.env);
 	const allCharacters = await getAllUserCharacters(db, userId);
 	return c.json(allCharacters);

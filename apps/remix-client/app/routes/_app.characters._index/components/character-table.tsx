@@ -32,6 +32,7 @@ export function CharacterTable({ characters }: CharacterTableProps) {
 					Level
 				</Column>
 				<Column isRowHeader>Factions</Column>
+				<Column isRowHeader>Image</Column>
 				<Column isRowHeader width={"0.5fr"}>
 					Controls
 				</Column>
@@ -48,6 +49,15 @@ export function CharacterTable({ characters }: CharacterTableProps) {
 									<Tag key={f?.id}>{f?.name}</Tag>
 								))}
 							</TagGroup>
+						</Cell>
+						<Cell>
+							{char.image && (
+								<img
+									src={char.image}
+									alt={`Portrait of ${char.name}`}
+									className="max-h-16 rounded-lg overflow-hidden mx-auto"
+								/>
+							)}
 						</Cell>
 						<Cell>
 							<Toolbar>
