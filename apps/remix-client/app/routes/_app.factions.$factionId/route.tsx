@@ -1,4 +1,8 @@
-import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import {
+	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
+	json,
+} from "@remix-run/cloudflare";
 import { z } from "zod";
 import { zx } from "zodix";
 import FactionView from "./faction-view";
@@ -6,14 +10,12 @@ import { useTypedRouteLoaderData } from "remix-typedjson";
 import { createDrizzleForTurso } from "@repo/db";
 import { handleFactionLoader, handleUpdateFaction } from "./queries.server";
 import ky from "ky";
-import { validateUser } from "~/lib/auth";
 import { patch } from "~/lib/game-master";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
-	const userId = await validateUser(request);
 	const { factionId } = zx.parseParams(params, { factionId: z.string() });
 	const db = createDrizzleForTurso(context.cloudflare.env);
-	return await handleFactionLoader(db, userId, factionId);
+	return await handleFactionLoader(db, factionId);
 };
 
 export const useFactionRouteData = () => {
@@ -28,9 +30,8 @@ export const useFactionRouteData = () => {
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const { factionId } = zx.parseParams(params, { factionId: z.string() });
-	const db = createDrizzleForTurso(context.cloudflare.env);
 	if (request.method === "PATCH") {
-		return await handleUpdateFaction(db, factionId, request);
+		return await handleUpdateFaction(request, context, factionId);
 	}
 	if (request.method === "POST") {
 		const { intent } = await zx.parseForm(request, {

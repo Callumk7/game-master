@@ -1,13 +1,38 @@
-import { NodeCanvas } from "~/components/flow/canvas";
+import { Header } from "~/components/typeography";
 import { useFactionRouteData } from "../_app.factions.$factionId/route";
-import { createFactionWithMemberNodes } from "~/components/flow/utils";
+import { RenderHtml } from "~/components/render-html";
+import { useSyncEditor } from "~/hooks/sync-editor";
+import { INTENT } from "@repo/db";
+import { EditorPreview } from "~/components/editor-preview";
+import { handleForwardUpdateFactionRequest } from "./queries.server";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
+import { extractParam } from "~/lib/zx-util";
+import { Button } from "~/components/ui/button";
+
+export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+	console.log("this was fired");
+	const factionId = extractParam("factionId", params);
+	if (request.method === "PATCH") {
+		return await handleForwardUpdateFactionRequest(context, factionId, request);
+	}
+};
 
 export default function FactionIndex() {
 	const { faction } = useFactionRouteData();
-	const { nodes, edges } = createFactionWithMemberNodes(faction);
+	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
+		initContent: faction.description ?? "",
+		action: `/factions/${faction.id}`,
+		intent: INTENT.UPDATE_CONTENT,
+	});
 	return (
-		<div className="w-full h-screen relative">
-			<NodeCanvas initNodes={nodes} initEdges={edges} fitView />
+		<div>
+			<Header>Faction</Header>
+			<Button onPress={() => setIsEditing(!isEditing)}>Edit</Button>
+			<EditorPreview
+				editor={editor}
+				isEditing={isEditing}
+				htmlContent={optimisticContent}
+			/>
 		</div>
 	);
 }

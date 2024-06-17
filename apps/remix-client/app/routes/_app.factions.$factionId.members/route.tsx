@@ -6,15 +6,11 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxGroup } from "~/components/ui/checkbox";
 import { extractParam } from "~/lib/zx-util";
 import { useAppData } from "../_app/route";
-import { post, put } from "~/lib/game-master";
+import { bulkUpdateMembers } from "./queries.server";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const factionId = extractParam("factionId", params);
-	const form = await request.formData();
-	const memberIds = form.getAll("memberIds");
-	memberIds.forEach((id) => form.append("linkIds", id.toString()));
-	form.append("intent", LINK_INTENT.CHARACTERS);
-	const res = await put(context, `factions/${factionId}/links`, form);
+	await bulkUpdateMembers(request, context, factionId);
 	return noContent();
 };
 

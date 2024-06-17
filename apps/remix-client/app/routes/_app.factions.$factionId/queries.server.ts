@@ -1,19 +1,9 @@
-import { json } from "@remix-run/cloudflare";
-import {
-	type DB,
-	type Faction,
-	INTENT,
-	badRequest,
-	getAllUserCharacters,
-	getFaction,
-	updateFaction,
-} from "@repo/db";
+import { type AppLoadContext, json } from "@remix-run/cloudflare";
+import { type DB, getFaction } from "@repo/db";
 import { redirect, typedjson } from "remix-typedjson";
-import { z } from "zod";
-import { zx } from "zodix";
-import { getIntentOrThrow } from "~/lib/responses";
+import { patch } from "~/lib/game-master";
 
-export const handleFactionLoader = async (db: DB, userId: string, factionId: string) => {
+export const handleFactionLoader = async (db: DB, factionId: string) => {
 	const faction = await getFaction(db, factionId);
 
 	if (!faction) {
@@ -24,22 +14,19 @@ export const handleFactionLoader = async (db: DB, userId: string, factionId: str
 };
 
 export const handleUpdateFaction = async (
-	db: DB,
-	factionId: string,
 	request: Request,
+	context: AppLoadContext,
+	factionId: string,
 ) => {
-	const intent = await getIntentOrThrow(request);
-	let update: Faction;
-	switch (intent) {
-		case INTENT.UPDATE_NAME: {
-			const { name } = await zx.parseForm(request, { name: z.string() });
-			update = await updateFaction(db, { name }, factionId);
-			break;
-		}
+	const form = await request.formData();
+	const htmlContent = form.get("htmlContent");
 
-		default:
-			throw badRequest("Invalid intent");
+	// the sync editor hook uses this field, as it is more common accross
+	// all other entities. could handle there or here.
+	if (htmlContent) {
+		form.append("description", htmlContent);
 	}
+	await patch(context, `factions/${factionId}`, form);
 
-	return json({ faction: update });
+	return json({ faction: factionId });
 };
