@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useSubmit } from "@remix-run/react";
 import type { BasicEntity } from "@repo/db";
 import { MenuTrigger, SubmenuTrigger } from "react-aria-components";
@@ -51,10 +51,13 @@ export function NoteMenu({
 					</Menu>
 				</SubmenuTrigger>
 				<MenuItem onAction={() => setIsFolderModalOpen(!isFolderModalOpen)}>
-					Create New Folder
+					New Folder
 				</MenuItem>
 				<MenuItem onAction={() => setIsSidebarOpen(!isSidebarOpen)}>
-					Link to Entities
+          <div className="w-full flex items-center justify-between">
+            <span>Link to Entities</span>
+            <DotsHorizontalIcon />
+          </div>
 				</MenuItem>
 				<MenuItem
 					onAction={() =>

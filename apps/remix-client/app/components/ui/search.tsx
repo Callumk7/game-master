@@ -1,7 +1,7 @@
 import {
 	SearchField as AriaSearchField,
-	SearchFieldProps as AriaSearchFieldProps,
-	ValidationResult,
+	type SearchFieldProps as AriaSearchFieldProps,
+	type ValidationResult,
 } from "react-aria-components";
 import { Button } from "./button";
 import { Description, FieldError, FieldGroup, Input, Label } from "./field";
@@ -25,7 +25,7 @@ export function SearchField({
 			{...props}
 			className={composeTailwindRenderProps(
 				props.className,
-				"group flex flex-col gap-1 min-w-[40px]",
+				"group flex flex-col gap-1 h-8 min-w-[40px]",
 			)}
 		>
 			{label && <Label>{label}</Label>}
@@ -36,7 +36,7 @@ export function SearchField({
 				/>
 				<Input className="[&::-webkit-search-cancel-button]:hidden" />
 				<Button size="icon-sm" variant="ghost" className="group-empty:invisible">
-					<Cross1Icon aria-hidden className="w-4 h-4" />
+					<Cross1Icon aria-hidden />
 				</Button>
 			</FieldGroup>
 			{description && <Description>{description}</Description>}

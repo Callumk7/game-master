@@ -4,37 +4,34 @@ import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useNavigate } from "@remix-run/react";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
-import { DialogTrigger, TableBody } from "react-aria-components";
+import { MenuTrigger, SubmenuTrigger, TableBody } from "react-aria-components";
 import { useSort } from "~/hooks/sort";
-import type { Note } from "@repo/db";
+import type { NoteWithLinks } from "@repo/db";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
 import { Menu, MenuItem } from "~/components/ui/menu";
 import { useState } from "react";
 import { Container } from "~/components/layout";
+import { useSearch } from "~/hooks/search";
+import { useFilter } from "~/hooks/filter";
+import { useAppData } from "../_app/route";
 
 export default function NotesView() {
 	const { allNotes } = useTypedLoaderData<typeof loader>();
-
-	// TODO: Extract this
-	const formattedNotes = allNotes.map((note) => ({
-		...note,
-		characters: note.characters.map((c) => c.character),
-		factions: note.factions.map((f) => f.faction),
-		sessions: note.sessions.map((s) => s.session),
-		plots: note.plots.map((p) => p.plot),
-	}));
+	const { allFolders } = useAppData();
+	const [isSelecting, setIsSelecting] = useState(false);
 
 	const navigate = useNavigate();
 
-	const [isSelecting, setIsSelecting] = useState(false);
+	const { searchTerm, setSearchTerm, results } = useSearch(allNotes);
+	const { filteredFolders, setFilteredFolders, output, clearFilter } = useFilter(results);
 
 	return (
 		<Container className="space-y-4">
 			<Header style="h1">All Notes</Header>
 			<Toolbar>
-				<SearchField />
-				<DialogTrigger>
+				<SearchField value={searchTerm} onChange={(e) => setSearchTerm(e)} />
+				<MenuTrigger>
 					<Button size="sm">Menu</Button>
 					<Menu>
 						<MenuItem onAction={() => navigate("/notes/new")}>Create New</MenuItem>
@@ -42,18 +39,47 @@ export default function NotesView() {
 						<MenuItem>Delete</MenuItem>
 						<MenuItem>Link To...</MenuItem>
 					</Menu>
-				</DialogTrigger>
+				</MenuTrigger>
+				<MenuTrigger>
+					<Button size="sm" variant="secondary">
+						Filter
+					</Button>
+					<Menu>
+						<SubmenuTrigger>
+							<MenuItem>Folders...</MenuItem>
+							<Menu
+								items={allFolders}
+								selectionMode="multiple"
+								selectedKeys={filteredFolders}
+								onSelectionChange={(keys) => {
+									if (keys !== "all") {
+										const ids = [...keys].map((k) => k.toString());
+										setFilteredFolders(ids);
+									}
+								}}
+							>
+								{(item) => <MenuItem>{item.name}</MenuItem>}
+							</Menu>
+						</SubmenuTrigger>
+						<MenuItem>Linked</MenuItem>
+						<MenuItem>No Link</MenuItem>
+					</Menu>
+				</MenuTrigger>
+				{filteredFolders.length > 0 && (
+					<Button variant="secondary" size="sm" onPress={() => clearFilter()}>
+						Clear
+					</Button>
+				)}
 			</Toolbar>
-			<TableOfNotes notes={formattedNotes} isSelecting={isSelecting} />
+			<TableOfNotes notes={output} isSelecting={isSelecting} />
 		</Container>
 	);
 }
 
 interface TableOfNotesProps {
-	notes: Note[];
+	notes: NoteWithLinks[];
 	isSelecting: boolean;
 }
-
 export function TableOfNotes({ notes, isSelecting }: TableOfNotesProps) {
 	const sort = useSort(notes, "name");
 
@@ -68,6 +94,9 @@ export function TableOfNotes({ notes, isSelecting }: TableOfNotesProps) {
 				<Column id="name" isRowHeader width={"2fr"} allowsSorting>
 					Title
 				</Column>
+				<Column id="folder" isRowHeader width={"1fr"}>
+					Folder
+				</Column>
 				<Column id="createdAt" isRowHeader width={"1fr"} allowsSorting>
 					Created At
 				</Column>
@@ -78,6 +107,7 @@ export function TableOfNotes({ notes, isSelecting }: TableOfNotesProps) {
 						<Cell>
 							<p className="whitespace-pre-wrap">{note.name}</p>
 						</Cell>
+						<Cell>{note.folder.name}</Cell>
 						<Cell>{note.createdAt.toLocaleString("gmt")}</Cell>
 					</Row>
 				)}

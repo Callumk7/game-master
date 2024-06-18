@@ -64,10 +64,19 @@ export const getAllNotesWithRelations = async (db: DB, userId: string) => {
 					},
 				},
 			},
+			folder: true
 		},
 	});
 
-	return allNotes;
+	const formattedNotes = allNotes.map((note) => ({
+		...note,
+		characters: note.characters.map((c) => c.character),
+		factions: note.factions.map((f) => f.faction),
+		sessions: note.sessions.map((s) => s.session),
+		plots: note.plots.map((p) => p.plot),
+	}));
+
+	return formattedNotes;
 };
 
 export const getNote = async (db: DB, noteId: string) => {

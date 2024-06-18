@@ -1,11 +1,11 @@
-import { type LoaderFunctionArgs, json } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { createDrizzleForTurso, sessions } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { validateUser } from "~/lib/auth";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { createAllSessionAndRelationNodesAndEdges } from "~/components/flow/utils";
 import { NodeCanvas } from "~/components/flow/canvas";
-import { Container, EntityView } from "~/components/layout";
+import { Container } from "~/components/layout";
 import { Header } from "~/components/typeography";
 
 // TODO: extract these functions and make the loader more declarative to read

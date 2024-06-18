@@ -184,6 +184,13 @@ export type CompleteNote = Note & {
 	sessions: Session[];
 	plots: Plot[];
 };
+export type NoteWithLinks = Note & {
+	characters: BasicEntity[];
+	factions: BasicEntity[];
+	sessions: BasicEntity[];
+	plots: BasicEntity[];
+	folder: Folder;
+};
 export type SessionWithCompleteNotes = Session & {
 	notes: CompleteNote[];
 };

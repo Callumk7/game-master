@@ -36,24 +36,29 @@ export function PinnedNote({
 	}
 
 	return (
-		<Card className="border-amber-6">
-			<Collapsible defaultOpen>
-				<CollapsibleTrigger className="w-full">
-					<div className="relative flex pb-6 items-center justify-between">
-						<Header style="h3">{note.name}</Header>
-						<Button
-							variant="secondary"
-							size="sm"
-							onPress={() => submit({ sessionId }, { method: "DELETE" })}
-						>
-							Unlink
-						</Button>
-					</div>
-				</CollapsibleTrigger>
-				<CollapsibleContent>
-					<RenderHtml content={note.htmlContent} />
-				</CollapsibleContent>
-			</Collapsible>
-		</Card>
+		<div className="space-y-1">
+			<p className="italic text-sm font-light text-amber-8">Pinned Note</p>
+			<Card className="border-amber-6">
+				<Collapsible defaultOpen>
+					<CollapsibleTrigger className="w-full">
+						<div className="relative flex pb-6 items-center justify-between">
+							<Header style="h2" tanker>
+								{note.name}
+							</Header>
+							<Button
+								variant="secondary"
+								size="sm"
+								onPress={() => submit({ sessionId }, { method: "DELETE" })}
+							>
+								Unlink
+							</Button>
+						</div>
+					</CollapsibleTrigger>
+					<CollapsibleContent>
+						<RenderHtml content={note.htmlContent} />
+					</CollapsibleContent>
+				</Collapsible>
+			</Card>
+		</div>
 	);
 }
