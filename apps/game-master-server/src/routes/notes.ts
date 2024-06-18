@@ -19,12 +19,15 @@ import {
 	updateNoteContent,
 	updateNoteName,
 	updateNoteSchema,
+	noContent,
+	handleDeleteNote,
 } from "@repo/db";
 import { StatusCodes } from "http-status-codes";
 import { zx } from "zodix";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { htmlToText } from "html-to-text";
+import { itemOrArrayToArray } from "~/utils";
 
 type Variables = {
 	intent: INTENT;
@@ -68,6 +71,20 @@ notesRoute.post("/", async (c) => {
 	}
 
 	return c.json(newNote);
+});
+
+notesRoute.delete("/", async (c) => {
+	const { noteIds } = await zx.parseForm(c.req.raw, { noteIds: OptionalEntitySchema });
+	const parsedIds = itemOrArrayToArray(noteIds);
+	const db = createDrizzleForTurso(c.env);
+	if (parsedIds.length > 0) {
+		const promises = [];
+		for (const id of parsedIds) {
+			promises.push(handleDeleteNote(db, id));
+		}
+		await Promise.all(promises); // WARN: This is bad, anything could happen
+	}
+	return noContent();
 });
 
 notesRoute.get("/:id", async (c) => {
