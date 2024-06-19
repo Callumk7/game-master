@@ -19,7 +19,7 @@ import type {
 	MultiSelectString,
 	NoteInsert,
 } from "../types";
-import type { LINK_INTENT } from "./util";
+import { internalServerError, type LINK_INTENT } from "./util";
 import { handleAddLinkToTargetByIntent, handleLinkingByIntent } from "./generic";
 
 export const getFullCharacterData = async (db: DB, characterId: string) => {
@@ -455,4 +455,22 @@ export const getCharacterFactionsWithMembersAndNotes = async (
 	});
 
 	return result.map((row) => row.faction);
+};
+
+export const handleDeleteCharacter = async (db: DB, characterId: string) => {
+	try {
+		await db.delete(characters).where(eq(characters.id, characterId));
+		await db
+			.delete(notesOnCharacters)
+			.where(eq(notesOnCharacters.characterId, characterId));
+		await db
+			.delete(charactersInFactions)
+			.where(eq(charactersInFactions.characterId, characterId));
+		await db
+			.delete(charactersInSessions)
+			.where(eq(charactersInSessions.characterId, characterId));
+	} catch (err) {
+		console.error(err);
+		return internalServerError();
+	}
 };

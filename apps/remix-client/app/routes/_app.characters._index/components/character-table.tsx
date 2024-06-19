@@ -1,7 +1,7 @@
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useSubmit } from "@remix-run/react";
 import type { CharacterWithRaceAndFactions } from "@repo/db";
-import { Group, TableBody } from "react-aria-components";
+import { Group, type Selection, TableBody } from "react-aria-components";
 import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
 import { Button } from "~/components/ui/button";
 import { Tag, TagGroup } from "~/components/ui/tag-group";
@@ -10,29 +10,55 @@ import { useSort } from "~/hooks/sort";
 
 interface CharacterTableProps {
 	characters: CharacterWithRaceAndFactions[];
+	isSelecting: boolean;
+	selectedChars: string[];
+	setSelectedChars: (selectedChars: string[]) => void;
 }
-export function CharacterTable({ characters }: CharacterTableProps) {
+export function CharacterTable({
+	characters,
+	isSelecting,
+	selectedChars,
+	setSelectedChars,
+}: CharacterTableProps) {
 	const sort = useSort(characters, "name");
 	const submit = useSubmit();
+
+	const handleSelectionChange = (keys: Selection) => {
+		if (keys !== "all") {
+			const ids = [...keys].map((k) => k.toString());
+			setSelectedChars(ids);
+		} else {
+			if (selectedChars.length > 0) {
+				setSelectedChars([]);
+			} else {
+				setSelectedChars(characters.map((char) => char.id));
+			}
+		}
+	};
+
 	return (
 		<Table
 			className={"w-full"}
 			aria-label="character table"
 			sortDescriptor={sort.sortDescriptor}
 			onSortChange={sort.handleSortChange}
+			selectionMode={isSelecting ? "multiple" : "none"}
+			selectedKeys={selectedChars}
+			onSelectionChange={handleSelectionChange}
 		>
 			<TableHeader>
-				<Column isRowHeader allowsSorting id="name">
+				<Column isRowHeader allowsSorting id="name" width={"2fr"}>
 					Name
 				</Column>
-				<Column isRowHeader allowsSorting id="class">
-					Class
+				<Column isRowHeader allowsSorting id="race" width={"1fr"}>
+					Race
 				</Column>
-				<Column isRowHeader width={"0.5fr"} allowsSorting id="level">
-					Level
+				<Column isRowHeader width={"1fr"}>
+					Factions
 				</Column>
-				<Column isRowHeader>Factions</Column>
-				<Column isRowHeader>Image</Column>
+				<Column isRowHeader width={"1fr"}>
+					Image
+				</Column>
 				<Column isRowHeader width={"0.5fr"}>
 					Controls
 				</Column>
@@ -41,8 +67,7 @@ export function CharacterTable({ characters }: CharacterTableProps) {
 				{(char) => (
 					<Row href={`/characters/${char.id}`}>
 						<Cell>{char.name}</Cell>
-						<Cell>{char.class}</Cell>
-						<Cell>{char.level}</Cell>
+						<Cell>{char.race.name}</Cell>
 						<Cell>
 							<TagGroup>
 								{char.factions.map((f) => (

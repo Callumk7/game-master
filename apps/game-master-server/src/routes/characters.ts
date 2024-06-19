@@ -6,10 +6,7 @@ import {
 	IntentSchema,
 	LinkIntentSchema,
 	OptionalEntitySchema,
-	badRequest,
 	characters,
-	charactersInFactions,
-	charactersInSessions,
 	charactersInsertSchema,
 	createCharacter,
 	createDrizzleForTurso,
@@ -20,13 +17,12 @@ import {
 	getFullCharacterData,
 	handleAddLinkToCharacter,
 	handleBulkCharacterLinking,
+	handleDeleteCharacter,
 	handleRemoveLinkByIntent,
 	internalServerError,
 	linkFactionsToCharacter,
 	noContent,
 	notFound,
-	notesOnCharacters,
-	plotsOnCharacters,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
@@ -34,27 +30,53 @@ import { zx } from "zodix";
 import { getCharacterFactions, getCharacterSessions } from "~/database/characters";
 import { z } from "zod";
 import { deleteFromS3, uploadToS3, validateUpload } from "~/services/s3";
+import { itemOrArrayToArray } from "~/utils";
 
 export const charactersRoute = new Hono<{
 	Bindings: Bindings;
 	Variables: { userId: string };
 }>();
 
-// THIS IS PROBABLY A BAD IDEA
-// charactersRoute.use("*", async (c, next) => {
-// 	const submission = await zx.parseFormSafe(c.req.raw, { userId: z.string() });
-// 	if (!submission.success) {
-// 		throw internalServerErrorExeption();
-// 	}
-// 	c.set("userId", submission.data.userId);
-// 	await next();
-// });
-
 charactersRoute.get("/", async (c) => {
 	const { userId } = c.req.query();
 	const db = createDrizzleForTurso(c.env);
 	const allCharacters = await getAllUserCharacters(db, userId);
 	return c.json(allCharacters);
+});
+
+charactersRoute.post("/", async (c) => {
+	const newCharBody = await zx.parseForm(
+		c.req.raw,
+		charactersInsertSchema.omit({ bio: true, id: true }),
+	);
+
+	const db = createDrizzleForTurso(c.env);
+
+	const characterInsert: CharacterInsert = {
+		id: `char_${uuidv4()}`,
+		bio: "The description of the character",
+		...newCharBody,
+	};
+
+	const newChar = await createCharacter(db, characterInsert);
+	return c.json(newChar);
+});
+
+// bulk delete
+charactersRoute.delete("/", async (c) => {
+	const { characterIds } = await zx.parseForm(c.req.raw, {
+		characterIds: OptionalEntitySchema,
+	});
+	const parsedIds = itemOrArrayToArray(characterIds);
+	const db = createDrizzleForTurso(c.env);
+	if (parsedIds.length > 0) {
+		const promises = [];
+		for (const id of parsedIds) {
+			promises.push(handleDeleteCharacter(db, id));
+		}
+		await Promise.all(promises);
+	}
+	return noContent();
 });
 
 charactersRoute.get("/:characterId", async (c) => {
@@ -77,24 +99,6 @@ charactersRoute.get("/:characterId", async (c) => {
 		.where(eq(characters.id, characterId));
 
 	return c.json(baseCharacter[0]);
-});
-
-charactersRoute.post("/", async (c) => {
-	const newCharBody = await zx.parseForm(
-		c.req.raw,
-		charactersInsertSchema.omit({ bio: true, id: true }),
-	);
-
-	const db = createDrizzleForTurso(c.env);
-
-	const characterInsert: CharacterInsert = {
-		id: `char_${uuidv4()}`,
-		bio: "The description of the character",
-		...newCharBody,
-	};
-
-	const newChar = await createCharacter(db, characterInsert);
-	return c.json(newChar);
 });
 
 charactersRoute.patch("/:characterId", async (c) => {
@@ -137,6 +141,15 @@ charactersRoute.patch("/:characterId", async (c) => {
 	}
 
 	return c.json("done");
+});
+
+charactersRoute.delete("/:characterId", async (c) => {
+	const characterId = c.req.param("characterId");
+
+	const db = createDrizzleForTurso(c.env);
+	await handleDeleteCharacter(db, characterId);
+
+	return noContent();
 });
 
 // Post a single link to the character
@@ -209,29 +222,6 @@ charactersRoute.get("/:characterId/sessions", async (c) => {
 	return c.json(characterSessions);
 });
 
-charactersRoute.delete("/:characterId", async (c) => {
-	const characterId = c.req.param("characterId");
-
-	const db = createDrizzleForTurso(c.env);
-	const r1 = db.delete(characters).where(eq(characters.id, characterId));
-	const r2 = db
-		.delete(charactersInFactions)
-		.where(eq(charactersInFactions.characterId, characterId));
-	const r3 = db
-		.delete(charactersInSessions)
-		.where(eq(charactersInSessions.characterId, characterId));
-	const r4 = db
-		.delete(plotsOnCharacters)
-		.where(eq(plotsOnCharacters.characterId, characterId));
-	const r5 = db
-		.delete(notesOnCharacters)
-		.where(eq(notesOnCharacters.characterId, characterId));
-
-	await Promise.all([r1, r2, r3, r4, r5]);
-
-	return noContent();
-});
-
 charactersRoute.post("/:characterId/uploads", async (c) => {
 	const characterId = c.req.param("characterId");
 	const file = await validateUpload(c.req);
@@ -260,6 +250,7 @@ charactersRoute.delete("/:characterId/uploads", async (c) => {
 		return notFound();
 	}
 
+	// TODO: extract this, we need it in the delete character route
 	const key = result.image.split("/").pop();
 	console.log(key);
 

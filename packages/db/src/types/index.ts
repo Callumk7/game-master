@@ -189,7 +189,7 @@ export type NoteWithLinks = Note & {
 	factions: BasicEntity[];
 	sessions: BasicEntity[];
 	plots: BasicEntity[];
-	folder: Folder;
+	folder: Folder | null;
 };
 export type SessionWithCompleteNotes = Session & {
 	notes: CompleteNote[];

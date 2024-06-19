@@ -3,15 +3,7 @@ import type { loader } from "./route";
 import { Header } from "~/components/typeography";
 import { Button } from "~/components/ui/button";
 import { useNavigate, useSubmit } from "@remix-run/react";
-import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-table";
-import {
-	MenuTrigger,
-	type Selection,
-	SubmenuTrigger,
-	TableBody,
-} from "react-aria-components";
-import { useSort } from "~/hooks/sort";
-import type { NoteWithLinks } from "@repo/db";
+import { MenuTrigger, SubmenuTrigger } from "react-aria-components";
 import { Toolbar } from "~/components/ui/toolbar";
 import { SearchField } from "~/components/ui/search";
 import { Menu, MenuItem } from "~/components/ui/menu";
@@ -20,8 +12,9 @@ import { Container } from "~/components/layout";
 import { useSearch } from "~/hooks/search";
 import { useFilter } from "~/hooks/filter";
 import { useAppData } from "../_app/route";
+import { TableOfNotes } from "./components/notes-table";
 
-export default function NotesView() {
+export default function NotesIndexView() {
 	const { allNotes } = useTypedLoaderData<typeof loader>();
 	const { allFolders } = useAppData();
 
@@ -50,8 +43,12 @@ export default function NotesView() {
 					<Button size="sm">Menu</Button>
 					<Menu>
 						<MenuItem onAction={() => navigate("/notes/new")}>Create New</MenuItem>
-						<MenuItem onAction={() => setIsSelecting(!isSelecting)}>Select</MenuItem>
-						<MenuItem onAction={handleBulkDelete}>Delete</MenuItem>
+						<MenuItem onAction={() => setIsSelecting(!isSelecting)}>
+							Toggle Select Mode
+						</MenuItem>
+						<MenuItem onAction={handleBulkDelete} isDisabled={!isSelecting}>
+							Delete
+						</MenuItem>
 						<MenuItem>Link To...</MenuItem>
 					</Menu>
 				</MenuTrigger>
@@ -93,67 +90,5 @@ export default function NotesView() {
 				selectedNotes={selectedNotes}
 			/>
 		</Container>
-	);
-}
-
-interface TableOfNotesProps {
-	notes: NoteWithLinks[];
-	isSelecting: boolean;
-	selectedNotes: string[];
-	setSelectedNotes: (selectedNotes: string[]) => void;
-}
-export function TableOfNotes({
-	notes,
-	isSelecting,
-	selectedNotes,
-	setSelectedNotes,
-}: TableOfNotesProps) {
-	const sort = useSort(notes, "name");
-
-	const handleSelectionChange = (keys: Selection) => {
-		if (keys !== "all") {
-			const ids = [...keys].map((k) => k.toString());
-			setSelectedNotes(ids);
-		} else {
-			if (selectedNotes.length > 0) {
-				setSelectedNotes([]);
-			} else {
-				setSelectedNotes(notes.map((note) => note.id));
-			}
-		}
-	};
-
-	return (
-		<Table
-			sortDescriptor={sort.sortDescriptor}
-			onSortChange={sort.handleSortChange}
-			aria-label="note table"
-			selectionMode={isSelecting ? "multiple" : "none"}
-			selectedKeys={selectedNotes}
-			onSelectionChange={handleSelectionChange}
-		>
-			<TableHeader>
-				<Column id="name" isRowHeader width={"2fr"} allowsSorting>
-					Title
-				</Column>
-				<Column id="folder" isRowHeader width={"1fr"}>
-					Folder
-				</Column>
-				<Column id="createdAt" isRowHeader width={"1fr"} allowsSorting>
-					Created At
-				</Column>
-			</TableHeader>
-			<TableBody items={sort.sortedItems}>
-				{(note) => (
-					<Row href={`/notes/${note.id}`}>
-						<Cell>
-							<p className="whitespace-pre-wrap">{note.name}</p>
-						</Cell>
-						<Cell>{note.folder.name}</Cell>
-						<Cell>{note.createdAt.toLocaleString("gmt")}</Cell>
-					</Row>
-				)}
-			</TableBody>
-		</Table>
 	);
 }
