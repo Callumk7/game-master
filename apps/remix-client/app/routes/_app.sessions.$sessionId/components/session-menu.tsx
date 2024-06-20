@@ -7,12 +7,12 @@ import { Dialog } from "~/components/ui/dialog";
 import { Menu, MenuItem } from "~/components/ui/menu";
 import { Modal } from "~/components/ui/modal";
 import { useAppData } from "~/routes/_app/route";
-import { useCharacterRouteData } from "../route";
 import { useState } from "react";
 import { type EntityType, LINK_INTENT } from "@repo/db";
 import { CopyIcon, Share1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { useSessionRouteData } from "../route";
 
-export function CharacterMenu({ characterId }: { characterId: string }) {
+export function SessionMenu({ sessionId }: { sessionId: string }) {
 	const submit = useSubmit();
 
 	// State for the links modal
@@ -23,9 +23,9 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 		setIsOpen(true);
 		setLinkType("factions");
 	};
-	const handleLinkSessionsClicked = () => {
+	const handleLinkCharactersClicked = () => {
 		setIsOpen(true);
-		setLinkType("sessions");
+		setLinkType("characters");
 	};
 	const handleLinkNotesClicked = () => {
 		setIsOpen(true);
@@ -35,11 +35,11 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 	return (
 		<>
 			<MenuTrigger>
-				<Button aria-label="Character Options">Menu</Button>
+				<Button aria-label="Session Options">Menu</Button>
 				<Menu>
 					<MenuItem
 						onAction={() =>
-							submit({}, { method: "DELETE", action: `/characters/${characterId}` })
+							submit({}, { method: "DELETE", action: `/sessions/${sessionId}` })
 						}
 					>
 						<TrashIcon className="mr-3" />
@@ -57,13 +57,13 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 						<Menu>
 							<MenuItem onAction={handleLinkFactionsClicked}>Factions</MenuItem>
 							<MenuItem onAction={handleLinkNotesClicked}>Notes</MenuItem>
-							<MenuItem onAction={handleLinkSessionsClicked}>Sessions</MenuItem>
+							<MenuItem onAction={handleLinkCharactersClicked}>Characters</MenuItem>
 						</Menu>
 					</SubmenuTrigger>
 				</Menu>
 			</MenuTrigger>
 			<LinkModal
-				characterId={characterId}
+				sessionId={sessionId}
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
 				linkType={linkType}
@@ -73,22 +73,22 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 }
 
 interface LinkModalProps {
-	characterId: string;
+	sessionId: string;
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	linkType: EntityType;
 }
-function LinkModal({ characterId, isOpen, setIsOpen, linkType }: LinkModalProps) {
-	const { allFactions, allNotes, allSessions } = useAppData();
-	const { characterData } = useCharacterRouteData();
+function LinkModal({ sessionId, isOpen, setIsOpen, linkType }: LinkModalProps) {
+	const { allFactions, allNotes, allCharacters } = useAppData();
+	const { session } = useSessionRouteData();
 
-	const initFactions = new Set(characterData.factions.map((f) => f.factionId as Key));
-	const initNotes = new Set(characterData.notes.map((f) => f.noteId as Key));
-	const initSessions = new Set(characterData.sessions.map((f) => f.sessionId as Key));
+	const initFactions = new Set(session.factions.map((f) => f.factionId as Key));
+	const initNotes = new Set(session.notes.map((f) => f.noteId as Key));
+	const initChars = new Set(session.characters.map((f) => f.characterId as Key));
 
 	const [linkedFactions, setLinkedFactions] = useState(initFactions);
 	const [linkedNotes, setLinkedNotes] = useState(initNotes);
-	const [linkedSessions, setLinkedSessions] = useState(initSessions);
+	const [linkedChars, setLinkedChars] = useState(initChars);
 
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -97,7 +97,7 @@ function LinkModal({ characterId, isOpen, setIsOpen, linkType }: LinkModalProps)
 					<>
 						{linkType === "factions" ? (
 							<EntitySelectCard
-								targetEntityId={characterId}
+								targetEntityId={sessionId}
 								targetEntityType={linkType}
 								allEntities={allFactions}
 								selectedEntities={linkedFactions}
@@ -108,7 +108,7 @@ function LinkModal({ characterId, isOpen, setIsOpen, linkType }: LinkModalProps)
 							/>
 						) : linkType === "notes" ? (
 							<EntitySelectCard
-								targetEntityId={characterId}
+								targetEntityId={sessionId}
 								targetEntityType={linkType}
 								allEntities={allNotes}
 								selectedEntities={linkedNotes}
@@ -119,12 +119,12 @@ function LinkModal({ characterId, isOpen, setIsOpen, linkType }: LinkModalProps)
 							/>
 						) : (
 							<EntitySelectCard
-								targetEntityId={characterId}
+								targetEntityId={sessionId}
 								targetEntityType={linkType}
-								allEntities={allSessions}
-								selectedEntities={linkedSessions}
-								setSelectedEntites={setLinkedSessions}
-								intent={LINK_INTENT.SESSIONS}
+								allEntities={allCharacters}
+								selectedEntities={linkedChars}
+								setSelectedEntites={setLinkedChars}
+								intent={LINK_INTENT.CHARACTERS}
 								action=""
 								close={close}
 							/>

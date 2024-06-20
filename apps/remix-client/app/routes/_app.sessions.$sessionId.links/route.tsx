@@ -15,14 +15,15 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		return noContent();
 	}
 	// WARN: I am not sure if this code is actually used by the client..
-	const form = await getFormAndAppendUserId(request);
-	const linkId = form.get("linkId");
-	const linkType = form.get("linkType");
-	if (!linkId || !linkType) {
-		return badRequest("No link data provided");
-	}
-	const res = await post(context, `sessions/${sessionId}/${linkType}/${linkId}`, form);
-	return null;
+
+	// const form = await getFormAndAppendUserId(request);
+	// const linkId = form.get("linkId");
+	// const linkType = form.get("linkType");
+	// if (!linkId || !linkType) {
+	// 	return badRequest("No link data provided");
+	// }
+	// const res = await post(context, `sessions/${sessionId}/${linkType}/${linkId}`, form);
+	// return null;
 };
 
 export default function SessionLinksView() {

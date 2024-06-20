@@ -97,13 +97,13 @@ sessionsRoute.post("/:sessionId/links", async (c) => {
 
 sessionsRoute.put("/:sessionId/links", async (c) => {
 	const sessionId = c.req.param("sessionId");
-	const { intent, targetIds } = await zx.parseForm(c.req.raw, {
+	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
 		intent: LinkIntentSchema,
-		targetIds: OptionalEntitySchema,
+		linkIds: OptionalEntitySchema,
 	});
 
 	const db = createDrizzleForTurso(c.env);
-	return await handleBulkSessionLinking(db, sessionId, targetIds, intent);
+	return await handleBulkSessionLinking(db, sessionId, linkIds, intent);
 });
 
 sessionsRoute.delete("/:sessionId/links", async (c) => {

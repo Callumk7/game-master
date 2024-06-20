@@ -1,8 +1,9 @@
-import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { createDrizzleForTurso, getCompleteSession } from "@repo/db";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { createDrizzleForTurso, getCompleteSession, methodNotAllowed } from "@repo/db";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { extractParam } from "~/lib/zx-util";
 import { SessionLayout } from "./session-layout";
+import { handleBulkLinkToSession } from "./queries.server";
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
@@ -15,6 +16,15 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	}
 
 	return typedjson({ session: completeSession });
+};
+
+export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+	const sessionId = extractParam("sessionId", params);
+	if (request.method === "PUT") {
+		console.log("put request here");
+		return await handleBulkLinkToSession(request, context, sessionId);
+	}
+	return methodNotAllowed();
 };
 
 export const useSessionRouteData = () => {

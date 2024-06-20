@@ -5,7 +5,7 @@ import { Menu, MenuItem } from "~/components/ui/menu";
 export function FactionMenu({ factionId }: { factionId: string }) {
 	return (
 		<MenuTrigger>
-			<Button>Menu</Button>
+			<Button aria-label="Faction Options">Menu</Button>
 			<Menu>
 				<MenuItem href={`/factions/${factionId}/members`}>Members</MenuItem>
 				<MenuItem href={`/factions/${factionId}/notes`}>Notes</MenuItem>

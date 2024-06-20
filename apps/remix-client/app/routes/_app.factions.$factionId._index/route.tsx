@@ -8,6 +8,8 @@ import { handleForwardUpdateFactionRequest } from "./queries.server";
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { Button } from "~/components/ui/button";
+import { Container } from "~/components/layout";
+import { Pencil1Icon } from "@radix-ui/react-icons";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	console.log("this was fired");
@@ -20,19 +22,23 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 export default function FactionIndex() {
 	const { faction } = useFactionRouteData();
 	const { editor, isEditing, setIsEditing, optimisticContent } = useSyncEditor({
-		initContent: faction.description ?? "",
+		initContent: faction.description ?? "Faction description would be here..",
 		action: `/factions/${faction.id}`,
 		intent: INTENT.UPDATE_CONTENT,
 	});
 	return (
-		<div>
-			<Header>Faction</Header>
-			<Button onPress={() => setIsEditing(!isEditing)}>Edit</Button>
+		<Container width="max">
+			<div className="flex gap-2 items-center mb-4">
+				<Header style="h2">Description</Header>
+				<Button onPress={() => setIsEditing(!isEditing)} variant="ghost" size="sm">
+					{isEditing ? "Save changes" : <Pencil1Icon />}
+				</Button>
+			</div>
 			<EditorPreview
 				editor={editor}
 				isEditing={isEditing}
 				htmlContent={optimisticContent}
 			/>
-		</div>
+		</Container>
 	);
 }

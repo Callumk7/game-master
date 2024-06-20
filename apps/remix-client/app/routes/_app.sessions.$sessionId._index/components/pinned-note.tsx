@@ -38,20 +38,21 @@ export function PinnedNote({
 	return (
 		<div className="space-y-1">
 			<p className="italic text-sm font-light text-amber-8">Pinned Note</p>
-			<Card className="border-amber-6">
+			<Card className="border-amber-6 relative">
 				<Collapsible defaultOpen>
+					<Button
+						variant="secondary"
+						size="sm"
+						onPress={() => submit({ sessionId }, { method: "DELETE" })}
+						className={"absolute top-2 right-2"}
+					>
+						Unlink
+					</Button>
 					<CollapsibleTrigger className="w-full">
-						<div className="relative flex pb-6 items-center justify-between">
-							<Header style="h2" tanker>
+						<div className="pb-6">
+							<Header style="h2" tanker className="text-left">
 								{note.name}
 							</Header>
-							<Button
-								variant="secondary"
-								size="sm"
-								onPress={() => submit({ sessionId }, { method: "DELETE" })}
-							>
-								Unlink
-							</Button>
 						</div>
 					</CollapsibleTrigger>
 					<CollapsibleContent>
