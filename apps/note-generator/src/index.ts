@@ -4,19 +4,30 @@ export interface Env {
 	AI: Ai;
 }
 
+type Message = {
+	role: "user" | "system" | "assistant";
+	content: string;
+};
+
+type Messages = Message[];
+
 export default {
 	async fetch(request, env): Promise<Response> {
 		const url = new URL(request.url);
 		const params = new URLSearchParams(url.search);
 		const q = params.get("q");
+
 		if (!q) {
 			return new Response("No q found.");
 		}
-		console.log(q)
-		const response = await env.AI.run("@hf/mistral/mistral-7b-instruct-v0.2", {
-			prompt: q,
+
+		const messages = JSON.parse(q) as Messages;
+		console.log(messages);
+
+		const response = await env.AI.run("@cf/meta/llama-3-8b-instruct", {
+			messages,
 		});
 
-		return new Response(JSON.stringify(response));
+		return Response.json(response);
 	},
 } satisfies ExportedHandler<Env>;
