@@ -47,6 +47,9 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		// Server handles all other updates
 		return await handleForwardUpdateCharacterRequest(context, characterId, request);
 	}
+
+	// TODO: Build this out effectively, remember it needs to be async and handled on the server.
+	// Could consider a signal but it is unlikely
 	if (request.method === "POST") {
 		const data = (await request.json()) as { characterName: string };
 		const messages = [
