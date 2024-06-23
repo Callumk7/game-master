@@ -15,6 +15,7 @@ import {
 	factions,
 	OptionalEntitySchema,
 	handleBulkFactionLinking,
+	charactersInsertSchema,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { z } from "zod";
@@ -132,6 +133,27 @@ members.put("/:characterId", async (c) => {
 		);
 
 	return c.json("done");
+});
+
+members.patch("/:characterId", async (c) => {
+	const factionId = c.req.param("factionId") as string;
+	const characterId = c.req.param("characterId");
+	const { role, description } = await zx.parseForm(c.req.raw, {
+		role: z.string().optional(),
+		description: z.string().optional(),
+	});
+	const db = createDrizzleForTurso(c.env);
+	const result = await db
+		.update(charactersInFactions)
+		.set({ role, description })
+		.where(
+			and(
+				eq(charactersInFactions.characterId, characterId),
+				eq(charactersInFactions.factionId, factionId),
+			),
+		)
+		.returning();
+	return c.json(result);
 });
 
 members.delete("/:characterId", async (c) => {

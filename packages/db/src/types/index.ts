@@ -167,8 +167,9 @@ export type CharactersInSessionsWithCharacterNote = CharactersInSessions & {
 	character: Character;
 	note: Note | null;
 };
+export type Member = CharactersInFactions & { character: Character };
 export type FactionWithMembers = Faction & {
-	members: (CharactersInFactions & { character: Character })[];
+	members: Member[];
 };
 export type FactionWithMembersAndNotes = Faction & {
 	notes: (NotesOnFactions & { note: Note })[];
