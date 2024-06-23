@@ -1,8 +1,8 @@
 import type { AppLoadContext } from "@remix-run/cloudflare";
-import { LINK_INTENT } from "@repo/db";
-import { put } from "~/lib/game-master";
+import { LINK_INTENT, noContent } from "@repo/db";
+import { patch, put } from "~/lib/game-master";
 
-export const bulkUpdateMembers = async (
+export const handleBulkUpdateMembers = async (
 	request: Request,
 	context: AppLoadContext,
 	factionId: string,
@@ -12,4 +12,19 @@ export const bulkUpdateMembers = async (
 	memberIds.forEach((id) => form.append("linkIds", id.toString()));
 	form.append("intent", LINK_INTENT.CHARACTERS);
 	const res = await put(context, `factions/${factionId}/links`, form);
+};
+
+export const handleUpdateMember = async (
+	request: Request,
+	context: AppLoadContext,
+	factionId: string,
+	characterId: string,
+) => {
+	const form = await request.formData();
+	const res = await patch(
+		context,
+		`factions/${factionId}/members/${characterId}`,
+		form,
+	);
+	return noContent();
 };
