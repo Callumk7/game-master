@@ -4,13 +4,12 @@ import {
 	ExitIcon,
 	HomeIcon,
 } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
-import { Toolbar } from "./ui/toolbar";
-import { Tooltip } from "./ui/tooltip";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+import { Toolbar } from "~/components/ui/toolbar";
+import { Tooltip } from "~/components/ui/tooltip";
 import { Form, useNavigate } from "@remix-run/react";
-import { QuickNoteSlideOver } from "./quick-note-slideover";
-import { useAppData } from "~/routes/_app/route";
+import { QuickNoteSlideOver } from "~/components/quick-note-slideover";
 
 interface AppToolbarProps {
 	isSidebarOpen: boolean;

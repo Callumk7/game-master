@@ -15,12 +15,12 @@ import { DialogTrigger } from "react-aria-components";
 import { Popover } from "~/components/ui/popover";
 import { Dialog } from "~/components/ui/dialog";
 import { TextField } from "~/components/ui/text-field";
-import { AppToolbar } from "~/components/app-toolbar";
 import { EntityListBox } from "~/components/entity-listbox";
 import { Header } from "~/components/typeography";
 import { NewSessionForm } from "~/components/forms/new-session";
 import { NewCharacterForm } from "~/components/forms/new-character";
 import { NewFactionForm } from "~/components/forms/new-faction";
+import { AppToolbar } from "./app-toolbar";
 
 interface SidebarProps {
 	isSidebarOpen: boolean;
