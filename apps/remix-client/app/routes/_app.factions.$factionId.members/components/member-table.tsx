@@ -33,7 +33,12 @@ export function MemberTable({ members, factionId }: MemberTableProps) {
 					<Column width={"1fr"}>Role</Column>
 					<Column width={"0.5fr"}>Controls</Column>
 				</TableHeader>
-				<TableBody items={members}>
+				<TableBody
+					items={members}
+					renderEmptyState={() => (
+						<p className="text-sm italic font-light w-full text-center py-2">empty</p>
+					)}
+				>
 					{(item) => (
 						<Row id={item.characterId}>
 							<Cell>{item.character.name}</Cell>

@@ -87,7 +87,7 @@ factionsRoute.patch("/:factionId", async (c) => {
 	return c.json(updatedFaction);
 });
 
-factionsRoute.post("/:factionId/links", async (c) => {
+factionsRoute.put("/:factionId/links", async (c) => {
 	const factionId = c.req.param("factionId");
 	const { intent, linkIds } = await zx.parseForm(c.req.raw, {
 		intent: LinkIntentSchema,
