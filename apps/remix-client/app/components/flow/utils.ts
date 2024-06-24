@@ -1,7 +1,6 @@
 import type {
 	BasicEntity,
 	EntityType,
-	FactionWithMembers,
 	FactionWithMembersAndNotes,
 	SessionWithFullRelations,
 } from "@repo/db";
@@ -171,10 +170,12 @@ export const createAllFactionWithMemberNodes = (
 ) => {
 	const nodes: Node[] = [];
 	const edges: Edge[] = [];
+	let factionX = 0;
 	for (const faction of factionData) {
-		const data = createFactionWithMemberNodes(faction, nodes, edges);
+		const data = createFactionWithMemberNodes(faction, nodes, edges, factionX);
 		nodes.concat(data.nodes);
 		edges.concat(data.edges);
+		factionX += 250;
 	}
 
 	return {

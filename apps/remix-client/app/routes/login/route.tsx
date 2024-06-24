@@ -8,6 +8,7 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { createDrizzleForTurso, getValidUser } from "@repo/db";
 import { z } from "zod";
 import { zx } from "zodix";
+import { Card } from "~/components/card";
 import { MainContainer } from "~/components/layout";
 import { Button } from "~/components/ui/button";
 import { TextField } from "~/components/ui/text-field";
@@ -73,31 +74,33 @@ export default function LoginRoute() {
 
 	return (
 		<MainContainer>
-			<Form method="POST">
-				<div className="flex flex-col gap-3">
-					<p className="text-destructive-9">{error}</p>
-					<TextField
-						label="Email"
-						name="email"
-						type="email"
-						isRequired
-						errorMessage={emailError}
-					/>
-					<TextField
-						label="Password"
-						name="password"
-						type="password"
-						isRequired
-						errorMessage={passwordError}
-					/>
-					<Button type="submit" onPress={() => console.log("Login button pressed")}>
-						Login
-					</Button>
-					<Button onPress={() => navigate("/signup")} variant="outline">
-						Need an account? Sign up!
-					</Button>
-				</div>
-			</Form>
+			<Card className="my-24 w-1/2 mx-auto p-5">
+				<Form method="POST">
+					<div className="flex flex-col gap-5">
+						<p className="text-destructive-9">{error}</p>
+						<TextField
+							label="Email"
+							name="email"
+							type="email"
+							isRequired
+							errorMessage={emailError}
+						/>
+						<TextField
+							label="Password"
+							name="password"
+							type="password"
+							isRequired
+							errorMessage={passwordError}
+						/>
+						<Button type="submit" onPress={() => console.log("Login button pressed")}>
+							Login
+						</Button>
+						<Button onPress={() => navigate("/signup")} variant="outline">
+							Need an account? Sign up!
+						</Button>
+					</div>
+				</Form>
+			</Card>
 		</MainContainer>
 	);
 }

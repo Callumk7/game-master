@@ -1,10 +1,11 @@
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { Form } from "@remix-run/react";
 import { createDrizzleForTurso, users } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { redirect } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
+import { Card } from "~/components/card";
 import { MainContainer } from "~/components/layout";
 import { Button } from "~/components/ui/button";
 import { TextField } from "~/components/ui/text-field";
@@ -30,13 +31,6 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		.values({ id: `user_${uuidv4()}`, username, email, password })
 		.returning({ userId: users.id, username: users.username, email: users.email });
 
-	// const session = createSession({
-	// 	userId: newUser[0].id,
-	// 	username: newUser[0].username,
-	// 	email: newUser[0].email,
-	// });
-
-	// I think actually, the cookie should just be set directly..
 	const session = await getSession(await authCookie.serialize(newUser[0]));
 
 	return redirect("/", {
@@ -53,26 +47,28 @@ export default function SignUpRoute() {
 
 	return (
 		<MainContainer>
-			<Form method="POST">
-				<div className="flex flex-col gap-3">
-					<TextField label="Username" name="username" errorMessage={usernameError} />
-					<TextField
-						label="Email"
-						name="email"
-						type="email"
-						isRequired
-						errorMessage={emailError}
-					/>
-					<TextField
-						label="Password"
-						name="password"
-						type="password"
-						isRequired
-						errorMessage={passwordError}
-					/>
-					<Button type="submit">Sign Up</Button>
-				</div>
-			</Form>
+			<Card className="my-24 w-1/2 mx-auto p-5">
+				<Form method="POST">
+					<div className="flex flex-col gap-3">
+						<TextField label="Username" name="username" errorMessage={usernameError} />
+						<TextField
+							label="Email"
+							name="email"
+							type="email"
+							isRequired
+							errorMessage={emailError}
+						/>
+						<TextField
+							label="Password"
+							name="password"
+							type="password"
+							isRequired
+							errorMessage={passwordError}
+						/>
+						<Button type="submit">Sign Up</Button>
+					</div>
+				</Form>
+			</Card>
 		</MainContainer>
 	);
 }
