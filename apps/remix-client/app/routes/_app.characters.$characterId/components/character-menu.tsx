@@ -1,4 +1,4 @@
-import { useSubmit } from "@remix-run/react";
+import { useFetcher, useSubmit } from "@remix-run/react";
 import { MenuTrigger, SubmenuTrigger } from "react-aria-components";
 import type { Key } from "react-stately";
 import { EntitySelectCard } from "~/components/entity-select-card";
@@ -10,9 +10,12 @@ import { useAppData } from "~/routes/_app/route";
 import { useCharacterRouteData } from "../route";
 import { useState } from "react";
 import { type EntityType, LINK_INTENT } from "@repo/db";
-import { CopyIcon, Share1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { CopyIcon, MagicWandIcon, Share1Icon, TrashIcon } from "@radix-ui/react-icons";
 
-export function CharacterMenu({ characterId }: { characterId: string }) {
+export function CharacterMenu({
+	characterId,
+	characterName,
+}: { characterId: string; characterName: string }) {
 	const submit = useSubmit();
 
 	// State for the links modal
@@ -31,6 +34,8 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 		setIsOpen(true);
 		setLinkType("notes");
 	};
+
+	const fetcher = useFetcher();
 
 	return (
 		<>
@@ -60,6 +65,17 @@ export function CharacterMenu({ characterId }: { characterId: string }) {
 							<MenuItem onAction={handleLinkSessionsClicked}>Sessions</MenuItem>
 						</Menu>
 					</SubmenuTrigger>
+					<MenuItem
+						onAction={() =>
+							fetcher.submit(
+								{ characterName: characterName },
+								{ method: "POST", encType: "application/json" },
+							)
+						}
+					>
+						<MagicWandIcon className="mr-3" />
+						<span>Generate Bio (experimental)</span>
+					</MenuItem>
 				</Menu>
 			</MenuTrigger>
 			<LinkModal

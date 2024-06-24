@@ -2,6 +2,7 @@ import { Cell, Column, Row, Table, TableHeader } from "~/components/ui/aria-tabl
 import { type Selection, TableBody } from "react-aria-components";
 import { useSort } from "~/hooks/sort";
 import type { NoteWithLinks } from "@repo/db";
+import { Header } from "~/components/typeography";
 
 interface TableOfNotesProps {
 	notes: NoteWithLinks[];
@@ -43,7 +44,7 @@ export function TableOfNotes({
 				<Column id="name" isRowHeader width={"2fr"} allowsSorting>
 					Title
 				</Column>
-				<Column id="folder" isRowHeader width={"1fr"}>
+				<Column id="folder" isRowHeader width={"1fr"} allowsSorting>
 					Folder
 				</Column>
 				<Column id="createdAt" isRowHeader width={"1fr"} allowsSorting>
@@ -56,7 +57,11 @@ export function TableOfNotes({
 						<Cell>
 							<p className="whitespace-pre-wrap">{note.name}</p>
 						</Cell>
-						<Cell>{note.folder?.name ?? ""}</Cell>
+						<Cell>
+							<Header style="h5" colour="amber">
+								{note.folder?.name ?? ""}
+							</Header>
+						</Cell>
 						<Cell>{note.createdAt.toLocaleString("gmt")}</Cell>
 					</Row>
 				)}

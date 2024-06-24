@@ -35,19 +35,18 @@ export function CharacterView() {
 	];
 	const fetcher = useFetcher();
 	return (
-		<EntityView top margin menu={<CharacterMenu characterId={characterData.id} />}>
+		<EntityView
+			top
+			margin
+			menu={
+				<CharacterMenu
+					characterId={characterData.id}
+					characterName={characterData.name}
+				/>
+			}
+		>
 			<EntityHeader title={characterData.name}>
 				<NavigationLinks links={links} />
-				<Button
-					onPress={() =>
-						fetcher.submit(
-							{ characterName: characterData.name },
-							{ method: "POST", encType: "application/json" },
-						)
-					}
-				>
-					Generate Bio
-				</Button>
 			</EntityHeader>
 			<Outlet />
 		</EntityView>

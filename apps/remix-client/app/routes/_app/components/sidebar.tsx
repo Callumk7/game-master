@@ -43,8 +43,8 @@ export function Sidebar({
 	return (
 		<div className="fixed pt-4 pr-2 pl-4 h-full min-h-screen max-h-screen border-r bg-primary-1 min-w-[15vw] max-w-56 border-grade-5">
 			<AppToolbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-			<ScrollArea className="h-full">
-				<div className="p-2 space-y-4 border-b border-grade-6">
+			<ScrollArea className="h-[90vh]">
+				<div className="p-2 space-y-4 h-fit pb-5 border-b border-grade-6">
 					<SidebarSection
 						title="Sessions"
 						icon={<HomeIcon />}

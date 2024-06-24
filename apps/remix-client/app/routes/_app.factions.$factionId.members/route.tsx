@@ -14,6 +14,7 @@ import { Popover } from "~/components/ui/popover";
 import { Dialog } from "~/components/ui/dialog";
 import { EntitySelectCard } from "~/components/entity-select-card";
 import { useState } from "react";
+import { Container } from "~/components/layout";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	console.log("here");
@@ -35,11 +36,11 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 export default function FactionMembersView() {
 	const { faction } = useFactionRouteData();
 	return (
-		<div>
+		<Container width="max" className="space-y-4">
 			<Header style="h2">Faction Members</Header>
 			<MemberTable members={faction.members} factionId={faction.id} />
 			<AddMembersPopover />
-		</div>
+		</Container>
 	);
 }
 

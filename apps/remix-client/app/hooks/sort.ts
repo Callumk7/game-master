@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { SortDescriptor } from "react-aria-components";
 
+// TODO: This sort function.. is not very good.
+
 // biome-ignore lint/suspicious/noExplicitAny:
 export const applySort = <T extends Record<string, any>>(
 	items: T[],
@@ -11,11 +13,10 @@ export const applySort = <T extends Record<string, any>>(
 	}
 	const sortedItems = items.sort((a, b) => {
 		// biome-ignore lint/style/noNonNullAssertion: Will have column
-		let first = a[sortDescriptor.column!];
-		if (typeof first === "object") first = first.name;
+		const first = String(a[sortDescriptor.column!]);
+
 		// biome-ignore lint/style/noNonNullAssertion: Will have columm
-		let second = b[sortDescriptor.column!];
-		if (typeof second === "object") second = second.name;
+		const second = String(b[sortDescriptor.column!]);
 		let cmp =
 			(Number.parseInt(first) || first) < (Number.parseInt(second) || second)
 				? -1

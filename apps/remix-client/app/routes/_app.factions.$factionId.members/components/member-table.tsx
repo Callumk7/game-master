@@ -40,7 +40,7 @@ export function MemberTable({ members, factionId }: MemberTableProps) {
 					)}
 				>
 					{(item) => (
-						<Row id={item.characterId}>
+						<Row id={item.characterId} href={`/characters/${item.characterId}`}>
 							<Cell>{item.character.name}</Cell>
 							<Cell>{item.role}</Cell>
 							<Cell>
@@ -95,17 +95,21 @@ function EditMemberModal({
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} isDismissable>
 			<Dialog>
-				<Header style="h3" className="mb-3">
-					Update Member Details
-				</Header>
-				<fetcher.Form className="space-y-4" method="POST">
-					<TextField label="Role" name="role" />
-					<TextField textarea label="Notes" name="description" />
-					<input type="hidden" name="characterId" value={characterId} />
-					<input type="hidden" name="factionId" value={factionId} />
-					<input type="hidden" name="intent" value="UPDATE_MEMBER" />
-					<Button type="submit">Save</Button>
-				</fetcher.Form>
+				{({ close }) => (
+					<>
+						<Header style="h3" className="mb-3">
+							Update Member Details
+						</Header>
+						<fetcher.Form className="space-y-4" method="POST" onSubmit={close}>
+							<TextField label="Role" name="role" />
+							<TextField textarea label="Notes" name="description" />
+							<input type="hidden" name="characterId" value={characterId} />
+							<input type="hidden" name="factionId" value={factionId} />
+							<input type="hidden" name="intent" value="UPDATE_MEMBER" />
+							<Button type="submit">Save</Button>
+						</fetcher.Form>
+					</>
+				)}
 			</Dialog>
 		</Modal>
 	);
