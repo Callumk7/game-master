@@ -35,6 +35,10 @@ type Variables = {
 
 export const notesRoute = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+notesRoute.get("/test", async (c) => {
+	return c.text("test passed");
+});
+
 notesRoute.post("/", async (c) => {
 	const newNoteData = await zx.parseForm(
 		c.req.raw,
