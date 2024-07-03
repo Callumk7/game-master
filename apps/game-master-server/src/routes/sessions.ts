@@ -24,12 +24,15 @@ import {
 	deleteNotesFromSession,
 	deleteFactionsFromSession,
 	deleteCharactersFromSession,
+	sessions,
+	images,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerErrorExeption } from "~/utils";
 import { z } from "zod";
 import { and } from "drizzle-orm/sql";
 import { eq } from "drizzle-orm/expressions";
+import { uploadToS3, validateUpload } from "~/services/s3";
 
 export const sessionsRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -167,4 +170,22 @@ sessionsRoute.post("/:sessionId/characters/:characterId", async (c) => {
 	});
 
 	return c.json(newNote);
+});
+
+sessionsRoute.post("/:sessionId/uploads", async (c) => {
+	const sessionId = c.req.param("sessionId");
+	const file = await validateUpload(c.req);
+	const key = await uploadToS3(c.env, file);
+	const imageUrl = `https://game-master-images.s3.eu-west-2.amazonaws.com/${key}`;
+	const db = createDrizzleForTurso(c.env);
+	const newImage = await db
+		.insert(images)
+		.values({
+			id: `img_${uuidv4()}`,
+			sessionId: sessionId,
+			key: key,
+			imageUrl: imageUrl,
+		})
+		.returning();
+	return c.json(newImage);
 });

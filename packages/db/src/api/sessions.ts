@@ -54,6 +54,7 @@ export const getCompleteSession = async (db: DB, sessionId: string) => {
 					},
 				},
 			},
+			images: true,
 		},
 	});
 

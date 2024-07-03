@@ -30,6 +30,7 @@ export const sessionsRelations = relations(sessions, ({ one, many }) => ({
 		fields: [sessions.pinnedNoteId],
 		references: [notes.id],
 	}),
+	images: many(images),
 }));
 
 export const charactersInSessions = sqliteTable(
@@ -137,3 +138,28 @@ export const locationsInSessionsRelations = relations(locationsInSessions, ({ on
 		references: [locations.id],
 	}),
 }));
+
+export const images = sqliteTable("images", {
+	id: text("id").primaryKey().notNull(),
+	key: text("key").notNull(),
+	imageUrl: text("image_url").notNull(),
+	sessionId: text("session_id").notNull(),
+});
+
+export const imagesRelations = relations(images, ({ one }) => ({
+	session: one(sessions, {
+		fields: [images.sessionId],
+		references: [sessions.id],
+	}),
+}));
+
+// export const imagesInSessions = sqliteTable(
+// 	"images_in_sessions",
+// 	{
+// 		imageId: text("image_id").notNull(),
+// 		sessionId: text("session_id").notNull(),
+// 	},
+// 	(t) => ({
+// 		pk: primaryKey({ columns: [t.sessionId, t.imageId] }),
+// 	}),
+// );

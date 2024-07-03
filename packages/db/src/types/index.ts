@@ -17,6 +17,7 @@ import {
 	plotsInSessions,
 	locations,
 	notesOnFactions,
+    images,
 } from "../db/schemas";
 
 export * from "./http";
@@ -152,6 +153,12 @@ export type FactionsInSessions = z.infer<typeof factionsInSessionsSelectSchema>;
 export type FactionsInSessionsInsert = z.infer<typeof factionsInSessionsInsertSchema>;
 export type PlotsInSessions = z.infer<typeof plotsInSessionsSelectSchema>;
 export type PlotsInSessionsInsert = z.infer<typeof plotsInSessionsInsertSchema>;
+
+export const imageInsertSchema = createInsertSchema(images);
+export const imageSelectSchema = createSelectSchema(images);
+
+export type Image = z.infer<typeof imageSelectSchema>;
+export type ImageInsert = z.infer<typeof imageInsertSchema>;
 
 // Composite types
 export type CharacterWithRace = Character & {

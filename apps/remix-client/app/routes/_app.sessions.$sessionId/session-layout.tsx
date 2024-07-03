@@ -16,6 +16,10 @@ export function SessionLayout() {
 			name: "Links",
 			href: `/sessions/${session.id}/links`,
 		},
+		{
+			name: "Images",
+			href: `/sessions/${session.id}/images`,
+		},
 	];
 	return (
 		<EntityView top margin menu={<SessionMenu sessionId={session.id} />}>
