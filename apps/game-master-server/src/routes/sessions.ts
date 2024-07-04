@@ -26,13 +26,14 @@ import {
 	deleteCharactersFromSession,
 	sessions,
 	images,
+	noContent,
 } from "@repo/db";
 import { uuidv4 } from "callum-util";
 import { internalServerErrorExeption } from "~/utils";
 import { z } from "zod";
 import { and } from "drizzle-orm/sql";
 import { eq } from "drizzle-orm/expressions";
-import { uploadToS3, validateUpload } from "~/services/s3";
+import { deleteFromS3, uploadToS3, validateUpload } from "~/services/s3";
 
 export const sessionsRoute = new Hono<{ Bindings: Bindings }>();
 
@@ -188,4 +189,19 @@ sessionsRoute.post("/:sessionId/uploads", async (c) => {
 		})
 		.returning();
 	return c.json(newImage);
+});
+
+sessionsRoute.delete("/:sessionId/uploads", async (c) => {
+	const sessionId = c.req.param("sessionId");
+	const { key } = await zx.parseForm(c.req.raw, { key: z.string() });
+	const db = createDrizzleForTurso(c.env);
+
+	try {
+		await deleteFromS3(c.env, key);
+	} catch (err) {
+		console.error(err);
+	}
+
+	await db.delete(images).where(eq(images.key, key));
+	return noContent();
 });

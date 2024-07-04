@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 
 export const useCustomUploadButton = () => {
 	const [fileName, setFileName] = useState("");
@@ -17,10 +17,15 @@ export const useCustomUploadButton = () => {
 		}
 	};
 
+	const handleSubmitCleanup = () => {
+		setFileName("");
+	};
+
 	return {
 		fileName,
 		fileInputRef,
 		handleInputClick,
 		handleFileChange,
+		handleSubmitCleanup,
 	};
 };

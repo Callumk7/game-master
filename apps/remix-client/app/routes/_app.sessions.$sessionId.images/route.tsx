@@ -1,6 +1,6 @@
 import { Container } from "~/components/layout";
 import { Header } from "~/components/typeography";
-import { badRequest, methodNotAllowed, type Image } from "@repo/db";
+import { badRequest, methodNotAllowed, type Image, internalServerError } from "@repo/db";
 import { useSessionRouteData } from "../_app.sessions.$sessionId/route";
 import { useCustomUploadButton } from "~/hooks/custom-upload-button";
 import { json, useFetcher } from "@remix-run/react";
@@ -8,12 +8,13 @@ import { Button } from "~/components/ui/button";
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { createApi } from "~/lib/game-master";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
 	const api = createApi(context);
 	if (request.method === "POST") {
-		const contentType = request.headers.get("Content-Type");
+		const contentType = request.headers.get("Content-Type"); // Required for forwarding the request to the server
 		const uploadStream = request.body;
 		if (!contentType) {
 			return badRequest("No Content-Type provided in request header");
@@ -35,6 +36,14 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		const { key } = (await response.json()) as { key: string };
 		return json({ key });
 	}
+	if (request.method === "DELETE") {
+		const form = await request.formData();
+		const response = await api.delete(`sessions/${sessionId}/uploads`, { body: form });
+		if (response.ok) {
+			return json({ sessionId });
+		}
+		return internalServerError();
+	}
 	return methodNotAllowed();
 };
 
@@ -46,17 +55,34 @@ export default function SessionImagesRoute() {
 			<Header>Images</Header>
 			<ImageUploader />
 			{images && (
-				<div>
+				<div className={"grid grid-cols-3 gap-4"}>
 					{images.map((image) => (
-						<img
-							key={image.id}
-							src={image.imageUrl}
-							alt="User uploaded session imagery"
-						/>
+						<ImagePreview key={image.id} image={image} />
 					))}
 				</div>
 			)}
 		</Container>
+	);
+}
+
+function ImagePreview({ image }: { image: Image }) {
+	const fetcher = useFetcher();
+	return (
+		<div className="group rounded-2xl border relative border-grade-6 w-fit overflow-hidden">
+			<img
+				src={image.imageUrl}
+				alt="User uploaded imagery"
+				className="object-fill object-center"
+			/>
+			<Button
+				size="icon-sm"
+				variant="hover-destructive"
+				className={"absolute opacity-0 top-2 right-2 group-hover:opacity-100"}
+				onPress={() => fetcher.submit({ key: image.key }, { method: "DELETE" })}
+			>
+				<Cross1Icon />
+			</Button>
+		</div>
 	);
 }
 
@@ -65,12 +91,21 @@ export default function SessionImagesRoute() {
 // on the character route, but must handle an array of images, and the
 // addition of images to that array once they have been uploaded to S3
 function ImageUploader() {
-	const { fileName, fileInputRef, handleInputClick, handleFileChange } =
-		useCustomUploadButton();
+	const {
+		fileName,
+		fileInputRef,
+		handleInputClick,
+		handleFileChange,
+		handleSubmitCleanup,
+	} = useCustomUploadButton();
 	const fetcher = useFetcher();
 
 	return (
-		<fetcher.Form method="POST" encType="multipart/form-data">
+		<fetcher.Form
+			method="POST"
+			encType="multipart/form-data"
+			onSubmit={handleSubmitCleanup}
+		>
 			<input
 				type="file"
 				name="image"

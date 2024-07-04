@@ -11,8 +11,13 @@ interface ImageUploadProps {
 
 export function ImageUpload({ imageSrc, alt }: ImageUploadProps) {
 	const fetcher = useFetcher();
-	const { fileName, fileInputRef, handleInputClick, handleFileChange } =
-		useCustomUploadButton();
+	const {
+		fileName,
+		fileInputRef,
+		handleInputClick,
+		handleFileChange,
+		handleSubmitCleanup,
+	} = useCustomUploadButton();
 
 	if (imageSrc) {
 		return (
@@ -35,7 +40,12 @@ export function ImageUpload({ imageSrc, alt }: ImageUploadProps) {
 	}
 
 	return (
-		<fetcher.Form action="uploads" method="POST" encType="multipart/form-data">
+		<fetcher.Form
+			action="uploads"
+			method="POST"
+			encType="multipart/form-data"
+			onSubmit={handleSubmitCleanup}
+		>
 			<input
 				type="file"
 				name="image"
