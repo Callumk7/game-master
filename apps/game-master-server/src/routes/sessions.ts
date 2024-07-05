@@ -24,7 +24,6 @@ import {
 	deleteNotesFromSession,
 	deleteFactionsFromSession,
 	deleteCharactersFromSession,
-	sessions,
 	images,
 	noContent,
 } from "@repo/db";
