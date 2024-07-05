@@ -51,11 +51,11 @@ export default function SessionImagesRoute() {
 	const { session } = useSessionRouteData();
 	const images = session.images;
 	return (
-		<Container width="max">
-			<Header>Images</Header>
+		<Container width="max" className="space-y-4">
+			<Header style="h2">Images</Header>
 			<ImageUploader />
 			{images && (
-				<div className={"grid grid-cols-3 gap-4"}>
+				<div className="flex flex-wrap gap-4">
 					{images.map((image) => (
 						<ImagePreview key={image.id} image={image} />
 					))}
@@ -68,7 +68,7 @@ export default function SessionImagesRoute() {
 function ImagePreview({ image }: { image: Image }) {
 	const fetcher = useFetcher();
 	return (
-		<div className="group rounded-2xl border relative border-grade-6 w-fit overflow-hidden">
+		<div className="group rounded-2xl border relative border-grade-6 w-fit overflow-hidden max-w-64 h-fit">
 			<img
 				src={image.imageUrl}
 				alt="User uploaded imagery"

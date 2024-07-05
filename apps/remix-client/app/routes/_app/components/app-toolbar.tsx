@@ -3,7 +3,7 @@ import {
 	ChevronRightIcon,
 	ExitIcon,
 	HomeIcon,
-    MagicWandIcon,
+	MagicWandIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -22,30 +22,36 @@ export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps)
 		<div className="sticky space-y-3 p-4">
 			<Toolbar>
 				<Tooltip content={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}>
-					<Button
-						size="icon-sm"
-						variant="outline"
-						onPress={() => setIsSidebarOpen(!isSidebarOpen)}
-					>
-						{isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-					</Button>
+					<div>
+						<Button
+							size="icon-sm"
+							variant="outline"
+							onPress={() => setIsSidebarOpen(!isSidebarOpen)}
+						>
+							{isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+						</Button>
+					</div>
 				</Tooltip>
 				<Tooltip content={"Home"}>
-					<Button size="icon-sm" variant="outline" onPress={() => navigate("/")}>
-						<HomeIcon />
-					</Button>
+					<div>
+						<Button size="icon-sm" variant="outline" onPress={() => navigate("/")}>
+							<HomeIcon />
+						</Button>
+					</div>
 				</Tooltip>
 				<Separator orientation="vertical" />
 				<Tooltip content={"Create new..."}>
-					<QuickNoteSlideOver action="/notes/new" />
+					<div>
+						<QuickNoteSlideOver action="/notes/new" />
+					</div>
 				</Tooltip>
-        <Tooltip content={"Generate note.."}>
-          <Form>
-            <Button type="submit" variant="outline" size="icon-sm">
-              <MagicWandIcon />
-            </Button>
-          </Form>
-        </Tooltip>
+				<Tooltip content={"Generate note.."}>
+					<Form>
+						<Button type="submit" variant="outline" size="icon-sm">
+							<MagicWandIcon />
+						</Button>
+					</Form>
+				</Tooltip>
 				<Tooltip content={"Logout"}>
 					<Form method="POST" action="/logout" className="flex items-center">
 						<Button variant="outline" size="icon-sm" type="submit">
@@ -53,7 +59,6 @@ export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps)
 						</Button>
 					</Form>
 				</Tooltip>
-        
 			</Toolbar>
 		</div>
 	);
