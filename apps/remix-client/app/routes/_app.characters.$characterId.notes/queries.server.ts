@@ -23,11 +23,9 @@ export const linkNotesToCharacter = async (
 	context: AppLoadContext,
 	characterId: string,
 ) => {
-	console.log("Linking notes to character");
 	const { noteId } = await zx.parseForm(request, { noteId: z.string() });
 	const form = await request.formData();
 	form.append("linkIds", characterId);
-	console.log(form);
 	const res = await post(context, `notes/${noteId}/links`, form);
 	if (res.ok) {
 		return noContent();
