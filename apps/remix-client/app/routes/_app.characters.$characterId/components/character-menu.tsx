@@ -50,9 +50,9 @@ export function CharacterMenu({
 						<TrashIcon className="mr-3" />
 						<span>Delete</span>
 					</MenuItem>
-					<MenuItem>
+					<MenuItem isDisabled>
 						<CopyIcon className="mr-3" />
-						<span>Duplicate (inactive)</span>
+						<span>Duplicate</span>
 					</MenuItem>
 					<SubmenuTrigger>
 						<MenuItem>
@@ -66,6 +66,7 @@ export function CharacterMenu({
 						</Menu>
 					</SubmenuTrigger>
 					<MenuItem
+            isDisabled
 						onAction={() =>
 							fetcher.submit(
 								{ characterName: characterName },

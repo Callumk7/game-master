@@ -7,6 +7,7 @@ import { focusRing } from "./utils";
 export const useDefaultEditor = (content: string | null) => {
 	return useEditor({
 		extensions: [StarterKit, Highlight, Typography],
+    immediatelyRender: false,
 		editorProps: {
 			attributes: {
 				class: focusRing({ className: "prose prose-invert max-w-none" }),

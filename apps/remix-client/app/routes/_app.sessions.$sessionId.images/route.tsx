@@ -9,6 +9,10 @@ import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { extractParam } from "~/lib/zx-util";
 import { createApi } from "~/lib/game-master";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { Modal } from "~/components/ui/modal";
+import { Dialog } from "~/components/ui/dialog";
+import { Card } from "~/components/card";
+import { useState } from "react";
 
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
 	const sessionId = extractParam("sessionId", params);
@@ -50,22 +54,37 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 export default function SessionImagesRoute() {
 	const { session } = useSessionRouteData();
 	const images = session.images;
+	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	return (
-		<Container width="max" className="space-y-4">
-			<Header style="h2">Images</Header>
-			<ImageUploader />
-			{images && (
-				<div className="flex flex-wrap gap-4">
-					{images.map((image) => (
-						<ImagePreview key={image.id} image={image} />
-					))}
-				</div>
-			)}
-		</Container>
+		<>
+			<Container width="max" className="space-y-4">
+				<Header style="h2">Images</Header>
+				<ImageUploader />
+				{images && (
+					<div className="flex flex-wrap gap-4">
+						{images.map((image) => (
+							<ImagePreview
+								key={image.id}
+								image={image}
+								onImageClick={() => setSelectedImage(image.imageUrl)}
+							/>
+						))}
+					</div>
+				)}
+			</Container>
+			<ImageModal
+				isOpen={!!selectedImage}
+				imageUrl={selectedImage}
+				onClose={() => setSelectedImage(null)}
+			/>
+		</>
 	);
 }
 
-function ImagePreview({ image }: { image: Image }) {
+function ImagePreview({
+	image,
+	onImageClick,
+}: { image: Image; onImageClick: () => void }) {
 	const fetcher = useFetcher();
 	return (
 		<div className="group rounded-2xl border relative border-grade-6 w-fit overflow-hidden max-w-64 h-fit">
@@ -73,6 +92,8 @@ function ImagePreview({ image }: { image: Image }) {
 				src={image.imageUrl}
 				alt="User uploaded imagery"
 				className="object-fill object-center"
+				onClick={onImageClick}
+				onKeyDown={onImageClick}
 			/>
 			<Button
 				size="icon-sm"
@@ -124,5 +145,27 @@ function ImageUploader() {
 				</Button>
 			)}
 		</fetcher.Form>
+	);
+}
+
+interface ImageModalProps {
+	isOpen: boolean;
+	onClose: () => void;
+	imageUrl: string | null;
+}
+function ImageModal({ isOpen, onClose, imageUrl }: ImageModalProps) {
+	return (
+		<Modal isOpen={isOpen}>
+			<Dialog className="space-y-6">
+				<div className="rounded-2xl border border-grade-6 max-w-[90vw] max-h-[90vh] w-fit overflow-hidden h-fit">
+					<img
+						src={imageUrl ?? ""}
+						alt="Full size"
+						className="object-fill object-center"
+					/>
+				</div>
+				<Button onPress={onClose}>Close</Button>
+			</Dialog>
+		</Modal>
 	);
 }

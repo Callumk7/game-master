@@ -3,7 +3,6 @@ import {
 	ChevronRightIcon,
 	ExitIcon,
 	HomeIcon,
-	MagicWandIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -44,13 +43,6 @@ export function AppToolbar({ isSidebarOpen, setIsSidebarOpen }: AppToolbarProps)
 					<div>
 						<QuickNoteSlideOver action="/notes/new" />
 					</div>
-				</Tooltip>
-				<Tooltip content={"Generate note.."}>
-					<Form>
-						<Button type="submit" variant="outline" size="icon-sm">
-							<MagicWandIcon />
-						</Button>
-					</Form>
 				</Tooltip>
 				<Tooltip content={"Logout"}>
 					<Form method="POST" action="/logout" className="flex items-center">

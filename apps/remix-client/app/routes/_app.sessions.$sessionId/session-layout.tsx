@@ -23,8 +23,8 @@ export function SessionLayout() {
 	];
 	return (
 		<EntityView top margin menu={<SessionMenu sessionId={session.id} />}>
+      <NavigationLinks links={links} />
 			<EntityHeader title={session.name} />
-			<NavigationLinks links={links} />
 			<Outlet />
 		</EntityView>
 	);
