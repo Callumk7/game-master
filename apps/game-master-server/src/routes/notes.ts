@@ -29,15 +29,7 @@ import { eq } from "drizzle-orm";
 import { htmlToText } from "html-to-text";
 import { itemOrArrayToArray } from "~/utils";
 
-type Variables = {
-	intent: INTENT;
-};
-
-export const notesRoute = new Hono<{ Bindings: Bindings; Variables: Variables }>();
-
-notesRoute.get("/test", async (c) => {
-	return c.text("test passed");
-});
+export const notesRoute = new Hono<{ Bindings: Bindings }>();
 
 notesRoute.post("/", async (c) => {
 	const newNoteData = await zx.parseForm(

@@ -34,7 +34,7 @@ export function NoteMenu({
 					{isEditing ? "Save" : "Edit"}
 				</MenuItem>
 				<SubmenuTrigger>
-					<MenuItem>
+					<MenuItem isDisabled={folders.length === 0}>
 						<div className="w-full flex items-center justify-between">
 							<span>Move to Folder</span>
 							<ArrowRightIcon />

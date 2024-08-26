@@ -10,15 +10,16 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
-		"@libsql/client": "^0.5.6",
+		"@libsql/client": "^0.7.0",
 		"callum-util": "^1.2.1",
-		"drizzle-orm": "^0.30.4",
+		"drizzle-orm": "^0.32.1",
 		"drizzle-zod": "^0.5.1",
 		"http-status-codes": "^2.3.0",
-		"zod": "^3.22.4"
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.6.1",
-		"drizzle-kit": "^0.20.17"
+		"@biomejs/biome": "^1.8.3",
+		"@types/node": "^20.14.12",
+		"drizzle-kit": "^0.23.0"
 	}
 }
