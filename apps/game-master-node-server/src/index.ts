@@ -1,5 +1,7 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { db } from "@repo/db-new";
+
 
 const app = new Hono()
 
@@ -27,10 +29,6 @@ const userRoute = new Hono()
 userRoute.get("/", (c) => c.text("This is the user route, please use the correct endpoint"))
 
 userRoute.get("/:userId", async (c) => {
-	// validate request shape
-
-	// access correct user data
-	// return user data
 })
 
 
