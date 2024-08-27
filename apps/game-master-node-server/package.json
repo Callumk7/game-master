@@ -5,12 +5,13 @@
 		"dev": "tsx watch src/index.ts",
 		"test": "vitest",
 		"build": "tsc",
-		"start": "node dist/index.js"
+		"start": "node --env-file=.env dist/src/index.js"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.12.1",
-		"hono": "^4.5.9",
-		"@repo/db-new": "workspace:*"
+		"@repo/db-new": "workspace:*",
+		"drizzle-orm": "^0.33.0",
+		"hono": "^4.5.9"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
