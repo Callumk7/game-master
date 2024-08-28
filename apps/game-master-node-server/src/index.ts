@@ -22,8 +22,10 @@ app.use("*", async (c, next) => {
 	if (c.req.method === "GET") {
 		return next();
 	}
+
 	const originHeader = c.req.header("Origin") ?? null;
 	const hostHeader = c.req.header("Host") ?? null;
+
 	if (
 		!originHeader ||
 		!hostHeader ||
@@ -34,6 +36,7 @@ app.use("*", async (c, next) => {
 	return next();
 });
 
+// Set User and Session from request cookie 
 app.use("*", async (c, next) => {
 	const sessionId = lucia.readSessionCookie(c.req.header("Cookie") ?? "");
 	if (!sessionId) {
@@ -43,18 +46,22 @@ app.use("*", async (c, next) => {
 	}
 
 	const { session, user } = await lucia.validateSession(sessionId);
+
 	if (session?.fresh) {
 		c.header("Set-Cookie", lucia.createSessionCookie(session.id).serialize(), {
 			append: true,
 		});
 	}
+
 	if (!session) {
 		c.header("Set-Cookie", lucia.createBlankSessionCookie().serialize(), {
 			append: true,
 		});
 	}
+
 	c.set("session", session);
 	c.set("user", user);
+
 	return next();
 });
 
