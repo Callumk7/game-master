@@ -1,13 +1,13 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
-import { verifyRequestOrigin } from 'lucia';
-import { lucia } from './features/auth';
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { verifyRequestOrigin } from "lucia";
+import { lucia } from "./features/auth";
 
 import type { Env } from "hono";
 import type { User, Session } from "lucia";
-import { renderHTMLTemplate } from './lib/html';
-import { loginRouter } from './features/login/route';
-import { signupRouter } from './features/signup/route';
+import { renderHTMLTemplate } from "./lib/html";
+import { loginRouter } from "./features/login/route";
+import { signupRouter } from "./features/signup/route";
 
 export interface Context extends Env {
 	Variables: {
@@ -16,7 +16,7 @@ export interface Context extends Env {
 	};
 }
 
-const app = new Hono<Context>()
+const app = new Hono<Context>();
 
 app.use("*", async (c, next) => {
 	if (c.req.method === "GET") {
@@ -24,7 +24,11 @@ app.use("*", async (c, next) => {
 	}
 	const originHeader = c.req.header("Origin") ?? null;
 	const hostHeader = c.req.header("Host") ?? null;
-	if (!originHeader || !hostHeader || !verifyRequestOrigin(originHeader, [hostHeader])) {
+	if (
+		!originHeader ||
+		!hostHeader ||
+		!verifyRequestOrigin(originHeader, [hostHeader])
+	) {
 		return c.body(null, 403);
 	}
 	return next();
@@ -39,11 +43,15 @@ app.use("*", async (c, next) => {
 	}
 
 	const { session, user } = await lucia.validateSession(sessionId);
-	if (session && session.fresh) {
-		c.header("Set-Cookie", lucia.createSessionCookie(session.id).serialize(), { append: true });
+	if (session?.fresh) {
+		c.header("Set-Cookie", lucia.createSessionCookie(session.id).serialize(), {
+			append: true,
+		});
 	}
 	if (!session) {
-		c.header("Set-Cookie", lucia.createBlankSessionCookie().serialize(), { append: true });
+		c.header("Set-Cookie", lucia.createBlankSessionCookie().serialize(), {
+			append: true,
+		});
 	}
 	c.set("session", session);
 	c.set("user", user);
@@ -53,26 +61,26 @@ app.use("*", async (c, next) => {
 app.get("/", async (c) => {
 	const user = c.get("user");
 	if (!user) {
-		return c.redirect("/login")
+		return c.redirect("/login");
 	}
 
 	const html = await renderHTMLTemplate("src/index.template.html", {
 		email: user.email,
-		user_id: user.id
+		user_id: user.id,
 	});
 
 	return c.html(html, 200);
-})
+});
 
 app.route("/login", loginRouter);
 app.route("/signup", signupRouter);
 
-const port = 3000
-console.log(`Server is running on port ${port}`)
+const port = 3000;
+console.log(`Server is running on port ${port}`);
 
 serve({
 	fetch: app.fetch,
-	port
-})
+	port,
+});
 
 export default app;

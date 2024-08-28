@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { users } from "~/db/schema/users";
-import { Context } from "~/index";
+import type { Context } from "~/index";
 import { lucia } from "../auth";
 import { renderHTMLTemplate } from "~/lib/html";
 
