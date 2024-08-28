@@ -1,7 +1,7 @@
 import { Lucia } from "lucia";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { db } from "../db";
-import { sessions, users } from "../db/schema/users";
+import { db } from "~/db";
+import { DatabaseUser, sessions, users } from "~/db/schema/users";
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users)
 
@@ -10,11 +10,17 @@ export const lucia = new Lucia(adapter, {
 		attributes: {
 			secure: process.env.NODE_ENV === "production"
 		}
+	},
+	getUserAttributes: (attributes) => {
+		return {
+			email: attributes.email
+		}
 	}
 })
 
 declare module "lucia" {
 	interface Register {
-		Lucia: typeof lucia
+		Lucia: typeof lucia;
+		DatabaseUserAttributes: Omit<DatabaseUser, "id">;
 	}
 }
