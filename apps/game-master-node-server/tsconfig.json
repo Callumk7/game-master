@@ -1,12 +1,19 @@
 {
+	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
-		"target": "ESNext",
+		"esModuleInterop": true,
+		"target": "ES2022",
+		"verbatimModuleSyntax": true,
+		"allowJs": true,
+		"resolveJsonModule": true,
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
+		"moduleDetection": "force",
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
-		"outDir": "dist",
+		"noUncheckedIndexedAccess": true,
 		"skipLibCheck": true,
+		"noEmit": true,
 		"types": [
 			"node"
 		],
