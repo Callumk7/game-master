@@ -128,6 +128,55 @@ importers:
         specifier: ^3.67.0
         version: 3.67.0(@cloudflare/workers-types@4.20240725.0)
 
+  apps/gm-client-hono-prototype:
+    dependencies:
+      '@remix-run/node':
+        specifier: ^2.11.2
+        version: 2.11.2(typescript@5.5.4)
+      '@remix-run/react':
+        specifier: ^2.11.2
+        version: 2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
+      '@remix-run/serve':
+        specifier: ^2.11.2
+        version: 2.11.2(typescript@5.5.4)
+      isbot:
+        specifier: ^4.1.0
+        version: 4.4.0
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@remix-run/dev':
+        specifier: ^2.11.2
+        version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
+      '@types/react':
+        specifier: ^18.2.20
+        version: 18.3.4
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.0
+      autoprefixer:
+        specifier: ^10.4.19
+        version: 10.4.19(postcss@8.4.41)
+      postcss:
+        specifier: ^8.4.38
+        version: 8.4.41
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.10(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))
+      typescript:
+        specifier: ^5.1.6
+        version: 5.5.4
+      vite:
+        specifier: ^5.1.0
+        version: 5.3.5(@types/node@22.5.0)(lightningcss@1.25.1)
+      vite-tsconfig-paths:
+        specifier: ^4.2.1
+        version: 4.3.2(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))
+
   apps/gm-client-v2:
     dependencies:
       '@remix-run/express':
@@ -166,7 +215,7 @@ importers:
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.11.2
-        version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
+        version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
       '@types/compression':
         specifier: ^1.7.5
         version: 1.7.5
@@ -335,7 +384,7 @@ importers:
         version: 4.20240725.0
       '@remix-run/dev':
         specifier: ^2.10.3
-        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
+        version: 2.10.3(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
       '@tailwindcss/typography':
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.7(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4)))
@@ -3042,6 +3091,11 @@ packages:
   '@remix-run/router@1.19.1':
     resolution: {integrity: sha512-S45oynt/WH19bHbIXjtli6QmwNYvaz+vtnubvNpNDvUOoA/OWh6j1OikIP3G+v5GHdxyC6EXoChG3HgYGEUfcg==}
     engines: {node: '>=14.0.0'}
+
+  '@remix-run/serve@2.11.2':
+    resolution: {integrity: sha512-f1ETbCAlkSO3kg1zcQyLVHxI2r1TXqV2nfPgX/5+7QmA1dEHJD3OhvSmbvopwSMSfi1jzuyRbJo04yK4aJ8ztg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   '@remix-run/server-runtime@2.10.3':
     resolution: {integrity: sha512-vUl5jONUI6Lj0ICg9FSRFhoPzQdZ/7dpT1m7ID13DF5BEeF3t/9uCJS61XXWgQ/JEu7YRiwvZiwSRTrgM7zeWw==}
@@ -9870,7 +9924,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.4
 
-  '@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))':
+  '@remix-run/dev@2.10.3(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))':
     dependencies:
       '@babel/core': 7.24.9
       '@babel/generator': 7.24.10
@@ -9912,10 +9966,10 @@ snapshots:
       picocolors: 1.0.1
       picomatch: 2.3.1
       pidtree: 0.6.0
-      postcss: 8.4.40
-      postcss-discard-duplicates: 5.1.0(postcss@8.4.40)
-      postcss-load-config: 4.0.2(postcss@8.4.40)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))
-      postcss-modules: 6.0.0(postcss@8.4.40)
+      postcss: 8.4.41
+      postcss-discard-duplicates: 5.1.0(postcss@8.4.41)
+      postcss-load-config: 4.0.2(postcss@8.4.41)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))
+      postcss-modules: 6.0.0(postcss@8.4.41)
       prettier: 2.8.8
       pretty-ms: 7.0.1
       react-refresh: 0.14.2
@@ -9927,6 +9981,7 @@ snapshots:
       tsconfig-paths: 4.2.0
       ws: 7.5.10
     optionalDependencies:
+      '@remix-run/serve': 2.11.2(typescript@5.5.4)
       typescript: 5.5.4
       vite: 5.3.5(@types/node@22.5.0)(lightningcss@1.25.1)
       wrangler: 3.67.0(@cloudflare/workers-types@4.20240725.0)
@@ -9945,7 +10000,7 @@ snapshots:
       - ts-node
       - utf-8-validate
 
-  '@remix-run/dev@2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))':
+  '@remix-run/dev@2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.0)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.0)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))':
     dependencies:
       '@babel/core': 7.24.9
       '@babel/generator': 7.24.10
@@ -10002,6 +10057,7 @@ snapshots:
       tsconfig-paths: 4.2.0
       ws: 7.5.10
     optionalDependencies:
+      '@remix-run/serve': 2.11.2(typescript@5.5.4)
       typescript: 5.5.4
       vite: 5.3.5(@types/node@22.5.0)(lightningcss@1.25.1)
       wrangler: 3.67.0(@cloudflare/workers-types@4.20240725.0)
@@ -10078,6 +10134,20 @@ snapshots:
   '@remix-run/router@1.18.0': {}
 
   '@remix-run/router@1.19.1': {}
+
+  '@remix-run/serve@2.11.2(typescript@5.5.4)':
+    dependencies:
+      '@remix-run/express': 2.11.2(express@4.19.2)(typescript@5.5.4)
+      '@remix-run/node': 2.11.2(typescript@5.5.4)
+      chokidar: 3.6.0
+      compression: 1.7.4
+      express: 4.19.2
+      get-port: 5.1.1
+      morgan: 1.10.0
+      source-map-support: 0.5.21
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   '@remix-run/server-runtime@2.10.3(typescript@5.5.4)':
     dependencies:
@@ -12267,6 +12337,10 @@ snapshots:
     dependencies:
       postcss: 8.4.40
 
+  icss-utils@5.1.0(postcss@8.4.41):
+    dependencies:
+      postcss: 8.4.41
+
   ieee754@1.2.1: {}
 
   imurmurhash@0.1.4: {}
@@ -13311,6 +13385,10 @@ snapshots:
     dependencies:
       postcss: 8.4.40
 
+  postcss-discard-duplicates@5.1.0(postcss@8.4.41):
+    dependencies:
+      postcss: 8.4.41
+
   postcss-import@15.1.0(postcss@8.4.40):
     dependencies:
       postcss: 8.4.40
@@ -13355,10 +13433,21 @@ snapshots:
     dependencies:
       postcss: 8.4.40
 
+  postcss-modules-extract-imports@3.1.0(postcss@8.4.41):
+    dependencies:
+      postcss: 8.4.41
+
   postcss-modules-local-by-default@4.0.5(postcss@8.4.40):
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.40)
       postcss: 8.4.40
+      postcss-selector-parser: 6.1.1
+      postcss-value-parser: 4.2.0
+
+  postcss-modules-local-by-default@4.0.5(postcss@8.4.41):
+    dependencies:
+      icss-utils: 5.1.0(postcss@8.4.41)
+      postcss: 8.4.41
       postcss-selector-parser: 6.1.1
       postcss-value-parser: 4.2.0
 
@@ -13367,10 +13456,20 @@ snapshots:
       postcss: 8.4.40
       postcss-selector-parser: 6.1.1
 
+  postcss-modules-scope@3.2.0(postcss@8.4.41):
+    dependencies:
+      postcss: 8.4.41
+      postcss-selector-parser: 6.1.1
+
   postcss-modules-values@4.0.0(postcss@8.4.40):
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.40)
       postcss: 8.4.40
+
+  postcss-modules-values@4.0.0(postcss@8.4.41):
+    dependencies:
+      icss-utils: 5.1.0(postcss@8.4.41)
+      postcss: 8.4.41
 
   postcss-modules@6.0.0(postcss@8.4.40):
     dependencies:
@@ -13382,6 +13481,18 @@ snapshots:
       postcss-modules-local-by-default: 4.0.5(postcss@8.4.40)
       postcss-modules-scope: 3.2.0(postcss@8.4.40)
       postcss-modules-values: 4.0.0(postcss@8.4.40)
+      string-hash: 1.1.3
+
+  postcss-modules@6.0.0(postcss@8.4.41):
+    dependencies:
+      generic-names: 4.0.0
+      icss-utils: 5.1.0(postcss@8.4.41)
+      lodash.camelcase: 4.3.0
+      postcss: 8.4.41
+      postcss-modules-extract-imports: 3.1.0(postcss@8.4.41)
+      postcss-modules-local-by-default: 4.0.5(postcss@8.4.41)
+      postcss-modules-scope: 3.2.0(postcss@8.4.41)
+      postcss-modules-values: 4.0.0(postcss@8.4.41)
       string-hash: 1.1.3
 
   postcss-nested@6.2.0(postcss@8.4.40):
