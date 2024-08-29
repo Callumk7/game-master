@@ -14,7 +14,7 @@
 				"noDangerouslySetInnerHtml": "warn"
 			},
 			"style": {
-				"noNonNullAssertion": "warn"
+				"noNonNullAssertion": "off"
 			},
 			"complexity": {
 				"noForEach": "off"

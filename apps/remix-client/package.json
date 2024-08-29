@@ -7,7 +7,6 @@
 		"build": "remix vite:build",
 		"deploy": "wrangler pages deploy ./build/client",
 		"dev": "remix vite:dev",
-		"lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
 		"start": "wrangler pages dev ./build/client",
 		"typecheck": "tsc",
 		"typegen": "wrangler types"
@@ -57,7 +56,6 @@
 		"zustand": "^4.5.4"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
 		"@cloudflare/workers-types": "^4.20240725.0",
 		"@remix-run/dev": "^2.10.3",
 		"@tailwindcss/typography": "^0.5.13",

@@ -23,7 +23,6 @@
 		"zodix": "^0.4.4"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
 		"@cloudflare/workers-types": "^4.20240725.0",
 		"@types/html-to-text": "^9.0.4",
 		"drizzle-kit": "^0.23.0",
