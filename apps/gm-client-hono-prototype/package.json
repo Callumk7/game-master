@@ -9,8 +9,6 @@
     "start": "NODE_ENV=production node ./build/server/index.js"
   },
   "dependencies": {
-    "@lucia-auth/adapter-drizzle": "^1.1.0",
-    "@node-rs/argon2": "^1.8.3",
     "@remix-run/node": "^2.11.2",
     "@remix-run/react": "^2.11.2",
     "@remix-run/serve": "^2.11.2",
@@ -18,7 +16,6 @@
     "drizzle-zod": "^0.5.1",
     "hono": "^4.5.10",
     "isbot": "^4.1.0",
-    "lucia": "^3.2.0",
     "postgres": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
