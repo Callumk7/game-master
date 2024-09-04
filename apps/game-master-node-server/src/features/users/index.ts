@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "~/db";
+import { games } from "~/db/schema/games";
 import { users } from "~/db/schema/users";
 import { handleDatabaseError, handleNotFound, returnData, validateOrThrowError } from "~/lib/http-helpers";
 
@@ -60,4 +61,9 @@ usersRoute.post("/", async (c) => {
 
 usersRoute.get("/:userId/games", async (c) => {
 	const userId = c.req.param("userId");
+	try {
+		const result = await db.select().from(games).where(eq(games.ownerId, userId));
+	} catch (error) {
+		
+	}
 });
