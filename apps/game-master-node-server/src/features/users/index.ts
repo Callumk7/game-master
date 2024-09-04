@@ -1,13 +1,32 @@
-import { zValidator } from "@hono/zod-validator";
 import { uuidv4 } from "callum-util";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "~/db";
 import { users } from "~/db/schema/users";
+import { handleDatabaseError, handleNotFound, returnData, validateOrThrowError } from "~/lib/http-helpers";
 
 export const usersRoute = new Hono();
 
-export const newUserSchema = z.object({
+// TODO: write tests
+usersRoute.get("/:userId", async (c) => {
+	const userId = c.req.param("userId");
+	try {
+		const result = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, userId))
+			.then((rows) => rows[0]);
+		if (!result) {
+			return handleNotFound(c);
+		}
+		return returnData(c, result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+const newUserSchema = z.object({
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
 	username: z.string(),
@@ -15,10 +34,8 @@ export const newUserSchema = z.object({
 	passwordHash: z.string(),
 });
 
-// TODO: Get a single user
-
-usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
-	const data = c.req.valid("json");
+usersRoute.post("/", async (c) => {
+	const data = await validateOrThrowError(newUserSchema, c);
 	try {
 		const newUserData = await db
 			.insert(users)
@@ -32,10 +49,8 @@ usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
 		if (newUserData) {
 			return c.json(newUserData, 201);
 		}
-		
 	} catch (error) {
-		// TODO: How are we going to handle errors?
-		console.error(error);
+		return handleDatabaseError(c, error);
 	}
 });
 
@@ -45,5 +60,4 @@ usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
 
 usersRoute.get("/:userId/games", async (c) => {
 	const userId = c.req.param("userId");
-
-})
+});
