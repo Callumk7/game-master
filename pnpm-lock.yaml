@@ -26,12 +26,6 @@ importers:
       '@remix-run/serve':
         specifier: ^2.11.2
         version: 2.11.2(typescript@5.5.4)
-      callum-util:
-        specifier: ^2.0.1
-        version: 2.0.1
-      hono:
-        specifier: ^4.5.11
-        version: 4.5.11
       isbot:
         specifier: ^4.1.0
         version: 4.4.0
@@ -41,21 +35,6 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
-      react-router-hono-server:
-        specifier: ^0.1.0
-        version: 0.1.0(@remix-run/node@2.11.2(typescript@5.5.4))(hono@4.5.11)(remix-hono@0.0.16(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4))(typescript@5.5.4)(zod@3.23.8))(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1))
-      remix-hono:
-        specifier: ^0.0.16
-        version: 0.0.16(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4))(typescript@5.5.4)(zod@3.23.8)
-      remix-typedjson:
-        specifier: ^0.4.1
-        version: 0.4.1(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.11.2(typescript@5.5.4))(react@18.3.1)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-      zodix:
-        specifier: ^0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.11.2(typescript@5.5.4))(zod@3.23.8)
     devDependencies:
       '@remix-run/dev':
         specifier: ^2.11.2
@@ -1754,12 +1733,6 @@ packages:
     resolution: {integrity: sha512-C9l+08O8xtXB7Ppmy8DjBFH1hYji7JKzsU32Yt1poIIbdPp6S7aOI8IldDHD9YFJ55lv2c21ovNrmxatlHfhAg==}
     engines: {node: '>=18.14.1'}
 
-  '@hono/vite-dev-server@0.13.1':
-    resolution: {integrity: sha512-AK0yQkGwoQvcbf0MeBDDslVnVvzlKjAT00Z2A4Oqyh0RYhLQyCT1aSJzz3eZj7tYytG0B6EGt92DjrkB0tsy1A==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: '*'
-
   '@hono/zod-validator@0.2.2':
     resolution: {integrity: sha512-dSDxaPV70Py8wuIU2QNpoVEIOSzSXZ/6/B/h4xA7eOMz7+AarKTSGV8E6QwrdcCbBLkpqfJ4Q2TmBO0eP1tCBQ==}
     peerDependencies:
@@ -2805,11 +2778,6 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@rollup/rollup-linux-arm64-gnu@4.18.1':
-    resolution: {integrity: sha512-8mwmGD668m8WaGbthrEYZ9CBmPug2QPGWxhJxh/vCgBjro5o96gL04WLlg5BA233OCWLqERy4YUzX3bJGXaJgQ==}
-    cpu: [arm64]
-    os: [linux]
-
   '@rollup/rollup-linux-arm64-gnu@4.19.0':
     resolution: {integrity: sha512-0EkX2HYPkSADo9cfeGFoQ7R0/wTKb7q6DdwI4Yn/ULFE1wuRRCHybxpl2goQrx4c/yzK3I8OlgtBu4xvted0ug==}
     cpu: [arm64]
@@ -2845,11 +2813,6 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@rollup/rollup-win32-arm64-msvc@4.18.1':
-    resolution: {integrity: sha512-W2ZNI323O/8pJdBGil1oCauuCzmVd9lDmWBBqxYZcOqWD6aWqJtVBQ1dFrF4dYpZPks6F+xCZHfzG5hYlSHZ6g==}
-    cpu: [arm64]
-    os: [win32]
-
   '@rollup/rollup-win32-arm64-msvc@4.19.0':
     resolution: {integrity: sha512-HxDMKIhmcguGTiP5TsLNolwBUK3nGGUEoV/BO9ldUBoMLBssvh4J0X8pf11i1fTV7WShWItB1bKAKjX4RQeYmg==}
     cpu: [arm64]
@@ -2858,11 +2821,6 @@ packages:
   '@rollup/rollup-win32-ia32-msvc@4.19.0':
     resolution: {integrity: sha512-xItlIAZZaiG/u0wooGzRsx11rokP4qyc/79LkAOdznGRAbOFc+SfEdfUOszG1odsHNgwippUJavag/+W/Etc6Q==}
     cpu: [ia32]
-    os: [win32]
-
-  '@rollup/rollup-win32-x64-msvc@4.18.1':
-    resolution: {integrity: sha512-yjk2MAkQmoaPYCSu35RLJ62+dz358nE83VfTePJRp8CG7aMg25mEJYpXFiD+NcevhX8LxD5OP5tktPXnXN7GDw==}
-    cpu: [x64]
     os: [win32]
 
   '@rollup/rollup-win32-x64-msvc@4.19.0':
@@ -4517,10 +4475,6 @@ packages:
     resolution: {integrity: sha512-6q8AugoWG5wlrjdGG8OFFiqEsPlPGjODjUik48sEJeko4Tae1UsLS2vUiYHLEJx1gJvOZa4BWkQC+urwDmkEvQ==}
     engines: {node: '>=16.0.0'}
 
-  hono@4.5.11:
-    resolution: {integrity: sha512-62FcjLPtjAFwISVBUshryl+vbHOjg8rE4uIK/dxyR8GpLztunZpwFmfEvmJCUI7xoGh/Sr3CGCDPCmYxVw7wUQ==}
-    engines: {node: '>=16.0.0'}
-
   hono@4.5.9:
     resolution: {integrity: sha512-zz8ktqMDRrZETjxBrv8C5PQRFbrTRCLNVAjD1SNQyOzv4VjmX68Uxw83xQ6oxdAB60HiWnGEatiKA8V3SZLDkQ==}
     engines: {node: '>=16.0.0'}
@@ -4806,7 +4760,6 @@ packages:
 
   libsql@0.3.19:
     resolution: {integrity: sha512-Aj5cQ5uk/6fHdmeW0TiXK42FqUlwx7ytmMLPSaUQPin5HKKKuUPD62MAbN4OEweGBBI7q1BekoEN4gPUEL6MZA==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lightningcss-darwin-arm64@1.25.1:
@@ -5565,10 +5518,6 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  pretty-cache-header@1.0.0:
-    resolution: {integrity: sha512-xtXazslu25CdnGnUkByU1RoOjK55TqwatJkjjJLg5ZAdz2Lngko/mmaUgeET36P2GMlNwh3fdM7FWBO717pNcw==}
-    engines: {node: '>=12.13'}
-
   pretty-ms@7.0.1:
     resolution: {integrity: sha512-973driJZvxiGOQ5ONsFhOF/DtzPMOMtgC11kCpUrPGMTgqp2q/1gwzCquocrN33is0VZ5GFHXZYMM9l6h67v2Q==}
     engines: {node: '>=10'}
@@ -5726,14 +5675,6 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  react-router-hono-server@0.1.0:
-    resolution: {integrity: sha512-kxEczgoER4ci1XxMtBhcKMGLbScdcH2TFur7kMcBixHrB9CfNX4GkwLFGvact6Z1GxhtHMvTM5af7xFUljOJ2g==}
-    peerDependencies:
-      '@remix-run/node': ^2.0.0
-      hono: ^4.5.3
-      remix-hono: ^0.0.16
-      vite: ^5.0.0
-
   react-router@6.25.0:
     resolution: {integrity: sha512-bziKjCcDbcxgWS9WlWFcQIVZ2vJHnCP6DGpQDT0l+0PFDasfJKgzf9CM22eTyhFsZkjk8ApCdKjJwKtzqH80jQ==}
     engines: {node: '>=14.0.0'}
@@ -5801,23 +5742,6 @@ packages:
 
   remark-rehype@10.1.0:
     resolution: {integrity: sha512-EFmR5zppdBp0WQeDVZ/b66CWJipB2q2VLNFMabzDSGR66Z2fQii83G5gTBbgGEnEEA0QRussvrFHxk1HWGJskw==}
-
-  remix-hono@0.0.16:
-    resolution: {integrity: sha512-IPooI2E0eSFRV9wAgTzpsklSoOyij6Nsk6ANIugGhD9vYlovbYb2BT+siz++sLzWseZSPEtIzx/LBel203jBfQ==}
-    peerDependencies:
-      '@remix-run/cloudflare': ^2.0.0
-      i18next: ^23.0.0
-      remix-i18next: ^6.0.0
-      zod: ^3.0.0
-    peerDependenciesMeta:
-      '@remix-run/cloudflare':
-        optional: true
-      i18next:
-        optional: true
-      remix-i18next:
-        optional: true
-      zod:
-        optional: true
 
   remix-typedjson@0.4.1:
     resolution: {integrity: sha512-AL6LdNajqce1Exy6aB1bD6GYMk90S6H31e8kDCi6jLgBi4K82Ph604lqGGzalswaPPYckYK+NZzgvhWEY7JCDw==}
@@ -6196,10 +6120,6 @@ packages:
 
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
-
-  timestring@6.0.0:
-    resolution: {integrity: sha512-wMctrWD2HZZLuIlchlkE2dfXJh7J2KDI9Dwl+2abPYg0mswQHfOAyQW3jJg1pY5VfttSINZuKcXoB3FGypVklA==}
-    engines: {node: '>=8'}
 
   tinybench@2.8.0:
     resolution: {integrity: sha512-1/eK7zUnIklz4JUUlL+658n58XO2hHLQfSk1Zf2LKieUjxidN16eKFEoDEfjHc3ohofSSqK3X5yO6VGb6iW8Lw==}
@@ -7961,17 +7881,6 @@ snapshots:
 
   '@hono/node-server@1.12.1': {}
 
-  '@hono/vite-dev-server@0.13.1(hono@4.5.11)':
-    dependencies:
-      '@hono/node-server': 1.12.1
-      hono: 4.5.11
-      miniflare: 3.20240718.0
-      minimatch: 9.0.5
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
   '@hono/zod-validator@0.2.2(hono@4.5.1)(zod@3.23.8)':
     dependencies:
       hono: 4.5.1
@@ -9634,9 +9543,6 @@ snapshots:
   '@rollup/rollup-linux-arm-musleabihf@4.19.0':
     optional: true
 
-  '@rollup/rollup-linux-arm64-gnu@4.18.1':
-    optional: true
-
   '@rollup/rollup-linux-arm64-gnu@4.19.0':
     optional: true
 
@@ -9658,16 +9564,10 @@ snapshots:
   '@rollup/rollup-linux-x64-musl@4.19.0':
     optional: true
 
-  '@rollup/rollup-win32-arm64-msvc@4.18.1':
-    optional: true
-
   '@rollup/rollup-win32-arm64-msvc@4.19.0':
     optional: true
 
   '@rollup/rollup-win32-ia32-msvc@4.19.0':
-    optional: true
-
-  '@rollup/rollup-win32-x64-msvc@4.18.1':
     optional: true
 
   '@rollup/rollup-win32-x64-msvc@4.19.0':
@@ -11643,8 +11543,6 @@ snapshots:
 
   hono@4.5.1: {}
 
-  hono@4.5.11: {}
-
   hono@4.5.9: {}
 
   hosted-git-info@2.8.9: {}
@@ -12801,10 +12699,6 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  pretty-cache-header@1.0.0:
-    dependencies:
-      timestring: 6.0.0
-
   pretty-ms@7.0.1:
     dependencies:
       parse-ms: 2.1.0
@@ -13063,25 +12957,6 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-router: 6.26.1(react@18.3.1)
 
-  react-router-hono-server@0.1.0(@remix-run/node@2.11.2(typescript@5.5.4))(hono@4.5.11)(remix-hono@0.0.16(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4))(typescript@5.5.4)(zod@3.23.8))(vite@5.3.5(@types/node@22.5.0)(lightningcss@1.25.1)):
-    dependencies:
-      '@hono/node-server': 1.12.1
-      '@hono/vite-dev-server': 0.13.1(hono@4.5.11)
-      '@remix-run/node': 2.11.2(typescript@5.5.4)
-      hono: 4.5.11
-      remix-hono: 0.0.16(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4))(typescript@5.5.4)(zod@3.23.8)
-      vite: 5.3.5(@types/node@22.5.0)(lightningcss@1.25.1)
-    optionalDependencies:
-      '@rollup/rollup-linux-arm64-gnu': 4.18.1
-      '@rollup/rollup-linux-x64-gnu': 4.19.0
-      '@rollup/rollup-linux-x64-musl': 4.19.0
-      '@rollup/rollup-win32-arm64-msvc': 4.18.1
-      '@rollup/rollup-win32-x64-msvc': 4.18.1
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
   react-router@6.25.0(react@18.3.1):
     dependencies:
       '@remix-run/router': 1.18.0
@@ -13212,26 +13087,9 @@ snapshots:
       mdast-util-to-hast: 12.3.0
       unified: 10.1.2
 
-  remix-hono@0.0.16(@remix-run/cloudflare@2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4))(typescript@5.5.4)(zod@3.23.8):
-    dependencies:
-      '@remix-run/server-runtime': 2.11.2(typescript@5.5.4)
-      hono: 4.5.11
-      pretty-cache-header: 1.0.0
-    optionalDependencies:
-      '@remix-run/cloudflare': 2.10.3(@cloudflare/workers-types@4.20240725.0)(typescript@5.5.4)
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - typescript
-
   remix-typedjson@0.4.1(@remix-run/react@2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.11.2(typescript@5.5.4))(react@18.3.1):
     dependencies:
       '@remix-run/react': 2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
-      '@remix-run/server-runtime': 2.11.2(typescript@5.5.4)
-      react: 18.3.1
-
-  remix-typedjson@0.4.1(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.11.2(typescript@5.5.4))(react@18.3.1):
-    dependencies:
-      '@remix-run/react': 2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
       '@remix-run/server-runtime': 2.11.2(typescript@5.5.4)
       react: 18.3.1
 
@@ -13673,8 +13531,6 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
       xtend: 4.0.2
-
-  timestring@6.0.0: {}
 
   tinybench@2.8.0: {}
 
