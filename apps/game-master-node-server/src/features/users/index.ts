@@ -15,6 +15,8 @@ export const newUserSchema = z.object({
 	passwordHash: z.string(),
 });
 
+// TODO: Get a single user
+
 usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
 	const data = c.req.valid("json");
 	try {
@@ -37,3 +39,11 @@ usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
 	}
 });
 
+// TODO: Delete users
+
+// TODO: Edit users
+
+usersRoute.get("/:userId/games", async (c) => {
+	const userId = c.req.param("userId");
+
+})
