@@ -36,3 +36,4 @@ usersRoute.post("/", zValidator("json", newUserSchema), async (c) => {
 		console.error(error);
 	}
 });
+
