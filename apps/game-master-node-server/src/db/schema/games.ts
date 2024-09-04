@@ -2,6 +2,8 @@ import { boolean, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-co
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { notes } from "./notes";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 export const games = pgTable("games", {
 	id: text("id").primaryKey().notNull(),
@@ -21,6 +23,12 @@ export const gamesRelations = relations(games, ({ one, many }) => ({
 	members: many(usersToGames),
 	notes: many(notes),
 }));
+
+export const databaseSelectGameSchema = createSelectSchema(games);
+export type DatabaseGame = z.infer<typeof databaseSelectGameSchema>;
+
+export const databaseInsertGameSchema = createInsertSchema(games);
+export type InsertDatabaseGame = z.infer<typeof databaseInsertGameSchema>;
 
 export const usersToGames = pgTable(
 	"users_to_games",
