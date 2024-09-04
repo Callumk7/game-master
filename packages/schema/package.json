@@ -1,0 +1,14 @@
+{
+	"name": "@repo/schemas",
+	"private": true,
+	"version": "0.0.1",
+	"description": "Zod schemas to be shared between client app and server app",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+		"zod": "^3.23.8"
+	}
+}
