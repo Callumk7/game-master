@@ -5,6 +5,7 @@ import type { ZodSchema } from "zod";
 export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) {
 	const result = schema.safeParse(await c.req.json());
 	if (!result.success) {
+		console.error(result.error.message);
 		throw new HTTPException(400, { message: result.error.message });
 	}
 

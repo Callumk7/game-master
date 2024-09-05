@@ -1,24 +1,24 @@
-import { zValidator } from "@hono/zod-validator";
 import { uuidv4 } from "callum-util";
 import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "~/db";
 import { games, type InsertDatabaseGame } from "~/db/schema/games";
+import { handleDatabaseError, validateOrThrowError } from "~/lib/http-helpers";
 
 export const gamesRoute = new Hono();
 
-export const createGameSchema = z.object({
+const createGameSchema = z.object({
 	name: z.string(),
-	creatorId: z.string(),
+	ownerId: z.string(),
 });
 
-gamesRoute.post("/", zValidator("json", createGameSchema), async (c) => {
-	const data = c.req.valid("json");
+gamesRoute.post("/", async (c) => {
+	const data = await validateOrThrowError(createGameSchema, c);
 
 	const newGame: InsertDatabaseGame = {
 		id: generateGameId(),
 		name: data.name,
-		ownerId: data.creatorId,
+		ownerId: data.ownerId,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
@@ -27,8 +27,7 @@ gamesRoute.post("/", zValidator("json", createGameSchema), async (c) => {
 		await db.insert(games).values(newGame);
 		return c.json({ success: true, newGame }, 201);
 	} catch (error) {
-		console.error(error);
-		return c.json({success: false, error: error}, 401);
+		return handleDatabaseError(c, error);
 	}
 });
 

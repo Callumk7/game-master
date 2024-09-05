@@ -1,20 +1,40 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import {
+	Outlet,
+	json,
+	useHref,
+	useLoaderData,
+	useNavigate,
+	useRouteLoaderData,
+} from "@remix-run/react";
+import { RouterProvider } from "react-aria-components";
+import { NavigationBar } from "~/components/navigation";
 import { validateUser } from "~/lib/auth.server";
+import { getUserDetails } from "./queries.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await validateUser(request);
-  return { userId };
+	const userId = await validateUser(request);
+	const user = await getUserDetails(userId);
+	return json({ user });
 };
 
 export default function AppLayout() {
-  const { userId } = useLoaderData<typeof loader>();
-  return (
-    <div>
-      <div className="w-full p-4 bg-slate-400 text-slate-100">
-        <p>{userId}</p>
-      </div>
-      <Outlet />
-    </div>
-  );
+	const { user } = useLoaderData<typeof loader>();
+	const navigate = useNavigate();
+	return (
+		<RouterProvider navigate={navigate} useHref={useHref}>
+			<div>
+				<NavigationBar />
+				<Outlet />
+			</div>
+		</RouterProvider>
+	);
+}
+
+export function useAppData() {
+	const data = useRouteLoaderData<typeof loader>("routes/_app");
+	if (data === undefined) {
+		throw new Error("useAppData must be used within the _app route or its children");
+	}
+	return data;
 }
