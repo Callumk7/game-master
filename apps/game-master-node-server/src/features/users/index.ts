@@ -5,7 +5,12 @@ import { z } from "zod";
 import { db } from "~/db";
 import { games } from "~/db/schema/games";
 import { users } from "~/db/schema/users";
-import { handleDatabaseError, handleNotFound, returnData, validateOrThrowError } from "~/lib/http-helpers";
+import {
+	handleDatabaseError,
+	handleNotFound,
+	returnData,
+	validateOrThrowError,
+} from "~/lib/http-helpers";
 
 export const usersRoute = new Hono();
 
@@ -59,11 +64,12 @@ usersRoute.post("/", async (c) => {
 
 // TODO: Edit users
 
-usersRoute.get("/:userId/games", async (c) => {
+usersRoute.get("/:userId/games/owned", async (c) => {
 	const userId = c.req.param("userId");
 	try {
 		const result = await db.select().from(games).where(eq(games.ownerId, userId));
+		return c.json(result);
 	} catch (error) {
-		
+		return handleDatabaseError(c, error);
 	}
 });

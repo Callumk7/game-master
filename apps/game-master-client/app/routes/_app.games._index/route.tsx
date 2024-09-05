@@ -1,7 +1,8 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import { Button, Form, Input } from "react-aria-components";
-import { SERVER_URL } from "~/config";
+import type { CreateGameInput } from "types/games";
+import { client } from "~/lib/api";
 import { validateUser } from "~/lib/auth.server";
 
 // TODO: This is a skeleton route, come back to this
@@ -12,19 +13,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const form = await request.formData();
 	const name = form.get("name")?.toString();
 
-	const res = await fetch(`${SERVER_URL}/games`, {
-		method: "POST",
-		body: JSON.stringify({
-			name: name!,
-			ownerId: userId,
-		}),
-	});
+	const input: CreateGameInput = {
+		name: name!,
+		ownerId: userId,
+	};
 
-	if (!res.ok) {
-		console.log(res.status);
-		console.error("Something has gone wrong");
-		return { newGame: false };
-	}
+	const result = await client.games.createGame(input);
+
+	console.log(result);
 
 	return { newGame: true };
 };
