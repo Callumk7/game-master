@@ -63,4 +63,4 @@ export class SDK {
 }
 
 // Initialise service
-export const client = new SDK({ baseUrl: SERVER_URL, apiKey: "sec9sbet" });
+export const api = new SDK({ baseUrl: SERVER_URL, apiKey: "sec9sbet" });

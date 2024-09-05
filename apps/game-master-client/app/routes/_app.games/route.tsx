@@ -1,11 +1,11 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { client } from "~/lib/api";
+import { api } from "~/lib/api";
 import { validateUser } from "~/lib/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
-	const ownedGames = await client.games.getOwnedGames(userId);
+	const ownedGames = await api.games.getOwnedGames(userId);
 	return json({ ownedGames });
 };
 
