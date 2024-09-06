@@ -12,6 +12,9 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 		}
 		return result.data;
 	} catch (error) {
+		if (error instanceof HTTPException) {
+			throw error;
+		}
 		throw new HTTPException(400, { message: "Failed to parse JSON" });
 	}
 }
