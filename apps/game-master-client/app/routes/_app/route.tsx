@@ -21,15 +21,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function AppLayout() {
-	const { user } = useLoaderData<typeof loader>();
 	const navigate = useNavigate();
 	return (
 		<RouterProvider navigate={navigate} useHref={useHref}>
 			<div>
 				<NavigationBar />
-        <p>
-          {user.email}
-        </p>
 				<Outlet />
 			</div>
 		</RouterProvider>

@@ -33,6 +33,8 @@ export class Client {
 		});
 	}
 
+	// TODO: Add runtime type checking with zod to api calls
+
 	async get<T>(url: string, options?: Options): Promise<T> {
 		return this.ky.get(url, options).json<T>();
 	}
