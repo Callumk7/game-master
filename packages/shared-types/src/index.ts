@@ -20,3 +20,11 @@ export interface Game {
 	updatedAt: Date;
 	ownerId: Id;
 }
+
+export interface Note {
+	id: Id;
+	name: string;
+	createdAt: Date;
+	updatedAt: Date;
+	ownerId: Id;
+}
