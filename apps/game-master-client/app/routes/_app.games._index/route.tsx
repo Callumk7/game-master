@@ -20,8 +20,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 	const result = await api.games.createGame(input);
 
-	console.log(result);
-
 	return { newGame: true };
 };
 

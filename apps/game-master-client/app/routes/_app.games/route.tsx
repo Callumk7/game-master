@@ -1,5 +1,7 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link } from "~/components/navigation";
+import { ListBox, ListBoxItem } from "~/components/ui/list-box";
 import { api } from "~/lib/api";
 import { validateUser } from "~/lib/auth.server";
 
@@ -13,12 +15,9 @@ export default function GamesLayout() {
 	const { ownedGames } = useLoaderData<typeof loader>();
 	return (
 		<div>
-			<p>This is the games layout</p>
-			<div>
-				{ownedGames.map((game) => (
-					<p key={game.id}>{game.name}</p>
-				))}
-			</div>
+      <ListBox items={ownedGames} aria-label="Owned Games" selectionMode="single" className={"max-w-32"}>
+      {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+      </ListBox>
 			<Outlet />
 		</div>
 	);
