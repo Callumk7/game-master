@@ -1,4 +1,11 @@
-import { boolean, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { notes } from "./notes";
@@ -30,6 +37,8 @@ export type DatabaseGame = z.infer<typeof databaseSelectGameSchema>;
 export const databaseInsertGameSchema = createInsertSchema(games);
 export type InsertDatabaseGame = z.infer<typeof databaseInsertGameSchema>;
 
+export const roleEnum = pgEnum("role", ["admin", "dm", "player", "guest"]);
+
 export const usersToGames = pgTable(
 	"users_to_games",
 	{
@@ -40,6 +49,7 @@ export const usersToGames = pgTable(
 			.notNull()
 			.references(() => games.id),
 		isOwner: boolean("is_owner").notNull(),
+		role: roleEnum("role")
 	},
 	(t) => ({ pk: primaryKey({ columns: [t.userId, t.gameId] }) }),
 );
@@ -54,4 +64,3 @@ export const usersToGamesRelations = relations(usersToGames, ({ one, many }) => 
 		references: [games.id],
 	}),
 }));
-

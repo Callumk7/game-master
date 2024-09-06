@@ -1,7 +1,16 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { games } from "./games";
+
+export const noteTypeEnum = pgEnum("type", [
+	"note",
+	"location",
+	"character",
+	"faction",
+	"item",
+	"quest",
+]);
 
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
@@ -15,6 +24,7 @@ export const notes = pgTable("notes", {
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
 	gameId: text("game_id").references(() => games.id),
+	type: noteTypeEnum("type"),
 });
 
 export const notesRelations = relations(notes, ({ one, many }) => ({
@@ -24,8 +34,27 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 	}),
 	folder: one(folders, {
 		fields: [notes.folderId],
-		references: [folders.id]
-	})
+		references: [folders.id],
+	}),
+}));
+
+export const links = pgTable("links", {
+	fromId: text("from_id").notNull(),
+	toId: text("to_id").notNull(),
+	description: text("description"),
+});
+
+export const linksRelations = relations(links, ({ one, many }) => ({
+	from: one(notes, {
+		fields: [links.fromId],
+		references: [notes.id],
+		relationName: "from",
+	}),
+	to: one(notes, {
+		fields: [links.toId],
+		references: [notes.id],
+		relationName: "to",
+	}),
 }));
 
 export const folders = pgTable("folders", {

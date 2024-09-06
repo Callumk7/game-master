@@ -1,3 +1,4 @@
+import type { User } from "@repo/shared-types";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -8,7 +9,7 @@ import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
 	handleNotFound,
-	returnData,
+	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 
@@ -17,6 +18,7 @@ export const usersRoute = new Hono();
 // TODO: write tests
 usersRoute.get("/:userId", async (c) => {
 	const userId = c.req.param("userId");
+
 	try {
 		const result = await db
 			.select()
@@ -26,7 +28,8 @@ usersRoute.get("/:userId", async (c) => {
 		if (!result) {
 			return handleNotFound(c);
 		}
-		return returnData(c, result);
+		return successResponse(c, result);
+
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
