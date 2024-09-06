@@ -1,0 +1,49 @@
+{
+	"name": "game-master-client",
+	"private": true,
+	"sideEffects": false,
+	"type": "module",
+	"scripts": {
+		"build": "remix vite:build",
+		"dev": "remix vite:dev",
+		"start": "remix-serve ./build/server/index.js",
+		"typecheck": "tsc",
+		"test": "vitest"
+	},
+	"dependencies": {
+		"@node-rs/argon2": "^1.8.3",
+		"@remix-run/node": "^2.11.2",
+		"@remix-run/react": "^2.11.2",
+		"@remix-run/serve": "^2.11.2",
+		"callum-util": "^2.0.1",
+		"drizzle-orm": "^0.33.0",
+		"drizzle-zod": "^0.5.1",
+		"isbot": "^4.1.0",
+		"ky": "^1.5.0",
+		"postgres": "^3.4.4",
+		"react": "^18.2.0",
+		"react-aria-components": "^1.3.1",
+		"react-dom": "^18.2.0",
+		"remix-typedjson": "^0.4.1",
+		"zod": "^3.23.8",
+		"zodix": "^0.4.4"
+	},
+	"devDependencies": {
+		"@repo/shared-types": "workspace:*",
+		"@remix-run/dev": "^2.11.2",
+		"@types/react": "^18.2.20",
+		"@types/react-dom": "^18.2.7",
+		"autoprefixer": "^10.4.19",
+		"dotenv": "^16.4.5",
+		"msw": "^2.4.2",
+		"postcss": "^8.4.38",
+		"tailwindcss": "^3.4.4",
+		"typescript": "^5.1.6",
+		"vite": "^5.1.0",
+		"vite-tsconfig-paths": "^4.2.1",
+		"vitest": "2.0.4"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	}
+}

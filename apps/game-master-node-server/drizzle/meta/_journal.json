@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1724843055452,
-      "tag": "0000_volatile_machine_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1724852453667,
-      "tag": "0001_fancy_malcolm_colcord",
+      "when": 1725618770768,
+      "tag": "0000_clumsy_red_skull",
       "breakpoints": true
     }
   ]
