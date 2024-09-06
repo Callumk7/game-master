@@ -69,6 +69,9 @@ importers:
       '@remix-run/dev':
         specifier: ^2.11.2
         version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.4)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.4)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
+      '@repo/shared-types':
+        specifier: workspace:*
+        version: link:../../packages/shared-types
       '@types/react':
         specifier: ^18.2.20
         version: 18.3.4
@@ -136,6 +139,9 @@ importers:
       '@biomejs/biome':
         specifier: ^1.8.3
         version: 1.8.3
+      '@repo/shared-types':
+        specifier: workspace:*
+        version: link:../../packages/shared-types
       '@types/node':
         specifier: ^20.11.17
         version: 20.14.12
@@ -157,6 +163,9 @@ importers:
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
+      vite-tsconfig-paths:
+        specifier: ^5.0.1
+        version: 5.0.1(typescript@5.5.4)(vite@5.3.5(@types/node@20.14.12)(lightningcss@1.25.1))
       vitest:
         specifier: 2.0.4
         version: 2.0.4(@types/node@20.14.12)(lightningcss@1.25.1)
@@ -433,6 +442,12 @@ importers:
       zod:
         specifier: ^3.23.8
         version: 3.23.8
+
+  packages/shared-types:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.5.4
 
 packages:
 
@@ -6636,6 +6651,14 @@ packages:
 
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+
+  vite-tsconfig-paths@5.0.1:
+    resolution: {integrity: sha512-yqwv+LstU7NwPeNqajZzLEBVpUFU6Dugtb2P84FXuvaoYA+/70l9MHE+GYfYAycVyPSDYZ7mjOFuYBRqlEpTig==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -14354,6 +14377,17 @@ snapshots:
       tsconfck: 3.1.1(typescript@5.5.4)
     optionalDependencies:
       vite: 5.3.5(@types/node@22.5.4)(lightningcss@1.25.1)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  vite-tsconfig-paths@5.0.1(typescript@5.5.4)(vite@5.3.5(@types/node@20.14.12)(lightningcss@1.25.1)):
+    dependencies:
+      debug: 4.3.5
+      globrex: 0.1.2
+      tsconfck: 3.1.1(typescript@5.5.4)
+    optionalDependencies:
+      vite: 5.3.5(@types/node@20.14.12)(lightningcss@1.25.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
