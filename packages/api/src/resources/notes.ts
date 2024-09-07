@@ -1,5 +1,6 @@
-import { Id, Note } from "@repo/shared-types";
-import { Client } from ".";
+import type { Client } from "../client.js";
+import type { Id, ServerResponse } from "../types/index.js";
+import type { CreateNoteRequestBody, Note } from "../types/notes.js";
 
 export class Notes {
 	constructor(private client: Client) {}
@@ -18,7 +19,7 @@ export class Notes {
 	}
 
 	// POST REQUESTS
-	async createNote(gameId: Id, ownerId: Id): Promise<CreateNoteResponse> {
-		return this.client.post<CreateNoteResponse>("notes", { gameId, ownerId });
+	async createNote(body: CreateNoteRequestBody): Promise<ServerResponse<Note>> {
+		return this.client.post<ServerResponse<Note>>("notes", body);
 	}
 }
