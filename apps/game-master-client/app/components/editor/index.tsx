@@ -18,6 +18,7 @@ export function EditorBody() {
   const editor = useEditor({
     extensions,
     content,
+    immediatelyRender: false,
   });
 
   return (
