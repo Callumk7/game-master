@@ -3,15 +3,13 @@ import {
 	Outlet,
 	json,
 	useHref,
-	useLoaderData,
 	useNavigate,
 	useRouteLoaderData,
 } from "@remix-run/react";
 import { RouterProvider } from "react-aria-components";
 import { NavigationBar } from "~/components/navigation";
 import { validateUser } from "~/lib/auth.server";
-import { getUserDetails } from "./queries.server";
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);

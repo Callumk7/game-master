@@ -1,6 +1,5 @@
 import ky, { type Options } from "ky";
 import { Games } from "./resources/games.js";
-import { SERVER_URL } from "./config.js";
 import { Users } from "./resources/users.js";
 
 export interface ClientOptions {
@@ -63,6 +62,3 @@ export class SDK {
 		this.users = new Users(this.client);
 	}
 }
-
-// Initialise service
-export const api = new SDK({ baseUrl: SERVER_URL, apiKey: "sec9sbet" });

@@ -1,4 +1,3 @@
-import type { GameMasterResponse } from "@repo/shared-types";
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 import type { ZodSchema } from "zod";

@@ -1,4 +1,3 @@
-import type { User } from "@repo/shared-types";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";

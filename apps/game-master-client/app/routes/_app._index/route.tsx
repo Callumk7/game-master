@@ -1,7 +1,7 @@
 import { json, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { EditorBody } from "~/components/editor";
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export const meta: MetaFunction = () => {

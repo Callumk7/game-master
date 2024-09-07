@@ -1,8 +1,7 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { Link } from "~/components/navigation";
 import { ListBox, ListBoxItem } from "~/components/ui/list-box";
-import { api } from "~/lib/api";
+import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
