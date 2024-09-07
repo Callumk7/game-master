@@ -37,7 +37,6 @@
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^2.11.2",
-		"@repo/shared-types": "workspace:*",
 		"@types/react": "^18.2.20",
 		"@types/react-dom": "^18.2.7",
 		"autoprefixer": "^10.4.19",
