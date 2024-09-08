@@ -27,7 +27,7 @@ gamesRoute.post("/", async (c) => {
 
 	try {
 		await db.insert(games).values(newGame);
-		return c.json({ success: true, newGame }, 201);
+		return c.json({ success: true, data: newGame }, 201);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

@@ -2,6 +2,8 @@ import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { games } from "./games";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 export const noteTypeEnum = pgEnum("type", [
 	"note",
@@ -56,6 +58,12 @@ export const linksRelations = relations(links, ({ one, many }) => ({
 		relationName: "to",
 	}),
 }));
+
+export const databaseSelectNoteSchema = createSelectSchema(notes);
+export type DatabaseNote = z.infer<typeof databaseSelectNoteSchema>;
+
+export const databaseInsertNoteSchema = createInsertSchema(notes);
+export type InsertDatabaseNote = z.infer<typeof databaseInsertNoteSchema>;
 
 export const folders = pgTable("folders", {
 	id: text("id").primaryKey().notNull(),
