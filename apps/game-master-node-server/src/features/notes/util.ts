@@ -8,6 +8,7 @@ export const createNoteInsert = (input: CreateNoteRequestBody): InsertDatabaseNo
 		id: generateNoteId(),
 		name: input.name,
 		ownerId: input.ownerId,
+		gameId: input.gameId,
 		createdAt: currentDate,
 		updatedAt: currentDate,
 		type: input.type

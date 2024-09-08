@@ -6,15 +6,17 @@ import { Text } from "~/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NewNoteForm } from "./components/new-note";
 import { validateUser } from "~/lib/auth.server";
+import { Link } from "~/components/ui/link";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { gameId } = zx.parseParams(params, { gameId: z.string() });
   const game = await api.games.getGame(gameId);
-  console.log(game);
+  const notes = await api.notes.getAllGameNotes(gameId);
 
-  return typedjson({ game });
+  return typedjson({ game, notes });
 };
 
+// TODO: Build this route properly
 export const action = async ({ request, params, context }: ActionFunctionArgs) => {
   const { gameId } = zx.parseParams(params, { gameId: z.string() });
   const userId = await validateUser(request);
@@ -39,12 +41,19 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 };
 
 export default function GameRoute() {
-  const { game } = useTypedLoaderData<typeof loader>();
+  const { game, notes } = useTypedLoaderData<typeof loader>();
   return (
     <div>
       <Text variant={"h1"}>{game.name}</Text>
-        <Text>{game.id}</Text>
+      <Text>{game.id}</Text>
       <NewNoteForm gameId={game.id} />
+      <div>
+        {notes.map((note) => (
+          <Link key={note.id} href={`/games/${game.id}/notes/${note.id}`}>
+            {note.name}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

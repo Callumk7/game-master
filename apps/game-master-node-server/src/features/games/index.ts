@@ -12,6 +12,7 @@ import {
 import { createGameNote } from "./mutations";
 import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
 import { createGameInsert } from "./util";
+import { notes } from "~/db/schema/notes";
 
 export const gamesRoute = new Hono();
 
@@ -75,6 +76,16 @@ gamesRoute.patch("/:gameId", async (c) => {
 			.where(eq(games.id, gameId))
 			.returning();
 		return successResponse(c, updatedGame);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.get("/:gameId/notes", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameNotes = await db.select().from(notes).where(eq(notes.gameId, gameId));
+		return c.json(gameNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
