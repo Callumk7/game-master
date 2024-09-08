@@ -46,6 +46,10 @@ export class Client {
 		return this.ky.put(url, { json: data, ...options }).json<T>();
 	}
 
+	async patch<T>(url: string, data: unknown, options?: Options): Promise<T> {
+		return this.ky.patch(url, { json: data, ...options }).json<T>();
+	}
+
 	async delete<T>(url: string, options?: Options): Promise<T> {
 		return this.ky.delete(url, options).json<T>();
 	}
