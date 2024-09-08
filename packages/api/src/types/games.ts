@@ -31,3 +31,11 @@ export const createGameSchema = z.object({
 	ownerId: z.string(),
 });
 export type CreateGameRequestBody = z.infer<typeof createGameSchema>;
+
+export const updateGameSchema = z.object({
+	name: z.string().optional(),
+	content: z.string().optional(),
+	htmlContent: z.string().optional(),
+	ownerId: z.string().optional()
+})
+export type UpdateGameRequestBody = z.infer<typeof updateGameSchema>;

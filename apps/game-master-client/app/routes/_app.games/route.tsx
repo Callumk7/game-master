@@ -8,6 +8,7 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
   const ownedGames = await api.games.getOwnedGames(userId);
+  console.log(ownedGames);
   return typedjson({ ownedGames });
 };
 

@@ -1,9 +1,9 @@
+import { newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { z } from "zod";
 import { db } from "~/db";
-import { games } from "~/db/schema/games";
+import { games, usersToGames } from "~/db/schema/games";
 import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
@@ -14,7 +14,6 @@ import {
 
 export const usersRoute = new Hono();
 
-// TODO: write tests
 usersRoute.get("/:userId", async (c) => {
 	const userId = c.req.param("userId");
 
@@ -28,18 +27,9 @@ usersRoute.get("/:userId", async (c) => {
 			return handleNotFound(c);
 		}
 		return successResponse(c, result);
-
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
-});
-
-const newUserSchema = z.object({
-	firstName: z.string().optional(),
-	lastName: z.string().optional(),
-	username: z.string(),
-	email: z.string().email(),
-	passwordHash: z.string(),
 });
 
 usersRoute.post("/", async (c) => {
@@ -66,11 +56,32 @@ usersRoute.post("/", async (c) => {
 
 // TODO: Edit users
 
-usersRoute.get("/:userId/games/owned", async (c) => {
+usersRoute.get("/:userId/games", async (c) => {
 	const userId = c.req.param("userId");
+	const isOwned = c.req.query().owned;
+	if (isOwned) {
+		try {
+			const ownedGames = await db
+				.select()
+				.from(games)
+				.where(eq(games.ownerId, userId));
+			return c.json(ownedGames);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+
 	try {
-		const result = await db.select().from(games).where(eq(games.ownerId, userId));
-		return c.json(result);
+		const allGames = await db.query.usersToGames
+			.findMany({
+				where: eq(usersToGames.userId, userId),
+				columns: {},
+				with: {
+					game: true,
+				},
+			})
+			.then((rows) => rows.map((row) => row.game));
+		return c.json(allGames);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

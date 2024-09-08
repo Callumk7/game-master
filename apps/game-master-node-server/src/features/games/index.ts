@@ -2,32 +2,26 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "~/db";
-import { games, type InsertDatabaseGame } from "~/db/schema/games";
+import { games } from "~/db/schema/games";
 import {
+	basicSuccessResponse,
 	handleDatabaseError,
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createGameNote } from "./mutations";
-import { generateGameId } from "~/lib/ids";
-import { createGameSchema, createNoteSchema } from "@repo/api";
+import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
+import { createGameInsert } from "./util";
 
 export const gamesRoute = new Hono();
 
 gamesRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createGameSchema, c);
-
-	const newGame: InsertDatabaseGame = {
-		id: generateGameId(),
-		name: data.name,
-		ownerId: data.ownerId,
-		createdAt: new Date(),
-		updatedAt: new Date(),
-	};
+	const newGameInsert = createGameInsert(data);
 
 	try {
-		await db.insert(games).values(newGame);
-		return c.json({ success: true, data: newGame }, 201);
+		const newGame = await db.insert(games).values(newGameInsert).returning();
+		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -66,6 +60,16 @@ gamesRoute.get("/:gameId", async (c) => {
 	}
 });
 
+gamesRoute.delete("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		await db.delete(games).where(eq(games.id, gameId)); // TODO: Delete all joins
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 gamesRoute.post("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
 	const data = await validateOrThrowError(createNoteSchema, c);
@@ -75,6 +79,21 @@ gamesRoute.post("/:gameId/notes", async (c) => {
 			htmlContent: data.htmlContent,
 			gameId,
 		});
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.patch("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	const data = await validateOrThrowError(updateGameSchema, c);
+	try {
+		const updatedGame = await db
+			.update(games)
+			.set(data)
+			.where(eq(games.id, gameId))
+			.returning();
+		return successResponse(c, updatedGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

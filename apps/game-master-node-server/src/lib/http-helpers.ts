@@ -1,5 +1,7 @@
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
+import type { StatusCode } from "hono/utils/http-status";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import type { ZodSchema } from "zod";
 
 export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) {
@@ -7,27 +9,43 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 		const result = schema.safeParse(await c.req.json());
 		if (!result.success) {
 			console.error(result.error.message);
-			throw new HTTPException(400, { message: result.error.message });
+			throw new HTTPException(StatusCodes.BAD_REQUEST, {
+				message: result.error.message,
+			});
 		}
 		return result.data;
 	} catch (error) {
 		if (error instanceof HTTPException) {
 			throw error;
 		}
-		throw new HTTPException(400, { message: "Failed to parse JSON" });
+		throw new HTTPException(StatusCodes.BAD_REQUEST, {
+			message: "Failed to parse JSON",
+		});
 	}
 }
 
-export function successResponse<T>(c: Context, data: T) {
-	return c.json({ success: true, data });
+export function successResponse<T>(
+	c: Context,
+	data: T,
+	status: StatusCodes = StatusCodes.OK,
+) {
+	return c.json({ success: true, data }, status as StatusCode);
 }
 
 export function handleNotFound(c: Context, error?: unknown) {
 	if (error) console.error(error);
-	return c.text("Not found", 401);
+	return c.text(ReasonPhrases.NOT_FOUND, StatusCodes.NOT_FOUND);
 }
 
 export function handleDatabaseError(c: Context, error?: unknown) {
 	if (error) console.error(error);
-	return c.text("Database Error", 500);
+	return c.text("Database Error", StatusCodes.INTERNAL_SERVER_ERROR);
+}
+
+export function handleBadRequest(c: Context) {
+	return c.text(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
+}
+
+export function basicSuccessResponse(c: Context) {
+	return c.json({ success: true });
 }

@@ -1,7 +1,14 @@
 import { z } from "zod";
 import type { Id } from "./index.js";
 
-const noteTypeSchema = z.enum(["note", "location", "character", "faction", "item", "quest"])
+const noteTypeSchema = z.enum([
+	"note",
+	"location",
+	"character",
+	"faction",
+	"item",
+	"quest",
+]);
 export type NoteType = z.infer<typeof noteTypeSchema>;
 
 export interface Note {
@@ -18,6 +25,6 @@ export const createNoteSchema = z.object({
 	ownerId: z.string(),
 	gameId: z.string(),
 	htmlContent: z.string(),
-	type: noteTypeSchema
+	type: noteTypeSchema,
 });
 export type CreateNoteRequestBody = z.infer<typeof createNoteSchema>;
