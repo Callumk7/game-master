@@ -5,15 +5,6 @@ import { games } from "./games";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
-export const noteTypeEnum = pgEnum("type", [
-	"note",
-	"location",
-	"character",
-	"faction",
-	"item",
-	"quest",
-]);
-
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
@@ -26,7 +17,7 @@ export const notes = pgTable("notes", {
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
 	gameId: text("game_id").references(() => games.id),
-	type: noteTypeEnum("type"),
+	type: text("type").notNull()
 });
 
 export const notesRelations = relations(notes, ({ one, many }) => ({

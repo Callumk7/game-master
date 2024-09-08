@@ -1,5 +1,5 @@
 {
-  "id": "7b03e0e4-b63e-4204-940e-31fb01cf0c8e",
+  "id": "13d80498-65de-43d4-89fa-0e8c39c7bbd0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -264,10 +264,9 @@
         },
         "type": {
           "name": "type",
-          "type": "type",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -421,18 +420,6 @@
         "dm",
         "player",
         "guest"
-      ]
-    },
-    "public.type": {
-      "name": "type",
-      "schema": "public",
-      "values": [
-        "note",
-        "location",
-        "character",
-        "faction",
-        "item",
-        "quest"
       ]
     }
   },

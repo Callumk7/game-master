@@ -4,12 +4,6 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "public"."type" AS ENUM('note', 'location', 'character', 'faction', 'item', 'quest');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "games" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
@@ -49,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "notes" (
 	"owner_id" text NOT NULL,
 	"folder_id" text,
 	"game_id" text,
-	"type" "type"
+	"type" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
