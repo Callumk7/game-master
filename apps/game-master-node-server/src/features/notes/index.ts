@@ -57,7 +57,11 @@ notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
 	const data = await validateOrThrowError(updateNoteContentSchema, c);
 	try {
-		const noteUpdate = await db.update(notes).set(data).where(eq(notes.id, noteId));
+		const noteUpdate = await db
+			.update(notes)
+			.set(data)
+			.where(eq(notes.id, noteId))
+			.returning();
 		return successResponse(c, noteUpdate);
 	} catch (error) {
 		return handleDatabaseError(c, error);

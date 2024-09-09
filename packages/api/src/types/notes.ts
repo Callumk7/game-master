@@ -14,6 +14,8 @@ export type NoteType = z.infer<typeof noteTypeSchema>;
 export interface Note {
 	id: Id;
 	name: string;
+	content: string;
+	htmlContent: string;
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;

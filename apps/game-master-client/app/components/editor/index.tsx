@@ -24,17 +24,18 @@ export const useDefaultEditor = (content: string | null) => {
 	});
 };
 
-const content = "<p>Hello World!</p>";
-
-export function EditorBody() {
+export function EditorBody({ htmlContent }: { htmlContent: string }) {
 	const { editor, isEditing, setIsEditing } = useSyncEditorContent({
-		action: "",
-		initContent: content,
+		initContent: htmlContent,
 	});
 
 	return (
 		<>
-			<Button size={"icon"} variant={"secondary"}>
+			<Button
+				size={"icon"}
+				variant={isEditing ? "secondary" : "ghost"}
+				onPress={() => setIsEditing(!isEditing)}
+			>
 				<DiscIcon />
 			</Button>
 			<EditorContent editor={editor} />
