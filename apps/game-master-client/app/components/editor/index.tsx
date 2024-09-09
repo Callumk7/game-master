@@ -1,65 +1,79 @@
-import {
-  useEditor,
-  EditorContent,
-  BubbleMenu,
-  type Editor,
-} from "@tiptap/react";
+import { useEditor, EditorContent, BubbleMenu, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
+import Typography from "@tiptap/extension-typography";
+import {
+	DiscIcon,
+	FontBoldIcon,
+	FontItalicIcon,
+	HeadingIcon,
+} from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
+import { useSyncEditorContent } from "./sync";
 
-// define your extension array
-const extensions = [StarterKit];
+export const useDefaultEditor = (content: string | null) => {
+	return useEditor({
+		extensions: [StarterKit, Typography],
+		immediatelyRender: false,
+		editorProps: {
+			attributes: {
+				class: "prose prose-invert max-w-none",
+			},
+		},
+		content,
+	});
+};
 
 const content = "<p>Hello World!</p>";
 
 export function EditorBody() {
-  const editor = useEditor({
-    extensions,
-    content,
-    immediatelyRender: false,
-  });
+	const { editor, isEditing, setIsEditing } = useSyncEditorContent({
+		action: "",
+		initContent: content,
+	});
 
-  return (
-    <>
-      <EditorContent editor={editor} />
-      {editor && (
-        <BubbleMenu editor={editor}>
-          <BubbleMenuItems editor={editor} />
-        </BubbleMenu>
-      )}
-    </>
-  );
+	return (
+		<>
+			<Button size={"icon"} variant={"secondary"}>
+				<DiscIcon />
+			</Button>
+			<EditorContent editor={editor} />
+			{editor && (
+				<BubbleMenu editor={editor}>
+					<BubbleMenuItems editor={editor} />
+				</BubbleMenu>
+			)}
+		</>
+	);
 }
 
 interface BubbleMenuItemsProps {
-  editor: Editor;
+	editor: Editor;
 }
 export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
-  return (
-    <Toolbar className="p-3 bg-background/80 backdrop-blur rounded-md">
-      <Button
-        size="icon"
-        variant="secondary"
-        onPress={() => editor.chain().focus().toggleBold().run()}
-      >
-        <FontBoldIcon />
-      </Button>
-      <Button
-        size="icon"
-        variant="secondary"
-        onPress={() => editor.chain().focus().toggleItalic().run()}
-      >
-        <FontItalicIcon />
-      </Button>
-      <Button
-        size="icon"
-        variant="secondary"
-        onPress={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-      >
-        <HeadingIcon />
-      </Button>
-    </Toolbar>
-  );
+	return (
+		<Toolbar className="p-3 bg-accent border rounded-md">
+			<Button
+				size="icon"
+				variant="secondary"
+				onPress={() => editor.chain().focus().toggleBold().run()}
+			>
+				<FontBoldIcon />
+			</Button>
+			<Button
+				size="icon"
+				variant="secondary"
+				onPress={() => editor.chain().focus().toggleItalic().run()}
+			>
+				<FontItalicIcon />
+			</Button>
+			<Button
+				size="icon"
+				variant="secondary"
+				onPress={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+			>
+				<HeadingIcon />
+			</Button>
+		</Toolbar>
+	);
 }

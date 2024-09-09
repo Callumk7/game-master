@@ -5,18 +5,22 @@ import type { CreateNoteRequestBody, Note } from "../types/notes.js";
 export class Notes {
 	constructor(private client: Client) {}
 
+	// DONE
 	async getNote(noteId: Id): Promise<Note> {
 		return this.client.get<Note>(`notes/${noteId}`);
 	}
 
+	// DONE
 	async createNote(body: CreateNoteRequestBody): Promise<ServerResponse<Note>> {
 		return this.client.post<ServerResponse<Note>>("notes", body);
 	}
 
+	// DONE
 	async deleteNote(noteId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(`notes/${noteId}`);
 	}
 
+	// DONE
 	async updateNote(
 		noteId: Id,
 		noteDetails: Partial<Note>,
@@ -24,6 +28,7 @@ export class Notes {
 		return this.client.patch<ServerResponse<Note>>(`notes/${noteId}`, noteDetails);
 	}
 
+	// PARTIALLY DONE
 	async duplicateNote(
 		noteId: Id,
 		newNoteDetails: Partial<Note>,
@@ -34,10 +39,12 @@ export class Notes {
 		);
 	}
 
+	// DONE
 	async getAllGameNotes(gameId: Id): Promise<Note[]> {
 		return this.client.get<Note[]>(`games/${gameId}/notes`);
 	}
 
+	// DONE
 	async getUserNotesForGame(gameId: Id, userId: Id): Promise<Note[]> {
 		return this.client.get<Note[]>(`games/${gameId}/users/${userId}/notes`);
 	}

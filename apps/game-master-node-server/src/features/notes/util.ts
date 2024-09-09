@@ -1,4 +1,4 @@
-import type { CreateNoteRequestBody } from "@repo/api";
+import type { CreateNoteRequestBody, UpdateNoteContentRequestBody } from "@repo/api";
 import type { InsertDatabaseNote } from "~/db/schema/notes";
 import { generateNoteId } from "~/lib/ids";
 

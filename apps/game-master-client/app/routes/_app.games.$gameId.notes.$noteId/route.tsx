@@ -1,4 +1,5 @@
 import { useParams } from "@remix-run/react";
+import { EditorBody } from "~/components/editor";
 import { Text } from "~/components/ui/typeography";
 
 export default function NotesRoute() {
@@ -7,6 +8,7 @@ export default function NotesRoute() {
     <div className="p-4 space-y-4">
       <Text variant={"h1"}>{noteId}</Text>
       <Text variant={"h2"}>{gameId}</Text>
+      <EditorBody />
     </div>
   );
 }

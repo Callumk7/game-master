@@ -28,3 +28,16 @@ export const createNoteSchema = z.object({
 	type: noteTypeSchema,
 });
 export type CreateNoteRequestBody = z.infer<typeof createNoteSchema>;
+
+export const updateNoteContentSchema = z.object({
+	name: z.string().optional(),
+	htmlContent: z.string().optional(),
+	content: z.string().optional()
+})
+export type UpdateNoteContentRequestBody = z.infer<typeof updateNoteContentSchema>;
+
+export const duplicateNoteSchema = z.object({
+	name: z.string(),
+	ownerId: z.string()
+})
+export type DuplicateNoteRequestBody = z.infer<typeof duplicateNoteSchema>;

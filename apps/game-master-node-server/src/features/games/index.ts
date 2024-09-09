@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { games } from "~/db/schema/games";
@@ -51,6 +51,16 @@ gamesRoute.delete("/:gameId", async (c) => {
 	}
 });
 
+gamesRoute.get("/:gameId/notes", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameNotes = await db.select().from(notes).where(eq(notes.gameId, gameId));
+		return c.json(gameNotes);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 gamesRoute.post("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
 	const data = await validateOrThrowError(createNoteSchema, c);
@@ -80,12 +90,15 @@ gamesRoute.patch("/:gameId", async (c) => {
 	}
 });
 
-gamesRoute.get("/:gameId/notes", async (c) => {
-	const gameId = c.req.param("gameId");
+gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
+	const { gameId, userId } = c.req.param();
 	try {
-		const gameNotes = await db.select().from(notes).where(eq(notes.gameId, gameId));
-		return c.json(gameNotes);
-	} catch (error) {
+		const userGames = await db
+			.select()
+			.from(notes)
+			.where(and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)));
+		return c.json(userGames);
+	} catch (error) { 
 		return handleDatabaseError(c, error);
 	}
 });
