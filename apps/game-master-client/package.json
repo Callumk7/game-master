@@ -38,7 +38,8 @@
 		"remix-typedjson": "^0.4.1",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.23.8",
-		"zodix": "^0.4.4"
+		"zodix": "^0.4.4",
+		"zustand": "^4.5.4"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^2.11.2",

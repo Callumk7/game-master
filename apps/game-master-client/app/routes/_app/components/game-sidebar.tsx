@@ -1,7 +1,6 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "@remix-run/react";
 import type { Game, GameWithData } from "@repo/api";
-import { useState } from "react";
 import { Group } from "react-aria-components";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
@@ -13,20 +12,24 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { useGameSelectionContext } from "~/store/selection";
 
 interface GameSidebarProps {
 	gamesWithNotes: GameWithData[];
 }
 
 export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
-	const [selectedGame, setSelectedGame] = useState(gamesWithNotes[0].id);
+	const selectedGame = useGameSelectionContext((s) => s.gameSelectionId);
+	const updateSelection = useGameSelectionContext((s) => s.setGameSelection);
+
 	const gameNotes = gamesWithNotes.find((game) => game.id === selectedGame)?.notes;
+
 	return (
 		<aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
 			<SelectGame
 				games={gamesWithNotes}
 				selectedGame={selectedGame}
-				setSelectedGame={setSelectedGame}
+				setSelectedGame={updateSelection}
 			/>
 			<Group className={"flex flex-col gap-2 items-start"}>
 				{gameNotes?.map((note) => (
