@@ -6,6 +6,6 @@ export default {
 	out: "./drizzle",
 	dialect: "postgresql",
 	dbCredentials: {
-		url: process.env.DB_URL_STAGING!,
+		url: process.env.DB_URL!,
 	},
 } satisfies Config;

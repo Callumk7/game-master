@@ -1,4 +1,3 @@
-import type { Id } from "@repo/shared-types";
 import { db } from "~/db";
 import { notes } from "~/db/schema/notes";
 import { generateNoteId } from "~/lib/ids";
@@ -6,7 +5,7 @@ import { generateNoteId } from "~/lib/ids";
 interface NewNote {
 	name: string;
 	htmlContent: string;
-	gameId: Id;
+	gameId: string;
 }
 
 export const createGameNote = async (ownerId: string, newNote: NewNote) => {

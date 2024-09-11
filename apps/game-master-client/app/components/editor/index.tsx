@@ -1,34 +1,58 @@
-import {
-  useEditor,
-  EditorContent,
-  BubbleMenu,
-  type Editor,
-} from "@tiptap/react";
+import { useEditor, EditorContent, BubbleMenu, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
+import Typography from "@tiptap/extension-typography";
+import {
+  DiscIcon,
+  FontBoldIcon,
+  FontItalicIcon,
+  HeadingIcon,
+} from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
+import { useSyncEditorContent } from "./sync";
 
-// define your extension array
-const extensions = [StarterKit];
-
-const content = "<p>Hello World!</p>";
-
-export function EditorBody() {
-  const editor = useEditor({
-    extensions,
+export const useDefaultEditor = (content: string | null) => {
+  return useEditor({
+    extensions: [StarterKit, Typography],
+    immediatelyRender: false,
     content,
+    editorProps: {
+      attributes: {
+        class:
+          "rounded-md p-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+      },
+    },
+  });
+};
+
+export function EditorBody({
+  htmlContent,
+  action,
+}: { htmlContent: string; action?: string }) {
+  const { editor, isEdited, status, saveContent } = useSyncEditorContent({
+    initContent: htmlContent,
+    action,
   });
 
   return (
-    <>
-      <EditorContent editor={editor} />
+    <div className="editor">
+      <Toolbar className={"flex p-2"}>
+        <Button
+          size={"sm"}
+          onPress={saveContent}
+          isDisabled={!isEdited}
+          variant={isEdited ? "default" : "outline"}
+        >
+          {isEdited ? "Save" : "Content Saved"}
+        </Button>
+      </Toolbar>
+      <EditorContent className="editor__content" editor={editor} />
       {editor && (
         <BubbleMenu editor={editor}>
           <BubbleMenuItems editor={editor} />
         </BubbleMenu>
       )}
-    </>
+    </div>
   );
 }
 
@@ -37,7 +61,7 @@ interface BubbleMenuItemsProps {
 }
 export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
   return (
-    <Toolbar className="p-3 bg-background/80 backdrop-blur rounded-md">
+    <Toolbar className="p-3 bg-accent border rounded-md">
       <Button
         size="icon"
         variant="secondary"
@@ -55,7 +79,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
       <Button
         size="icon"
         variant="secondary"
-        onPress={() => editor.chain().focus().toggleHeading({level: 1}).run()}
+        onPress={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
       >
         <HeadingIcon />
       </Button>

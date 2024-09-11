@@ -1,10 +1,9 @@
-import { Outlet, useParams } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 
 export default function GameLayout() {
-  const {gameId} = useParams();
-	return (
-		<div>
-			<Outlet />
-		</div>
-	);
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
 }

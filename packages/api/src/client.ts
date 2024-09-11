@@ -1,7 +1,7 @@
 import ky, { type Options } from "ky";
-import { SERVER_URL } from "~/config";
-import { Games } from "./games";
-import { Users } from "./users";
+import { Games } from "./resources/games.js";
+import { Users } from "./resources/users.js";
+import { Notes } from "./resources/notes.js";
 
 export interface ClientOptions {
 	baseUrl: string;
@@ -47,6 +47,10 @@ export class Client {
 		return this.ky.put(url, { json: data, ...options }).json<T>();
 	}
 
+	async patch<T>(url: string, data: unknown, options?: Options): Promise<T> {
+		return this.ky.patch(url, { json: data, ...options }).json<T>();
+	}
+
 	async delete<T>(url: string, options?: Options): Promise<T> {
 		return this.ky.delete(url, options).json<T>();
 	}
@@ -56,13 +60,12 @@ export class SDK {
 	private client: Client;
 	users: Users;
 	games: Games;
+	notes: Notes;
 
 	constructor(options: ClientOptions) {
 		this.client = new Client(options);
 		this.games = new Games(this.client);
 		this.users = new Users(this.client);
+		this.notes = new Notes(this.client);
 	}
 }
-
-// Initialise service
-export const api = new SDK({ baseUrl: SERVER_URL, apiKey: "sec9sbet" });

@@ -20,6 +20,9 @@ importers:
       '@node-rs/argon2':
         specifier: ^1.8.3
         version: 1.8.3
+      '@radix-ui/react-collapsible':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.3.1)
@@ -32,6 +35,15 @@ importers:
       '@remix-run/serve':
         specifier: ^2.11.2
         version: 2.11.2(typescript@5.5.4)
+      '@repo/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@tailwindcss/typography':
+        specifier: ^0.5.13
+        version: 0.5.13(tailwindcss@3.4.10(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4)))
+      '@tiptap/extension-typography':
+        specifier: ^2.5.6
+        version: 2.5.6(@tiptap/core@2.5.6(@tiptap/pm@2.5.6))
       '@tiptap/pm':
         specifier: ^2.5.6
         version: 2.5.6
@@ -74,6 +86,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-stately:
+        specifier: ^3.32.1
+        version: 3.32.1(react@18.3.1)
       remix-typedjson:
         specifier: ^0.4.1
         version: 0.4.1(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/server-runtime@2.11.2(typescript@5.5.4))(react@18.3.1)
@@ -90,9 +105,6 @@ importers:
       '@remix-run/dev':
         specifier: ^2.11.2
         version: 2.11.2(@remix-run/react@2.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@remix-run/serve@2.11.2(typescript@5.5.4))(@types/node@22.5.4)(lightningcss@1.25.1)(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4))(typescript@5.5.4)(vite@5.3.5(@types/node@22.5.4)(lightningcss@1.25.1))(wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0))
-      '@repo/shared-types':
-        specifier: workspace:*
-        version: link:../../packages/shared-types
       '@types/react':
         specifier: ^18.2.20
         version: 18.3.4
@@ -132,12 +144,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.12.1
         version: 1.12.1
-      '@hono/zod-validator':
-        specifier: ^0.2.2
-        version: 0.2.2(hono@4.5.9)(zod@3.23.8)
-      '@repo/schemas':
+      '@repo/api':
         specifier: workspace:*
-        version: link:../../packages/schema
+        version: link:../../packages/api
       callum-util:
         specifier: ^2.0.1
         version: 2.0.1
@@ -150,6 +159,9 @@ importers:
       hono:
         specifier: ^4.5.9
         version: 4.5.9
+      http-status-codes:
+        specifier: ^2.3.0
+        version: 2.3.0
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
@@ -160,9 +172,6 @@ importers:
       '@biomejs/biome':
         specifier: ^1.8.3
         version: 1.8.3
-      '@repo/shared-types':
-        specifier: workspace:*
-        version: link:../../packages/shared-types
       '@types/node':
         specifier: ^20.11.17
         version: 20.14.12
@@ -430,6 +439,25 @@ importers:
         specifier: ^3.67.0
         version: 3.67.0(@cloudflare/workers-types@4.20240725.0)
 
+  packages/api:
+    dependencies:
+      ky:
+        specifier: ^1.5.0
+        version: 1.5.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      msw:
+        specifier: ^2.4.2
+        version: 2.4.2(typescript@5.5.4)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+      vitest:
+        specifier: 2.0.4
+        version: 2.0.4(@types/node@22.5.4)(lightningcss@1.25.1)
+
   packages/db:
     dependencies:
       '@libsql/client':
@@ -460,18 +488,6 @@ importers:
       drizzle-kit:
         specifier: ^0.23.0
         version: 0.23.0
-
-  packages/schema:
-    dependencies:
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-
-  packages/shared-types:
-    devDependencies:
-      typescript:
-        specifier: ^5.0.0
-        version: 5.5.4
 
 packages:
 
@@ -8252,11 +8268,6 @@ snapshots:
       hono: 4.5.1
       zod: 3.23.8
 
-  '@hono/zod-validator@0.2.2(hono@4.5.9)(zod@3.23.8)':
-    dependencies:
-      hono: 4.5.9
-      zod: 3.23.8
-
   '@inquirer/confirm@3.2.0':
     dependencies:
       '@inquirer/core': 9.1.0
@@ -8591,6 +8602,22 @@ snapshots:
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
 
+  '@radix-ui/react-collapsible@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.0
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      '@radix-ui/react-context': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      '@radix-ui/react-presence': 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.4
+      '@types/react-dom': 18.3.0
+
   '@radix-ui/react-collection@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.3)(react@18.3.1)
@@ -8609,11 +8636,23 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
+  '@radix-ui/react-compose-refs@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
+
   '@radix-ui/react-context@1.1.0(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
+
+  '@radix-ui/react-context@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
 
   '@radix-ui/react-direction@1.1.0(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
@@ -8632,6 +8671,13 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
+  '@radix-ui/react-id@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
+
   '@radix-ui/react-presence@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.3)(react@18.3.1)
@@ -8642,6 +8688,16 @@ snapshots:
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
 
+  '@radix-ui/react-presence@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.4
+      '@types/react-dom': 18.3.0
+
   '@radix-ui/react-primitive@2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-slot': 1.1.0(@types/react@18.3.3)(react@18.3.1)
@@ -8649,6 +8705,15 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.3
+      '@types/react-dom': 18.3.0
+
+  '@radix-ui/react-primitive@2.0.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.4
       '@types/react-dom': 18.3.0
 
   '@radix-ui/react-scroll-area@1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -8675,11 +8740,24 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
+  '@radix-ui/react-slot@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
+
   '@radix-ui/react-use-callback-ref@1.1.0(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
+
+  '@radix-ui/react-use-callback-ref@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
 
   '@radix-ui/react-use-controllable-state@1.1.0(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
@@ -8688,11 +8766,24 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
+  '@radix-ui/react-use-controllable-state@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-use-callback-ref': 1.1.0(@types/react@18.3.4)(react@18.3.1)
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
+
   '@radix-ui/react-use-layout-effect@1.1.0(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
+
+  '@radix-ui/react-use-layout-effect@1.1.0(@types/react@18.3.4)(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.4
 
   '@react-aria/breadcrumbs@3.5.15(react@18.3.1)':
     dependencies:
@@ -10391,6 +10482,14 @@ snapshots:
   '@swc/helpers@0.5.12':
     dependencies:
       tslib: 2.6.3
+
+  '@tailwindcss/typography@0.5.13(tailwindcss@3.4.10(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4)))':
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      postcss-selector-parser: 6.0.10
+      tailwindcss: 3.4.10(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4))
 
   '@tailwindcss/typography@0.5.13(tailwindcss@3.4.7(ts-node@10.9.2(@types/node@22.5.4)(typescript@5.5.4)))':
     dependencies:
@@ -14533,7 +14632,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.4
-      '@vitest/pretty-format': 2.0.4
+      '@vitest/pretty-format': 2.0.5
       '@vitest/runner': 2.0.4
       '@vitest/snapshot': 2.0.4
       '@vitest/spy': 2.0.4
@@ -14566,7 +14665,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.4
-      '@vitest/pretty-format': 2.0.4
+      '@vitest/pretty-format': 2.0.5
       '@vitest/runner': 2.0.4
       '@vitest/snapshot': 2.0.4
       '@vitest/spy': 2.0.4

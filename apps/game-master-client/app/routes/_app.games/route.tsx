@@ -1,24 +1,22 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
-import { Link } from "~/components/navigation";
-import { ListBox, ListBoxItem } from "~/components/ui/list-box";
-import { api } from "~/lib/api";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
+import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
+import { GamesSidebar } from "./components/games-sidebar";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-	const userId = await validateUser(request);
-	const ownedGames = await api.games.getOwnedGames(userId);
-	return json({ ownedGames });
+  const userId = await validateUser(request);
+  const ownedGames = await api.games.getOwnedGames(userId);
+  console.log(ownedGames);
+  return typedjson({ ownedGames });
 };
 
 export default function GamesLayout() {
-	const { ownedGames } = useLoaderData<typeof loader>();
-	return (
-		<div>
-      <ListBox items={ownedGames} aria-label="Owned Games" selectionMode="single" className={"max-w-32"}>
-      {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
-      </ListBox>
-			<Outlet />
-		</div>
-	);
+  const { ownedGames } = useTypedLoaderData<typeof loader>();
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
 }
