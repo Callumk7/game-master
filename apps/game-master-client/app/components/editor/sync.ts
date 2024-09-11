@@ -20,8 +20,6 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 
 	const editor = useDefaultEditor(optimisticContent);
 
-	// Editor state for auto-saving to the server
-	const [isEditing, setIsEditing] = useState(false);
 	const [isEdited, setIsEdited] = useState(false);
 
 	if (editor) {
@@ -37,24 +35,27 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		}
 	});
 
-	// We want to save the data to the server if it is no longer editing, and it
-	// has been edited.
-	useEffect(() => {
-		if (editor && isEdited && !isEditing) {
+	const saveContent = () => {
+		if (editor && isEdited) {
 			fetcher.submit(
 				{
 					htmlContent: editor.getHTML(),
 					content: editor.getText(),
 				},
-				{ method: "PATCH", action: options.action },
+				{
+					method: "PATCH",
+					action: options.action,
+				},
 			);
 		}
-	}, [isEditing, isEdited, fetcher.submit, editor, options.action]);
+		setIsEdited(false);
+	};
 
 	return {
 		optimisticContent,
 		editor,
-		isEditing,
-		setIsEditing,
+		isEdited,
+		status: fetcher.state,
+		saveContent
 	};
 };

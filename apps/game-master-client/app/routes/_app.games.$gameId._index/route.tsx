@@ -4,56 +4,28 @@ import { z } from "zod";
 import { parseFormSafe, zx } from "zodix";
 import { Text } from "~/ui/typeography";
 import { api } from "~/lib/api.server";
-import { NewNoteForm } from "./components/new-note";
-import { validateUser } from "~/lib/auth.server";
-import { Link } from "~/components/ui/link";
+import { EditorBody } from "~/components/editor";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const { gameId } = zx.parseParams(params, { gameId: z.string() });
-  const game = await api.games.getGame(gameId);
-  const notes = await api.notes.getAllGameNotes(gameId);
+	const { gameId } = zx.parseParams(params, { gameId: z.string() });
+	const game = await api.games.getGame(gameId);
+	const notes = await api.notes.getAllGameNotes(gameId);
 
-  return typedjson({ game, notes });
+	return typedjson({ game, notes });
 };
 
-// TODO: Build this route properly
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
-  const { gameId } = zx.parseParams(params, { gameId: z.string() });
-  const userId = await validateUser(request);
-  const result = await parseFormSafe(request, { name: z.string() });
-  if (!result.success) {
-    return typedjson({ someError: "message" });
-  }
-
-  const newGame = await api.notes.createNote({
-    name: result.data.name,
-    ownerId: userId,
-    type: "note",
-    gameId,
-    htmlContent: "<p>Hello World</p>",
-  });
-
-  if (newGame.success) {
-    return typedjson(newGame.data);
-  }
-
-  return new Response("Ops");
-};
+export const action = async ({request, params, context}: ActionFunctionArgs) => {
+  const form = await request.formData();
+  console.log(form);
+  return null;
+}
 
 export default function GameRoute() {
-  const { game, notes } = useTypedLoaderData<typeof loader>();
-  return (
-    <div>
-      <Text variant={"h1"}>{game.name}</Text>
-      <Text>{game.id}</Text>
-      <NewNoteForm gameId={game.id} />
-      <div>
-        {notes.map((note) => (
-          <Link key={note.id} href={`/games/${game.id}/notes/${note.id}`}>
-            {note.name}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
+	const { game } = useTypedLoaderData<typeof loader>();
+	return (
+		<div>
+			<Text variant={"h1"}>{game.name}</Text>
+			<EditorBody htmlContent="<p>A new note...</p>" />
+		</div>
+	);
 }

@@ -4,11 +4,11 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { games, usersToGames } from "~/db/schema/games";
+import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
 	handleNotFound,
-	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 
@@ -19,14 +19,20 @@ usersRoute.get("/:userId", async (c) => {
 
 	try {
 		const result = await db
-			.select()
+			.select({
+				id: users.id,
+				firstName: users.firstName,
+				lastName: users.lastName,
+				username: users.username,
+				email: users.email,
+			})
 			.from(users)
 			.where(eq(users.id, userId))
 			.then((rows) => rows[0]);
 		if (!result) {
 			return handleNotFound(c);
 		}
-		return successResponse(c, result);
+		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -72,16 +78,26 @@ usersRoute.get("/:userId/games", async (c) => {
 	}
 
 	try {
-		const allGames = await db.query.usersToGames
-			.findMany({
-				where: eq(usersToGames.userId, userId),
-				columns: {},
-				with: {
-					game: true,
-				},
-			})
-			.then((rows) => rows.map((row) => row.game));
+		const allGames = await db.query.games.findMany({
+			where: eq(games.ownerId, userId),
+			with: {
+				notes: true,
+			},
+		});
 		return c.json(allGames);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+usersRoute.get("/:userId/notes", async (c) => {
+	const userId = c.req.param("userId");
+	try {
+		const allUserNotes = await db
+			.select()
+			.from(notes)
+			.where(eq(notes.ownerId, userId));
+		return c.json(allUserNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

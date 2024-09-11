@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { games } from "~/db/schema/games";
+import { games, usersToGames } from "~/db/schema/games";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -20,7 +20,18 @@ gamesRoute.post("/", async (c) => {
 	const newGameInsert = createGameInsert(data);
 
 	try {
-		const newGame = await db.insert(games).values(newGameInsert).returning();
+		const newGame = await db
+			.insert(games)
+			.values(newGameInsert)
+			.returning()
+			.then((result) => result[0]);
+		await db
+			.insert(usersToGames)
+			.values({
+				gameId: newGameInsert.id,
+				userId: newGameInsert.ownerId,
+				isOwner: true,
+			});
 		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -98,7 +109,7 @@ gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
 			.from(notes)
 			.where(and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)));
 		return c.json(userGames);
-	} catch (error) { 
+	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
 });

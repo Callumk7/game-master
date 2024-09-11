@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@node-rs/argon2": "^1.8.3",
+		"@radix-ui/react-collapsible": "^1.1.0",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@remix-run/node": "^2.11.2",
 		"@remix-run/react": "^2.11.2",
@@ -33,6 +34,7 @@
 		"react": "^18.2.0",
 		"react-aria-components": "^1.3.1",
 		"react-dom": "^18.2.0",
+		"react-stately": "^3.32.1",
 		"remix-typedjson": "^0.4.1",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.23.8",

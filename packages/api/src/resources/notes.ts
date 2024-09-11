@@ -49,6 +49,7 @@ export class Notes {
 		return this.client.get<Note[]>(`games/${gameId}/users/${userId}/notes`);
 	}
 
+	// DONE
 	async getAllUserNotes(userId: Id): Promise<Note[]> {
 		return this.client.get<Note[]>(`users/${userId}/notes`);
 	}
@@ -59,3 +60,5 @@ export class Notes {
 		});
 	}
 }
+
+

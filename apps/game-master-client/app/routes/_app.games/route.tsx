@@ -15,11 +15,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function GamesLayout() {
   const { ownedGames } = useTypedLoaderData<typeof loader>();
   return (
-    <div className="flex h-screen">
-      <GamesSidebar games={ownedGames} />
-        <div className="flex-1 ml-64 p-8 overflow-y-auto">
-          <Outlet />
-        </div>
+    <div>
+      <Outlet />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { EditorBody } from "~/components/editor";
 import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
 		noteId: z.string(),
 	});
@@ -17,7 +17,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 };
 
 // Update note
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const { noteId } = parseParams(params, {
 		noteId: z.string(),
 	});
