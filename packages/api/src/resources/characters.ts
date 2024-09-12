@@ -1,5 +1,5 @@
 import type { Client } from "../client.js";
-import type { Character } from "../types/characters.js";
+import type { Character, CreateCharacterRequestBody } from "../types/characters.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 
 export class Characters {
@@ -9,7 +9,7 @@ export class Characters {
 		return this.client.get<Character>(`characters/${charId}`);
 	}
 
-	async createCharacter(body: CreateCharacterBody): Promise<ServerResponse<Character>> {
+	async createCharacter(body: CreateCharacterRequestBody): Promise<ServerResponse<Character>> {
 		return this.client.post<ServerResponse<Character>>("characters", body);
 	}
 
