@@ -10,6 +10,8 @@ export const characters = pgTable("characters", {
 	name: text("name").notNull(),
 	content: text("content"),
 	htmlContent: text("html_content"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
 	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
