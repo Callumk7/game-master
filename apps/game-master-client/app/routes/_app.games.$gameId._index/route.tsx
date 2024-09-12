@@ -24,7 +24,6 @@ export default function GameRoute() {
 	const { game } = useTypedLoaderData<typeof loader>();
 	return (
 		<div>
-			<Text variant={"h1"}>{game.name}</Text>
 			<EditorBody htmlContent="<p>A new note...</p>" />
 		</div>
 	);

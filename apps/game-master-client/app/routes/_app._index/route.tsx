@@ -25,7 +25,6 @@ export default function Index() {
   const { ownedGames } = useTypedLoaderData<typeof loader>();
   return (
     <div className="font-sans p-4">
-      <Text variant={"h1"}>Index</Text>
       <div className="flex flex-col gap-1">
         {ownedGames.map((game) => (
           <Link key={game.id} href={`/games/${game.id}`}>
