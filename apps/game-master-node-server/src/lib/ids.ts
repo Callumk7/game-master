@@ -7,3 +7,7 @@ export function generateGameId() {
 export function generateNoteId() {
 	return `note_${uuidv4()}`;
 }
+
+export function generateCharacterId() {
+	return `char_${uuidv4()}`;
+}
