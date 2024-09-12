@@ -43,3 +43,6 @@ export function useGameSelectionContext<T>(selector: (state: SelectionState) => 
 	if (!store) throw new Error("Missing GameSelection.Provider in this route tree");
 	return useStore(store, selector);
 }
+
+export const gameSelectionId = useGameSelectionContext((s) => s.gameSelectionId);
+export const setGameSelection = useGameSelectionContext((s) => s.setGameSelection);
