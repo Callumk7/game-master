@@ -1,15 +1,19 @@
-import { pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
 import { notes } from "./notes";
 import { relations } from "drizzle-orm";
 import { factions } from "./factions";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	content: text("content"),
 	htmlContent: text("html_content"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
 	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
@@ -18,6 +22,12 @@ export const characters = pgTable("characters", {
 		.references(() => users.id)
 		.notNull(),
 });
+
+export const databaseSelectCharacterSchema = createSelectSchema(characters);
+export type DatabaseCharacter = z.infer<typeof databaseSelectCharacterSchema>;
+
+export const databaseInsertCharacterSchema = createInsertSchema(characters);
+export type InsertDatabaseCharacter = z.infer<typeof databaseInsertCharacterSchema>;
 
 export const characterRelations = relations(characters, ({ one, many }) => ({
 	notes: many(notesOnCharacters),
@@ -56,7 +66,7 @@ export const charactersInFactions = pgTable(
 		factionId: text("faction_id")
 			.references(() => factions.id)
 			.notNull(),
-		role: text("role")
+		role: text("role"),
 	},
 
 	(t) => ({

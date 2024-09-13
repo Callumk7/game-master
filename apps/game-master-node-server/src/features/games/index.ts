@@ -12,6 +12,7 @@ import { createGameNote } from "./mutations";
 import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
 import { createGameInsert } from "./util";
 import { notes } from "~/db/schema/notes";
+import { characters } from "~/db/schema/characters";
 
 export const gamesRoute = new Hono();
 
@@ -25,13 +26,11 @@ gamesRoute.post("/", async (c) => {
 			.values(newGameInsert)
 			.returning()
 			.then((result) => result[0]);
-		await db
-			.insert(usersToGames)
-			.values({
-				gameId: newGameInsert.id,
-				userId: newGameInsert.ownerId,
-				isOwner: true,
-			});
+		await db.insert(usersToGames).values({
+			gameId: newGameInsert.id,
+			userId: newGameInsert.ownerId,
+			isOwner: true,
+		});
 		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -109,6 +108,34 @@ gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
 			.from(notes)
 			.where(and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)));
 		return c.json(userGames);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Character Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+gamesRoute.get("/:gameId/characters", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameCharacters = await db.query.characters.findMany({
+			where: eq(characters.gameId, gameId),
+		});
+		return c.json(gameCharacters);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
+	const { gameId, userId } = c.req.param();
+	try {
+		const userChars = await db.query.characters.findMany({
+			where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
+		});
+		return c.json(userChars);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

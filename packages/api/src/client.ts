@@ -2,6 +2,7 @@ import ky, { type Options } from "ky";
 import { Games } from "./resources/games.js";
 import { Users } from "./resources/users.js";
 import { Notes } from "./resources/notes.js";
+import { Characters } from "./resources/characters.js";
 
 export interface ClientOptions {
 	baseUrl: string;
@@ -61,11 +62,13 @@ export class SDK {
 	users: Users;
 	games: Games;
 	notes: Notes;
+	characters: Characters;
 
 	constructor(options: ClientOptions) {
 		this.client = new Client(options);
 		this.games = new Games(this.client);
 		this.users = new Users(this.client);
 		this.notes = new Notes(this.client);
+		this.characters = new Characters(this.client);
 	}
 }
