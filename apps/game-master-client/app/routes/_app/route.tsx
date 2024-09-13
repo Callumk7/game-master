@@ -17,7 +17,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function AppLayout() {
 	const { userData } = useTypedLoaderData<typeof loader>();
 	const navigate = useNavigate();
-	const defaultGameId = userData[0].id;
+	const defaultGameId = userData[0]?.id ?? ""; // TODO: This is a temporary hack
 	return (
 		<RouterProvider navigate={navigate} useHref={useHref}>
 			<GameSelectionProvider gameSelectionId={defaultGameId}>
