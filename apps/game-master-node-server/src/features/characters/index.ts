@@ -74,6 +74,3 @@ characterRoute.patch("/:charId", async (c) => {
 	}
 });
 
-// TODO: update character details
-
-// TODO: get all, get all for game, get all user chars for game
