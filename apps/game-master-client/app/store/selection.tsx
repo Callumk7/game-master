@@ -38,11 +38,16 @@ export function GameSelectionProvider({ children, ...props }: SelectionProviderP
 	);
 }
 
-export function useGameSelectionContext<T>(selector: (state: SelectionState) => T): T {
+function useGameSelectionContext<T>(selector: (state: SelectionState) => T): T {
 	const store = useContext(GameSelectionContext);
 	if (!store) throw new Error("Missing GameSelection.Provider in this route tree");
 	return useStore(store, selector);
 }
 
-export const gameSelectionId = useGameSelectionContext((s) => s.gameSelectionId);
-export const setGameSelection = useGameSelectionContext((s) => s.setGameSelection);
+export function useGameSelectionId() {
+  return useGameSelectionContext((s) => s.gameSelectionId);
+}
+
+export function useSetGameSelection() {
+  return useGameSelectionContext((s) => s.setGameSelection);
+}

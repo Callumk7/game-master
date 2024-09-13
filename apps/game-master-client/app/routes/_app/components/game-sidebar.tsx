@@ -12,20 +12,23 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { useGameSelectionContext } from "~/store/selection";
+import { useGameSelectionId, useSetGameSelection } from "~/store/selection";
 
 interface GameSidebarProps {
 	gamesWithNotes: GameWithData[];
 }
 
 export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
-	const selectedGame = useGameSelectionContext((s) => s.gameSelectionId);
-	const updateSelection = useGameSelectionContext((s) => s.setGameSelection);
+	const selectedGame = useGameSelectionId();
+	const updateSelection = useSetGameSelection();
 
 	const gameNotes = gamesWithNotes.find((game) => game.id === selectedGame)?.notes;
 
 	return (
 		<aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
+      <form method="POST" action="logout">
+        <Button variant={"outline"} size={"sm"} type="submit">Logout</Button>
+      </form>
 			<SelectGame
 				games={gamesWithNotes}
 				selectedGame={selectedGame}
