@@ -12,15 +12,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { useGameSelectionContext } from "~/store/selection";
+import { useGameSelectionId, useSetGameSelection } from "~/store/selection";
 
 interface GameSidebarProps {
 	gamesWithNotes: GameWithData[];
 }
 
 export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
-	const selectedGame = useGameSelectionContext((s) => s.gameSelectionId);
-	const updateSelection = useGameSelectionContext((s) => s.setGameSelection);
+	const selectedGame = useGameSelectionId();
+	const updateSelection = useSetGameSelection();
 
 	const gameNotes = gamesWithNotes.find((game) => game.id === selectedGame)?.notes;
 

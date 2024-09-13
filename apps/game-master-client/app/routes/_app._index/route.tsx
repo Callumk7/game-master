@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { Text } from "~/ui/typeography";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { Link } from "~/components/ui/link";
