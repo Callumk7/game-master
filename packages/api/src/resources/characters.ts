@@ -31,10 +31,12 @@ export class Characters {
 		);
 	}
 
+	// DONE
 	async getAllGameCharacters(gameId: Id): Promise<Character[]> {
 		return this.client.get<Character[]>(`games/${gameId}/characters`);
 	}
 
+	// DONE
 	async getUserCharactersForGame(gameId: Id, userId: Id): Promise<Character[]> {
 		return this.client.get<Character[]>(`games/${gameId}/users/${userId}/characters`);
 	}
