@@ -26,6 +26,9 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 
 	return (
 		<aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
+      <form method="POST" action="logout">
+        <Button variant={"outline"} size={"sm"} type="submit">Logout</Button>
+      </form>
 			<SelectGame
 				games={gamesWithNotes}
 				selectedGame={selectedGame}
