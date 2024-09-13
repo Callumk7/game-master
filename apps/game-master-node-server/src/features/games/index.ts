@@ -13,6 +13,7 @@ import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api"
 import { createGameInsert } from "./util";
 import { notes } from "~/db/schema/notes";
 import { characters } from "~/db/schema/characters";
+import { StatusCodes } from "http-status-codes";
 
 export const gamesRoute = new Hono();
 
@@ -31,7 +32,7 @@ gamesRoute.post("/", async (c) => {
 			userId: newGameInsert.ownerId,
 			isOwner: true,
 		});
-		return successResponse(c, newGame);
+		return successResponse(c, newGame, StatusCodes.CREATED);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
