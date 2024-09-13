@@ -20,12 +20,25 @@ export class Client {
 				"Content-Type": "application/json",
 			},
 			hooks: {
+				beforeRequest: [
+					(request) => {
+						console.log(`Making request to: ${request.url}`);
+					},
+				],
+				afterResponse: [
+					(request, options, response) => {
+						console.log(
+							`Received response from: ${request.url}, status: ${response.status}`,
+						);
+					},
+				],
 				beforeError: [
 					(error) => {
-						const { response } = error;
-						if (response?.body) {
-							error.name = "ApiError";
-							error.message = `${response.status} ${response.statusText}`;
+						error.name = "ApiError";
+						if (error.response) {
+							error.message = `${error.response.status} ${error.response.statusText}`;
+						} else {
+							error.message = `Network error: ${error.message}`;
 						}
 						return error;
 					},
