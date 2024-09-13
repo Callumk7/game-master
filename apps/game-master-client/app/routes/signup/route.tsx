@@ -1,5 +1,4 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
@@ -8,6 +7,10 @@ import { z } from "zod";
 import { zx } from "zodix";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
 import { hashPassword } from "./queries.server";
+import { Form } from "@remix-run/react";
+import { JollyTextField } from "~/components/ui/textfield";
+import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(request, {
@@ -39,19 +42,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function SignUpRoute() {
-
   return (
-    <div className="bg-red-50 w-full">
-      <div className="my-24 w-1/2 mx-auto p-5">
-        <Form method="POST">
-          <div className="flex flex-col gap-3">
-            <input name="username" className="border border-black p-1" placeholder="username" />
-            <input name="email" className="border border-black p-1" placeholder="email" />
-            <input name="password" className="border border-black p-1" placeholder="password" />
-            <button type="submit">Sign Up</button>
-          </div>
-        </Form>
+      <div className="h-screen flex items-center justify-center">
+        <Card className="mx-auto md:w-1/2">
+          <CardHeader>
+            <CardTitle>Signup for Game Master</CardTitle>
+          </CardHeader>
+          <Form className="p-6 space-y-4" method="POST">
+            <JollyTextField name="email" label="Email" type="email" isRequired />
+            <JollyTextField name="username" label="Username" type="text" isRequired />
+            <JollyTextField name="password" label="Password" type="password" isRequired />
+            <Button type="submit">Create Account</Button>
+          </Form>
+        </Card>
       </div>
-    </div>
   );
 }

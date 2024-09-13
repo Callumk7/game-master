@@ -1,17 +1,11 @@
-import { db } from "db";
-import { eq } from "drizzle-orm";
-import { users } from "db/schema/users";
+import { api } from "~/lib/api.server";
+import { resolve } from "~/util/await-all";
 
-export const getUserDetails = async (userId: string) => {
-	return await db
-		.select({
-			id: users.id,
-			email: users.email,
-			username: users.username,
-			firstName: users.firstName,
-			lastName: users.lastName,
-		})
-		.from(users)
-		.where(eq(users.id, userId))
-		.then((result) => result[0]);
+export const getUserAppData = async (userId: string) => {
+	const userCall = api.users.getUser(userId);
+	const userDataCall = api.users.getAllUserData(userId); // TODO: this should include the user's data;
+
+	const [user, userData] = await resolve(userCall, userDataCall);
+
+	return { user, userData };
 };

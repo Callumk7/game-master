@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gamesRoute } from "~/features/games";
+import {gamesRoute} from "../src/features/games";
 
 describe("Games Route", async () => {
 	describe("/games", async () => {

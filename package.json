@@ -5,8 +5,13 @@
 		"build": "turbo build",
 		"deploy": "turbo deploy",
 		"dev": "turbo dev",
+		"dev:server": "pnpm --filter game-master-node-server dev",
+		"dev:client": "pnpm --filter game-master-client dev",
+		"test": "turbo test",
 		"lint": "turbo lint",
-		"lint:repo": "pnpm dlx sherif@latest"
+		"lint:repo": "pnpm dlx sherif@latest",
+		"test:server": "pnpm --filter game-master-node-server test",
+		"test:api": "pnpm --filter @repo/api test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",

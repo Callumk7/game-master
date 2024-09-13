@@ -1,8 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
-import { Button, Form, Input } from "react-aria-components";
-import type { CreateGameInput } from "types/games";
-import { api } from "~/lib/api";
+import { Form, json, useActionData } from "@remix-run/react";
+import type { CreateGameRequestBody } from "@repo/api";
+import { Button } from "~/components/ui/button";
+import { FieldError, Label } from "~/components/ui/field";
+import { Input, TextField } from "~/components/ui/textfield";
+import { api, extractDataFromResponseOrThrow } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 // TODO: This is a skeleton route, come back to this
@@ -13,16 +15,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const form = await request.formData();
 	const name = form.get("name")?.toString();
 
-	const input: CreateGameInput = {
+	const input: CreateGameRequestBody = {
 		name: name!,
 		ownerId: userId,
 	};
 
 	const result = await api.games.createGame(input);
+	const newGame = extractDataFromResponseOrThrow(result);
 
-	console.log(result);
-
-	return { newGame: true };
+	return json({ newGame });
 };
 
 export default function GamesIndex() {
@@ -30,9 +31,15 @@ export default function GamesIndex() {
 	return (
 		<div>
 			{data?.newGame ? "true succeess" : "Nothing, or no success"}
-			<Form method="post" action="/games?index">
-				<Input name="name" />
-				<Button type="submit">Create</Button>
+			<Form method="post" action="/games?index" className="max-w-80 flex flex-col gap-4">
+				<TextField name="name" type="text" isRequired>
+					<Label>New Game</Label>
+					<Input />
+					<FieldError />
+				</TextField>
+				<Button className="w-fit" type="submit">
+					Submit
+				</Button>
 			</Form>
 		</div>
 	);

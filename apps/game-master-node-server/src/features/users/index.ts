@@ -1,46 +1,42 @@
-import type { User } from "@repo/shared-types";
+import { newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { z } from "zod";
 import { db } from "~/db";
+import { characters } from "~/db/schema/characters";
 import { games } from "~/db/schema/games";
+import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
 	handleNotFound,
-	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 
 export const usersRoute = new Hono();
 
-// TODO: write tests
 usersRoute.get("/:userId", async (c) => {
 	const userId = c.req.param("userId");
 
 	try {
 		const result = await db
-			.select()
+			.select({
+				id: users.id,
+				firstName: users.firstName,
+				lastName: users.lastName,
+				username: users.username,
+				email: users.email,
+			})
 			.from(users)
 			.where(eq(users.id, userId))
 			.then((rows) => rows[0]);
 		if (!result) {
 			return handleNotFound(c);
 		}
-		return successResponse(c, result);
-
+		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
-});
-
-const newUserSchema = z.object({
-	firstName: z.string().optional(),
-	lastName: z.string().optional(),
-	username: z.string(),
-	email: z.string().email(),
-	passwordHash: z.string(),
 });
 
 usersRoute.post("/", async (c) => {
@@ -67,12 +63,59 @@ usersRoute.post("/", async (c) => {
 
 // TODO: Edit users
 
-usersRoute.get("/:userId/games/owned", async (c) => {
+usersRoute.get("/:userId/games", async (c) => {
+	const userId = c.req.param("userId");
+	const isOwned = c.req.query().owned;
+	if (isOwned) {
+		try {
+			const ownedGames = await db
+				.select()
+				.from(games)
+				.where(eq(games.ownerId, userId));
+			return c.json(ownedGames);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+
+	try {
+		const allGames = await db.query.games.findMany({
+			where: eq(games.ownerId, userId),
+			with: {
+				notes: true,
+			},
+		});
+		return c.json(allGames);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+usersRoute.get("/:userId/notes", async (c) => {
 	const userId = c.req.param("userId");
 	try {
-		const result = await db.select().from(games).where(eq(games.ownerId, userId));
-		return c.json(result);
+		const allUserNotes = await db
+			.select()
+			.from(notes)
+			.where(eq(notes.ownerId, userId));
+		return c.json(allUserNotes);
 	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Character Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+usersRoute.get("/:userId/chracters", async (c) => {
+	const userId = c.req.param("userId");
+	try {
+		const userChars = await db.query.characters.findMany({
+			where: eq(characters.ownerId, userId),
+		});
+		return c.json(userChars);
+	} catch (error) { 
 		return handleDatabaseError(c, error);
 	}
 });
