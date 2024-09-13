@@ -3,7 +3,8 @@ import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { games, usersToGames } from "~/db/schema/games";
+import { characters } from "~/db/schema/characters";
+import { games } from "~/db/schema/games";
 import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
@@ -99,6 +100,22 @@ usersRoute.get("/:userId/notes", async (c) => {
 			.where(eq(notes.ownerId, userId));
 		return c.json(allUserNotes);
 	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Character Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+usersRoute.get("/:userId/chracters", async (c) => {
+	const userId = c.req.param("userId");
+	try {
+		const userChars = await db.query.characters.findMany({
+			where: eq(characters.ownerId, userId),
+		});
+		return c.json(userChars);
+	} catch (error) { 
 		return handleDatabaseError(c, error);
 	}
 });

@@ -41,6 +41,7 @@ export class Characters {
 		return this.client.get<Character[]>(`games/${gameId}/users/${userId}/characters`);
 	}
 
+	// DONE
 	async getAllUserCharacters(userId: Id): Promise<Character[]> {
 		return this.client.get<Character[]>(`users/${userId}/characters`);
 	}
