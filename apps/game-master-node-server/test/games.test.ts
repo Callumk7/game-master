@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { gamesRoute } from "../src/features/games";
-import type { CreateGameRequestBody } from "@repo/api";
 
 describe("Games Route", async () => {
 	describe("/games route", async () => {
