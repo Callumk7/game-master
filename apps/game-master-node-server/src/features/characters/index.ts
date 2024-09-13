@@ -1,4 +1,7 @@
-import { createCharacterSchema } from "@repo/api/dist/types/characters";
+import {
+	createCharacterSchema,
+	updateCharacterSchema,
+} from "@repo/api/dist/types/characters";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -52,6 +55,22 @@ characterRoute.delete("/:charId", async (c) => {
 		return basicSuccessResponse(c);
 	} catch (error) {
 		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.patch("/:charId", async (c) => {
+	const charId = c.req.param("charId");
+	const data = await validateOrThrowError(updateCharacterSchema, c);
+
+	try {
+		const charUpdate = await db
+			.update(characters)
+			.set(data)
+			.where(eq(characters.id, charId))
+			.returning();
+		return successResponse(c, charUpdate);
+	} catch (error) {
+		handleDatabaseError(c, error);
 	}
 });
 
