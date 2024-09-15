@@ -46,7 +46,7 @@ notesRoute.post("/", async (c) => {
 
 	try {
 		const newNote = await db.insert(notes).values(newNoteInsert); 
-		return successResponse(c, newNote); // TODO: return the response from the database
+		return successResponse(c, newNote);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
