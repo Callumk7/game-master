@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useHref, useNavigate } from "@remix-run/react";
+import { Outlet, useHref, useNavigate, useParams } from "@remix-run/react";
 import { RouterProvider } from "react-aria-components";
 import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
@@ -17,7 +17,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function AppLayout() {
 	const { userData } = useTypedLoaderData<typeof loader>();
 	const navigate = useNavigate();
+
 	const defaultGameId = userData[0]?.id ?? ""; // TODO: This is a temporary hack
+
 	return (
 		<RouterProvider navigate={navigate} useHref={useHref}>
 			<GameSelectionProvider gameSelectionId={defaultGameId}>
