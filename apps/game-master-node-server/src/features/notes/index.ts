@@ -52,6 +52,18 @@ notesRoute.post("/", async (c) => {
 	}
 });
 
+// api.getNote
+notesRoute.get("/:noteId", async (c) => {
+	const noteId = c.req.param("noteId");
+	try {
+		const note = await getNote(noteId);
+		if (!note) return handleNotFound(c);
+		return c.json(note);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 // api.updateNote
 notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
