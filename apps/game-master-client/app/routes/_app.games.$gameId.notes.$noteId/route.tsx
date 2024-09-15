@@ -40,12 +40,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function NotesRoute() {
-	const { gameId, noteId } = useParams();
 	const { note } = useTypedLoaderData<typeof loader>();
 	return (
 		<div className="p-4 space-y-4">
-			<Text variant={"h1"}>{noteId}</Text>
-			<Text variant={"h2"}>{gameId}</Text>
+			<Text variant={"h2"}>{note.name}</Text>
 			<EditorBody htmlContent={note.htmlContent} />
 		</div>
 	);

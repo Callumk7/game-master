@@ -15,7 +15,6 @@ export default function NotesLayout() {
   const { notes } = useTypedLoaderData<typeof loader>();
   return (
     <div>
-      <p>Notes sidebar</p>
       <Outlet />
     </div>
   );
