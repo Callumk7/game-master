@@ -1,10 +1,11 @@
-import { useFetcher } from "@remix-run/react";
+import { type FormMethod, useFetcher } from "@remix-run/react";
 import { useDefaultEditor } from ".";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useStateSync } from "~/hooks/state-sync";
 
 type SyncEditorOptions = {
 	action?: string;
+	method?: FormMethod;
 	initContent: string;
 };
 
@@ -14,7 +15,6 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	let optimisticContent = options.initContent;
 
 	if (fetcher.formData?.has("htmlContent")) {
-		console.log("optimistic htmlCOntent exists");
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
@@ -43,7 +43,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 					content: editor.getText(),
 				},
 				{
-					method: "PATCH",
+					method: options.method ?? "patch", // WARN: test this syntax
 					action: options.action,
 				},
 			);

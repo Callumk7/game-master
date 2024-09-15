@@ -1,6 +1,7 @@
-import { PlusIcon } from "@radix-ui/react-icons";
-import { useNavigate } from "@remix-run/react";
+import { FilePlusIcon, PlusIcon } from "@radix-ui/react-icons";
+import { useParams } from "@remix-run/react";
 import type { Game, GameWithData } from "@repo/api";
+import { useEffect } from "react";
 import { Group } from "react-aria-components";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
@@ -21,6 +22,13 @@ interface GameSidebarProps {
 export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 	const selectedGame = useGameSelectionId();
 	const updateSelection = useSetGameSelection();
+	const params = useParams();
+
+	useEffect(() => {
+		if (params.gameId && selectedGame !== params.gameId) {
+			updateSelection(params.gameId);
+		}
+	});
 
 	const gameNotes = gamesWithNotes.find((game) => game.id === selectedGame)?.notes;
 
@@ -56,7 +64,6 @@ interface SelectGameProps {
 }
 
 function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
-	const navigate = useNavigate();
 	return (
 		<Group className={"flex gap-2 w-full"}>
 			<Select
@@ -69,18 +76,26 @@ function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
 				</SelectTrigger>
 				<SelectPopover>
 					<SelectListBox items={games}>
-						{(item) => <SelectItem>{item.name}</SelectItem>}
+						{(item) => <SelectItem href={`/games/${item.id}`}>{item.name}</SelectItem>}
 					</SelectListBox>
 				</SelectPopover>
 			</Select>
-			<Button
+			<Link
 				variant={"outline"}
 				size={"icon"}
 				className={"flex-grow-0 flex-shrink-0"}
-				onPress={() => navigate(`/games/${selectedGame}`)}
+				href={`/games/${selectedGame}/notes/new`}
+			>
+				<FilePlusIcon />
+			</Link>
+			<Link
+				variant={"outline"}
+				size={"icon"}
+				className={"flex-grow-0 flex-shrink-0"}
+				href="/games/new"
 			>
 				<PlusIcon />
-			</Button>
+			</Link>
 		</Group>
 	);
 }
