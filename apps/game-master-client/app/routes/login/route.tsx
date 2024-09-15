@@ -10,6 +10,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "~/components/ui/ca
 import { JollyTextField } from "~/components/ui/textfield";
 import { commitSession, getUserSession } from "~/lib/auth.server";
 import { verifyPassword } from "./queries.server";
+import { Link } from "~/components/ui/link";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
   const session = await getUserSession(request);
@@ -88,7 +89,10 @@ export default function LoginRoute() {
         <Form className="p-6 space-y-4" method="POST">
           <JollyTextField name="username" label="Username" type="text" isRequired />
           <JollyTextField name="password" label="Password" type="password" isRequired />
-          <Button type="submit">Login</Button>
+          <div className="flex flex-col gap-2">
+            <Button type="submit">Login</Button>
+            <Link variant={"secondary"} href={"/signup"}>Need an account? Sign up</Link>
+          </div>
         </Form>
       </Card>
     </div>
