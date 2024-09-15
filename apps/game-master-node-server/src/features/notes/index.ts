@@ -33,7 +33,11 @@ notesRoute.post("/", async (c) => {
 	const newNoteInsert = createNoteInsert(data);
 
 	try {
-		const newNote = await db.insert(notes).values(newNoteInsert); 
+		const newNote = await db
+			.insert(notes)
+			.values(newNoteInsert)
+			.returning()
+			.then((result) => result[0]);
 		return successResponse(c, newNote);
 	} catch (error) {
 		return handleDatabaseError(c, error);
