@@ -42,10 +42,10 @@ notesRoute.get("/:noteId", async (c) => {
 notesRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createNoteSchema, c);
 
-	const newNote = createNoteInsert(data);
+	const newNoteInsert = createNoteInsert(data);
 
 	try {
-		await db.insert(notes).values(newNote); 
+		const newNote = await db.insert(notes).values(newNoteInsert); 
 		return successResponse(c, newNote); // TODO: return the response from the database
 	} catch (error) {
 		return handleDatabaseError(c, error);
