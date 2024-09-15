@@ -84,7 +84,7 @@ function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
 				variant={"outline"}
 				size={"icon"}
 				className={"flex-grow-0 flex-shrink-0"}
-				href={`/games/${selectedGame}`}
+				href={`/games/${selectedGame}/notes/new`}
 			>
 				<FilePlusIcon />
 			</Link>
