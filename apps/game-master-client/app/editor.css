@@ -111,8 +111,6 @@
 
 .editor {
     background-color: hsl(var(--background));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
     color: hsl(var(--foreground));
     display: flex;
     flex-direction: column;
