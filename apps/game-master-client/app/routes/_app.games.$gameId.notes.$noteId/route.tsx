@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useParams } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
+import { NoteToolbar } from "./components/note-toolbar";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -36,6 +36,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		return typedjson(result.data);
 	}
 
+	if (request.method === "DELETE") {
+		const result = await api.notes.deleteNote(noteId);
+		if (!result.success) {
+			return new Response("Error");
+		}
+    return redirect("/")
+	}
+
 	return new Response("Method Not Allowed", { status: 400 });
 };
 
@@ -43,6 +51,7 @@ export default function NotesRoute() {
 	const { note } = useTypedLoaderData<typeof loader>();
 	return (
 		<div className="p-4 space-y-4">
+			<NoteToolbar noteId={note.id} />
 			<Text variant={"h2"}>{note.name}</Text>
 			<EditorBody htmlContent={note.htmlContent} />
 		</div>
