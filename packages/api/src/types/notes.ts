@@ -26,6 +26,7 @@ export const createNoteSchema = z.object({
 	name: z.string(),
 	ownerId: z.string(),
 	gameId: z.string(),
+	content: z.string(),
 	htmlContent: z.string(),
 	type: noteTypeSchema,
 });

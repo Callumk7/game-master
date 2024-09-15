@@ -26,6 +26,24 @@ const getNote = async (noteId: Id) => {
 	});
 };
 
+// api.createNote
+notesRoute.post("/", async (c) => {
+	const data = await validateOrThrowError(createNoteSchema, c);
+
+	const newNoteInsert = createNoteInsert(data);
+
+	try {
+		const newNote = await db
+			.insert(notes)
+			.values(newNoteInsert)
+			.returning()
+			.then((result) => result[0]);
+		return successResponse(c, newNote);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 // api.getNote
 notesRoute.get("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
@@ -33,20 +51,6 @@ notesRoute.get("/:noteId", async (c) => {
 		const note = await getNote(noteId);
 		if (!note) return handleNotFound(c);
 		return c.json(note);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-// api.createNote
-notesRoute.post("/", async (c) => {
-	const data = await validateOrThrowError(createNoteSchema, c);
-
-	const newNote = createNoteInsert(data);
-
-	try {
-		await db.insert(notes).values(newNote); 
-		return successResponse(c, newNote); // TODO: return the response from the database
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
