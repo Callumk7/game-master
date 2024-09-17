@@ -80,6 +80,7 @@ gamesRoute.post("/:gameId/notes", async (c) => {
 			htmlContent: data.htmlContent,
 			gameId,
 		});
+		return successResponse(c, newNote);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
