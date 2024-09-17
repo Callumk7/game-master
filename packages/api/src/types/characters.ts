@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Id } from "./index.js";
+import type { Note } from "./notes.js";
 
 export interface Character {
 	id: Id;
@@ -11,6 +12,10 @@ export interface Character {
 	ownerId: Id;
 	gameId: Id;
 	isPlayer: boolean;
+}
+
+export interface CharacterWithNotes extends Character {
+	notes: Note[];
 }
 
 export const createCharacterSchema = z.object({
