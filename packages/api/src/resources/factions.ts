@@ -1,5 +1,5 @@
 import type { Client } from "../client.js";
-import type { CreateFactionRequestBody, Faction, FactionWithNotes } from "../types/factions.js";
+import type { CreateFactionRequestBody, Faction, FactionWithMembers, FactionWithNotes } from "../types/factions.js";
 import type { ServerResponse, Id, BasicServerResponse } from "../types/index.js";
 
 export class Factions {
@@ -42,7 +42,11 @@ export class Factions {
 		return this.client.get<Faction[]>(`users/${userId}/factions`);
 	}
 
-	async getFactionWithNotes(factionId: Id): Promise<FactionWithNotes[]> {
-		return this.client.get<FactionWithNotes[]>(`factions/${factionId}/notes`);
+	async getFactionWithNotes(factionId: Id): Promise<FactionWithNotes> {
+		return this.client.get<FactionWithNotes>(`factions/${factionId}/notes`);
+	}
+
+	async getFactionWithMembers(factionId: Id): Promise<FactionWithMembers> {
+		return this.client.get<FactionWithMembers>(`factions/${factionId}/members`);
 	}
 }

@@ -46,7 +46,7 @@ export class Characters {
 		return this.client.get<Character[]>(`users/${userId}/characters`);
 	}
 
-	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes[]> {
-		return this.client.get<CharacterWithNotes[]>(`characters/${charId}/notes`)
+	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
+		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`)
 	}
 }
