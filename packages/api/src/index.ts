@@ -6,3 +6,5 @@ export * from "./types/index.js";
 export * from "./types/games.js";
 export * from "./types/users.js";
 export * from "./types/notes.js";
+export * from "./types/characters.js";
+export * from "./types/factions.js";
