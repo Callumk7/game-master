@@ -15,7 +15,8 @@
 		"db:generate": "pnpm --filter game-master-node-server db:generate",
 		"db:migrate": "pnpm --filter game-master-node-server db:migrate",
 		"db:push": "pnpm --filter game-master-node-server db:push",
-		"db:studio": "pnpm --filter game-master-node-server db:studio"
+		"db:studio": "pnpm --filter game-master-node-server db:studio",
+		"build:api": "pnpm --filter @repo/api build"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
