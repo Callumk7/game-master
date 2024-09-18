@@ -31,3 +31,12 @@ export const createFactionSchema = z.object({
 	members: z.array(z.string()).optional(),
 });
 export type CreateFactionRequestBody = z.infer<typeof createFactionSchema>;
+
+export const updateFactionSchema = z.object({
+	name: z.string().optional(),
+	content: z.string().optional(),
+	htmlContent: z.string().optional(),
+	coverImageUrl: z.string().optional(),
+	leaderId: z.string().optional(),
+})
+export type UpdateFactionRequestBody = z.infer<typeof updateFactionSchema>;
