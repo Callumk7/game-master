@@ -74,4 +74,3 @@ characterRoute.patch("/:charId", async (c) => {
 		handleDatabaseError(c, error);
 	}
 });
-
