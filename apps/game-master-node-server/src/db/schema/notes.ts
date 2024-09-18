@@ -4,6 +4,8 @@ import { relations } from "drizzle-orm";
 import { games } from "./games";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { notesOnCharacters } from "./characters";
+import { notesOnFactions } from "./factions";
 
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
@@ -29,6 +31,8 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 		fields: [notes.folderId],
 		references: [folders.id],
 	}),
+	characters: many(notesOnCharacters),
+	factions: many(notesOnFactions)
 }));
 
 export const links = pgTable("links", {
