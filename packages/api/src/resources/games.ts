@@ -2,7 +2,9 @@ import type { Client } from "../client.js";
 import type {
 	CreateGameRequestBody,
 	Game,
+	GameWithCharacters,
 	GameWithData,
+	GameWithNestedData,
 	GameWithNotes,
 } from "../types/games.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
@@ -38,6 +40,10 @@ export class Games {
 		return this.client.get<GameWithData>(`games/${gameId}/all`);
 	}
 
+	async getAllGameDataWithNestedRelations(gameId: Id): Promise<GameWithNestedData> {
+		return this.client.get<GameWithNestedData>(`games/${gameId}/all?nested=true`)
+	}
+
 	async getGameNotes(gameId: Id): Promise<GameWithNotes> {
 		return this.client.get<GameWithNotes>(`games/${gameId}/notes`);
 	}
@@ -46,8 +52,8 @@ export class Games {
 		return this.client.get<Note[]>(`games/${gameId}/members/${userId}/notes`);
 	}
 
-	async getGameCharacters(gameId: Id): Promise<GameWithNotes> {
-		return this.client.get<GameWithNotes>(`games/${gameId}/characters`);
+	async getGameCharacters(gameId: Id): Promise<GameWithCharacters> {
+		return this.client.get<GameWithCharacters>(`games/${gameId}/characters`);
 	}
 
 	async createGame(input: CreateGameRequestBody): Promise<ServerResponse<Game>> {

@@ -4,6 +4,8 @@ import { users } from "./users";
 import { characters, charactersInFactions } from "./characters";
 import { relations } from "drizzle-orm";
 import { notes } from "./notes";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 export const factions = pgTable("factions", {
 	id: text("id").primaryKey().notNull(),
@@ -19,6 +21,12 @@ export const factions = pgTable("factions", {
 		.notNull(),
 	leaderId: text("leader_id").references(() => characters.id),
 });
+
+export const databaseSelectFactionSchema = createSelectSchema(factions);
+export type DatabaseFaction = z.infer<typeof databaseSelectFactionSchema>;
+
+export const databaseInsertFactionSchema = createInsertSchema(factions);
+export type InsertDatabaseFaction = z.infer<typeof databaseInsertFactionSchema>;
 
 export const factionRelations = relations(factions, ({ one, many }) => ({
 	notes: many(notesOnFactions),
@@ -47,3 +55,14 @@ export const notesOnFactions = pgTable(
 		pk: primaryKey({ columns: [t.noteId, t.factionsId] }),
 	}),
 );
+
+export const notesOnFactionsRelations = relations(notesOnFactions, ({one}) => ({
+	note: one(notes, {
+		fields: [notesOnFactions.noteId],
+		references: [notes.id]
+	}),
+	faction: one(factions, {
+		fields: [notesOnFactions.factionsId],
+		references: [factions.id]
+	})
+}))

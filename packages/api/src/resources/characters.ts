@@ -1,5 +1,5 @@
 import type { Client } from "../client.js";
-import type { Character, CreateCharacterRequestBody } from "../types/characters.js";
+import type { Character, CharacterWithNotes, CreateCharacterRequestBody } from "../types/characters.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 
 export class Characters {
@@ -20,7 +20,7 @@ export class Characters {
 		return this.client.delete(`characters/${charId}`);
 	}
 
-	// DONE
+	// TODO: change the Partial type to an inferred type based on the updateCharacter zod schema
 	async updateCharacterDetails(
 		charId: Id,
 		charDetails: Partial<Character>,
@@ -44,5 +44,9 @@ export class Characters {
 	// DONE
 	async getAllUserCharacters(userId: Id): Promise<Character[]> {
 		return this.client.get<Character[]>(`users/${userId}/characters`);
+	}
+
+	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
+		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`)
 	}
 }
