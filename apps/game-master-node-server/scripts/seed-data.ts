@@ -20,13 +20,14 @@ async function seedData() {
 		}
 	}
 
-	// Create note data
 	const newNoteIds: string[] = [];
+	const newCharIds: string[] = [];
 	for (const gameId of newGameIds) {
-		let i = 0;
+		// Create note data
+		let n = 0;
 		for (const note of ttrpgNotes) {
 			const result = await client.notes.createNote({
-				name: noteTitles[i],
+				name: noteTitles[n],
 				content: note.content,
 				htmlContent: note.htmlContent,
 				ownerId: "staging",
@@ -39,13 +40,30 @@ async function seedData() {
 				console.log(`${result.data.name} created for game: ${gameId}`);
 			}
 
-			i++;
+			n++;
+		}
+		// create character data
+		let c = 0;
+		for (const charName of fantasyCharacterNames) {
+			const result = await client.characters.createCharacter({
+				name: charName,
+				content: ttrpgNotes[c].content,
+				htmlContent: ttrpgNotes[c].htmlContent,
+				ownerId: "staging",
+				gameId,
+			});
+
+			if (result.success) {
+				newCharIds.push(result.data.id);
+				console.log(`${result.data.name} created for game: ${gameId}`);
+			}
+
+			c++;
 		}
 	}
 }
 
 seedData();
-
 
 const noteTitles = [
 	"The Whispering Caverns",
@@ -159,4 +177,37 @@ const ttrpgNotes = [
 		htmlContent:
 			"<h2>The Fractal Citadel</h2>\n\n<p>An impossibly complex fortress that exists simultaneously on multiple scales. From a distance, it appears as a single massive structure, but as one approaches, infinite smaller copies of itself become visible, each one a perfect replica containing even smaller versions within.</p>\n\n<p>Key features:</p>\n<ul>\n<li>Rooms and corridors that seamlessly transition between different scales</li>\n<li>Puzzles and challenges that require manipulating objects at various sizes</li>\n<li>Inhabitants that exist at different scales, some too small to see, others impossibly large</li>\n</ul>\n\n<p>The Fractal Citadel is said to house the Lens of Infinity, an artifact that allows the user to perceive and interact with all levels of reality simultaneously. However, the mind-bending nature of the citadel makes reaching the Lens a formidable challenge.</p>\n\n<p>Potential hazards:</p>\n<ol>\n<li>Vertigo and disorientation from rapid scale changes</li>\n<li>Traps that activate at one scale but have consequences at another</li>\n<li>The risk of becoming lost in infinitely recursive spaces</li>\n</ol>\n\n<p>Adventure hooks:</p>\n<ul>\n<li>Retrieve a specific item hidden somewhere in the citadel's infinite fractal structure</li>\n<li>Negotiate with the various factions that inhabit different scales of the citadel</li>\n<li>Prevent a villain from using the Lens of Infinity to unravel the fabric of reality</li>\n</ul>\n\n<p><strong>GM Note:</strong> The Fractal Citadel can be an excellent setting for mind-bending puzzles and exploration. Consider using visual aids or props to help players grasp the shifting scales and spatial relationships within the citadel.</p>",
 	},
+];
+
+const fantasyCharacterNames = [
+	"Aelindra Moonwhisper",
+	"Thorgar Ironheart",
+	"Zephyra Stormborn",
+	"Caelum Shadowbane",
+	"Lyra Dawnbringer",
+	"Garrick Flameforge",
+	"Elowen Nightshade",
+	"Thorne Blackthorn",
+	"Isolde Frostweaver",
+	"Ragnar Stormcaller",
+	"Seraphina Starweaver",
+	"Drogon Emberheart",
+	"Nymeria Swiftshadow",
+	"Alaric Stormbringer",
+	"Eilara Moonshadow",
+	"Fenris Wolfborn",
+	"Celeste Dreamwalker",
+	"Azrael Duskblade",
+	"Elowen Thornheart",
+	"Thaddeus Grimstone",
+	"Lilith Shadowdancer",
+	"Bjorn Frostbeard",
+	"Aria Windsong",
+	"Cyrus Blackwater",
+	"Freya Silverbranch",
+	"Zephyr Cloudrunner",
+	"Elara Sunfire",
+	"Kael Stormshadow",
+	"Ysera Mistwalker",
+	"Gareth Ironshield",
 ];
