@@ -47,3 +47,14 @@ export const notesOnFactions = pgTable(
 		pk: primaryKey({ columns: [t.noteId, t.factionsId] }),
 	}),
 );
+
+export const notesOnFactionsRelations = relations(notesOnFactions, ({one}) => ({
+	note: one(notes, {
+		fields: [notesOnFactions.noteId],
+		references: [notes.id]
+	}),
+	faction: one(factions, {
+		fields: [notesOnFactions.factionsId],
+		references: [factions.id]
+	})
+}))

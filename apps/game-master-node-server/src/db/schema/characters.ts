@@ -57,6 +57,18 @@ export const notesOnCharacters = pgTable(
 	}),
 );
 
+export const notesOnCharactersRelations = relations(notesOnCharacters, ({one}) => ({
+	note: one(notes, {
+		fields: [notesOnCharacters.noteId],
+		references: [notes.id]
+	}),
+	character: one(characters, {
+		fields: [notesOnCharacters.characterId],
+		references: [characters.id]
+	})
+}))
+
+
 export const charactersInFactions = pgTable(
 	"characters_in_factions",
 	{
@@ -73,3 +85,16 @@ export const charactersInFactions = pgTable(
 		pk: primaryKey({ columns: [t.factionId, t.characterId] }),
 	}),
 );
+
+export const charactersInFactionsRelations = relations(charactersInFactions, ({one}) => ({
+	faction: one(factions, {
+		fields: [charactersInFactions.factionId],
+		references: [factions.id]
+	}),
+	character: one(characters, {
+		fields: [charactersInFactions.characterId],
+		references: [characters.id]
+	})
+}))
+
+

@@ -15,6 +15,13 @@
       "when": 1726155628658,
       "tag": "0001_bored_jocasta",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1726652382241,
+      "tag": "0002_sloppy_johnny_blaze",
+      "breakpoints": true
     }
   ]
 }

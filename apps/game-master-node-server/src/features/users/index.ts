@@ -12,6 +12,7 @@ import {
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
+import { getOwnedGamesWithConnections } from "./queries";
 
 export const usersRoute = new Hono();
 
@@ -65,27 +66,35 @@ usersRoute.post("/", async (c) => {
 
 usersRoute.get("/:userId/games", async (c) => {
 	const userId = c.req.param("userId");
-	const isOwned = c.req.query().owned;
-	if (isOwned) {
+
+	const withData = c.req.query().withData;
+	const nested = c.req.query().nested;
+
+	if (withData === "true") {
+		if (nested === "true") {
+			try {
+				const allGames = await getOwnedGamesWithConnections(userId);
+				return c.json(allGames);
+			} catch (error) {
+				return handleDatabaseError(c, error);
+			}
+		}
 		try {
-			const ownedGames = await db
-				.select()
-				.from(games)
-				.where(eq(games.ownerId, userId));
-			return c.json(ownedGames);
+			const allGames = await db.query.games.findMany({
+				where: eq(games.ownerId, userId),
+				with: {
+					notes: true,
+				},
+			});
+			return c.json(allGames);
 		} catch (error) {
 			return handleDatabaseError(c, error);
 		}
 	}
 
 	try {
-		const allGames = await db.query.games.findMany({
-			where: eq(games.ownerId, userId),
-			with: {
-				notes: true,
-			},
-		});
-		return c.json(allGames);
+		const ownedGames = await db.select().from(games).where(eq(games.ownerId, userId));
+		return c.json(ownedGames);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -115,7 +124,7 @@ usersRoute.get("/:userId/chracters", async (c) => {
 			where: eq(characters.ownerId, userId),
 		});
 		return c.json(userChars);
-	} catch (error) { 
+	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
 });
