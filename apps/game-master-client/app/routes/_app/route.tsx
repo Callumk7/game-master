@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useHref, useNavigate, useParams } from "@remix-run/react";
+import { Outlet, useHref, useNavigate } from "@remix-run/react";
 import { RouterProvider } from "react-aria-components";
 import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
