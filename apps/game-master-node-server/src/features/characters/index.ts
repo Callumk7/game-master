@@ -41,7 +41,8 @@ characterRoute.post("/", async (c) => {
 		const newChar = await db
 			.insert(characters)
 			.values(newCharacterInsert)
-			.returning();
+			.returning()
+			.then((result) => result[0]);
 		return successResponse(c, newChar);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -73,4 +74,3 @@ characterRoute.patch("/:charId", async (c) => {
 		handleDatabaseError(c, error);
 	}
 });
-

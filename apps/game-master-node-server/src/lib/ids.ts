@@ -11,3 +11,7 @@ export function generateNoteId() {
 export function generateCharacterId() {
 	return `char_${uuidv4()}`;
 }
+
+export function generateFactionId() {
+	return `faction_${uuidv4()}`;
+}
