@@ -3,8 +3,10 @@ import { useParams } from "@remix-run/react";
 import type { Game, GameWithData } from "@repo/api";
 import { useEffect } from "react";
 import { Group } from "react-aria-components";
+import { SignoutButton } from "~/components/signout";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
+import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import {
 	Select,
 	SelectItem,
@@ -24,6 +26,7 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 	const updateSelection = useSetGameSelection();
 	const params = useParams();
 
+	// TODO: This should maybe be a hook, could be useful through the app
 	useEffect(() => {
 		if (params.gameId && selectedGame !== params.gameId) {
 			updateSelection(params.gameId);
@@ -34,10 +37,8 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 
 	return (
 		<aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
-      <form method="POST" action="/logout">
-        <Button variant={"outline"} size={"sm"} type="submit">Logout</Button>
-      </form>
-			<SelectGame
+			<SignoutButton />
+			<SidebarTools
 				games={gamesWithNotes}
 				selectedGame={selectedGame}
 				setSelectedGame={updateSelection}
@@ -63,7 +64,7 @@ interface SelectGameProps {
 	games: Game[];
 }
 
-function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
+function SidebarTools({ selectedGame, setSelectedGame, games }: SelectGameProps) {
 	return (
 		<Group className={"flex gap-2 w-full"}>
 			<Select
@@ -80,14 +81,7 @@ function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
 					</SelectListBox>
 				</SelectPopover>
 			</Select>
-			<Link
-				variant={"outline"}
-				size={"icon"}
-				className={"flex-grow-0 flex-shrink-0"}
-				href={`/games/${selectedGame}/notes/new`}
-			>
-				<FilePlusIcon />
-			</Link>
+			<NewEntityMenu selectedGame={selectedGame} />
 			<Link
 				variant={"outline"}
 				size={"icon"}
@@ -97,5 +91,18 @@ function SelectGame({ selectedGame, setSelectedGame, games }: SelectGameProps) {
 				<PlusIcon />
 			</Link>
 		</Group>
+	);
+}
+
+interface NewEntityMenuProps {
+	selectedGame: string;
+}
+function NewEntityMenu({ selectedGame }: NewEntityMenuProps) {
+	return (
+		<JollyMenu label={<FilePlusIcon />} size={"icon"} variant={"outline"}>
+			<MenuItem href={`/games/${selectedGame}/notes/new`}>Note</MenuItem>
+			<MenuItem href={`/games/${selectedGame}/characters/new`}>Character</MenuItem>
+			<MenuItem href={`/games/${selectedGame}/factions/new`}>Faction</MenuItem>
+		</JollyMenu>
 	);
 }

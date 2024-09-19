@@ -20,6 +20,7 @@ import { Button, type buttonVariants } from "./button";
 import { ListBoxCollection, ListBoxSection } from "./list-box";
 import { SelectPopover } from "./select";
 import { cn } from "callum-util";
+import { ReactNode } from "react";
 
 const MenuTrigger = AriaMenuTrigger;
 
@@ -130,7 +131,7 @@ interface JollyMenuProps<T>
 	extends AriaMenuProps<T>,
 		VariantProps<typeof buttonVariants>,
 		Omit<AriaMenuTriggerProps, "children"> {
-	label?: string;
+	label?: string | ReactNode;
 }
 function JollyMenu<T extends object>({
 	label,
