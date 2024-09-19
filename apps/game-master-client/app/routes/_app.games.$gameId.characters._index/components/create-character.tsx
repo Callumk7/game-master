@@ -1,6 +1,6 @@
 import { Form, useSubmit } from "@remix-run/react";
 import { type FormEventHandler, useState } from "react";
-import { EditorBody, EditorWithControls, useDefaultEditor } from "~/components/editor";
+import { EditorWithControls, useDefaultEditor } from "~/components/editor";
 import { Button } from "~/components/ui/button";
 import {
 	DialogContent,
@@ -42,7 +42,7 @@ export function CreateCharacter({ gameId }: CreateCharacterProps) {
 			<DialogOverlay>
 				<DialogContent side="right" className="sm:max-w-[425px]">
 					{({ close }) => (
-						<>
+						<div className="max-h-[95vh] overflow-y-auto">
 							<DialogHeader>
 								<DialogTitle>Create Character</DialogTitle>
 							</DialogHeader>
@@ -63,7 +63,7 @@ export function CreateCharacter({ gameId }: CreateCharacterProps) {
 									</Button>
 								</DialogFooter>
 							</Form>
-						</>
+						</div>
 					)}
 				</DialogContent>
 			</DialogOverlay>
