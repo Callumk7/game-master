@@ -6,8 +6,11 @@ import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
 import { useSyncEditorContent } from "./sync";
 import type { FormMethod } from "@remix-run/react";
+import type { EntityType } from "~/types/general";
+import { cn } from "callum-util";
+import { Label } from "../ui/field";
 
-export const useDefaultEditor = (content: string | null) => {
+export const useDefaultEditor = (content: string | undefined = undefined) => {
 	return useEditor({
 		extensions: [StarterKit, Typography],
 		immediatelyRender: false,
@@ -49,18 +52,25 @@ export function EditorBody({ htmlContent, action, method }: EditorBodyProps) {
 	);
 }
 
-export function EditorWithControls({ editor }: { editor: Editor | null }) {
+interface EditorWithControlsProps {
+	editor: Editor | null;
+	bordered?: boolean;
+	label?: string;
+}
+
+export function EditorWithControls({ editor, bordered, label }: EditorWithControlsProps) {
 	if (!editor) return null;
 	return (
-		<>
+		<div>
+			{label && <Label>{label}</Label>}
 			<EditorContent
-				className="flex-auto"
+				className={cn("flex-auto", bordered ? "border rounded-md" : "")}
 				editor={editor}
 			/>
 			<BubbleMenu editor={editor}>
 				<BubbleMenuItems editor={editor} />
 			</BubbleMenu>
-		</>
+		</div>
 	);
 }
 
