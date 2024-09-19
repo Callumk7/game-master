@@ -3,6 +3,7 @@ import { Games } from "./resources/games.js";
 import { Users } from "./resources/users.js";
 import { Notes } from "./resources/notes.js";
 import { Characters } from "./resources/characters.js";
+import { Factions } from "./resources/factions.js";
 
 export interface ClientOptions {
 	baseUrl: string;
@@ -63,6 +64,7 @@ export class SDK {
 	games: Games;
 	notes: Notes;
 	characters: Characters;
+	factions: Factions;
 
 	constructor(options: ClientOptions) {
 		this.client = new Client(options);
@@ -70,5 +72,6 @@ export class SDK {
 		this.users = new Users(this.client);
 		this.notes = new Notes(this.client);
 		this.characters = new Characters(this.client);
+		this.factions = new Factions(this.client);
 	}
 }

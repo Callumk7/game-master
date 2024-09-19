@@ -6,10 +6,13 @@ import type { Note } from "./notes.js";
 export interface Faction {
 	id: Id;
 	name: string;
-	description: string;
+	content: string;
+	htmlContent: string;
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
+	gameId: Id;
+	leaderId: Id;
 }
 
 export interface FactionWithMembers extends Faction {
