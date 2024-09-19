@@ -24,6 +24,7 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 	const updateSelection = useSetGameSelection();
 	const params = useParams();
 
+  // TODO: This should maybe be a hook, could be useful through the app 
 	useEffect(() => {
 		if (params.gameId && selectedGame !== params.gameId) {
 			updateSelection(params.gameId);
