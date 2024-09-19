@@ -27,7 +27,7 @@ export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
 							<DialogHeader>
 								<DialogTitle>Create Character</DialogTitle>
 							</DialogHeader>
-							<CreateCharacterForm gameId={gameId} />
+							<CreateCharacterForm gameId={gameId} close={close} />
 						</div>
 					)}
 				</DialogContent>
