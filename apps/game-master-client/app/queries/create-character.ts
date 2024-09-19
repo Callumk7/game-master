@@ -22,5 +22,5 @@ export async function createCharacterAction(request: Request) {
 		return redirect(`/games/${gameId}/characters/${id}`);
 	}
 
-	throw new Error("Something went wrong with the api - Callum error");
+	throw new Error("Something went wrong with the api - Characters - Callum error");
 }
