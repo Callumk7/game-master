@@ -1,24 +1,46 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
-import { parseParams } from "zodix";
+import { parseForm, parseParams } from "zodix";
 import { api } from "~/lib/api.server";
+import { CreateCharacter } from "./components/create-character";
+import { methodNotAllowed } from "~/util/responses";
+import { validateUser } from "~/lib/auth.server";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
 
 	const gameChars = await api.characters.getAllGameCharacters(gameId);
 
-	return typedjson({ gameChars });
+	return typedjson({ gameId, gameChars });
+};
+
+export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+	const userId = await validateUser(request);
+	if (request.method === "POST") {
+		const data = await parseForm(request, {
+			name: z.string(),
+			content: z.string(),
+			htmlContent: z.string(),
+			gameId: z.string(),
+		});
+		const result = await api.characters.createCharacter({ ...data, ownerId: userId });
+    return typedjson(result);
+	}
+
+	return methodNotAllowed();
 };
 
 export default function CharacterIndex() {
-	const { gameChars } = useTypedLoaderData<typeof loader>();
+	const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
 	return (
 		<div>
-      {gameChars.map(char => (
-        <p key={char.id}>{char.name}</p>
-      ))}
+			<CreateCharacter gameId={gameId} />
+			<div>
+				{gameChars.map((char) => (
+					<p key={char.id}>{char.name}</p>
+				))}
+			</div>
 		</div>
 	);
 }
