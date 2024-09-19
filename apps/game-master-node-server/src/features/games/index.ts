@@ -1,7 +1,10 @@
+import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
+import { characters } from "~/db/schema/characters";
 import { games, usersToGames } from "~/db/schema/games";
+import { notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -9,10 +12,8 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createGameNote } from "./mutations";
-import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
 import { createGameInsert } from "./util";
-import { notes } from "~/db/schema/notes";
-import { characters } from "~/db/schema/characters";
+import { factions } from "~/db/schema/factions";
 
 export const gamesRoute = new Hono();
 
@@ -141,3 +142,20 @@ gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Faction Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+gamesRoute.get("/:gameId/factions", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameFactions = await db.query.factions.findMany({
+			where: eq(factions.gameId, gameId),
+		});
+		return c.json(gameFactions);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+

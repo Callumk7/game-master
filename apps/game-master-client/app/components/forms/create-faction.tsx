@@ -12,22 +12,22 @@ import {
 } from "~/components/ui/dialog";
 import { JollyTextField } from "~/components/ui/textfield";
 
-interface CreateCharacterProps {
+interface CreateFactionSlideoverProps {
 	gameId: string;
 }
 
-export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
+export function CreateFactionSlideover({ gameId }: CreateFactionSlideoverProps) {
 	return (
 		<DialogTrigger>
-			<Button variant="outline">Create Character</Button>
+			<Button variant="outline">Create Faction</Button>
 			<DialogOverlay>
 				<DialogContent side="right" className="sm:max-w-[425px]">
 					{({ close }) => (
 						<div className="max-h-[95vh] overflow-y-auto">
 							<DialogHeader>
-								<DialogTitle>Create Character</DialogTitle>
+								<DialogTitle>Create Faction</DialogTitle>
 							</DialogHeader>
-							<CreateCharacterForm gameId={gameId} close={close} />
+							<CreateFactionForm gameId={gameId} />
 						</div>
 					)}
 				</DialogContent>
@@ -36,12 +36,12 @@ export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
 	);
 }
 
-interface CreateCharacterFormProps {
+interface CreateFactionFormProps {
 	gameId: string;
   close?: () => void;
 }
 
-export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps) {
+export function CreateFactionForm({ gameId, close }: CreateFactionFormProps) {
 	const editor = useDefaultEditor();
 
 	const [name, setName] = useState("");
@@ -68,10 +68,10 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
 					autoFocus
 					value={name}
 					onInput={(e) => setName(e.currentTarget.value)}
-					label="Name"
+					label="Faction Name"
 					isRequired
 				/>
-				<EditorWithControls editor={editor} bordered label="Description" />
+				<EditorWithControls editor={editor} bordered label="Background" />
 			</div>
 			<DialogFooter>
 				<Button onPress={close} type="submit">
