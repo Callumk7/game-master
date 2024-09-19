@@ -12,6 +12,10 @@ const createLinks = (gameId: string) => {
 			label: "Characters",
 			href: `/games/${gameId}/characters`,
 		},
+		{
+			label: "Factions",
+			href: `/games/${gameId}/factions`,
+		},
 	];
 };
 
