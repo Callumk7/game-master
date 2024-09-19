@@ -6,6 +6,7 @@ import { api } from "~/lib/api.server";
 import { CreateCharacter } from "./components/create-character";
 import { methodNotAllowed } from "~/util/responses";
 import { validateUser } from "~/lib/auth.server";
+import { Link } from "~/components/ui/link";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
@@ -25,7 +26,7 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 			gameId: z.string(),
 		});
 		const result = await api.characters.createCharacter({ ...data, ownerId: userId });
-    return typedjson(result);
+		return typedjson(result);
 	}
 
 	return methodNotAllowed();
@@ -36,9 +37,15 @@ export default function CharacterIndex() {
 	return (
 		<div>
 			<CreateCharacter gameId={gameId} />
-			<div>
+			<div className="flex flex-col gap-2 items-start">
 				{gameChars.map((char) => (
-					<p key={char.id}>{char.name}</p>
+					<Link
+						variant={"link"}
+						href={`/games/${gameId}/characters/${char.id}`}
+						key={char.id}
+					>
+						{char.name}
+					</Link>
 				))}
 			</div>
 		</div>
