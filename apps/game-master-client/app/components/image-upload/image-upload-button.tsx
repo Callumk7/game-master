@@ -1,8 +1,7 @@
 import { useFetcher } from "@remix-run/react";
-import type { EntityType } from "@repo/db";
-import { Button } from "./ui/button";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { useCustomUploadButton } from "~/hooks/custom-upload-button";
+import { useCustomUploadButton } from "./upload-hook";
+import { Button } from "../ui/button";
 
 interface ImageUploadProps {
 	imageSrc: string | null;
@@ -28,8 +27,8 @@ export function ImageUpload({ imageSrc, alt }: ImageUploadProps) {
 					className="object-fill object-center"
 				/>
 				<Button
-					size="icon-sm"
-					variant="hover-destructive"
+					size="icon"
+					variant="destructive"
 					className={"absolute opacity-0 top-2 right-2 group-hover:opacity-100"}
 					onPress={() => fetcher.submit({}, { method: "DELETE", action: "uploads" })}
 				>
