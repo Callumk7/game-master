@@ -111,3 +111,19 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Linking
+////////////////////////////////////////////////////////////////////////////////
+
+notesRoute.post("/:noteId/links", async (c) => {
+	const fromId = c.req.param("noteId"); // note id is always the fromId
+	const { toIds } = await validateOrThrowError(linkNotesSchema, c);
+
+	try {
+		const linkInsert = toIds.map((id) => ({ fromId, toId: id }));
+		await db.insert(links).values(linkInsert);
+	} catch (error) { 
+		return handleDatabaseError(c, error);
+	}
+});
