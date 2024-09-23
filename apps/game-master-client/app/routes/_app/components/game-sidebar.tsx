@@ -4,7 +4,6 @@ import type { Game, GameWithData } from "@repo/api";
 import { useEffect } from "react";
 import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
-import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import {
@@ -49,6 +48,7 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 						key={note.id}
 						variant={"link"}
 						href={`/games/${selectedGame}/notes/${note.id}`}
+              className={"text-wrap h-fit"}
 					>
 						{note.name}
 					</Link>
