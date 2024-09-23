@@ -2,6 +2,7 @@ import type { Client } from "../client.js";
 import type {
 	CreateGameRequestBody,
 	Game,
+	GameEntities,
 	GameWithCharacters,
 	GameWithData,
 	GameWithNestedData,
@@ -38,6 +39,10 @@ export class Games {
 
 	async getAllGameData(gameId: Id): Promise<GameWithData> {
 		return this.client.get<GameWithData>(`games/${gameId}/all`);
+	}
+
+	async getAllGameEntities(gameId: Id): Promise<GameEntities> {
+		return this.client.get<GameEntities>(`games/${gameId}/entities`);
 	}
 
 	async getAllGameDataWithNestedRelations(gameId: Id): Promise<GameWithNestedData> {
