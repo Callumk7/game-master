@@ -117,14 +117,41 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 //                                Linking
 ////////////////////////////////////////////////////////////////////////////////
 
+notesRoute.get("/:noteId/links", async (c) => {
+	const noteId = c.req.param("noteId");
+
+	try {
+		const backLinks = await db.query.links
+			.findMany({
+				where: eq(links.toId, noteId),
+				with: {
+					from: true,
+				},
+			})
+			.then((result) => result.map((row) => row.from));
+		const outgoingLinks = await db.query.links
+			.findMany({
+				where: eq(links.fromId, noteId),
+				with: {
+					to: true,
+				},
+			})
+			.then((result) => result.map((row) => row.to));
+		return c.json({ backLinks, outgoingLinks });
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 notesRoute.post("/:noteId/links", async (c) => {
 	const fromId = c.req.param("noteId"); // note id is always the fromId
 	const { toIds } = await validateOrThrowError(linkNotesSchema, c);
 
 	try {
 		const linkInsert = toIds.map((id) => ({ fromId, toId: id }));
-		await db.insert(links).values(linkInsert);
-	} catch (error) { 
+		const result = await db.insert(links).values(linkInsert).returning();
+		return c.json(result);
+	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
 });

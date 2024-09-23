@@ -6,8 +6,9 @@ import { EditorBody } from "~/components/editor";
 import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NoteToolbar } from "./components/note-toolbar";
-import { useIsRightSidebarOpen, useSetRightSidebarOpen } from "~/store/selection";
 import { NoteSidebar } from "./components/note-sidebar";
+import { useStateSync } from "~/hooks/state-sync";
+import { useState } from "react";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { noteId } = parseParams(params, {
@@ -15,7 +16,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   });
 
   const note = await api.notes.getNote(noteId);
-  return typedjson({ note });
+  const linkedNotes = await api.notes.getLinkedNotes(noteId);
+  console.log(linkedNotes);
+  return typedjson({ note, linkedNotes });
 };
 
 // Update note
@@ -50,16 +53,21 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function NotesRoute() {
-  const { note } = useTypedLoaderData<typeof loader>();
+  const { note, linkedNotes } = useTypedLoaderData<typeof loader>();
 
   return (
     <>
       <div className="p-4 space-y-4">
         <NoteToolbar noteId={note.id} />
         <Text variant={"h2"}>{note.name}</Text>
+        <Text variant={"p"}>{note.id}</Text>
         <EditorBody htmlContent={note.htmlContent} />
       </div>
-      <NoteSidebar linkedNotes={[{ id: "1", name: "First note", type: "note" }]} />
+      <NoteSidebar
+        noteId={note.id}
+        backlinks={linkedNotes.backLinks}
+        outgoingLinks={linkedNotes.outgoingLinks}
+      />
     </>
   );
 }

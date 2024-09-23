@@ -3,7 +3,7 @@ import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js"
 import type { CreateNoteRequestBody, Note } from "../types/notes.js";
 
 export class Notes {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	// DONE
 	async getNote(noteId: Id): Promise<Note> {
@@ -54,6 +54,14 @@ export class Notes {
 		return this.client.get<Note[]>(`users/${userId}/notes`);
 	}
 
+	async getLinkedNotes(
+		noteId: Id,
+	): Promise<{ backLinks: Note[]; outgoingLinks: Note[] }> {
+		return this.client.get<{ backLinks: Note[]; outgoingLinks: Note[] }>(
+			`notes/${noteId}/links`,
+		);
+	}
+
 	// DONE
 	async linkNotes(fromId: Id, toIds: Id[]): Promise<{ fromId: Id; toIds: Id[] }> {
 		return this.client.post<{ fromId: Id; toIds: Id[] }>(`notes/${fromId}/links`, {
@@ -61,5 +69,3 @@ export class Notes {
 		});
 	}
 }
-
-
