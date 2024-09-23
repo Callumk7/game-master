@@ -19,6 +19,7 @@ export interface Note {
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
+	gameId: Id;
 	type: NoteType;
 }
 
