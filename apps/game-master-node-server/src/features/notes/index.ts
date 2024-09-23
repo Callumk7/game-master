@@ -1,6 +1,8 @@
 import {
 	createNoteSchema,
 	duplicateNoteSchema,
+	linkCharactersSchema,
+	linkFactionsSchema,
 	linkNotesSchema,
 	updateNoteContentSchema,
 	type Id,
@@ -18,6 +20,8 @@ import {
 import { createNoteInsert } from "./util";
 import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
+import { notesOnCharacters } from "~/db/schema/characters";
+import { notesOnFactions } from "~/db/schema/factions";
 
 export const notesRoute = new Hono();
 
@@ -150,6 +154,62 @@ notesRoute.post("/:noteId/links/notes", async (c) => {
 	try {
 		const linkInsert = toIds.map((id) => ({ fromId, toId: id }));
 		const result = await db.insert(links).values(linkInsert).returning();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/links/characters", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
+
+	try {
+		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
+		const result = await db.insert(notesOnCharacters).values(linkInsert).returning();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/links/factions", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { factionIds } = await validateOrThrowError(linkFactionsSchema, c);
+
+	try {
+		const linkInsert = factionIds.map((id) => ({ noteId, factionId: id }));
+		const result = await db.insert(notesOnFactions).values(linkInsert).returning();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Replace all links
+notesRoute.put("/:noteId/links/characters", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
+
+	try {
+		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
+		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
+		const result = await db.insert(notesOnCharacters).values(linkInsert).returning();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Replace all links
+notesRoute.put("/:noteId/links/factions", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { factionIds } = await validateOrThrowError(linkFactionsSchema, c);
+
+	try {
+		const linkInsert = factionIds.map((id) => ({ noteId, factionId: id }));
+		await db.delete(notesOnFactions).where(eq(notesOnFactions.noteId, noteId));
+		const result = await db.insert(notesOnFactions).values(linkInsert).returning();
 		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
