@@ -1,64 +1,89 @@
 import type { BasicEntity, EntityType } from "@repo/api";
 import type { ReactNode } from "react";
 import {
-	DialogContent,
-	DialogHeader,
-	DialogOverlay,
-	DialogTitle,
-	DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
 } from "./ui/dialog";
 import { Tab, TabList, TabPanel, Tabs } from "./ui/tabs";
 import { useGameData } from "~/routes/_app.games.$gameId/route";
 import { GridList, GridListItem } from "./ui/grid-list";
+import { useListData } from "react-stately";
+import type { GridListProps } from "react-aria-components";
 
 interface LinkDialogProps {
-	entityId: string;
-	entityType: EntityType;
-	trigger: ReactNode;
+  entityId: string;
+  entityType: EntityType;
+  trigger: ReactNode;
 }
 
 export function LinkDialog({ entityId, entityType, trigger }: LinkDialogProps) {
-	const { notes, characters, factions } = useGameData();
-	return (
-		<DialogTrigger>
-			{trigger}
-			<DialogOverlay>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Link</DialogTitle>
-					</DialogHeader>
-					<div>
-						<Tabs>
-							<TabList>
-								<Tab id="notes">Notes</Tab>
-								<Tab id="chars">Characters</Tab>
-								<Tab id="factions">Factions</Tab>
-							</TabList>
-							<TabPanel id="notes">
-								<EntityGridBox items={notes} />
-							</TabPanel>
-							<TabPanel id="chars">
-								<EntityGridBox items={characters} />
-							</TabPanel>
-							<TabPanel id="factions">
-								<EntityGridBox items={factions} />
-							</TabPanel>
-						</Tabs>
-					</div>
-				</DialogContent>
-			</DialogOverlay>
-		</DialogTrigger>
-	);
+  const { notes, characters, factions } = useGameData();
+  const notesState = useListData({
+    initialItems: notes,
+  });
+  const charactersState = useListData({
+    initialItems: characters,
+  });
+  const factionsState = useListData({
+    initialItems: notes,
+  });
+  return (
+    <DialogTrigger>
+      {trigger}
+      <DialogOverlay>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Link</DialogTitle>
+          </DialogHeader>
+          <div>
+            <Tabs>
+              <TabList>
+                <Tab id="notes">Notes</Tab>
+                <Tab id="chars">Characters</Tab>
+                <Tab id="factions">Factions</Tab>
+              </TabList>
+              <TabPanel id="notes">
+                <EntityGridBox
+                  items={notesState.items}
+                  selectionMode="multiple"
+                  selectedKeys={notesState.selectedKeys}
+                  onSelectionChange={notesState.setSelectedKeys}
+                />
+              </TabPanel>
+              <TabPanel id="chars">
+                <EntityGridBox
+                  items={charactersState.items}
+                  selectionMode="multiple"
+                  selectedKeys={charactersState.selectedKeys}
+                  onSelectionChange={charactersState.setSelectedKeys}
+                />
+              </TabPanel>
+              <TabPanel id="factions">
+                <EntityGridBox
+                  items={factionsState.items}
+                  selectionMode="multiple"
+                  selectedKeys={factionsState.selectedKeys}
+                  onSelectionChange={factionsState.setSelectedKeys}
+                />
+              </TabPanel>
+            </Tabs>
+          </div>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogTrigger>
+  );
 }
 
-interface EntityGridBoxProps {
-	items: BasicEntity[];
-}
-
-export function EntityGridBox({ items }: EntityGridBoxProps) {
-	return (
-		<GridList items={items} selectionMode="multiple">
-			{(item) => <GridListItem>{item.name}</GridListItem>}
-		</GridList>
-	);
+export function EntityGridBox<T extends BasicEntity>({
+  items,
+  ...props
+}: GridListProps<T>) {
+  return (
+    <GridList items={items} {...props}>
+      {(item) => <GridListItem>{item.name}</GridListItem>}
+    </GridList>
+  );
 }

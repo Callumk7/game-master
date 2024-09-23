@@ -117,7 +117,7 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 //                                Linking
 ////////////////////////////////////////////////////////////////////////////////
 
-notesRoute.get("/:noteId/links", async (c) => {
+notesRoute.get("/:noteId/links/notes", async (c) => {
 	const noteId = c.req.param("noteId");
 
 	try {
@@ -143,7 +143,7 @@ notesRoute.get("/:noteId/links", async (c) => {
 	}
 });
 
-notesRoute.post("/:noteId/links", async (c) => {
+notesRoute.post("/:noteId/links/notes", async (c) => {
 	const fromId = c.req.param("noteId"); // note id is always the fromId
 	const { toIds } = await validateOrThrowError(linkNotesSchema, c);
 
