@@ -8,6 +8,7 @@ export type BasicServerResponse = { success: boolean };
 export type BasicEntity = {
 	id: Id;
 	name: string;
+	gameId: string;
 }
 
 export type EntityType = "notes" | "characters" | "factions";

@@ -1,10 +1,10 @@
+import type { BasicEntity } from "@repo/api";
 import { useState } from "react";
 import { LinkDialog } from "~/components/link-dialog";
 import { Button } from "~/components/ui/button";
 import { ListBox, ListBoxHeader, ListBoxItem } from "~/components/ui/list-box";
 import { useStateSync } from "~/hooks/state-sync";
 import { useIsRightSidebarOpen } from "~/store/selection";
-import type { BasicEntity } from "~/types/general";
 
 interface NoteSidebarProps<T extends BasicEntity> {
 	noteId: string;
@@ -36,7 +36,7 @@ export function NoteSidebar<T extends BasicEntity>({
 					</Button>
 				}
 				entityId={""}
-				entityType={"note"}
+				entityType={"notes"}
 				allNotes={[]}
 				allChars={[]}
 				allFactions={[]}
