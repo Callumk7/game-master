@@ -54,6 +54,7 @@ export class Notes {
 		return this.client.get<Note[]>(`users/${userId}/notes`);
 	}
 
+	// DONE
 	async linkNotes(fromId: Id, toIds: Id[]): Promise<{ fromId: Id; toIds: Id[] }> {
 		return this.client.post<{ fromId: Id; toIds: Id[] }>(`notes/${fromId}/links`, {
 			toIds,
