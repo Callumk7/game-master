@@ -3,20 +3,24 @@ import { createStore, useStore } from "zustand";
 
 interface SelectionProps {
 	gameSelectionId: string;
+  isRightSidebarOpen: boolean;
 }
 
 interface SelectionState extends SelectionProps {
 	setGameSelection: (gameId: string) => void;
+  setIsRightSidebarOpen: (isOpen: boolean) => void;
 }
 
 const createGameSelectionStore = (initProps?: Partial<SelectionProps>) => {
 	const DEFAULT_PROPS: SelectionProps = {
 		gameSelectionId: "",
+    isRightSidebarOpen: false
 	};
 	return createStore<SelectionState>()((set) => ({
 		...DEFAULT_PROPS,
 		...initProps,
 		setGameSelection: (gameId) => set({ gameSelectionId: gameId }),
+    setIsRightSidebarOpen: (isOpen) => set({isRightSidebarOpen: isOpen})
 	}));
 };
 
@@ -50,4 +54,12 @@ export function useGameSelectionId() {
 
 export function useSetGameSelection() {
   return useGameSelectionContext((s) => s.setGameSelection);
+}
+
+export function useIsRightSidebarOpen() {
+  return useGameSelectionContext((s) => s.isRightSidebarOpen);
+}
+
+export function useSetRightSidebarOpen() {
+  return useGameSelectionContext((s) => s.setIsRightSidebarOpen);
 }

@@ -1,12 +1,13 @@
 import {
 	createNoteSchema,
 	duplicateNoteSchema,
+	linkNotesSchema,
 	updateNoteContentSchema,
 	type Id,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { notes } from "~/db/schema/notes";
+import { links, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
