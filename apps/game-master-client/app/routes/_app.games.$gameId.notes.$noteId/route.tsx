@@ -7,8 +7,6 @@ import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NoteToolbar } from "./components/note-toolbar";
 import { NoteSidebar } from "./components/note-sidebar";
-import { useStateSync } from "~/hooks/state-sync";
-import { useState } from "react";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { noteId } = parseParams(params, {
