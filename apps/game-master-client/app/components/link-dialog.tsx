@@ -17,19 +17,34 @@ interface LinkDialogProps {
   entityId: string;
   entityType: EntityType;
   trigger: ReactNode;
+  linkedNotes: BasicEntity[];
+  linkedChars: BasicEntity[];
+  linkedFactions: BasicEntity[];
 }
 
-export function LinkDialog({ entityId, entityType, trigger }: LinkDialogProps) {
-  const { notes, characters, factions } = useGameData();
+export function LinkDialog({
+  entityId,
+  entityType,
+  trigger,
+  linkedNotes,
+  linkedChars,
+  linkedFactions,
+}: LinkDialogProps) {
+  const { notes, characters, factions } = useGameData(); // full list of game entities
   const notesState = useListData({
     initialItems: notes,
+    initialSelectedKeys: linkedNotes.map((note) => note.id),
   });
   const charactersState = useListData({
     initialItems: characters,
+    initialSelectedKeys: linkedChars.map((char) => char.id),
   });
   const factionsState = useListData({
     initialItems: notes,
+    initialSelectedKeys: linkedFactions.map((faction) => faction.id),
   });
+
+  const handleSaveOnClosed = () => {};
   return (
     <DialogTrigger>
       {trigger}

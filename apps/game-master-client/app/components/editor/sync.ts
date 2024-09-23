@@ -1,7 +1,6 @@
 import { type FormMethod, useFetcher } from "@remix-run/react";
 import { useDefaultEditor } from ".";
 import { useState } from "react";
-import { useStateSync } from "~/hooks/state-sync";
 
 type SyncEditorOptions = {
 	action?: string;
@@ -58,4 +57,14 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		status: fetcher.state,
 		saveContent
 	};
+};
+
+type StateFunction = () => void;
+
+const useStateSync = <T>(data: T, stateFunction: StateFunction) => {
+	const [prevData, setPrevData] = useState(data);
+	if (data !== prevData) {
+		setPrevData(data);
+		stateFunction();
+	}
 };
