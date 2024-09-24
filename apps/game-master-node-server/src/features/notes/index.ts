@@ -191,6 +191,8 @@ notesRoute.put("/:noteId/links/characters", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
 
+	console.log(characterIds)
+
 	try {
 		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
 		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
