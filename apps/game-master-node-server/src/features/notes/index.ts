@@ -160,14 +160,54 @@ notesRoute.post("/:noteId/links/notes", async (c) => {
 	}
 });
 
+notesRoute.get("/:noteId/links/characters", async (c) => {
+	const noteId = c.req.param("noteId");
+
+	try {
+		const linkedChars = await db.query.notesOnCharacters
+			.findMany({
+				where: eq(notesOnCharacters.noteId, noteId),
+				with: {
+					character: true,
+				},
+			})
+			.then((result) => result.map((row) => row.character));
+		return c.json(linkedChars);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 notesRoute.post("/:noteId/links/characters", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
 
 	try {
 		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
-		const result = await db.insert(notesOnCharacters).values(linkInsert).returning();
+		const result = await db
+			.insert(notesOnCharacters)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
 		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.get("/:noteId/links/factions", async (c) => {
+	const noteId = c.req.param("noteId");
+
+	try {
+		const linkedFactions = await db.query.notesOnFactions
+			.findMany({
+				where: eq(notesOnFactions.noteId, noteId),
+				with: {
+					faction: true,
+				},
+			})
+			.then((result) => result.map((row) => row.faction));
+		return c.json(linkedFactions);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -179,7 +219,11 @@ notesRoute.post("/:noteId/links/factions", async (c) => {
 
 	try {
 		const linkInsert = factionIds.map((id) => ({ noteId, factionId: id }));
-		const result = await db.insert(notesOnFactions).values(linkInsert).returning();
+		const result = await db
+			.insert(notesOnFactions)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
 		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -191,12 +235,16 @@ notesRoute.put("/:noteId/links/characters", async (c) => {
 	const noteId = c.req.param("noteId");
 	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
 
-	console.log(characterIds)
+	console.log(characterIds);
 
 	try {
 		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
 		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
-		const result = await db.insert(notesOnCharacters).values(linkInsert).returning();
+		const result = await db
+			.insert(notesOnCharacters)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
 		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -211,7 +259,11 @@ notesRoute.put("/:noteId/links/factions", async (c) => {
 	try {
 		const linkInsert = factionIds.map((id) => ({ noteId, factionId: id }));
 		await db.delete(notesOnFactions).where(eq(notesOnFactions.noteId, noteId));
-		const result = await db.insert(notesOnFactions).values(linkInsert).returning();
+		const result = await db
+			.insert(notesOnFactions)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
 		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
