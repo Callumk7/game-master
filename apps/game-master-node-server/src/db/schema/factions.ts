@@ -47,12 +47,12 @@ export const notesOnFactions = pgTable(
 		noteId: text("note_id")
 			.references(() => notes.id)
 			.notNull(),
-		factionsId: text("faction_id")
+		factionId: text("faction_id")
 			.references(() => factions.id)
 			.notNull(),
 	},
 	(t) => ({
-		pk: primaryKey({ columns: [t.noteId, t.factionsId] }),
+		pk: primaryKey({ columns: [t.noteId, t.factionId] }),
 	}),
 );
 
@@ -62,7 +62,7 @@ export const notesOnFactionsRelations = relations(notesOnFactions, ({one}) => ({
 		references: [notes.id]
 	}),
 	faction: one(factions, {
-		fields: [notesOnFactions.factionsId],
+		fields: [notesOnFactions.factionId],
 		references: [factions.id]
 	})
 }))

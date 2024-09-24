@@ -4,7 +4,6 @@ import type { Game, GameWithData } from "@repo/api";
 import { useEffect } from "react";
 import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
-import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import {
@@ -43,12 +42,13 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 				selectedGame={selectedGame}
 				setSelectedGame={updateSelection}
 			/>
-			<Group className={"flex flex-col gap-2 items-start"}>
+			<Group className={"flex flex-col gap-2 items-start"} aria-label="Note list">
 				{gameNotes?.map((note) => (
 					<Link
 						key={note.id}
 						variant={"link"}
 						href={`/games/${selectedGame}/notes/${note.id}`}
+						className={"text-wrap h-fit"}
 					>
 						{note.name}
 					</Link>
@@ -58,19 +58,20 @@ export function GameSidebar({ gamesWithNotes }: GameSidebarProps) {
 	);
 }
 
-interface SelectGameProps {
+interface SidebarToolsProps {
 	selectedGame: string;
 	setSelectedGame: (key: string) => void;
 	games: Game[];
 }
 
-function SidebarTools({ selectedGame, setSelectedGame, games }: SelectGameProps) {
+function SidebarTools({ selectedGame, setSelectedGame, games }: SidebarToolsProps) {
 	return (
-		<Group className={"flex gap-2 w-full"}>
+		<Group className={"flex gap-2 w-full"} aria-label="Game tools">
 			<Select
 				selectedKey={selectedGame}
 				onSelectionChange={(key) => setSelectedGame(key.toString())}
 				className={"flex-1 min-w-0"}
+				aria-label="Game select dropdown"
 			>
 				<SelectTrigger>
 					<SelectValue />
@@ -81,7 +82,7 @@ function SidebarTools({ selectedGame, setSelectedGame, games }: SelectGameProps)
 					</SelectListBox>
 				</SelectPopover>
 			</Select>
-			<NewEntityMenu selectedGame={selectedGame} />
+			<NewEntityMenu selectedGame={selectedGame} aria-label="New item menu" />
 			<Link
 				variant={"outline"}
 				size={"icon"}

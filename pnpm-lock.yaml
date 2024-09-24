@@ -54,8 +54,8 @@ importers:
         specifier: ^2.5.6
         version: 2.5.6(@tiptap/pm@2.5.6)
       callum-util:
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^2.2.0
+        version: 2.2.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -3800,6 +3800,9 @@ packages:
 
   callum-util@2.0.1:
     resolution: {integrity: sha512-qNTqG0l9HEpyx/8BWg/K6rbMzV1seQx8RIFuaqWChJjV1ss8gkatBfwWqql8C1JJ9wzizT0myFurEjOywNsn2w==}
+
+  callum-util@2.2.0:
+    resolution: {integrity: sha512-PTcoohmBhYSKpVnpWUfv8M40mxXm/HaEOoqtpYCb8bubGgNv9TSF6Ua/XOPyAFVZ619AZaTkx5NgxXg11WfLMA==}
 
   camelcase-css@2.0.1:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
@@ -11204,6 +11207,11 @@ snapshots:
       tailwind-merge: 2.4.0
 
   callum-util@2.0.1:
+    dependencies:
+      clsx: 2.1.1
+      tailwind-merge: 2.4.0
+
+  callum-util@2.2.0:
     dependencies:
       clsx: 2.1.1
       tailwind-merge: 2.4.0

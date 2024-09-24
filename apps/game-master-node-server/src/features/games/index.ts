@@ -52,6 +52,44 @@ gamesRoute.get("/:gameId", async (c) => {
 	}
 });
 
+gamesRoute.get("/:gameId/entities", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameData = await db.query.games
+			.findFirst({
+				where: eq(games.id, gameId),
+				with: {
+					characters: {
+						columns: {
+							id: true,
+							name: true,
+						},
+					},
+					factions: {
+						columns: {
+							id: true,
+							name: true,
+						},
+					},
+					notes: {
+						columns: {
+							id: true,
+							name: true,
+						},
+					},
+				},
+			})
+			.then((result) => ({
+				characters: result?.characters ?? [],
+				factions: result?.factions ?? [],
+				notes: result?.notes ?? [],
+			}));
+		return c.json(gameData);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 gamesRoute.delete("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
@@ -158,4 +196,3 @@ gamesRoute.get("/:gameId/factions", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
-
