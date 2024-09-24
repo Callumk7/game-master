@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, json } from "@remix-run/react";
+import { Form, json, redirect } from "@remix-run/react";
 import type { CreateGameRequestBody } from "@repo/api";
 import { z } from "zod";
 import { parseForm } from "zodix";
@@ -21,13 +21,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	const result = await api.games.createGame(input);
 	const newGame = extractDataFromResponseOrThrow(result);
 
-	return json({ newGame });
+	return redirect(`/games/${newGame.id}`);
 };
 
 export default function NewGameRoute() {
 	return (
 		<div className="p-6">
-			<Form method="post" action="/games?index" className="max-w-80 flex flex-col gap-4">
+			<Form method="post" className="max-w-80 flex flex-col gap-4">
 				<JollyTextField type="text" label="Name" name="name" isRequired />
 				<Button className="w-fit" type="submit">
 					Submit

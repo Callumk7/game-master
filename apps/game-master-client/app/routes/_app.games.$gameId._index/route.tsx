@@ -22,19 +22,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	});
 
 	if (request.method === "PATCH") {
-		const { content, htmlContent } = await parseForm(request, {
-			content: z.string(),
-			htmlContent: z.string(),
+		const { name } = await parseForm(request, {
+			name: z.string(),
 		});
 
-		const result = await api.notes.createNote({
-			htmlContent,
-			gameId,
-			ownerId: userId,
-			type: "note",
-			name: "TEMP_NOTE_NAME",
-			content,
-		});
+		const result = await api.games.updateGameDetails(gameId, { name });
 
 		if (!result.success) {
 			return new Response("Error");
@@ -49,8 +41,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function GameRoute() {
 	const { game } = useTypedLoaderData<typeof loader>();
 	return (
-		<div>
+		<div className="p-4">
 			<EditableText
+				method="patch"
 				fieldName={"name"}
 				value={game.name}
 				inputClassName={"text-5xl font-bold mb-5 w-full focus:outline-none bg-inherit"}
@@ -58,7 +51,6 @@ export default function GameRoute() {
 				inputLabel={"Game name input"}
 				buttonLabel={"Edit game name"}
 			/>
-			<EditorBody htmlContent="<p>A new note...</p>" />
 		</div>
 	);
 }

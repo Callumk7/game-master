@@ -75,7 +75,6 @@ export function EditableText({
 					}
 				}}
 				onBlur={(event) => {
-					console.log("blur has happened");
 					if (
 						inputRef.current?.value !== value &&
 						inputRef.current?.value.trim() !== ""
