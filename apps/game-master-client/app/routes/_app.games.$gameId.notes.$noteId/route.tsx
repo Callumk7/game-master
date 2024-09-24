@@ -1,5 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
+import {
+	redirect,
+	typedjson,
+	useTypedLoaderData,
+	useTypedRouteLoaderData,
+} from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
@@ -17,8 +22,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 	const note = await api.notes.getNote(noteId);
 	const linkedNotes = await api.notes.getLinkedNotes(noteId);
-	console.log(linkedNotes);
-	return typedjson({ note, linkedNotes });
+	const linkedChars = await api.notes.getLinkedCharacters(noteId);
+	const linkedFactions = await api.notes.getLinkedFactions(noteId);
+
+	return typedjson({ note, linkedNotes, linkedChars, linkedFactions });
 };
 
 // Update note
@@ -53,7 +60,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		}
 		// TODO: error handling
 		if (data.characterIds) {
-			await api.notes.updateLinkedCharacters(noteId, stringOrArrayToArray(data.characterIds));
+			await api.notes.updateLinkedCharacters(
+				noteId,
+				stringOrArrayToArray(data.characterIds),
+			);
 		}
 
 		return null;
@@ -71,7 +81,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function NotesRoute() {
-	const { note, linkedNotes } = useTypedLoaderData<typeof loader>();
+	const { note } = useTypedLoaderData<typeof loader>();
 
 	return (
 		<>
@@ -81,11 +91,19 @@ export default function NotesRoute() {
 				<Text variant={"p"}>{note.id}</Text>
 				<EditorBody htmlContent={note.htmlContent} />
 			</div>
-			<NoteSidebar
-				noteId={note.id}
-				backlinks={linkedNotes.backLinks}
-				outgoingLinks={linkedNotes.outgoingLinks}
-			/>
+			<NoteSidebar />
 		</>
 	);
+}
+
+export function useNoteData() {
+	const data = useTypedRouteLoaderData<typeof loader>(
+		"routes/_app.games.$gameId.notes.$noteId",
+	);
+	if (data === undefined) {
+		throw new Error(
+			"useNoteData must be used within the _app.games.$gameId.notes.$noteId route or its children",
+		);
+	}
+	return data;
 }
