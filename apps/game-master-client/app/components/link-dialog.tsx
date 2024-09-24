@@ -12,6 +12,7 @@ import { useGameData } from "~/routes/_app.games.$gameId/route";
 import { GridList, GridListItem } from "./ui/grid-list";
 import { useListData } from "react-stately";
 import type { GridListProps } from "react-aria-components";
+import { useFetcher } from "@remix-run/react";
 
 interface LinkDialogProps {
   entityId: string;
@@ -30,6 +31,7 @@ export function LinkDialog({
   linkedChars,
   linkedFactions,
 }: LinkDialogProps) {
+  const fetcher = useFetcher();
   const { notes, characters, factions } = useGameData(); // full list of game entities
   const notesState = useListData({
     initialItems: notes,
@@ -44,9 +46,20 @@ export function LinkDialog({
     initialSelectedKeys: linkedFactions.map((faction) => faction.id),
   });
 
-  const handleSaveOnClosed = () => {};
+  const handleSaveOnClosed = (isOpen: boolean) => {
+    console.log("open changed");
+    if (isOpen === false) {
+      if (charactersState.selectedKeys !== "all") {
+        fetcher.submit(
+          { characterIds: [...charactersState.selectedKeys] },
+          { method: "PUT" },
+        );
+      }
+    }
+  };
+
   return (
-    <DialogTrigger>
+    <DialogTrigger onOpenChange={handleSaveOnClosed}>
       {trigger}
       <DialogOverlay>
         <DialogContent>
@@ -66,6 +79,7 @@ export function LinkDialog({
                   selectionMode="multiple"
                   selectedKeys={notesState.selectedKeys}
                   onSelectionChange={notesState.setSelectedKeys}
+                  aria-label="Notes selection list"
                 />
               </TabPanel>
               <TabPanel id="chars">
@@ -74,6 +88,7 @@ export function LinkDialog({
                   selectionMode="multiple"
                   selectedKeys={charactersState.selectedKeys}
                   onSelectionChange={charactersState.setSelectedKeys}
+                  aria-label="Character selection list"
                 />
               </TabPanel>
               <TabPanel id="factions">
@@ -82,6 +97,7 @@ export function LinkDialog({
                   selectionMode="multiple"
                   selectedKeys={factionsState.selectedKeys}
                   onSelectionChange={factionsState.setSelectedKeys}
+                  aria-label="Faction selection list"
                 />
               </TabPanel>
             </Tabs>

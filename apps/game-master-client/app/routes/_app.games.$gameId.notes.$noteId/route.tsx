@@ -39,6 +39,24 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return typedjson(result.data);
   }
 
+  if (request.method === "PUT") {
+    const data = await parseForm(request, {
+      characterIds: z.array(z.string()).optional(),
+      factionIds: z.array(z.string()).optional()
+    })
+
+    // TODO: error handling
+    if (data.factionIds) {
+      await api.notes.linkFactions(noteId, data.factionIds);
+    } 
+    // TODO: error handling
+    if (data.characterIds) {
+      await api.notes.linkCharacters(noteId, data.characterIds);
+    } 
+
+    return null
+  }
+
   if (request.method === "DELETE") {
     const result = await api.notes.deleteNote(noteId);
     if (!result.success) {
