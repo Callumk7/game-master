@@ -24,7 +24,7 @@ export default function AppLayout() {
   return (
     <RouterProvider navigate={navigate} useHref={useHref}>
       <GameSelectionProvider gameSelectionId={defaultGameId} isRightSidebarOpen={false}>
-        <GameSidebar gamesWithNotes={userData} />
+        <GameSidebar gamesWithAllEntities={userData} />
         <RightSidebarLayout>
           <Outlet />
         </RightSidebarLayout>
