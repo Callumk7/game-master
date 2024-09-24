@@ -8,6 +8,7 @@ const typographyVariants = cva("", {
       h3: "text-2xl font-medium",
       h4: "text-xl font-medium",
       p: "text-base",
+      label: "text-muted-foreground text-[0.8rem]"
     },
     weight: {
       normal: "font-normal",
