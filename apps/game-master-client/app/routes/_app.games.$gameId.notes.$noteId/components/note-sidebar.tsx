@@ -1,4 +1,3 @@
-import type { BasicEntity } from "@repo/api";
 import { LinkDialog } from "~/components/link-dialog";
 import { Button } from "~/components/ui/button";
 import { ListBox, ListBoxHeader, ListBoxItem } from "~/components/ui/list-box";
@@ -26,14 +25,30 @@ export function NoteSidebar() {
 			<ListBox aria-label="Linked notes list">
 				<ListBoxHeader>Backlinks</ListBoxHeader>
 				{linkedNotes.backLinks.map((note) => (
-					<ListBoxItem key={note.id} href={`games/${note.gameId}/notes/${note.id}`}>
+					<ListBoxItem key={note.id} href={`/games/${note.gameId}/notes/${note.id}`}>
 						{note.name}
 					</ListBoxItem>
 				))}
 				<ListBoxHeader>Outgoing</ListBoxHeader>
 				{linkedNotes.outgoingLinks.map((note) => (
-					<ListBoxItem key={note.id} href={`games/${note.gameId}/notes/${note.id}`}>
+					<ListBoxItem key={note.id} href={`/games/${note.gameId}/notes/${note.id}`}>
 						{note.name}
+					</ListBoxItem>
+				))}
+			</ListBox>
+			<ListBox aria-label="Linked character list">
+				<ListBoxHeader>Characters</ListBoxHeader>
+				{linkedChars.map((char) => (
+					<ListBoxItem key={char.id} href={`/games/${char.gameId}/characters/${char.id}`}>
+						{char.name}
+					</ListBoxItem>
+				))}
+			</ListBox>
+			<ListBox aria-label="Linked faction list">
+				<ListBoxHeader>Factions</ListBoxHeader>
+				{linkedFactions.map((faction) => (
+					<ListBoxItem key={faction.id} href={`/games/${faction.gameId}/faction/${faction.id}`}>
+						{faction.name}
 					</ListBoxItem>
 				))}
 			</ListBox>
