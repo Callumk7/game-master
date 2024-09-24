@@ -1,10 +1,11 @@
-import { Outlet } from "@remix-run/react";
-import { GameNavbar } from "./components/game-navbar";
-import { parseParams } from "zodix";
-import { z } from "zod";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { api } from "~/lib/api.server";
+import { Outlet, useRouteError } from "@remix-run/react";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
+import { z } from "zod";
+import { parseParams } from "zodix";
+import { api } from "~/lib/api.server";
+import { GameNavbar } from "./components/game-navbar";
+import { Text } from "~/components/ui/typeography";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
@@ -31,3 +32,15 @@ export function useGameData() {
 	}
 	return data;
 }
+
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error(error);
+  return (
+    <div className="w-4/5 mx-auto">
+      <Text variant={"h3"}>Something went wrong</Text>
+    </div>
+  );
+}
+

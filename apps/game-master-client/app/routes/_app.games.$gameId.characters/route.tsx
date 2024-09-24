@@ -1,9 +1,9 @@
 import { Outlet } from "@remix-run/react";
 
 export default function CharacterLayout() {
-	return (
-		<div>
+  return (
+    <div>
       <Outlet />
-		</div>
-	);
+    </div>
+  );
 }
