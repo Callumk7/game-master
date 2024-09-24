@@ -6,7 +6,6 @@ import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
 import { useSyncEditorContent } from "./sync";
 import type { FormMethod } from "@remix-run/react";
-import type { EntityType } from "~/types/general";
 import { cn } from "callum-util";
 import { Label } from "../ui/field";
 
