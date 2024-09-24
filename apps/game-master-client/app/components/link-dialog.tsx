@@ -1,4 +1,4 @@
-import type { BasicEntity, EntityType } from "@repo/api";
+import type { BasicEntity } from "@repo/api";
 import type { ReactNode } from "react";
 import {
 	DialogContent,
@@ -13,10 +13,9 @@ import { GridList, GridListItem } from "./ui/grid-list";
 import { useListData } from "react-stately";
 import type { GridListProps } from "react-aria-components";
 import { useFetcher } from "@remix-run/react";
+import { appendFormWithArray } from "~/util/form-array";
 
 interface LinkDialogProps {
-	entityId: string;
-	entityType: EntityType;
 	trigger: ReactNode;
 	linkedNotes: BasicEntity[];
 	linkedChars: BasicEntity[];
@@ -24,15 +23,13 @@ interface LinkDialogProps {
 }
 
 export function LinkDialog({
-	entityId,
-	entityType,
 	trigger,
 	linkedNotes,
 	linkedChars,
 	linkedFactions,
 }: LinkDialogProps) {
-	const fetcher = useFetcher();
 	const { notes, characters, factions } = useGameData(); // full list of game entities
+
 	const notesState = useListData({
 		initialItems: notes,
 		initialSelectedKeys: linkedNotes.map((note) => note.id),
@@ -42,21 +39,24 @@ export function LinkDialog({
 		initialSelectedKeys: linkedChars.map((char) => char.id),
 	});
 	const factionsState = useListData({
-		initialItems: notes,
+		initialItems: factions,
 		initialSelectedKeys: linkedFactions.map((faction) => faction.id),
 	});
 
+	const fetcher = useFetcher();
 	const handleSaveOnClosed = (isOpen: boolean) => {
-		console.log("open changed");
 		if (isOpen === false) {
+			const form = new FormData();
+
 			if (charactersState.selectedKeys !== "all") {
-				const characterIds = Array.from(charactersState.selectedKeys);
-        const form = new FormData();
-        for (const id of characterIds) {
-          form.append("characterIds", id.toString());
-        }
-				fetcher.submit(form, { method: "PUT" });
+				appendFormWithArray(form, charactersState.selectedKeys, "characterIds");
 			}
+
+			if (factionsState.selectedKeys !== "all") {
+				appendFormWithArray(form, factionsState.selectedKeys, "factionIds");
+			}
+
+      fetcher.submit(form, { method: "PUT" });
 		}
 	};
 
