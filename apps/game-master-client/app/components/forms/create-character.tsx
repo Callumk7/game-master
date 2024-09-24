@@ -63,7 +63,7 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
 
 	return (
 		<Form method="post" onSubmit={handleSubmit}>
-			<div className="grid gap-4 py-4">
+			<div className="grid gap-4 py-4 px-1">
 				<JollyTextField
 					autoFocus
 					value={name}

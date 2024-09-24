@@ -82,7 +82,7 @@ function SidebarTools({ selectedGame, setSelectedGame, games }: SidebarToolsProp
 					</SelectListBox>
 				</SelectPopover>
 			</Select>
-			<NewEntityMenu selectedGame={selectedGame} aria-label="New item menu" />
+			<NewEntityMenu selectedGame={selectedGame} />
 			<Link
 				variant={"outline"}
 				size={"icon"}
@@ -100,7 +100,7 @@ interface NewEntityMenuProps {
 }
 function NewEntityMenu({ selectedGame }: NewEntityMenuProps) {
 	return (
-		<JollyMenu label={<FilePlusIcon />} size={"icon"} variant={"outline"}>
+		<JollyMenu label={<FilePlusIcon />} size={"icon"} variant={"outline"} aria-label="New item menu">
 			<MenuItem href={`/games/${selectedGame}/notes/new`}>Note</MenuItem>
 			<MenuItem href={`/games/${selectedGame}/characters/new`}>Character</MenuItem>
 			<MenuItem href={`/games/${selectedGame}/factions/new`}>Faction</MenuItem>

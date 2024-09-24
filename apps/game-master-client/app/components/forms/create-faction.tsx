@@ -63,7 +63,7 @@ export function CreateFactionForm({ gameId, close }: CreateFactionFormProps) {
 
 	return (
 		<Form method="post" onSubmit={handleSubmit}>
-			<div className="grid gap-4 py-4">
+			<div className="grid gap-4 py-4 px-1">
 				<JollyTextField
 					autoFocus
 					value={name}
