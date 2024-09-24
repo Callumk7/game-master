@@ -1,5 +1,5 @@
 import type { Client } from "../client.js";
-import type { CreateFactionRequestBody, Faction, FactionWithMembers, FactionWithNotes } from "../types/factions.js";
+import type { CreateFactionRequestBody, Faction, FactionWithMembers, FactionWithNotes, UpdateFactionRequestBody } from "../types/factions.js";
 import type { ServerResponse, Id, BasicServerResponse } from "../types/index.js";
 
 export class Factions {
@@ -19,10 +19,9 @@ export class Factions {
 		return this.client.delete(`factions/${factionId}`);
 	}
 
-	// TODO: change the Partial type to an inferred type based on the updateFaction zod schema
 	async updateFactionDetails(
 		factionId: Id,
-		factionDetails: Partial<Faction>,
+		factionDetails: UpdateFactionRequestBody,
 	): Promise<ServerResponse<Faction>> {
 		return this.client.patch<ServerResponse<Faction>>(
 			`factions/${factionId}`,
