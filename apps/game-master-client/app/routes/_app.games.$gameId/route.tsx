@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useRouteError } from "@remix-run/react";
-import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
+import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
@@ -14,7 +14,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function GameLayout() {
-	const { characters, factions, notes } = useTypedLoaderData<typeof loader>(); // TODO: Not currently used
 	return (
 		<div className="space-y-4">
 			<GameNavbar />
