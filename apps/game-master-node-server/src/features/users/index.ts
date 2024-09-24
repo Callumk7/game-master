@@ -84,6 +84,8 @@ usersRoute.get("/:userId/games", async (c) => {
 				where: eq(games.ownerId, userId),
 				with: {
 					notes: true,
+					characters: true,
+					factions: true
 				},
 			});
 			return c.json(allGames);
