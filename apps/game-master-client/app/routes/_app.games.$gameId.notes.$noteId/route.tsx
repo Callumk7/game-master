@@ -7,6 +7,7 @@ import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NoteToolbar } from "./components/note-toolbar";
 import { NoteSidebar } from "./components/note-sidebar";
+import { OptionalEntitySchema } from "types/schemas";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { noteId } = parseParams(params, {
@@ -41,12 +42,13 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (request.method === "PUT") {
     const data = await parseForm(request, {
-      characterIds: z.array(z.string()).optional(),
-      factionIds: z.array(z.string()).optional()
+      characterIds: OptionalEntitySchema,
+      factionIds: OptionalEntitySchema
     })
 
     // TODO: error handling
     if (data.factionIds) {
+
       await api.notes.linkFactions(noteId, data.factionIds);
     } 
     // TODO: error handling
