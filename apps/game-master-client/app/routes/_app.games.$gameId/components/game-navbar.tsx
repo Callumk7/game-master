@@ -19,6 +19,10 @@ const createLinks = (gameId: string) => {
       label: "Factions",
       href: `/games/${gameId}/factions`,
     },
+    {
+      label: "Collections",
+      href: `/games/${gameId}/collections`,
+    },
   ];
 };
 
@@ -29,7 +33,7 @@ export function GameNavbar() {
   const setIsRightSidebarOpen = useSetRightSidebarOpen();
   return (
     <nav className="flex w-full p-4 justify-between items-center" aria-label="Game navigation bar">
-      <div className="flex gap-4">
+      <div className="flex">
         {links.map((link) => (
           <Link key={link.label} href={link.href} variant={"ghost"}>
             {link.label}
