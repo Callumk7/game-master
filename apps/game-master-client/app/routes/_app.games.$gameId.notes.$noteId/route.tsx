@@ -54,11 +54,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			factionIds: OptionalEntitySchema,
 		});
 
-		// TODO: error handling
 		if (data.factionIds) {
-			await api.notes.linkFactions(noteId, stringOrArrayToArray(data.factionIds));
+			await api.notes.updateLinkedFactions(noteId, stringOrArrayToArray(data.factionIds));
 		}
-		// TODO: error handling
 		if (data.characterIds) {
 			await api.notes.updateLinkedCharacters(
 				noteId,
@@ -88,7 +86,6 @@ export default function NotesRoute() {
 			<div className="p-4 space-y-4">
 				<NoteToolbar noteId={note.id} />
 				<Text variant={"h2"}>{note.name}</Text>
-				<Text variant={"p"}>{note.id}</Text>
 				<EditorBody htmlContent={note.htmlContent} />
 			</div>
 			<NoteSidebar />

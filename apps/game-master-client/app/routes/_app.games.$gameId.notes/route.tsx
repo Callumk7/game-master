@@ -1,9 +1,13 @@
 import { Outlet } from "@remix-run/react";
+import { useSetRightSidebarOpen } from "~/store/selection";
 
 export default function NotesLayout() {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+	const setIsRightSidebarOpen = useSetRightSidebarOpen();
+	setIsRightSidebarOpen(false);
+
+	return (
+		<div>
+			<Outlet />
+		</div>
+	);
 }

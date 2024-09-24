@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, useRouteError } from "@remix-run/react";
-import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
+import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
@@ -14,11 +14,12 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function GameLayout() {
-	const { characters, factions, notes } = useTypedLoaderData<typeof loader>(); // TODO: Not currently used
 	return (
 		<div className="space-y-4">
 			<GameNavbar />
-			<Outlet />
+			<div className="p-3">
+				<Outlet />
+			</div>
 		</div>
 	);
 }
@@ -33,14 +34,12 @@ export function useGameData() {
 	return data;
 }
 
-
 export function ErrorBoundary() {
-  const error = useRouteError();
-  console.error(error);
-  return (
-    <div className="w-4/5 mx-auto">
-      <Text variant={"h3"}>Something went wrong</Text>
-    </div>
-  );
+	const error = useRouteError();
+	console.error(error);
+	return (
+		<div className="w-4/5 mx-auto">
+			<Text variant={"h3"}>Something went wrong</Text>
+		</div>
+	);
 }
-
