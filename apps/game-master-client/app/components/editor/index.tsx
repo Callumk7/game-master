@@ -61,10 +61,11 @@ export function EditorWithControls({ editor, bordered, label }: EditorWithContro
 	if (!editor) return null;
 	return (
 		<div>
-			{label && <Label>{label}</Label>}
+			{label && <Label id="editor-label">{label}</Label>}
 			<EditorContent
 				className={cn("flex-auto", bordered ? "border rounded-md" : "")}
 				editor={editor}
+        aria-labelledby="editor-label"
 			/>
 			<BubbleMenu editor={editor}>
 				<BubbleMenuItems editor={editor} />
@@ -83,6 +84,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleBold().run()}
+        aria-label="Font bold"
 			>
 				<FontBoldIcon />
 			</Button>
@@ -90,6 +92,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleItalic().run()}
+        aria-label="Font italic"
 			>
 				<FontItalicIcon />
 			</Button>
@@ -97,6 +100,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        aria-label="Font heading"
 			>
 				<HeadingIcon />
 			</Button>

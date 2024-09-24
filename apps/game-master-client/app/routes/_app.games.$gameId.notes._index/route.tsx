@@ -18,13 +18,13 @@ export default function NotesIndex() {
 	const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
 	return (
 		<div>
-			<div className="flex flex-col gap-3">
+			<nav className="flex flex-col gap-3" aria-label="Notes list">
 				{allGameNotes.map((note) => (
 					<Link key={note.id} href={`/games/${gameId}/notes/${note.id}`} variant={"link"}>
 						{note.name}
 					</Link>
 				))}
-			</div>
+			</nav>
 		</div>
 	);
 }

@@ -30,7 +30,7 @@ export default function CharacterIndex() {
 	return (
 		<div>
 			<CreateCharacterSlideover gameId={gameId} />
-			<div className="flex flex-col gap-2 items-start">
+			<nav className="flex flex-col gap-2 items-start" aria-label="Character list">
 				{gameChars.map((char) => (
 					<Link
 						variant={"link"}
@@ -40,7 +40,7 @@ export default function CharacterIndex() {
 						{char.name}
 					</Link>
 				))}
-			</div>
+			</nav>
 		</div>
 	);
 }

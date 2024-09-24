@@ -55,8 +55,8 @@ export default function GameRoute() {
 				value={game.name}
 				inputClassName={"text-5xl font-bold mb-5 w-full focus:outline-none bg-inherit"}
 				buttonClassName={"text-5xl font-bold w-full mb-5 text-left"}
-				inputLabel={"game name input"}
-				buttonLabel={"game name input"}
+				inputLabel={"Game name input"}
+				buttonLabel={"Edit game name"}
 			/>
 			<EditorBody htmlContent="<p>A new note...</p>" />
 		</div>

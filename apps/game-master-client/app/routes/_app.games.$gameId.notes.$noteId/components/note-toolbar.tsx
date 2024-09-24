@@ -15,6 +15,7 @@ export function NoteToolbar({ noteId }: NoteToolbarProps) {
 				variant={"destructive"}
 				size={"sm"}
 				onPress={() => submit({}, { method: "delete" })}
+				aria-label="Delete note"
 			>
 				<TrashIcon />
 			</Button>

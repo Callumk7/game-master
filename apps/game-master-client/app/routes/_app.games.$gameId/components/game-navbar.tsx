@@ -28,7 +28,7 @@ export function GameNavbar() {
   const isRightSidebarOpen = useIsRightSidebarOpen();
   const setIsRightSidebarOpen = useSetRightSidebarOpen();
   return (
-    <nav className="flex w-full p-4 justify-between items-center">
+    <nav className="flex w-full p-4 justify-between items-center" aria-label="Game navigation bar">
       <div className="flex gap-4">
         {links.map((link) => (
           <Link key={link.label} href={link.href} variant={"ghost"}>
@@ -42,6 +42,7 @@ export function GameNavbar() {
           size={"icon"}
           variant={"outline"}
           onPress={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+          aria-label="Toggle right sidebar"
         >
           {isRightSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </Button>
