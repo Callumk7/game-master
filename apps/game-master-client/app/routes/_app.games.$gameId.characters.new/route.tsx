@@ -1,19 +1,25 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { useParams } from "@remix-run/react";
+import { useActionData, useParams } from "@remix-run/react";
+import { useState } from "react";
 import { CreateCharacterForm } from "~/components/forms/create-character";
+import { Text } from "~/components/ui/typeography";
 import { createCharacterAction } from "~/queries/create-character";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	if (request.method === "POST") {
-		return createCharacterAction(request);
-	}
+  return createCharacterAction(request);
 };
 
 export default function NewCharacterRoute() {
-	const params = useParams();
-	return (
-		<div>
-			<CreateCharacterForm gameId={params.gameId!} />
-		</div>
-	);
+  const params = useParams();
+  const result = useActionData<typeof action>()
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  if (result) {
+    setErrorMessage(result.errorMsg);
+  }
+  return (
+    <div>
+      <Text variant={"h3"}>{errorMessage}</Text>
+      <CreateCharacterForm gameId={params.gameId!} />
+    </div>
+  );
 }
