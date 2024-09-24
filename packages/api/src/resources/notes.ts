@@ -1,9 +1,11 @@
 import type { Client } from "../client.js";
+import type { Character } from "../types/characters.js";
+import type { Faction } from "../types/factions.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 import type { CreateNoteRequestBody, Note } from "../types/notes.js";
 
 export class Notes {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	// DONE
 	async getNote(noteId: Id): Promise<Note> {
@@ -54,6 +56,7 @@ export class Notes {
 		return this.client.get<Note[]>(`users/${userId}/notes`);
 	}
 
+	// DONE
 	async getLinkedNotes(
 		noteId: Id,
 	): Promise<{ backLinks: Note[]; outgoingLinks: Note[] }> {
@@ -75,6 +78,14 @@ export class Notes {
 		);
 	}
 
+	async getLinkedCharacters(
+		noteId: Id,
+	): Promise<Character[]> {
+		return this.client.get<Character[]>(
+			`notes/${noteId}/links/characters`,
+		);
+	}
+
 	async linkCharacters(
 		noteId: Id,
 		characterIds: Id[],
@@ -84,6 +95,14 @@ export class Notes {
 			{
 				characterIds,
 			},
+		);
+	}
+
+	async getLinkedFactions(
+		noteId: Id,
+	): Promise<Faction[]> {
+		return this.client.get<Faction[]>(
+			`notes/${noteId}/links/factions`,
 		);
 	}
 
@@ -122,5 +141,4 @@ export class Notes {
 			},
 		);
 	}
-
 }
