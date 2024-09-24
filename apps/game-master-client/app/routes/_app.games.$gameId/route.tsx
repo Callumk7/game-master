@@ -13,7 +13,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function GameLayout() {
-	const { characters, factions, notes } = useTypedLoaderData<typeof loader>();
+	const { characters, factions, notes } = useTypedLoaderData<typeof loader>(); // TODO: Not currently used
 	return (
 		<div className="space-y-4">
 			<GameNavbar />
