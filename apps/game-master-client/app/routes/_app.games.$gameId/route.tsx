@@ -18,7 +18,9 @@ export default function GameLayout() {
 	return (
 		<div className="space-y-4">
 			<GameNavbar />
-			<Outlet />
+			<div className="p-3">
+				<Outlet />
+			</div>
 		</div>
 	);
 }
@@ -33,14 +35,12 @@ export function useGameData() {
 	return data;
 }
 
-
 export function ErrorBoundary() {
-  const error = useRouteError();
-  console.error(error);
-  return (
-    <div className="w-4/5 mx-auto">
-      <Text variant={"h3"}>Something went wrong</Text>
-    </div>
-  );
+	const error = useRouteError();
+	console.error(error);
+	return (
+		<div className="w-4/5 mx-auto">
+			<Text variant={"h3"}>Something went wrong</Text>
+		</div>
+	);
 }
-
