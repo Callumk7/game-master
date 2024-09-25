@@ -5,6 +5,8 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { Link } from "~/components/ui/link";
 import { api } from "~/lib/api.server";
+import { NoteTable } from "./components/table";
+import { useAppData } from "../_app/route";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
@@ -16,15 +18,11 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 
 export default function NotesIndex() {
 	const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
+  const appData = useAppData();
+  const game = appData.userData.find(game => game.id === gameId);
 	return (
 		<div>
-			<nav className="flex flex-col gap-3" aria-label="Notes list">
-				{allGameNotes.map((note) => (
-					<Link key={note.id} href={`/games/${gameId}/notes/${note.id}`} variant={"link"}>
-						{note.name}
-					</Link>
-				))}
-			</nav>
+      <NoteTable notes={allGameNotes} />
 		</div>
 	);
 }
