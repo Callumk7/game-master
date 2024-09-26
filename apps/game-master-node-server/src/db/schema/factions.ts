@@ -1,17 +1,19 @@
-import { pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import { games } from "./games";
-import { users } from "./users";
-import { characters, charactersInFactions } from "./characters";
 import { relations } from "drizzle-orm";
-import { notes } from "./notes";
+import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { characters, charactersInFactions } from "./characters";
+import { games } from "./games";
+import { notes } from "./notes";
+import { users } from "./users";
 
 export const factions = pgTable("factions", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	content: text("content"),
 	htmlContent: text("html_content"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
 	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
