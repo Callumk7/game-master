@@ -39,7 +39,10 @@ export function handleNotFound(c: Context, error?: unknown) {
 
 export function handleDatabaseError(c: Context, error?: unknown) {
 	if (error) console.error(error);
-	return c.text("Database Error", StatusCodes.INTERNAL_SERVER_ERROR);
+	return new Response("Database Error", {
+		status: StatusCodes.INTERNAL_SERVER_ERROR,
+		statusText: "Database Error",
+	});
 }
 
 export function handleBadRequest(c: Context) {

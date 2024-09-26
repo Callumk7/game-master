@@ -8,39 +8,34 @@ import { validateUser } from "~/lib/auth.server";
 import { Link } from "~/components/ui/link";
 import { CreateCharacterSlideover } from "~/components/forms/create-character";
 import { createCharacterAction } from "~/queries/create-character";
+import { CharacterTable } from "./components/character-table";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
-	const { gameId } = parseParams(params, { gameId: z.string() });
+export const loader = async ({
+  request,
+  params,
+  context,
+}: LoaderFunctionArgs) => {
+  const { gameId } = parseParams(params, { gameId: z.string() });
 
-	const gameChars = await api.characters.getAllGameCharacters(gameId);
+  const gameChars = await api.characters.getAllGameCharacters(gameId);
 
-	return typedjson({ gameId, gameChars });
+  return typedjson({ gameId, gameChars });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	if (request.method === "POST") {
+  if (request.method === "POST") {
     return createCharacterAction(request);
-	}
+  }
 
-	return methodNotAllowed();
+  return methodNotAllowed();
 };
 
 export default function CharacterIndex() {
-	const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
-	return (
-		<div>
-			<CreateCharacterSlideover gameId={gameId} />
-			<nav className="flex flex-col gap-2 items-start" aria-label="Character list">
-				{gameChars.map((char) => (
-					<Link
-						variant={"link"}
-						href={`/games/${gameId}/characters/${char.id}`}
-						key={char.id}
-					>
-						{char.name}
-					</Link>
-				))}
-			</nav>
-		</div>
-	);
+  const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
+  return (
+    <div>
+      <CreateCharacterSlideover gameId={gameId} />
+      <CharacterTable characters={gameChars} />
+    </div>
+  );
 }
