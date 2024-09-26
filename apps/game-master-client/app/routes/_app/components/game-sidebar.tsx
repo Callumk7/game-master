@@ -1,4 +1,4 @@
-import { FilePlusIcon, PlusIcon } from "@radix-ui/react-icons";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 import type { BasicEntity, EntityType, Game, GameWithData } from "@repo/api";
 import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
@@ -15,6 +15,7 @@ import {
 import { useSyncSelectedGameWithParams } from "./sync-selected-game";
 import { Text } from "~/components/ui/typeography";
 import { ThemeToggle } from "~/components/context/dark-mode";
+import { useMemo } from "react";
 
 interface GameSidebarProps {
   gamesWithAllEntities: GameWithData[];
@@ -25,7 +26,7 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
 
   const { gameNotes, gameChars, gameFactions } = findGameEntities(
     gamesWithAllEntities,
-    selectedGame
+    selectedGame,
   );
 
   return (
@@ -63,19 +64,31 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
   );
 }
 
-const findGameEntities = (
-  gamesWithAllEntities: GameWithData[],
-  selectedGame: string
-) => {
-  const gameNotes = gamesWithAllEntities.find(
-    (game) => game.id === selectedGame
-  )?.notes;
-  const gameChars = gamesWithAllEntities.find(
-    (game) => game.id === selectedGame
-  )?.characters;
-  const gameFactions = gamesWithAllEntities.find(
-    (game) => game.id === selectedGame
-  )?.factions;
+const findGameEntities = (gamesWithAllEntities: GameWithData[], selectedGame: string) => {
+  const notes =
+    gamesWithAllEntities.find((game) => game.id === selectedGame)?.notes ?? [];
+  const gameNotes = useMemo(() => {
+    return [...notes].sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [notes]);
+
+  const chars =
+    gamesWithAllEntities.find((game) => game.id === selectedGame)?.characters ?? [];
+  const gameChars = useMemo(() => {
+    return [...chars].sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [chars]);
+
+  const factions = gamesWithAllEntities.find(
+    (game) => game.id === selectedGame,
+  )?.factions ?? [];
+  const gameFactions = useMemo(() => {
+    return [...factions].sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [factions]);
 
   return {
     gameNotes,
@@ -86,27 +99,19 @@ const findGameEntities = (
 
 interface EntityGroupProps {
   title: string;
-  items: BasicEntity[] | undefined;
+  items: BasicEntity[];
   selectedGame: string;
   itemType: EntityType;
 }
 
-export function EntityGroup({
-  title,
-  items,
-  selectedGame,
-  itemType,
-}: EntityGroupProps) {
+export function EntityGroup({ title, items, selectedGame, itemType }: EntityGroupProps) {
   return (
     <div className="w-full py-1">
       <Text variant={"label"} id="title">
         {title}
       </Text>
-      <Group
-        className={"flex flex-col gap-y-2 items-start"}
-        aria-labelledby="title"
-      >
-        {items?.map((note) => (
+      <Group className={"flex flex-col gap-y-2 items-start"} aria-labelledby="title">
+        {items.map((note) => (
           <Link
             key={note.id}
             variant={"link"}
@@ -127,11 +132,7 @@ interface SidebarToolsProps {
   games: Game[];
 }
 
-function SidebarTools({
-  selectedGame,
-  setSelectedGame,
-  games,
-}: SidebarToolsProps) {
+function SidebarTools({ selectedGame, setSelectedGame, games }: SidebarToolsProps) {
   return (
     <Group className={"flex gap-2 w-full"} aria-label="Game tools">
       <Select
@@ -145,9 +146,7 @@ function SidebarTools({
         </SelectTrigger>
         <SelectPopover>
           <SelectListBox items={games}>
-            {(item) => (
-              <SelectItem href={`/games/${item.id}`}>{item.name}</SelectItem>
-            )}
+            {(item) => <SelectItem href={`/games/${item.id}`}>{item.name}</SelectItem>}
           </SelectListBox>
         </SelectPopover>
       </Select>
@@ -169,9 +168,7 @@ function NewEntityMenu({ selectedGame }: NewEntityMenuProps) {
     >
       <MenuItem href={"/games/new"}>Game</MenuItem>
       <MenuItem href={`/games/${selectedGame}/notes/new`}>Note</MenuItem>
-      <MenuItem href={`/games/${selectedGame}/characters/new`}>
-        Character
-      </MenuItem>
+      <MenuItem href={`/games/${selectedGame}/characters/new`}>Character</MenuItem>
       <MenuItem href={`/games/${selectedGame}/factions/new`}>Faction</MenuItem>
     </JollyMenu>
   );
