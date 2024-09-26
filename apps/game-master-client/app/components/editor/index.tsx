@@ -13,6 +13,7 @@ export const useDefaultEditor = (content: string | undefined = undefined) => {
 	return useEditor({
 		extensions: [StarterKit, Typography],
 		immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
 		content,
 		editorProps: {
 			attributes: {
