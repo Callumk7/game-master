@@ -22,9 +22,10 @@ import { Label } from "../ui/field";
 import { suggestion } from "./util/suggestion";
 import Fuse from "fuse.js";
 import { CustomMention } from "./extensions/mention-extension";
+import type { MentionItem } from "~/types/mentions";
 
 export const useDefaultEditor = (
-  suggestionItems: () => { id: string; label: string; href: string }[],
+  suggestionItems: () => MentionItem[],
   content: string | undefined = undefined
 ) => {
   return useEditor({
@@ -57,7 +58,7 @@ export const useDefaultEditor = (
 
 interface EditorBodyProps {
   htmlContent: string;
-  suggestionItems: () => { id: string; label: string; href: string }[];
+  suggestionItems: () => MentionItem[];
   action?: string;
   method?: FormMethod;
 }

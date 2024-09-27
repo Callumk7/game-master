@@ -1,9 +1,10 @@
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import type { MentionItem } from "~/types/mentions";
 
 export const MentionList = forwardRef<
   ReturnType<NonNullable<SuggestionOptions["render"]>>,
-  SuggestionProps<{ id: string; label: string; href: string }>
+  SuggestionProps<MentionItem>
 >((props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 

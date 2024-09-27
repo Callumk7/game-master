@@ -1,12 +1,13 @@
 import { type FormMethod, useFetcher } from "@remix-run/react";
 import { useDefaultEditor } from ".";
 import { useState } from "react";
+import type { MentionItem } from "~/types/mentions";
 
 type SyncEditorOptions = {
 	action?: string;
 	method?: FormMethod;
 	initContent: string;
-	suggestionItems: () => { id: string; label: string; href: string }[];
+	suggestionItems: () => MentionItem[];
 };
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
@@ -45,7 +46,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 				{
 					method: options.method ?? "patch", // WARN: test this syntax
 					action: options.action,
-				},
+				}
 			);
 		}
 		setIsEdited(false);

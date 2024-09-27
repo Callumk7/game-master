@@ -2,15 +2,14 @@ import { ReactRenderer } from "@tiptap/react";
 import tippy, { type Instance } from "tippy.js";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { MentionList } from "../components/mention-list";
+import type { MentionItem } from "~/types/mentions";
 
-type MentionOption = { id: string; label: string; href: string };
-
-export const suggestion: Partial<SuggestionOptions<MentionOption>> = {
+export const suggestion: Partial<SuggestionOptions<MentionItem>> = {
 	allowSpaces: true,
 	render: () => {
 		let component: ReactRenderer<
 			ReturnType<NonNullable<SuggestionOptions["render"]>>,
-			SuggestionProps<MentionOption>
+			SuggestionProps<MentionItem>
 		>;
 		let popup: Instance;
 
