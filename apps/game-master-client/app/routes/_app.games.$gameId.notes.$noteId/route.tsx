@@ -8,7 +8,7 @@ import {
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
-import { Text } from "~/components/ui/typeography";
+import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NoteToolbar } from "./components/note-toolbar";
 import { NoteSidebar } from "./components/note-sidebar";
@@ -16,7 +16,8 @@ import { OptionalEntitySchema } from "types/schemas";
 import { stringOrArrayToArray } from "callum-util";
 import { getNoteData } from "./queries.server";
 import { useGameData } from "../_app.games.$gameId/route";
-import type { MentionItem } from "~/types/mentions";
+import { updateNoteContentSchema } from "@repo/api";
+import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -35,10 +36,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	});
 
 	if (request.method === "PATCH") {
-		const data = await parseForm(request, {
-			content: z.string(),
-			htmlContent: z.string(),
-		});
+		const data = await parseForm(request, updateNoteContentSchema);
 		const result = await api.notes.updateNote(noteId, data);
 
 		if (!result.success) {
@@ -75,7 +73,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		return redirect("/");
 	}
 
-	return new Response("Method Not Allowed", { status: 400 });
+  return methodNotAllowed();
 };
 
 export default function NotesRoute() {
@@ -87,7 +85,15 @@ export default function NotesRoute() {
 		<>
 			<div className="p-4 space-y-4">
 				<NoteToolbar noteId={note.id} />
-				<Text variant={"h2"}>{note.name}</Text>
+				<EditableText
+					method="patch"
+					fieldName={"name"}
+					value={note.name}
+					variant={"h2"}
+					weight={"semi"}
+					inputLabel={"Game name input"}
+					buttonLabel={"Edit game name"}
+				/>
 				<EditorBody htmlContent={note.htmlContent} suggestionItems={suggestionItems} />
 			</div>
 			<NoteSidebar />

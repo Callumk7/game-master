@@ -2,10 +2,9 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
-import { EditorBody } from "~/components/editor";
 import { validateUser } from "~/lib/auth.server";
-import { EditableText } from "~/components/editable-text";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
@@ -46,8 +45,8 @@ export default function GameRoute() {
 				method="patch"
 				fieldName={"name"}
 				value={game.name}
-				inputClassName={"text-5xl font-bold mb-5 w-full focus:outline-none bg-inherit"}
-				buttonClassName={"text-5xl font-bold w-full mb-5 text-left"}
+				variant={"h2"}
+				weight={"bold"}
 				inputLabel={"Game name input"}
 				buttonLabel={"Edit game name"}
 			/>
