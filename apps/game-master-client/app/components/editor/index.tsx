@@ -26,7 +26,9 @@ export const useDefaultEditor = (
 				suggestion: {
 					...suggestion,
 					items: ({ query }) => {
-            return suggestionItems().filter(item => item.label.startsWith(query));
+            const fuse = new Fuse(suggestionItems(), {keys: ["id", "label", "href"]})
+            return fuse.search(query).map(result => result.item);
+
 					},
 				},
 			}),

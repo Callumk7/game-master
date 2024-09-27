@@ -6,6 +6,7 @@ import { MentionList } from "./mention-list";
 type MentionOption = { id: string; label: string; href: string };
 
 export const suggestion: Partial<SuggestionOptions<MentionOption>> = {
+	allowSpaces: true,
 	render: () => {
 		let component: ReactRenderer<
 			ReturnType<NonNullable<SuggestionOptions["render"]>>,
