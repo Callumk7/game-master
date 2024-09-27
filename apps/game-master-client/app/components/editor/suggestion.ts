@@ -1,97 +1,98 @@
-import { ReactRenderer } from '@tiptap/react';
-import tippy from 'tippy.js';
+import { ReactRenderer } from "@tiptap/react";
+import tippy from "tippy.js";
 
-import type { MentionNodeAttrs } from '@tiptap/extension-mention';
-import type { SuggestionOptions } from '@tiptap/suggestion';
-import { MentionList } from './mention-list';
+import type { MentionNodeAttrs } from "@tiptap/extension-mention";
+import type { SuggestionOptions } from "@tiptap/suggestion";
+import { MentionList } from "./mention-list";
 
 // biome-ignore lint/suspicious/noExplicitAny: Type required by tiptap plugin
 export const suggestion: Omit<SuggestionOptions<any, MentionNodeAttrs>, "editor"> = {
-  items: async ({ query }) => {
-    return [
-      'Lea Thompson',
-      'Cyndi Lauper',
-      'Tom Cruise',
-      'Madonna',
-      'Jerry Hall',
-      'Joan Collins',
-      'Winona Ryder',
-      'Christina Applegate',
-      'Alyssa Milano',
-      'Molly Ringwald',
-      'Ally Sheedy',
-      'Debbie Harry',
-      'Olivia Newton-John',
-      'Elton John',
-      'Michael J. Fox',
-      'Axl Rose',
-      'Emilio Estevez',
-      'Ralph Macchio',
-      'Rob Lowe',
-      'Jennifer Grey',
-      'Mickey Rourke',
-      'John Cusack',
-      'Matthew Broderick',
-      'Justine Bateman',
-      'Lisa Bonet',
-    ]
-      .filter(item => item.toLowerCase().startsWith(query.toLowerCase()))
-      .slice(0, 5)
-  },
+	items: async ({ query }) => {
+		return [
+			"Lea Thompson",
+			"Cyndi Lauper",
+			"Tom Cruise",
+			"Madonna",
+			"Jerry Hall",
+			"Joan Collins",
+			"Winona Ryder",
+			"Christina Applegate",
+			"Alyssa Milano",
+			"Molly Ringwald",
+			"Ally Sheedy",
+			"Debbie Harry",
+			"Olivia Newton-John",
+			"Elton John",
+			"Michael J. Fox",
+			"Axl Rose",
+			"Emilio Estevez",
+			"Ralph Macchio",
+			"Rob Lowe",
+			"Jennifer Grey",
+			"Mickey Rourke",
+			"John Cusack",
+			"Matthew Broderick",
+			"Justine Bateman",
+			"Lisa Bonet",
+		]
+			.filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+			.slice(0, 5);
+	},
 
-  render: () => {
-    let component
-    let popup
+	allowSpaces: true,
 
-    return {
-      onStart: props => {
-        component = new ReactRenderer(MentionList, {
-          props,
-          editor: props.editor,
-        })
+	render: () => {
+		let component;
+		let popup;
 
-        if (!props.clientRect) {
-          return
-        }
+		return {
+			onStart: (props) => {
+				component = new ReactRenderer(MentionList, {
+					props,
+					editor: props.editor,
+				});
 
-        popup = tippy('body', {
-          getReferenceClientRect: props.clientRect,
-          appendTo: () => document.body,
-          content: component.element,
-          showOnCreate: true,
-          interactive: true,
-          trigger: 'manual',
-          placement: 'bottom-start',
-        })
-      },
+				if (!props.clientRect) {
+					return;
+				}
 
-      onUpdate(props) {
-        component.updateProps(props)
+				popup = tippy("body", {
+					getReferenceClientRect: props.clientRect,
+					appendTo: () => document.body,
+					content: component.element,
+					showOnCreate: true,
+					interactive: true,
+					trigger: "manual",
+					placement: "bottom-start",
+				});
+			},
 
-        if (!props.clientRect) {
-          return
-        }
+			onUpdate(props) {
+				component.updateProps(props);
 
-        popup[0].setProps({
-          getReferenceClientRect: props.clientRect,
-        })
-      },
+				if (!props.clientRect) {
+					return;
+				}
 
-      onKeyDown(props) {
-        if (props.event.key === 'Escape') {
-          popup[0].hide()
+				popup[0].setProps({
+					getReferenceClientRect: props.clientRect,
+				});
+			},
 
-          return true
-        }
+			onKeyDown(props) {
+				if (props.event.key === "Escape") {
+					popup[0].hide();
 
-        return component.ref?.onKeyDown(props)
-      },
+					return true;
+				}
 
-      onExit() {
-        popup[0].destroy()
-        component.destroy()
-      },
-    }
-  },
-}
+				return component.ref?.onKeyDown(props);
+			},
 
+			onExit() {
+				popup[0].destroy();
+				component.destroy();
+			},
+		};
+	},
+};

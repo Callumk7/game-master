@@ -11,6 +11,7 @@ import { cn } from "callum-util";
 import { Label } from "../ui/field";
 
 import { suggestion } from "./suggestion";
+import Fuse from "fuse.js";
 
 export const useDefaultEditor = (
 	suggestionItems: () => string[],
@@ -23,11 +24,10 @@ export const useDefaultEditor = (
 			Mention.configure({
 				HTMLAttributes: { class: "mention" },
 				suggestion: {
-          ...suggestion,
+					...suggestion,
 					items: ({ query }) => {
-						return suggestionItems()
-							.filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
-							.slice(0, 5);
+						const fuse = new Fuse(suggestionItems());
+						return fuse.search(query).map(result => result.item);
 					},
 				},
 			}),
@@ -46,16 +46,21 @@ export const useDefaultEditor = (
 
 interface EditorBodyProps {
 	htmlContent: string;
-  suggestionItems: () => string[];
+	suggestionItems: () => string[];
 	action?: string;
 	method?: FormMethod;
 }
-export function EditorBody({ htmlContent, action, method, suggestionItems }: EditorBodyProps) {
+export function EditorBody({
+	htmlContent,
+	action,
+	method,
+	suggestionItems,
+}: EditorBodyProps) {
 	const { editor, isEdited, status, saveContent } = useSyncEditorContent({
 		initContent: htmlContent,
-    suggestionItems,
+		suggestionItems,
 		action,
-    method,
+		method,
 	});
 
 	return (
