@@ -7,13 +7,13 @@ import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { useGameData } from "../_app.games.$gameId/route";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
 	const characterDetails = await api.characters.getCharacter(charId);
 	return typedjson({ characterDetails });
 };
 
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
 	const { content, htmlContent } = await parseForm(request, {
 		content: z.string(),
