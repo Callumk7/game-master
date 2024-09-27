@@ -5,6 +5,7 @@ import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { Text } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
+import { useGameData } from "../_app.games.$gameId/route";
 
 export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
@@ -24,15 +25,19 @@ export const action = async ({ request, params, context }: ActionFunctionArgs) =
 		htmlContent,
 	});
 
-  return typedjson(result);
+	return typedjson(result);
 };
 
 export default function CharacterRoute() {
 	const { characterDetails } = useTypedLoaderData<typeof loader>();
+	const { suggestionItems } = useGameData();
 	return (
 		<div>
 			<Text variant={"h1"}>{characterDetails.name}</Text>
-			<EditorBody htmlContent={characterDetails.htmlContent} />
+			<EditorBody
+				htmlContent={characterDetails.htmlContent}
+				suggestionItems={suggestionItems}
+			/>
 		</div>
 	);
 }
