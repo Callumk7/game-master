@@ -1,6 +1,7 @@
 import { useEditor, EditorContent, BubbleMenu, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
+import Mention from "@tiptap/extension-mention";
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
@@ -9,11 +10,17 @@ import type { FormMethod } from "@remix-run/react";
 import { cn } from "callum-util";
 import { Label } from "../ui/field";
 
+import {suggestion} from "./suggestion"
+
 export const useDefaultEditor = (content: string | undefined = undefined) => {
 	return useEditor({
-		extensions: [StarterKit, Typography],
+		extensions: [
+			StarterKit,
+			Typography,
+			Mention.configure({ HTMLAttributes: { class: "mention" }, suggestion }),
+		],
 		immediatelyRender: false,
-    shouldRerenderOnTransaction: false,
+		shouldRerenderOnTransaction: false,
 		content,
 		editorProps: {
 			attributes: {
@@ -66,7 +73,7 @@ export function EditorWithControls({ editor, bordered, label }: EditorWithContro
 			<EditorContent
 				className={cn("flex-auto", bordered ? "border rounded-md" : "")}
 				editor={editor}
-        aria-labelledby="editor-label"
+				aria-labelledby="editor-label"
 			/>
 			<BubbleMenu editor={editor}>
 				<BubbleMenuItems editor={editor} />
@@ -85,7 +92,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleBold().run()}
-        aria-label="Font bold"
+				aria-label="Font bold"
 			>
 				<FontBoldIcon />
 			</Button>
@@ -93,7 +100,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleItalic().run()}
-        aria-label="Font italic"
+				aria-label="Font italic"
 			>
 				<FontItalicIcon />
 			</Button>
@@ -101,7 +108,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        aria-label="Font heading"
+				aria-label="Font heading"
 			>
 				<HeadingIcon />
 			</Button>
