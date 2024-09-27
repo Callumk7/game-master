@@ -10,14 +10,27 @@ import type { FormMethod } from "@remix-run/react";
 import { cn } from "callum-util";
 import { Label } from "../ui/field";
 
-import {suggestion} from "./suggestion"
+import { suggestion } from "./suggestion";
 
-export const useDefaultEditor = (content: string | undefined = undefined) => {
+export const useDefaultEditor = (
+	suggestionItems: () => string[],
+	content: string | undefined = undefined,
+) => {
 	return useEditor({
 		extensions: [
 			StarterKit,
 			Typography,
-			Mention.configure({ HTMLAttributes: { class: "mention" }, suggestion }),
+			Mention.configure({
+				HTMLAttributes: { class: "mention" },
+				suggestion: {
+          ...suggestion,
+					items: ({ query }) => {
+						return suggestionItems()
+							.filter((item) => item.toLowerCase().startsWith(query.toLowerCase()))
+							.slice(0, 5);
+					},
+				},
+			}),
 		],
 		immediatelyRender: false,
 		shouldRerenderOnTransaction: false,
@@ -33,13 +46,16 @@ export const useDefaultEditor = (content: string | undefined = undefined) => {
 
 interface EditorBodyProps {
 	htmlContent: string;
+  suggestionItems: () => string[];
 	action?: string;
 	method?: FormMethod;
 }
-export function EditorBody({ htmlContent, action, method }: EditorBodyProps) {
+export function EditorBody({ htmlContent, action, method, suggestionItems }: EditorBodyProps) {
 	const { editor, isEdited, status, saveContent } = useSyncEditorContent({
 		initContent: htmlContent,
+    suggestionItems,
 		action,
+    method,
 	});
 
 	return (

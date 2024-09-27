@@ -1,10 +1,13 @@
 import { ReactRenderer } from '@tiptap/react';
 import tippy from 'tippy.js';
 
+import type { MentionNodeAttrs } from '@tiptap/extension-mention';
+import type { SuggestionOptions } from '@tiptap/suggestion';
 import { MentionList } from './mention-list';
 
-export const suggestion = {
-  items: ({ query }) => {
+// biome-ignore lint/suspicious/noExplicitAny: Type required by tiptap plugin
+export const suggestion: Omit<SuggestionOptions<any, MentionNodeAttrs>, "editor"> = {
+  items: async ({ query }) => {
     return [
       'Lea Thompson',
       'Cyndi Lauper',

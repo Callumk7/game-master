@@ -6,6 +6,7 @@ type SyncEditorOptions = {
 	action?: string;
 	method?: FormMethod;
 	initContent: string;
+	suggestionItems: () => string[];
 };
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
@@ -17,7 +18,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
-	const editor = useDefaultEditor(optimisticContent);
+	const editor = useDefaultEditor(options.suggestionItems, optimisticContent);
 
 	const [isEdited, setIsEdited] = useState(false);
 
