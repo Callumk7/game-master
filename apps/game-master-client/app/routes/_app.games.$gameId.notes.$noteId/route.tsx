@@ -81,10 +81,13 @@ export default function NotesRoute() {
 	const { note } = useTypedLoaderData<typeof loader>();
 
 	const data = useGameData();
-	const notes = data.notes.map((note) => note.name);
 
 	const suggestionItems = () => {
-		return notes;
+		return data.notes.map((note) => ({
+			id: note.id,
+			label: note.name,
+			href: `/games/${note.gameId}/notes/${note.id}`,
+		}));
 	};
 
 	return (

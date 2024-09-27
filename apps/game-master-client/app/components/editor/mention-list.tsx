@@ -1,22 +1,17 @@
+import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
-interface MentionListProps {
-  items: string[];
-  command: (params: {id: string}) => void;
-}
-
-interface MentionListRef {
-  onKeyDown: (params: {event: KeyboardEvent}) => boolean;
-}
-
-export const MentionList = forwardRef<MentionListRef, MentionListProps>((props, ref) => {
+export const MentionList = forwardRef<
+	ReturnType<NonNullable<SuggestionOptions["render"]>>,
+	SuggestionProps<{ id: string; label: string; href: string }>
+>((props, ref) => {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	const selectItem = (index: number) => {
 		const item = props.items[index];
 
 		if (item) {
-			props.command({ id: item });
+			props.command({ id: item.id, href: item.href, label: item.label });
 		}
 	};
 
@@ -61,11 +56,11 @@ export const MentionList = forwardRef<MentionListRef, MentionListProps>((props, 
 				props.items.map((item, index) => (
 					<button
 						className={index === selectedIndex ? "is-selected" : ""}
-						key={item}
+						key={item.id}
 						onClick={() => selectItem(index)}
-            type="button"
+						type="button"
 					>
-						{item}
+						{item.label}
 					</button>
 				))
 			) : (

@@ -6,7 +6,7 @@ type SyncEditorOptions = {
 	action?: string;
 	method?: FormMethod;
 	initContent: string;
-	suggestionItems: () => string[];
+	suggestionItems: () => { id: string; label: string; href: string }[];
 };
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
@@ -56,7 +56,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		editor,
 		isEdited,
 		status: fetcher.state,
-		saveContent
+		saveContent,
 	};
 };
 

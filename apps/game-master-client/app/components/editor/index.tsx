@@ -12,22 +12,21 @@ import { Label } from "../ui/field";
 
 import { suggestion } from "./suggestion";
 import Fuse from "fuse.js";
+import { CustomMention } from "./mention-extension";
 
 export const useDefaultEditor = (
-	suggestionItems: () => string[],
+	suggestionItems: () => { id: string; label: string; href: string }[],
 	content: string | undefined = undefined,
 ) => {
 	return useEditor({
 		extensions: [
 			StarterKit,
 			Typography,
-			Mention.configure({
-				HTMLAttributes: { class: "mention" },
+			CustomMention.configure({
 				suggestion: {
 					...suggestion,
 					items: ({ query }) => {
-						const fuse = new Fuse(suggestionItems());
-						return fuse.search(query).map(result => result.item);
+            return suggestionItems().filter(item => item.label.startsWith(query));
 					},
 				},
 			}),
@@ -46,7 +45,7 @@ export const useDefaultEditor = (
 
 interface EditorBodyProps {
 	htmlContent: string;
-	suggestionItems: () => string[];
+	suggestionItems: () => { id: string; label: string; href: string }[];
 	action?: string;
 	method?: FormMethod;
 }
