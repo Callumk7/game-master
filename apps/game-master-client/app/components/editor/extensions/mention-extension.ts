@@ -1,6 +1,6 @@
 import { default as MentionExtension } from "@tiptap/extension-mention";
 import { ReactNodeViewRenderer, mergeAttributes } from "@tiptap/react";
-import { InlineMention } from "./mention";
+import { InlineMention } from "../components/mention";
 
 export const CustomMention = MentionExtension.extend({
 	addAttributes() {
@@ -26,7 +26,7 @@ export const CustomMention = MentionExtension.extend({
 			"mention-component",
 			mergeAttributes(
 				{ href: node.attrs.href, label: node.attrs.label },
-				HTMLAttributes,
+				HTMLAttributes
 			),
 		];
 	},

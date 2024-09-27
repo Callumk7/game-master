@@ -1,7 +1,7 @@
 import { ReactRenderer } from "@tiptap/react";
 import tippy, { type Instance } from "tippy.js";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
-import { MentionList } from "./mention-list";
+import { MentionList } from "../components/mention-list";
 
 type MentionOption = { id: string; label: string; href: string };
 
