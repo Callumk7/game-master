@@ -1,11 +1,13 @@
 import { type FormMethod, useFetcher } from "@remix-run/react";
 import { useDefaultEditor } from ".";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import type { MentionItem } from "~/types/mentions";
 
 type SyncEditorOptions = {
 	action?: string;
 	method?: FormMethod;
 	initContent: string;
+	suggestionItems?: () => MentionItem[];
 };
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
@@ -17,22 +19,29 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
-	const editor = useDefaultEditor(optimisticContent);
+	const editor = useDefaultEditor(optimisticContent, options.suggestionItems);
 
 	const [isEdited, setIsEdited] = useState(false);
 
-	if (editor) {
-		editor.on("update", () => {
-			if (!isEdited) setIsEdited(true);
-		});
-	}
-
-	// custom hook to track state updates on parallel navigation
-	useStateSync(optimisticContent, () => {
+	useEffect(() => {
 		if (editor) {
+			const updateListener = () => {
+				if (!isEdited) setIsEdited(true);
+			};
+
+			editor.on("update", updateListener);
+
+			return () => {
+				editor.off("update", updateListener);
+			};
+		}
+	}, [editor, isEdited]); 
+
+	useLayoutEffect(() => {
+		if(editor) {
 			editor.commands.setContent(optimisticContent);
 		}
-	});
+	}, [editor, optimisticContent])
 
 	const saveContent = () => {
 		if (editor && isEdited) {
@@ -55,7 +64,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		editor,
 		isEdited,
 		status: fetcher.state,
-		saveContent
+		saveContent,
 	};
 };
 

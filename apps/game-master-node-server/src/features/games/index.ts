@@ -63,18 +63,21 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 						columns: {
 							id: true,
 							name: true,
+							gameId: true
 						},
 					},
 					factions: {
 						columns: {
 							id: true,
 							name: true,
+							gameId: true
 						},
 					},
 					notes: {
 						columns: {
 							id: true,
 							name: true,
+							gameId: true
 						},
 					},
 				},

@@ -1,4 +1,10 @@
-import { useEditor, EditorContent, BubbleMenu, type Editor } from "@tiptap/react";
+import {
+	useEditor,
+	EditorContent,
+	BubbleMenu,
+	type Editor,
+	type Extensions,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
@@ -9,11 +15,36 @@ import type { FormMethod } from "@remix-run/react";
 import { cn } from "callum-util";
 import { Label } from "../ui/field";
 
-export const useDefaultEditor = (content: string | undefined = undefined) => {
+import { suggestion } from "./util/suggestion";
+import Fuse from "fuse.js";
+import { CustomMention } from "./extensions/mention-extension";
+import type { MentionItem } from "~/types/mentions";
+import { useEffect, useState } from "react";
+
+export const useDefaultEditor = (
+	content?: string | undefined,
+	suggestionItems?: () => MentionItem[],
+) => {
+	const extensions: Extensions = [StarterKit, Typography];
+	if (suggestionItems) {
+		extensions.push(
+			CustomMention.configure({
+				suggestion: {
+					...suggestion,
+					items: ({ query }) => {
+						const fuse = new Fuse(suggestionItems(), {
+							keys: ["id", "label", "href"],
+						});
+						return fuse.search(query).map((result) => result.item);
+					},
+				},
+			}),
+		);
+	}
 	return useEditor({
-		extensions: [StarterKit, Typography],
+		extensions,
 		immediatelyRender: false,
-    shouldRerenderOnTransaction: false,
+		shouldRerenderOnTransaction: false,
 		content,
 		editorProps: {
 			attributes: {
@@ -26,26 +57,42 @@ export const useDefaultEditor = (content: string | undefined = undefined) => {
 
 interface EditorBodyProps {
 	htmlContent: string;
+	suggestionItems: () => MentionItem[];
 	action?: string;
 	method?: FormMethod;
 }
-export function EditorBody({ htmlContent, action, method }: EditorBodyProps) {
+export function EditorBody({
+	htmlContent,
+	action,
+	method,
+	suggestionItems,
+}: EditorBodyProps) {
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	const { editor, isEdited, status, saveContent } = useSyncEditorContent({
 		initContent: htmlContent,
+		suggestionItems,
 		action,
+		method,
 	});
 
 	return (
 		<div className="editor">
 			<Toolbar className={"flex p-2"}>
-				<Button
-					size={"sm"}
-					onPress={saveContent}
-					isDisabled={!isEdited}
-					variant={isEdited ? "default" : "outline"}
-				>
-					{isEdited ? "Save" : "Content Saved"}
-				</Button>
+				{isClient && (
+					<Button
+						size={"sm"}
+						onPress={saveContent}
+						isDisabled={!isEdited}
+						variant={isEdited ? "default" : "outline"}
+					>
+						{isEdited ? "Save" : "Content Saved"}
+					</Button>
+				)}
 			</Toolbar>
 			<EditorWithControls editor={editor} />
 		</div>
@@ -66,7 +113,7 @@ export function EditorWithControls({ editor, bordered, label }: EditorWithContro
 			<EditorContent
 				className={cn("flex-auto", bordered ? "border rounded-md" : "")}
 				editor={editor}
-        aria-labelledby="editor-label"
+				aria-labelledby="editor-label"
 			/>
 			<BubbleMenu editor={editor}>
 				<BubbleMenuItems editor={editor} />
@@ -85,7 +132,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleBold().run()}
-        aria-label="Font bold"
+				aria-label="Font bold"
 			>
 				<FontBoldIcon />
 			</Button>
@@ -93,7 +140,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleItalic().run()}
-        aria-label="Font italic"
+				aria-label="Font italic"
 			>
 				<FontItalicIcon />
 			</Button>
@@ -101,7 +148,7 @@ export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 				size="icon"
 				variant="secondary"
 				onPress={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        aria-label="Font heading"
+				aria-label="Font heading"
 			>
 				<HeadingIcon />
 			</Button>

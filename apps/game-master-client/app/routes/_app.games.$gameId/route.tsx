@@ -6,6 +6,7 @@ import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { GameNavbar } from "./components/game-navbar";
 import { Text } from "~/components/ui/typeography";
+import type { MentionItem } from "~/types/mentions";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
@@ -26,12 +27,42 @@ export default function GameLayout() {
 
 export function useGameData() {
 	const data = useTypedRouteLoaderData<typeof loader>("routes/_app.games.$gameId");
+
 	if (data === undefined) {
 		throw new Error(
 			"useGameData must be used within the _app.games.$gameId route or its children",
 		);
 	}
-	return data;
+
+	const suggestionItems = (): MentionItem[] => {
+		const items: MentionItem[] = [];
+		data.notes.map((note) => {
+			items.push({
+				id: note.id,
+				label: note.name,
+				href: `/games/${note.gameId}/notes/${note.id}`,
+			});
+		});
+
+		data.characters.map((char) => {
+			items.push({
+				id: char.id,
+				label: char.name,
+				href: `/games/${char.gameId}/characters/${char.id}`,
+			});
+		});
+
+		data.factions.map((faction) => {
+			items.push({
+				id: faction.id,
+				label: faction.name,
+				href: `/games/${faction.gameId}/factions/${faction.id}`,
+			});
+		});
+
+		return items;
+	};
+	return { ...data, suggestionItems };
 }
 
 export function ErrorBoundary() {
