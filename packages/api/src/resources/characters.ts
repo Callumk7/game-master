@@ -1,6 +1,15 @@
 import type { Client } from "../client.js";
-import type { Character, CharacterWithNotes, CreateCharacterRequestBody } from "../types/characters.js";
-import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
+import type {
+	Character,
+	CharacterWithNotes,
+	CreateCharacterRequestBody,
+	UpdateCharacterRequestBody,
+} from "../types/characters.js";
+import type {
+	BasicServerResponse,
+	Id,
+	ServerResponse,
+} from "../types/index.js";
 
 export class Characters {
 	constructor(private client: Client) {}
@@ -11,7 +20,9 @@ export class Characters {
 	}
 
 	// DONE
-	async createCharacter(body: CreateCharacterRequestBody): Promise<ServerResponse<Character>> {
+	async createCharacter(
+		body: CreateCharacterRequestBody
+	): Promise<ServerResponse<Character>> {
 		return this.client.post<ServerResponse<Character>>("characters", body);
 	}
 
@@ -23,11 +34,11 @@ export class Characters {
 	// TODO: change the Partial type to an inferred type based on the updateCharacter zod schema
 	async updateCharacterDetails(
 		charId: Id,
-		charDetails: Partial<Character>,
+		charDetails: UpdateCharacterRequestBody
 	): Promise<ServerResponse<Character>> {
 		return this.client.patch<ServerResponse<Character>>(
 			`characters/${charId}`,
-			charDetails,
+			charDetails
 		);
 	}
 
@@ -37,8 +48,13 @@ export class Characters {
 	}
 
 	// DONE
-	async getUserCharactersForGame(gameId: Id, userId: Id): Promise<Character[]> {
-		return this.client.get<Character[]>(`games/${gameId}/users/${userId}/characters`);
+	async getUserCharactersForGame(
+		gameId: Id,
+		userId: Id
+	): Promise<Character[]> {
+		return this.client.get<Character[]>(
+			`games/${gameId}/users/${userId}/characters`
+		);
 	}
 
 	// DONE
@@ -47,6 +63,8 @@ export class Characters {
 	}
 
 	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
-		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`)
+		return this.client.get<CharacterWithNotes>(
+			`characters/${charId}/notes`
+		);
 	}
 }
