@@ -8,7 +8,7 @@ import {
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
-import { Text, EditableText } from "~/components/ui/typeography";
+import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { NoteToolbar } from "./components/note-toolbar";
 import { NoteSidebar } from "./components/note-sidebar";
@@ -17,6 +17,7 @@ import { stringOrArrayToArray } from "callum-util";
 import { getNoteData } from "./queries.server";
 import { useGameData } from "../_app.games.$gameId/route";
 import { updateNoteContentSchema } from "@repo/api";
+import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -72,7 +73,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		return redirect("/");
 	}
 
-	return new Response("Method Not Allowed", { status: 400 });
+  return methodNotAllowed();
 };
 
 export default function NotesRoute() {
