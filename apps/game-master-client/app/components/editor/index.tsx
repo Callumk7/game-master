@@ -1,4 +1,10 @@
-import { useEditor, EditorContent, BubbleMenu, type Editor, type Extensions } from "@tiptap/react";
+import {
+	useEditor,
+	EditorContent,
+	BubbleMenu,
+	type Editor,
+	type Extensions,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
@@ -13,9 +19,10 @@ import { suggestion } from "./util/suggestion";
 import Fuse from "fuse.js";
 import { CustomMention } from "./extensions/mention-extension";
 import type { MentionItem } from "~/types/mentions";
+import { useEffect, useState } from "react";
 
 export const useDefaultEditor = (
-  content?: string | undefined,
+	content?: string | undefined,
 	suggestionItems?: () => MentionItem[],
 ) => {
 	const extensions: Extensions = [StarterKit, Typography];
@@ -60,6 +67,12 @@ export function EditorBody({
 	method,
 	suggestionItems,
 }: EditorBodyProps) {
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	const { editor, isEdited, status, saveContent } = useSyncEditorContent({
 		initContent: htmlContent,
 		suggestionItems,
@@ -70,14 +83,16 @@ export function EditorBody({
 	return (
 		<div className="editor">
 			<Toolbar className={"flex p-2"}>
-				<Button
-					size={"sm"}
-					onPress={saveContent}
-					isDisabled={!isEdited}
-					variant={isEdited ? "default" : "outline"}
-				>
-					{isEdited ? "Save" : "Content Saved"}
-				</Button>
+				{isClient && (
+					<Button
+						size={"sm"}
+						onPress={saveContent}
+						isDisabled={!isEdited}
+						variant={isEdited ? "default" : "outline"}
+					>
+						{isEdited ? "Save" : "Content Saved"}
+					</Button>
+				)}
 			</Toolbar>
 			<EditorWithControls editor={editor} />
 		</div>
