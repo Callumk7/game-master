@@ -24,6 +24,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	const [isEdited, setIsEdited] = useState(false);
 
 	if (editor) {
+		// TODO: This event will need to be unmounted
 		editor.on("update", () => {
 			if (!isEdited) setIsEdited(true);
 		});

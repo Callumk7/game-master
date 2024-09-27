@@ -6,7 +6,6 @@ import {
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
-import Mention from "@tiptap/extension-mention";
 import {
   FontBoldIcon,
   FontItalicIcon,
