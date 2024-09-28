@@ -1,37 +1,31 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect, useLoaderData, useParams } from "@remix-run/react";
-import { createNoteSchema } from "@repo/api";
+import { json, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
-import { api } from "~/lib/api.server";
+import { parseParams } from "zodix";
 import { validateUser } from "~/lib/auth.server";
-import { NewNoteEditor } from "./components/new-note";
+import { CreateNoteForm } from "~/components/forms/create-note";
+import { createNoteAction } from "~/queries/create-note";
+import { methodNotAllowed } from "~/util/responses";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+	const { gameId } = parseParams(params, { gameId: z.string() });
 	const userId = await validateUser(request);
-	return json({ userId });
+	return json({ userId, gameId });
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
-	const { gameId } = parseParams(params, { gameId: z.string() });
-	const data = await parseForm(request, createNoteSchema);
-
-	const result = await api.notes.createNote(data);
-  
-	if (result.success) {
-		return redirect(`/games/${gameId}/notes/${result.data.id}`);
+export const action = async ({ request }: ActionFunctionArgs) => {
+	if (request.method === "POST") {
+		return await createNoteAction(request);
 	}
 
-	return json({ error: result.message });
+	return methodNotAllowed();
 };
 
 export default function NewNoteRoute() {
-	const { userId } = useLoaderData<typeof loader>();
-	const { gameId } = useParams();
+	const { gameId } = useLoaderData<typeof loader>();
 	return (
 		<div>
-			<NewNoteEditor userId={userId} gameId={gameId!} />
+			<CreateNoteForm gameId={gameId} />
 		</div>
 	);
 }
-

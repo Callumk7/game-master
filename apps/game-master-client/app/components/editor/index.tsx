@@ -49,7 +49,7 @@ export const useDefaultEditor = (
 		editorProps: {
 			attributes: {
 				class:
-					"rounded-md p-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+					"rounded-md p-3 h-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
 			},
 		},
 	});
@@ -103,15 +103,21 @@ interface EditorWithControlsProps {
 	editor: Editor | null;
 	bordered?: boolean;
 	label?: string;
+	className?: string;
 }
 
-export function EditorWithControls({ editor, bordered, label }: EditorWithControlsProps) {
+export function EditorWithControls({
+	editor,
+	bordered,
+	label,
+	className,
+}: EditorWithControlsProps) {
 	if (!editor) return null;
 	return (
 		<div>
 			{label && <Label id="editor-label">{label}</Label>}
 			<EditorContent
-				className={cn("flex-auto", bordered ? "border rounded-md" : "")}
+				className={cn("flex-auto", bordered ? "border rounded-md" : "", className)}
 				editor={editor}
 				aria-labelledby="editor-label"
 			/>
