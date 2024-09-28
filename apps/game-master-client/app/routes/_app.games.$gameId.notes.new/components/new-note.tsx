@@ -28,16 +28,16 @@ export function NewNoteEditor({ userId, gameId, action }: NewNoteEditorProps) {
 		fetcher.submit(newNoteInsert, { method: "post", action });
 	};
 	return (
-    <div className="border rounded-md p-4 space-y-4">
-      <Input
-      type="text"
-      value={name}
-      onInput={(e) => setName(e.currentTarget.value)}
-      className={"border-0 text-2xl font-semibold"}
-      autoFocus
-    />
-        <EditorWithControls editor={editor} />
-        <Button onPress={handleSave}>Save</Button>
-      </div>
+		<div className="border rounded-md p-4 space-y-4">
+			<Input
+				type="text"
+				value={name}
+				onInput={(e) => setName(e.currentTarget.value)}
+				className={"border-0 text-2xl font-semibold"}
+				autoFocus
+			/>
+			<EditorWithControls editor={editor} />
+			<Button onPress={handleSave}>Save</Button>
+		</div>
 	);
 }
