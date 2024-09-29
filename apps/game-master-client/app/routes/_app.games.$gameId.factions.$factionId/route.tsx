@@ -8,6 +8,7 @@ import { api } from "~/lib/api.server";
 import { useGameData } from "../_app.games.$gameId/route";
 import { updateFactionSchema } from "@repo/api";
 import { methodNotAllowed } from "~/util/responses";
+import { EntityToolbar } from "~/components/entity-toolbar";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { factionId } = parseParams(params, { factionId: z.string() });
@@ -31,7 +32,8 @@ export default function FactionDetailRoute() {
 	const { factionDetails } = useTypedLoaderData<typeof loader>();
 	const { suggestionItems } = useGameData();
 	return (
-		<div>
+		<div className="p-4 space-y-4">
+      <EntityToolbar />
 			<EditableText
 				method="patch"
 				fieldName={"name"}
