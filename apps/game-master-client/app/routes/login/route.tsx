@@ -12,7 +12,7 @@ import { commitSession, getUserSession } from "~/lib/auth.server";
 import { verifyPassword } from "./queries.server";
 import { Link } from "~/components/ui/link";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getUserSession(request);
   // user is already logged in.
   if (session.get("userId")) {
@@ -27,7 +27,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
   });
 };
 
-export const action = async ({ request, params, context }: ActionFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getUserSession(request);
   const result = await parseFormSafe(request, {
     username: z.string(),
