@@ -3,16 +3,13 @@ import type {
 	Character,
 	CharacterWithNotes,
 	CreateCharacterRequestBody,
+	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
-import type {
-	BasicServerResponse,
-	Id,
-	ServerResponse,
-} from "../types/index.js";
+import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 
 export class Characters {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	// DONE
 	async getCharacter(charId: Id): Promise<Character> {
@@ -21,7 +18,7 @@ export class Characters {
 
 	// DONE
 	async createCharacter(
-		body: CreateCharacterRequestBody
+		body: CreateCharacterRequestBody,
 	): Promise<ServerResponse<Character>> {
 		return this.client.post<ServerResponse<Character>>("characters", body);
 	}
@@ -31,14 +28,24 @@ export class Characters {
 		return this.client.delete(`characters/${charId}`);
 	}
 
+	async duplicateCharacter(
+		charId: Id,
+		duplicateData: DuplicateCharacterRequestBody,
+	): Promise<ServerResponse<Character>> {
+		return this.client.post<ServerResponse<Character>>(
+			`characters/${charId}/duplicate`,
+			duplicateData,
+		);
+	}
+
 	// TODO: change the Partial type to an inferred type based on the updateCharacter zod schema
 	async updateCharacterDetails(
 		charId: Id,
-		charDetails: UpdateCharacterRequestBody
+		charDetails: UpdateCharacterRequestBody,
 	): Promise<ServerResponse<Character>> {
 		return this.client.patch<ServerResponse<Character>>(
 			`characters/${charId}`,
-			charDetails
+			charDetails,
 		);
 	}
 
@@ -48,13 +55,8 @@ export class Characters {
 	}
 
 	// DONE
-	async getUserCharactersForGame(
-		gameId: Id,
-		userId: Id
-	): Promise<Character[]> {
-		return this.client.get<Character[]>(
-			`games/${gameId}/users/${userId}/characters`
-		);
+	async getUserCharactersForGame(gameId: Id, userId: Id): Promise<Character[]> {
+		return this.client.get<Character[]>(`games/${gameId}/users/${userId}/characters`);
 	}
 
 	// DONE
@@ -63,8 +65,6 @@ export class Characters {
 	}
 
 	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
-		return this.client.get<CharacterWithNotes>(
-			`characters/${charId}/notes`
-		);
+		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`);
 	}
 }

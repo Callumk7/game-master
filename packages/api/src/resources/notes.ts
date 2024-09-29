@@ -8,6 +8,7 @@ import type {
 } from "../types/index.js";
 import type {
 	CreateNoteRequestBody,
+	DuplicateNoteRequestBody,
 	Note,
 	UpdateNoteContentRequestBody,
 } from "../types/notes.js";
@@ -46,7 +47,7 @@ export class Notes {
 	// PARTIALLY DONE
 	async duplicateNote(
 		noteId: Id,
-		newNoteDetails: Partial<Note>
+		newNoteDetails: DuplicateNoteRequestBody
 	): Promise<ServerResponse<Note>> {
 		return this.client.post<ServerResponse<Note>>(
 			`notes/${noteId}/duplicate`,

@@ -100,14 +100,11 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 		const newNote = await db
 			.insert(notes)
 			.values({
+				...note,
 				id: generateNoteId(),
 				name: data.name,
 				createdAt: currentDate,
 				updatedAt: currentDate,
-				ownerId: data.ownerId,
-				type: note.type,
-				content: note.content,
-				htmlContent: note.htmlContent,
 			})
 			.returning()
 			.then((result) => result[0]);

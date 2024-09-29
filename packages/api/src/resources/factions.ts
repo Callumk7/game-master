@@ -1,5 +1,12 @@
 import type { Client } from "../client.js";
-import type { CreateFactionRequestBody, Faction, FactionWithMembers, FactionWithNotes, UpdateFactionRequestBody } from "../types/factions.js";
+import type {
+	CreateFactionRequestBody,
+	DuplicateFactionRequestBody,
+	Faction,
+	FactionWithMembers,
+	FactionWithNotes,
+	UpdateFactionRequestBody,
+} from "../types/factions.js";
 import type { ServerResponse, Id, BasicServerResponse } from "../types/index.js";
 
 export class Factions {
@@ -26,6 +33,16 @@ export class Factions {
 		return this.client.patch<ServerResponse<Faction>>(
 			`factions/${factionId}`,
 			factionDetails,
+		);
+	}
+
+	async duplicateFaction(
+		factionId: Id,
+		duplicateData: DuplicateFactionRequestBody,
+	): Promise<ServerResponse<Faction>> {
+		return this.client.post<ServerResponse<Faction>>(
+			`factions/${factionId}/duplicate`,
+			duplicateData,
 		);
 	}
 

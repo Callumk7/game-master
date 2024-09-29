@@ -1,4 +1,8 @@
-import { createFactionSchema, updateFactionSchema } from "@repo/api";
+import {
+	createFactionSchema,
+	duplicateFactionSchema,
+	updateFactionSchema,
+} from "@repo/api";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -11,8 +15,15 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createFactionInsert } from "./util";
+import { generateFactionId } from "~/lib/ids";
 
 export const factionRoute = new Hono();
+
+const getFaction = async (factionId: string) => {
+	return await db.query.factions.findFirst({
+		where: eq(factions.id, factionId),
+	});
+};
 
 factionRoute.get("/:factionId", async (c) => {
 	const factionId = c.req.param("factionId");
@@ -68,6 +79,31 @@ factionRoute.patch("/:factionId", async (c) => {
 			.returning()
 			.then((result) => result[0]);
 		return successResponse(c, factionUpdate);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.post("/:factionId/duplicate", async (c) => {
+	const factionId = c.req.param("factionId");
+	const data = await validateOrThrowError(duplicateFactionSchema, c);
+	try {
+		const faction = await getFaction(factionId);
+		if (!faction) return handleNotFound(c);
+		const currentDate = new Date();
+		const newFaction = await db
+			.insert(factions)
+			.values({
+				...faction,
+				id: generateFactionId(),
+				name: data.name,
+				ownerId: data.ownerId,
+				createdAt: currentDate,
+				updatedAt: currentDate,
+			})
+			.returning()
+			.then((result) => result[0]);
+		return successResponse(c, newFaction);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

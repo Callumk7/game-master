@@ -1,13 +1,15 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { useGameData } from "../_app.games.$gameId/route";
-import { updateCharacterSchema } from "@repo/api";
-import { methodNotAllowed } from "~/util/responses";
+import { duplicateCharacterSchema, updateCharacterSchema } from "@repo/api";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { EntityToolbar } from "~/components/entity-toolbar";
+import { validateUser } from "~/lib/auth.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
@@ -17,6 +19,25 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
+
+	if (request.method === "POST") {
+		const userId = await validateUser(request);
+		const data = await parseForm(
+			request,
+			duplicateCharacterSchema.omit({ ownerId: true }),
+		);
+
+		const dupeResult = await api.characters.duplicateCharacter(charId, {
+			...data,
+			ownerId: userId,
+		});
+
+		if (!dupeResult.success) {
+			return unsuccessfulResponse(dupeResult.message);
+		}
+
+		return redirect(`/games/${dupeResult.data.gameId}/characters/${dupeResult.data.id}`);
+	}
 
 	if (request.method === "PATCH") {
 		const data = await parseForm(request, updateCharacterSchema);
@@ -37,7 +58,8 @@ export default function CharacterRoute() {
 	const { characterDetails } = useTypedLoaderData<typeof loader>();
 	const { suggestionItems } = useGameData();
 	return (
-		<div>
+		<div className="p-4 space-y-4">
+			<EntityToolbar />
 			<EditableText
 				method="patch"
 				fieldName={"name"}

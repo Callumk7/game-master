@@ -6,3 +6,10 @@ export function methodNotAllowed() {
 		statusText: ReasonPhrases.METHOD_NOT_ALLOWED,
 	});
 }
+
+export function unsuccessfulResponse(errorMessage: string) {
+	return new Response(errorMessage, {
+		status: StatusCodes.INTERNAL_SERVER_ERROR,
+		statusText: errorMessage
+	});
+}

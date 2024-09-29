@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import {
 	redirect,
 	typedjson,
@@ -10,14 +10,15 @@ import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
-import { NoteToolbar } from "./components/note-toolbar";
 import { NoteSidebar } from "./components/note-sidebar";
 import { OptionalEntitySchema } from "types/schemas";
 import { stringOrArrayToArray } from "callum-util";
 import { getNoteData } from "./queries.server";
 import { useGameData } from "../_app.games.$gameId/route";
-import { updateNoteContentSchema } from "@repo/api";
-import { methodNotAllowed } from "~/util/responses";
+import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { EntityToolbar } from "~/components/entity-toolbar";
+import { validateUser } from "~/lib/auth.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -31,16 +32,34 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 // Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+	const userId = await validateUser(request);
 	const { noteId } = parseParams(params, {
 		noteId: z.string(),
 	});
+
+	if (request.method === "POST") {
+		const data = await parseForm(request, duplicateNoteSchema.omit({ ownerId: true }));
+
+		const duplicatedNote = await api.notes.duplicateNote(noteId, {
+			...data,
+			ownerId: userId,
+		});
+
+		if (!duplicatedNote.success) {
+			return unsuccessfulResponse(duplicatedNote.message);
+		}
+
+		return redirect(
+			`/games/${duplicatedNote.data.gameId}/notes/${duplicatedNote.data.id}`,
+		);
+	}
 
 	if (request.method === "PATCH") {
 		const data = await parseForm(request, updateNoteContentSchema);
 		const result = await api.notes.updateNote(noteId, data);
 
 		if (!result.success) {
-			return new Response("Error");
+			return unsuccessfulResponse(result.message);
 		}
 
 		return typedjson(result.data);
@@ -73,7 +92,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		return redirect("/");
 	}
 
-  return methodNotAllowed();
+	return methodNotAllowed();
 };
 
 export default function NotesRoute() {
@@ -84,7 +103,7 @@ export default function NotesRoute() {
 	return (
 		<>
 			<div className="p-4 space-y-4">
-				<NoteToolbar noteId={note.id} />
+				<EntityToolbar />
 				<EditableText
 					method="patch"
 					fieldName={"name"}
