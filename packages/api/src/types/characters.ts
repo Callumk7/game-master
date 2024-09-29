@@ -33,3 +33,9 @@ export const updateCharacterSchema = z.object({
 	htmlContent: z.string().optional(),
 })
 export type UpdateCharacterRequestBody = z.infer<typeof updateCharacterSchema>;
+
+export const duplicateCharacterSchema = z.object({
+	name: z.string(),
+	ownerId: z.string()
+})
+export type DuplicateCharacterRequestBody = z.infer<typeof duplicateCharacterSchema>;

@@ -43,3 +43,9 @@ export const updateFactionSchema = z.object({
 	leaderId: z.string().optional(),
 })
 export type UpdateFactionRequestBody = z.infer<typeof updateFactionSchema>;
+
+export const duplicateFactionSchema = z.object({
+	name: z.string(),
+	ownerId: z.string()
+})
+export type DuplicateFactionRequestBody = z.infer<typeof duplicateFactionSchema>;
