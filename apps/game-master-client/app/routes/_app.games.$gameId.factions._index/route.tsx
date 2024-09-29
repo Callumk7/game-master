@@ -8,7 +8,7 @@ import { createFactionAction } from "~/queries/create-faction";
 import { CreateFactionSlideover } from "~/components/forms/create-faction";
 import { FactionTable } from "./components/faction-table";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
 
 	const gameFactions = await api.factions.getAllGameFactions(gameId);
