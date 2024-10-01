@@ -7,7 +7,12 @@ import {
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
-import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
+import {
+	FontBoldIcon,
+	FontItalicIcon,
+	HeadingIcon,
+	TriangleLeftIcon,
+} from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
 import { useSyncEditorContent } from "./sync";
@@ -21,6 +26,9 @@ import { CustomMention } from "./extensions/mention-extension";
 import type { MentionItem } from "~/types/mentions";
 import { useEffect, useState } from "react";
 
+// Core editor hook. A wrapper around the tiptap useEditor
+// hook, which ensures consistent settings when spawning a
+// new editor on each page.
 export const useDefaultEditor = (
 	content?: string | undefined,
 	suggestionItems?: () => MentionItem[],
@@ -55,6 +63,7 @@ export const useDefaultEditor = (
 	});
 };
 
+// Core editor component
 interface EditorBodyProps {
 	htmlContent: string;
 	suggestionItems: () => MentionItem[];
@@ -133,7 +142,19 @@ interface BubbleMenuItemsProps {
 }
 export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
 	return (
-		<Toolbar className="p-3 bg-accent border rounded-md">
+		<div className="p-3 bg-popover border rounded-md">
+			<EditorControls editor={editor} />
+		</div>
+	);
+}
+
+interface EditorControlsProps {
+	editor: Editor;
+}
+
+export function EditorControls({ editor }: EditorControlsProps) {
+	return (
+		<Toolbar>
 			<Button
 				size="icon"
 				variant="secondary"
