@@ -1,24 +1,28 @@
-import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type {
+	ClientActionFunctionArgs,
+	ClientLoaderFunctionArgs,
+} from "@remix-run/react";
+import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
+import { stringOrArrayToArray } from "callum-util";
 import {
 	redirect,
 	typedjson,
 	useTypedLoaderData,
 	useTypedRouteLoaderData,
 } from "remix-typedjson";
+import { OptionalEntitySchema } from "types/schemas";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
+import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
-import { NoteSidebar } from "./components/note-sidebar";
-import { OptionalEntitySchema } from "types/schemas";
-import { stringOrArrayToArray } from "callum-util";
-import { getNoteData } from "./queries.server";
-import { useGameData } from "../_app.games.$gameId/route";
-import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { EntityToolbar } from "~/components/entity-toolbar";
 import { validateUser } from "~/lib/auth.server";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { useGameData } from "../_app.games.$gameId/route";
+import { NoteSidebar } from "./components/note-sidebar";
+import { getNoteData } from "./queries.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -29,6 +33,34 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 	return typedjson({ note, linkedNotes, linkedChars, linkedFactions });
 };
+
+let isInitialRequest = true;
+
+export const clientLoader = async ({
+	params,
+	serverLoader,
+}: ClientLoaderFunctionArgs) => {
+	const { noteId } = parseParams(params, {
+		noteId: z.string(),
+	});
+	if (isInitialRequest) {
+		isInitialRequest = false;
+		const serverData = await serverLoader();
+		localStorage.setItem(noteId, JSON.stringify(serverData));
+		return serverData;
+	}
+
+	const cachedData = localStorage.getItem(noteId);
+	if (cachedData) {
+		return JSON.parse(cachedData);
+	}
+
+	const serverData = await serverLoader();
+	localStorage.setItem(noteId, JSON.stringify(serverData));
+	return serverData;
+};
+
+clientLoader.hydrate = true;
 
 // Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -94,6 +126,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 	return methodNotAllowed();
 };
+
+export async function clientAction({ params, serverAction }: ClientActionFunctionArgs) {
+	const { noteId } = parseParams(params, {
+		noteId: z.string(),
+	});
+
+	localStorage.removeItem(noteId);
+
+	const serverData = await serverAction();
+	return serverData;
+}
 
 export default function NotesRoute() {
 	const { note } = useTypedLoaderData<typeof loader>();
