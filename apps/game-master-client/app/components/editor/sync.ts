@@ -35,13 +35,18 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 				editor.off("update", updateListener);
 			};
 		}
-	}, [editor, isEdited]); 
+	}, [editor, isEdited]);
 
-	useLayoutEffect(() => {
-		if(editor) {
+	// Setting editor content inside a react lifecycle hook throws errors
+	// regarding tiptap's use of flushSync during render. It doesn't break
+	// the app, but the warning is annoying. Using the browser queueMicrotask
+	// api fixes the error, at the expense of potential delayed content load
+	// on quick navigations.
+	queueMicrotask(() => {
+		if (editor) {
 			editor.commands.setContent(optimisticContent);
 		}
-	}, [editor, optimisticContent])
+	});
 
 	const saveContent = () => {
 		if (editor && isEdited) {
