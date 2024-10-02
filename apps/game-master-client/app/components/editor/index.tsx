@@ -11,7 +11,6 @@ import {
 	FontBoldIcon,
 	FontItalicIcon,
 	HeadingIcon,
-	TriangleLeftIcon,
 } from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
