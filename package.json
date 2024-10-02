@@ -7,6 +7,7 @@
 		"dev": "turbo dev",
 		"dev:server": "pnpm --filter game-master-node-server dev",
 		"dev:client": "pnpm --filter game-master-client dev",
+		"start:server": "pnpm --filter game-master-node-server start",
 		"test": "turbo test",
 		"lint": "turbo lint",
 		"lint:repo": "pnpm dlx sherif@latest",
