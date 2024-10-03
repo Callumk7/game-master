@@ -28,6 +28,7 @@ export class Characters {
 		return this.client.delete(`characters/${charId}`);
 	}
 
+	// DONE
 	async duplicateCharacter(
 		charId: Id,
 		duplicateData: DuplicateCharacterRequestBody,
@@ -38,7 +39,7 @@ export class Characters {
 		);
 	}
 
-	// TODO: change the Partial type to an inferred type based on the updateCharacter zod schema
+	// DONE
 	async updateCharacterDetails(
 		charId: Id,
 		charDetails: UpdateCharacterRequestBody,
