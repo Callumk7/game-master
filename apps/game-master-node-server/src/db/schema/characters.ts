@@ -1,4 +1,4 @@
-import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
 import { notes } from "./notes";
@@ -21,6 +21,7 @@ export const characters = pgTable("characters", {
 	ownerId: text("owner_id")
 		.references(() => users.id)
 		.notNull(),
+	isPlayer: boolean("is_player").notNull().default(false),
 });
 
 export const databaseSelectCharacterSchema = createSelectSchema(characters);
@@ -57,17 +58,16 @@ export const notesOnCharacters = pgTable(
 	}),
 );
 
-export const notesOnCharactersRelations = relations(notesOnCharacters, ({one}) => ({
+export const notesOnCharactersRelations = relations(notesOnCharacters, ({ one }) => ({
 	note: one(notes, {
 		fields: [notesOnCharacters.noteId],
-		references: [notes.id]
+		references: [notes.id],
 	}),
 	character: one(characters, {
 		fields: [notesOnCharacters.characterId],
-		references: [characters.id]
-	})
-}))
-
+		references: [characters.id],
+	}),
+}));
 
 export const charactersInFactions = pgTable(
 	"characters_in_factions",
@@ -86,15 +86,16 @@ export const charactersInFactions = pgTable(
 	}),
 );
 
-export const charactersInFactionsRelations = relations(charactersInFactions, ({one}) => ({
-	faction: one(factions, {
-		fields: [charactersInFactions.factionId],
-		references: [factions.id]
+export const charactersInFactionsRelations = relations(
+	charactersInFactions,
+	({ one }) => ({
+		faction: one(factions, {
+			fields: [charactersInFactions.factionId],
+			references: [factions.id],
+		}),
+		character: one(characters, {
+			fields: [charactersInFactions.characterId],
+			references: [characters.id],
+		}),
 	}),
-	character: one(characters, {
-		fields: [charactersInFactions.characterId],
-		references: [characters.id]
-	})
-}))
-
-
+);

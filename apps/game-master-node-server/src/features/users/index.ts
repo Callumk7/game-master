@@ -8,37 +8,14 @@ import { games } from "~/db/schema/games";
 import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
+	badRequestResponse,
 	handleDatabaseError,
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getOwnedGamesWithConnections } from "./queries";
+import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
 
 export const usersRoute = new Hono();
-
-usersRoute.get("/:userId", async (c) => {
-	const userId = c.req.param("userId");
-
-	try {
-		const result = await db
-			.select({
-				id: users.id,
-				firstName: users.firstName,
-				lastName: users.lastName,
-				username: users.username,
-				email: users.email,
-			})
-			.from(users)
-			.where(eq(users.id, userId))
-			.then((rows) => rows[0]);
-		if (!result) {
-			return handleNotFound(c);
-		}
-		return c.json(result);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
 
 usersRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(newUserSchema, c);
@@ -60,6 +37,20 @@ usersRoute.post("/", async (c) => {
 	}
 });
 
+usersRoute.get("/:userId", async (c) => {
+	const userId = c.req.param("userId");
+
+	try {
+		const result = await getUser(userId);
+		if (!result) {
+			return handleNotFound(c);
+		}
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 // TODO: Delete users
 
 // TODO: Edit users
@@ -67,25 +58,30 @@ usersRoute.post("/", async (c) => {
 usersRoute.get("/:userId/games", async (c) => {
 	const userId = c.req.param("userId");
 
+	// should only be "nested", "flat" or "sidebar"
 	const withData = c.req.query().withData;
-	const nested = c.req.query().nested;
 
-	if (withData === "true") {
-		if (nested === "true") {
-			try {
-				const allGames = await getOwnedGamesWithConnections(userId);
-				return c.json(allGames);
-			} catch (error) {
-				return handleDatabaseError(c, error);
-			}
+	if (!withData || !["nested", "flat", "sidebar"].includes(withData)) {
+		return badRequestResponse("withData param not provided or was not correct value");
+	}
+
+	if (withData === "nested") {
+		try {
+			const allGames = await getOwnedGamesWithConnections(userId);
+			return c.json(allGames);
+		} catch (error) {
+			return handleDatabaseError(c, error);
 		}
+	}
+
+	if (withData === "flat") {
 		try {
 			const allGames = await db.query.games.findMany({
 				where: eq(games.ownerId, userId),
 				with: {
 					notes: true,
 					characters: true,
-					factions: true
+					factions: true,
 				},
 			});
 			return c.json(allGames);
@@ -94,11 +90,16 @@ usersRoute.get("/:userId/games", async (c) => {
 		}
 	}
 
-	try {
-		const ownedGames = await db.select().from(games).where(eq(games.ownerId, userId));
-		return c.json(ownedGames);
-	} catch (error) {
-		return handleDatabaseError(c, error);
+	if (withData === "sidebar") {
+		try {
+			const sidebarData = await getSidebarData(userId);
+			if (!sidebarData) {
+				return handleNotFound(c);
+			}
+			return c.json(sidebarData)
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
 	}
 });
 
