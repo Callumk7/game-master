@@ -5,8 +5,8 @@ import type { Note } from "./notes.js";
 export interface Character {
 	id: Id;
 	name: string;
-	content: string;
-	htmlContent: string;
+	content: string | null;
+	htmlContent: string | null;
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;

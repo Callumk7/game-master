@@ -18,7 +18,7 @@ export const notes = pgTable("notes", {
 		.notNull()
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
-	gameId: text("game_id").references(() => games.id),
+	gameId: text("game_id").references(() => games.id).notNull(),
 	type: text("type").notNull()
 });
 
