@@ -24,6 +24,10 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 	}
 }
 
+export function notFoundExeption(status?: StatusCode) {
+	return new HTTPException(status);
+}
+
 export function successResponse<T>(
 	c: Context,
 	data: T,
@@ -47,6 +51,13 @@ export function handleDatabaseError(c: Context, error?: unknown) {
 
 export function handleBadRequest(c: Context) {
 	return c.text(ReasonPhrases.BAD_REQUEST, StatusCodes.BAD_REQUEST);
+}
+
+export function badRequestResponse(message?: string) {
+	return new Response(message, {
+		status: StatusCodes.BAD_REQUEST,
+		statusText: message ? message : ReasonPhrases.BAD_REQUEST,
+	});
 }
 
 export function basicSuccessResponse(c: Context) {
