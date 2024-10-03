@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { BasicEntity, Id } from "./index.js";
+import type { BasicEntity, BasicEntityWithDates, Id } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
@@ -12,10 +12,18 @@ export interface Game {
 	ownerId: Id;
 }
 
+
+
 export interface GameWithEntities extends Game {
 	notes: BasicEntity[];
 	characters: BasicEntity[];
 	factions: BasicEntity[];
+}
+
+export interface GameWithDatedEntities extends Game {
+	notes: BasicEntityWithDates[];
+	characters: BasicEntityWithDates[];
+	factions: BasicEntityWithDates[];
 }
 
 export interface GameWithCharacters extends Game {

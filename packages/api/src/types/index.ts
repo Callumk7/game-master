@@ -5,10 +5,15 @@ type Unsuccessfulresponse = { success: false; message: string };
 export type ServerResponse<T> = SuccessfulResponse<T> | Unsuccessfulresponse;
 export type BasicServerResponse = { success: boolean };
 
-export type BasicEntity = {
+export interface BasicEntity {
 	id: Id;
 	name: string;
 	gameId: string;
+}
+
+export interface BasicEntityWithDates extends BasicEntity {
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export type EntityType = "notes" | "characters" | "factions";

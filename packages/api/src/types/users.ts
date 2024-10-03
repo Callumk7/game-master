@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Id } from "./index.js";
-import type { GameWithEntities } from "./games.js";
+import type { GameWithDatedEntities } from "./games.js";
 
 export interface User {
 	id: Id;
@@ -11,7 +11,7 @@ export interface User {
 }
 
 export interface UserWithSidebarData extends User {
-	games: GameWithEntities[];
+	games: GameWithDatedEntities[];
 }
 
 
