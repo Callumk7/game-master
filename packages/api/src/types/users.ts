@@ -4,8 +4,8 @@ import type { GameWithEntities } from "./games.js";
 
 export interface User {
 	id: Id;
-	firstName: string | undefined;
-	lastName: string | undefined;
+	firstName: string | null;
+	lastName: string | null;
 	username: string;
 	email: string;
 }
