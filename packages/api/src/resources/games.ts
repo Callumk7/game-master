@@ -39,10 +39,6 @@ export class Games {
 		return this.client.get<Game[]>(`users/${userId}/games`);
 	}
 
-	async getOwnedGames(userId: Id): Promise<Game[]> {
-		return this.client.get<Game[]>(`users/${userId}/games?owned=true`);
-	}
-
 	async getAllGameData(gameId: Id): Promise<GameWithData> {
 		return this.client.get<GameWithData>(`games/${gameId}/all`);
 	}
