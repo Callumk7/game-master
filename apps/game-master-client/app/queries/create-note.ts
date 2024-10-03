@@ -9,9 +9,9 @@ export async function createNoteAction(request: Request) {
 	const userId = await validateUser(request);
 	const data = await parseForm(
 		request,
-		createNoteSchema.omit({ ownerId: true, type: true }),
+		createNoteSchema.omit({ ownerId: true }),
 	);
-	const result = await api.notes.createNote({ ...data, ownerId: userId, type: "note" });
+	const result = await api.notes.createNote({ ...data, ownerId: userId });
 
 	if (result.success) {
 		const { gameId, id } = result.data;
