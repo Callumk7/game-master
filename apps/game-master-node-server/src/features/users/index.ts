@@ -12,7 +12,7 @@ import {
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getOwnedGamesWithConnections } from "./queries";
+import { getOwnedGamesWithConnections, getUser } from "./queries";
 
 export const usersRoute = new Hono();
 
@@ -20,17 +20,7 @@ usersRoute.get("/:userId", async (c) => {
 	const userId = c.req.param("userId");
 
 	try {
-		const result = await db
-			.select({
-				id: users.id,
-				firstName: users.firstName,
-				lastName: users.lastName,
-				username: users.username,
-				email: users.email,
-			})
-			.from(users)
-			.where(eq(users.id, userId))
-			.then((rows) => rows[0]);
+		const result = await getUser(userId);
 		if (!result) {
 			return handleNotFound(c);
 		}
@@ -85,7 +75,7 @@ usersRoute.get("/:userId/games", async (c) => {
 				with: {
 					notes: true,
 					characters: true,
-					factions: true
+					factions: true,
 				},
 			});
 			return c.json(allGames);
