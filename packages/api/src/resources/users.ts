@@ -11,16 +11,14 @@ export class Users {
 		return this.client.get<User>(`users/${id}`);
 	}
 
+	// DONE
 	async getAllUserGamesWithSidebarData(userId: Id): Promise<UserWithSidebarData> {
 		return this.client.get<UserWithSidebarData>(`users/${userId}/games`, {
 			searchParams: { withData: "sidebar" },
 		});
 	}
 
-	async getOwnedGames(userId: Id): Promise<Game[]> {
-		return this.client.get<Game[]>(`users/${userId}/games`);
-	}
-
+	// DONE
 	async getAllUserData(userId: Id): Promise<GameWithData[]> {
 		return this.client.get<GameWithData[]>(`users/${userId}/games`, {
 			searchParams: { withData: "flat" },
