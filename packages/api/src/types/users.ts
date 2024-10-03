@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Id } from "./index.js";
+import type { GameWithEntities } from "./games.js";
 
 export interface User {
 	id: Id;
@@ -7,6 +8,10 @@ export interface User {
 	lastName: string | undefined;
 	username: string;
 	email: string;
+}
+
+export interface UserWithSidebarData extends User {
+	games: GameWithEntities[];
 }
 
 

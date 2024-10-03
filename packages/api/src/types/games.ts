@@ -12,6 +12,12 @@ export interface Game {
 	ownerId: Id;
 }
 
+export interface GameWithEntities extends Game {
+	notes: BasicEntity[];
+	characters: BasicEntity[];
+	factions: BasicEntity[];
+}
+
 export interface GameWithCharacters extends Game {
 	characters: Character[];
 }
