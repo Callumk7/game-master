@@ -1,5 +1,5 @@
 import { FilePlusIcon } from "@radix-ui/react-icons";
-import type { BasicEntity, EntityType, Game, GameWithData } from "@repo/api";
+import type { BasicEntity, EntityType, Game, GameWithDatedEntities } from "@repo/api";
 import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
 import { Link } from "~/components/ui/link";
@@ -18,7 +18,7 @@ import { ThemeToggle } from "~/components/context/dark-mode";
 import { useMemo } from "react";
 
 interface GameSidebarProps {
-  gamesWithAllEntities: GameWithData[];
+  gamesWithAllEntities: GameWithDatedEntities[];
 }
 
 export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
@@ -64,7 +64,7 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
   );
 }
 
-const findGameEntities = (gamesWithAllEntities: GameWithData[], selectedGame: string) => {
+const findGameEntities = (gamesWithAllEntities: GameWithDatedEntities[], selectedGame: string) => {
   const notes =
     gamesWithAllEntities.find((game) => game.id === selectedGame)?.notes ?? [];
   const gameNotes = useMemo(() => {

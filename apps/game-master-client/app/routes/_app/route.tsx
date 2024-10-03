@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Outlet, useHref, useNavigate } from "@remix-run/react";
 import { RouterProvider } from "react-aria-components";
 import { validateUser } from "~/lib/auth.server";
@@ -7,24 +7,35 @@ import {
   useTypedLoaderData,
   useTypedRouteLoaderData,
 } from "remix-typedjson";
-import { getUserAppData } from "./queries.server";
 import { GameSidebar } from "./components/game-sidebar";
 import { GameSelectionProvider } from "~/store/selection";
 import { RightSidebarLayout } from "./components/right-sidebar";
 import { ThemeProvider } from "~/components/context/dark-mode";
+import { api } from "~/lib/api.server";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Game Master: Notes for Heroes" },
+    {
+      name: "description",
+      content: "Take your notes to the next level with Game Master",
+    },
+  ];
+};
+
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
-  const { user, userData } = await getUserAppData(userId); // WARN: big data load on startup. There are better ways
+  const sidebarData = await api.users.getAllUserGamesWithSidebarData(userId);
 
-  return typedjson({ user, userData });
+  return typedjson({ sidebarData });
 };
 
 export default function AppLayout() {
-  const { userData } = useTypedLoaderData<typeof loader>();
+  const { sidebarData } = useTypedLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  const defaultGameId = userData[0]?.id ?? ""; // TODO: This is a temporary hack
+  const defaultGameId = sidebarData.games[0]?.id ?? ""; // TODO: This is a temporary hack
 
   return (
     <RouterProvider navigate={navigate} useHref={useHref}>
@@ -33,7 +44,7 @@ export default function AppLayout() {
         isRightSidebarOpen={false}
       >
         <ThemeProvider>
-          <GameSidebar gamesWithAllEntities={userData} />
+          <GameSidebar gamesWithAllEntities={sidebarData.games} />
           <RightSidebarLayout>
             <Outlet />
           </RightSidebarLayout>
