@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { games, usersToGames } from "./games";
+import { usersToGames } from "./games";
 
 export const users = pgTable("users", {
 	id: text("id").primaryKey().notNull(),
