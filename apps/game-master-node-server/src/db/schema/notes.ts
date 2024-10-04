@@ -33,6 +33,10 @@ export const notes = pgTable("notes", {
 });
 
 export const notesRelations = relations(notes, ({ one, many }) => ({
+	owner: one(users, {
+		fields: [notes.ownerId],
+		references: [users.id]
+	}),
 	game: one(games, {
 		fields: [notes.gameId],
 		references: [games.id],
