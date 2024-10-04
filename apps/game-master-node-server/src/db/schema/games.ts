@@ -52,13 +52,13 @@ export const usersToGames = pgTable(
 		gameId: text("game_id")
 			.notNull()
 			.references(() => games.id),
-		isOwner: boolean("is_owner").notNull(),
-		role: roleEnum("role")
+		isOwner: boolean("is_owner").notNull().default(false),
+		role: roleEnum("role").notNull().default("player")
 	},
 	(t) => ({ pk: primaryKey({ columns: [t.userId, t.gameId] }) }),
 );
 
-export const usersToGamesRelations = relations(usersToGames, ({ one, many }) => ({
+export const usersToGamesRelations = relations(usersToGames, ({ one }) => ({
 	user: one(users, {
 		fields: [usersToGames.userId],
 		references: [users.id],

@@ -1,0 +1,2 @@
+ALTER TABLE "characters" ADD COLUMN "visibility" "visibility" DEFAULT 'private' NOT NULL;--> statement-breakpoint
+ALTER TABLE "factions" ADD COLUMN "visibility" "visibility" DEFAULT 'private' NOT NULL;

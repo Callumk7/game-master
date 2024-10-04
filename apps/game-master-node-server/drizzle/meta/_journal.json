@@ -8,6 +8,34 @@
       "when": 1727952017578,
       "tag": "0000_medical_silver_sable",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1728052303364,
+      "tag": "0001_nifty_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728053050453,
+      "tag": "0002_perpetual_nekra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1728053280855,
+      "tag": "0003_yellow_hitman",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728054400401,
+      "tag": "0004_perpetual_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

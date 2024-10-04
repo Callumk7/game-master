@@ -1,4 +1,11 @@
-import { boolean, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
 import { notes } from "./notes";
@@ -6,6 +13,13 @@ import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+
+export const visibilityEnum = pgEnum("visibility", [
+	"public",
+	"private",
+	"viewable",
+	"partial",
+]);
 
 export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
@@ -22,6 +36,7 @@ export const characters = pgTable("characters", {
 		.references(() => users.id)
 		.notNull(),
 	isPlayer: boolean("is_player").notNull().default(false),
+	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
 export const databaseSelectCharacterSchema = createSelectSchema(characters);
@@ -41,6 +56,7 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	factions: many(charactersInFactions), // ...a member of
+	permissions: many(charactersPermissions),
 }));
 
 export const notesOnCharacters = pgTable(
@@ -96,6 +112,37 @@ export const charactersInFactionsRelations = relations(
 		character: one(characters, {
 			fields: [charactersInFactions.characterId],
 			references: [characters.id],
+		}),
+	}),
+);
+
+export const charactersPermissions = pgTable(
+	"characters_permissions",
+	{
+		characterId: text("character_id")
+			.notNull()
+			.references(() => characters.id),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id),
+		canView: boolean("can_view").notNull(),
+		canEdit: boolean("can_edit").notNull().default(false),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.userId, t.characterId] }),
+	}),
+);
+
+export const charactersPermissionsRelations = relations(
+	charactersPermissions,
+	({ one }) => ({
+		character: one(characters, {
+			fields: [charactersPermissions.characterId],
+			references: [characters.id],
+		}),
+		user: one(users, {
+			fields: [charactersPermissions.userId],
+			references: [users.id],
 		}),
 	}),
 );
