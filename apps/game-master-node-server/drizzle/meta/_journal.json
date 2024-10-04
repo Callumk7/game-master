@@ -29,6 +29,13 @@
       "when": 1728053280855,
       "tag": "0003_yellow_hitman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728054400401,
+      "tag": "0004_perpetual_lord_hawal",
+      "breakpoints": true
     }
   ]
 }

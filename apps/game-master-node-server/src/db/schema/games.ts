@@ -58,7 +58,7 @@ export const usersToGames = pgTable(
 	(t) => ({ pk: primaryKey({ columns: [t.userId, t.gameId] }) }),
 );
 
-export const usersToGamesRelations = relations(usersToGames, ({ one, many }) => ({
+export const usersToGamesRelations = relations(usersToGames, ({ one }) => ({
 	user: one(users, {
 		fields: [usersToGames.userId],
 		references: [users.id],

@@ -3,6 +3,9 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { usersToGames } from "./games";
+import { charactersPermissions } from "./characters";
+import { factionsPermissions } from "./factions";
+import { notesPermissions } from "./notes";
 
 export const users = pgTable("users", {
 	id: text("id").primaryKey().notNull(),
@@ -13,8 +16,11 @@ export const users = pgTable("users", {
 	passwordHash: text("password_hash").notNull(),
 });
 
-export const usersRelations = relations(users, ({ one, many }) => ({
+export const usersRelations = relations(users, ({ many }) => ({
 	games: many(usersToGames),
+	characterPermissions: many(charactersPermissions),
+	factionPermissions: many(factionsPermissions),
+	notePermissions: many(notesPermissions)
 }));
 
 export const databaseSelectUserSchema = createSelectSchema(users);

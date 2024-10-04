@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, charactersInFactions } from "./characters";
@@ -49,6 +56,7 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	members: many(charactersInFactions),
+	permissions: many(factionsPermissions),
 }));
 
 export const notesOnFactions = pgTable(
@@ -74,5 +82,33 @@ export const notesOnFactionsRelations = relations(notesOnFactions, ({ one }) => 
 	faction: one(factions, {
 		fields: [notesOnFactions.factionId],
 		references: [factions.id],
+	}),
+}));
+
+export const factionsPermissions = pgTable(
+	"factions_permissions",
+	{
+		factionId: text("faction_id")
+			.notNull()
+			.references(() => factions.id),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id),
+		canView: boolean("can_view").notNull(),
+		canEdit: boolean("can_edit").notNull().default(false),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.userId, t.factionId] }),
+	}),
+);
+
+export const factionsPermissionsRelations = relations(factionsPermissions, ({ one }) => ({
+	faction: one(factions, {
+		fields: [factionsPermissions.factionId],
+		references: [factions.id],
+	}),
+	user: one(users, {
+		fields: [factionsPermissions.userId],
+		references: [users.id],
 	}),
 }));

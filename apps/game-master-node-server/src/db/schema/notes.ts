@@ -1,4 +1,11 @@
-import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { games } from "./games";
@@ -35,7 +42,7 @@ export const notes = pgTable("notes", {
 export const notesRelations = relations(notes, ({ one, many }) => ({
 	owner: one(users, {
 		fields: [notes.ownerId],
-		references: [users.id]
+		references: [users.id],
 	}),
 	game: one(games, {
 		fields: [notes.gameId],
@@ -47,6 +54,7 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 	}),
 	characters: many(notesOnCharacters),
 	factions: many(notesOnFactions),
+	permissions: many(notesPermissions),
 }));
 
 export const links = pgTable("links", {
@@ -55,7 +63,7 @@ export const links = pgTable("links", {
 	description: text("description"),
 });
 
-export const linksRelations = relations(links, ({ one, many }) => ({
+export const linksRelations = relations(links, ({ one }) => ({
 	from: one(notes, {
 		fields: [links.fromId],
 		references: [notes.id],
@@ -83,6 +91,34 @@ export const folders = pgTable("folders", {
 		.references(() => users.id),
 });
 
-export const folderRelations = relations(folders, ({ one, many }) => ({
+export const folderRelations = relations(folders, ({ many }) => ({
 	notes: many(notes),
+}));
+
+export const notesPermissions = pgTable(
+	"notes_permissions",
+	{
+		noteId: text("note_id")
+			.notNull()
+			.references(() => notes.id),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id),
+		canView: boolean("can_view").notNull(),
+		canEdit: boolean("can_edit").notNull().default(false),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.userId, t.noteId] }),
+	}),
+);
+
+export const notesPermissionsRelations = relations(notesPermissions, ({ one }) => ({
+	note: one(notes, {
+		fields: [notesPermissions.noteId],
+		references: [notes.id],
+	}),
+	user: one(users, {
+		fields: [notesPermissions.userId],
+		references: [users.id],
+	}),
 }));
