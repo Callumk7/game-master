@@ -1,68 +1,20 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import type {
-  ClientActionFunctionArgs,
-  ClientLoaderFunctionArgs,
+import type { ActionFunctionArgs } from "@remix-run/node";
+import {
+    Outlet,
+  type ClientActionFunctionArgs,
 } from "@remix-run/react";
 import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
 import { stringOrArrayToArray } from "callum-util";
 import {
   redirect,
   typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
 } from "remix-typedjson";
 import { OptionalEntitySchema } from "types/schemas";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody } from "~/components/editor";
-import { EntityToolbar } from "~/components/entity-toolbar";
-import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { useGameData } from "../_app.games.$gameId/route";
-import { NoteSidebar } from "./components/note-sidebar";
-import { getNoteData } from "./queries.server";
-import { JollyTagGroup, Tag } from "~/components/ui/tag-group";
-import { Button } from "~/components/ui/button";
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const { noteId } = parseParams(params, {
-    noteId: z.string(),
-  });
-
-  const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(noteId);
-
-  return typedjson({ note, linkedNotes, linkedChars, linkedFactions });
-};
-
-let isInitialRequest = true;
-
-export const clientLoader = async ({
-  params,
-  serverLoader,
-}: ClientLoaderFunctionArgs) => {
-  const { noteId } = parseParams(params, {
-    noteId: z.string(),
-  });
-  if (isInitialRequest) {
-    isInitialRequest = false;
-    const serverData = await serverLoader();
-    localStorage.setItem(noteId, JSON.stringify(serverData));
-    return serverData;
-  }
-
-  const cachedData = localStorage.getItem(noteId);
-  if (cachedData) {
-    return JSON.parse(cachedData);
-  }
-
-  const serverData = await serverLoader();
-  localStorage.setItem(noteId, JSON.stringify(serverData));
-  return serverData;
-};
-
-clientLoader.hydrate = true;
 
 // Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -141,44 +93,6 @@ export async function clientAction({ params, serverAction }: ClientActionFunctio
 }
 
 export default function NotesRoute() {
-  const { note } = useTypedLoaderData<typeof loader>();
-
-  const { suggestionItems } = useGameData();
-
-  return (
-    <>
-      <div className="p-4 space-y-4">
-        <EntityToolbar />
-        <EditableText
-          method="patch"
-          fieldName={"name"}
-          value={note.name}
-          variant={"h2"}
-          weight={"semi"}
-          inputLabel={"Game name input"}
-          buttonLabel={"Edit game name"}
-        />
-        <span className="rounded-full px-2.5 py-0.5 bg-accent text-accent-foreground text-xs font-semibold ml-1">
-          {note.type}
-        </span>
-        <EditorBody
-          htmlContent={note.htmlContent ?? ""}
-          suggestionItems={suggestionItems}
-        />
-      </div>
-      <NoteSidebar />
-    </>
-  );
+  return <Outlet />
 }
 
-export function useNoteData() {
-  const data = useTypedRouteLoaderData<typeof loader>(
-    "routes/_app.games.$gameId.notes.$noteId",
-  );
-  if (data === undefined) {
-    throw new Error(
-      "useNoteData must be used within the _app.games.$gameId.notes.$noteId route or its children",
-    );
-  }
-  return data;
-}
