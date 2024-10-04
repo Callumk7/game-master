@@ -4,35 +4,32 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { NoteTable } from "./components/note-table";
-import { useAppData } from "../_app/route";
 import { CreateNoteSlideover } from "~/components/forms/create-note";
 import { createNoteAction } from "~/queries/create-note";
 import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-	const { gameId } = parseParams(params, { gameId: z.string() });
+  const { gameId } = parseParams(params, { gameId: z.string() });
 
-	const allGameNotes = await api.notes.getAllGameNotes(gameId);
+  const allGameNotes = await api.notes.getAllGameNotes(gameId);
 
-	return typedjson({ allGameNotes, gameId });
+  return typedjson({ allGameNotes, gameId });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	if (request.method === "POST") {
-		return await createNoteAction(request);
-	}
+  if (request.method === "POST") {
+    return await createNoteAction(request);
+  }
 
-	return methodNotAllowed();
+  return methodNotAllowed();
 };
 
 export default function NotesIndex() {
-	const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
-	const appData = useAppData();
-	const game = appData.userData.find((game) => game.id === gameId);
-	return (
-		<div>
-			<CreateNoteSlideover gameId={gameId} />
-			<NoteTable notes={allGameNotes} />
-		</div>
-	);
+  const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
+  return (
+    <div>
+      <CreateNoteSlideover gameId={gameId} />
+      <NoteTable notes={allGameNotes} />
+    </div>
+  );
 }
