@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Id } from "./index.js";
+import type { Id, Visibility } from "./index.js";
 import type { Note } from "./notes.js";
 
 export interface Character {
@@ -12,6 +12,7 @@ export interface Character {
 	ownerId: Id;
 	gameId: Id;
 	isPlayer: boolean;
+	visibility: Visibility;
 }
 
 export interface CharacterWithNotes extends Character {

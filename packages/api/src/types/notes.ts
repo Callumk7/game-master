@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Id } from "./index.js";
+import type { Id, Visibility } from "./index.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -19,8 +19,10 @@ export interface Note {
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
+	folderId: Id | null;
 	gameId: Id;
 	type: NoteType;
+	visibility: Visibility;
 }
 
 export const createNoteSchema = z.object({
@@ -52,11 +54,11 @@ export const linkNotesSchema = z.object({
 export type LinkNotesRequestBody = z.infer<typeof linkNotesSchema>;
 
 export const linkCharactersSchema = z.object({
-	characterIds: z.array(z.string())
-})
+	characterIds: z.array(z.string()),
+});
 export type LinkCharactersRequestBody = z.infer<typeof linkCharactersSchema>;
 
 export const linkFactionsSchema = z.object({
-	factionIds: z.array(z.string())
-})
+	factionIds: z.array(z.string()),
+});
 export type linkFactionsSchema = z.infer<typeof linkFactionsSchema>;

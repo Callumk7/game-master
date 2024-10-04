@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
-import type { Id } from "./index.js";
+import type { Id, Visibility } from "./index.js";
 import type { Note } from "./notes.js";
 
 export interface Faction {
@@ -13,6 +13,7 @@ export interface Faction {
 	ownerId: Id;
 	gameId: Id;
 	leaderId: Id;
+	visibility: Visibility; 
 }
 
 export interface FactionWithMembers extends Faction {
