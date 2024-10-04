@@ -1,4 +1,9 @@
-import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
+import {
+	createGameSchema,
+	createNoteSchema,
+	updateGameSchema,
+	type GameWithMembers,
+} from "@repo/api";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -8,6 +13,7 @@ import { notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
+	handleNotFound,
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
@@ -41,12 +47,27 @@ gamesRoute.post("/", async (c) => {
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
-		const game = await db
-			.select()
-			.from(games)
-			.where(eq(games.id, gameId))
-			.then((result) => result[0]);
-		return c.json(game);
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, gameId),
+			with: {
+				members: {
+					with: {
+						user: true,
+					},
+				},
+			},
+		});
+
+		if (!game) {
+			return handleNotFound(c);
+		}
+
+		const transformedResult: GameWithMembers = {
+			...game,
+			members: game.members.map((m) => m.user),
+		};
+
+		return c.json(transformedResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -63,21 +84,21 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 					factions: {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 					notes: {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 				},

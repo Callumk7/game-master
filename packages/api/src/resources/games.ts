@@ -6,18 +6,20 @@ import type {
 	GameWithCharacters,
 	GameWithData,
 	GameWithEntities,
+	GameWithMembers,
 	GameWithNestedData,
 	GameWithNotes,
 	UpdateGameRequestBody,
 } from "../types/games.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 import type { Note } from "../types/notes.js";
+import type { User } from "../types/users.js";
 
 export class Games {
 	constructor(private client: Client) { }
 
-	async getGame(gameId: Id): Promise<Game> {
-		return this.client.get<Game>(`games/${gameId}`);
+	async getGame(gameId: Id): Promise<GameWithMembers> {
+		return this.client.get<GameWithMembers>(`games/${gameId}`);
 	}
 
 	async getGameWithSidebar(gameId: Id): Promise<GameWithEntities> {
@@ -53,6 +55,10 @@ export class Games {
 
 	async getGameNotes(gameId: Id): Promise<GameWithNotes> {
 		return this.client.get<GameWithNotes>(`games/${gameId}/notes`);
+	}
+
+	async getGameMembers(gameId: Id): Promise<User[]> {
+		return this.client.get<User[]>(`games/${gameId}/members`);
 	}
 
 	async getGameMembersNotes(gameId: Id, userId: Id): Promise<Note[]> {

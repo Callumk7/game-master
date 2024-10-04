@@ -4,18 +4,16 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditableText } from "~/components/ui/typeography";
 import { api } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });
 	const game = await api.games.getGame(gameId);
-	const notes = await api.notes.getAllGameNotes(gameId);
 
-	return typedjson({ game, notes });
+	return typedjson({ game });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-	const userId = await validateUser(request);
 	const { gameId } = parseParams(params, {
 		gameId: z.string(),
 	});
@@ -34,7 +32,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		return typedjson(result.data);
 	}
 
-	return new Response("Method Not Allowed", { status: 400 });
+	return methodNotAllowed();
 };
 
 export default function GameRoute() {
@@ -50,6 +48,11 @@ export default function GameRoute() {
 				inputLabel={"Game name input"}
 				buttonLabel={"Edit game name"}
 			/>
+			<div>
+				{game.members.map((member) => (
+					<p key={member.id}>{member.username}</p>
+				))}
+			</div>
 		</div>
 	);
 }

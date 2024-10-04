@@ -3,6 +3,7 @@ import type { BasicEntity, BasicEntityWithDates, Id } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
+import type { User } from "./users.js";
 
 export interface Game {
 	id: Id;
@@ -12,7 +13,9 @@ export interface Game {
 	ownerId: Id;
 }
 
-
+export interface GameWithMembers extends Game {
+	members: User[];
+}
 
 export interface GameWithEntities extends Game {
 	notes: BasicEntity[];
