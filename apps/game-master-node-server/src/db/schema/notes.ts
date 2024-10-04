@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { games } from "./games";
@@ -6,6 +6,13 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { notesOnCharacters } from "./characters";
 import { notesOnFactions } from "./factions";
+
+export const visibilityEnum = pgEnum("visibility", [
+	"public",
+	"private",
+	"viewable",
+	"partial",
+]);
 
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
@@ -18,8 +25,11 @@ export const notes = pgTable("notes", {
 		.notNull()
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
-	gameId: text("game_id").references(() => games.id).notNull(),
-	type: text("type").notNull()
+	gameId: text("game_id")
+		.references(() => games.id)
+		.notNull(),
+	type: text("type").notNull(),
+	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
 export const notesRelations = relations(notes, ({ one, many }) => ({
@@ -32,7 +42,7 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 		references: [folders.id],
 	}),
 	characters: many(notesOnCharacters),
-	factions: many(notesOnFactions)
+	factions: many(notesOnFactions),
 }));
 
 export const links = pgTable("links", {

@@ -1,11 +1,18 @@
 import { relations } from "drizzle-orm";
-import { pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
 import { notes } from "./notes";
 import { users } from "./users";
+
+export const visibilityEnum = pgEnum("visibility", [
+	"public",
+	"private",
+	"viewable",
+	"partial",
+]);
 
 export const factions = pgTable("factions", {
 	id: text("id").primaryKey().notNull(),
@@ -22,6 +29,7 @@ export const factions = pgTable("factions", {
 		.references(() => users.id)
 		.notNull(),
 	leaderId: text("leader_id").references(() => characters.id),
+	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
 export const databaseSelectFactionSchema = createSelectSchema(factions);
@@ -40,7 +48,7 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 		fields: [factions.ownerId],
 		references: [users.id],
 	}),
-	members: many(charactersInFactions)
+	members: many(charactersInFactions),
 }));
 
 export const notesOnFactions = pgTable(
@@ -58,13 +66,13 @@ export const notesOnFactions = pgTable(
 	}),
 );
 
-export const notesOnFactionsRelations = relations(notesOnFactions, ({one}) => ({
+export const notesOnFactionsRelations = relations(notesOnFactions, ({ one }) => ({
 	note: one(notes, {
 		fields: [notesOnFactions.noteId],
-		references: [notes.id]
+		references: [notes.id],
 	}),
 	faction: one(factions, {
 		fields: [notesOnFactions.factionId],
-		references: [factions.id]
-	})
-}))
+		references: [factions.id],
+	}),
+}));

@@ -1,4 +1,4 @@
-import { boolean, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
 import { notes } from "./notes";
@@ -6,6 +6,13 @@ import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+
+export const visibilityEnum = pgEnum("visibility", [
+	"public",
+	"private",
+	"viewable",
+	"partial",
+]);
 
 export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
@@ -22,6 +29,7 @@ export const characters = pgTable("characters", {
 		.references(() => users.id)
 		.notNull(),
 	isPlayer: boolean("is_player").notNull().default(false),
+	visibility: visibilityEnum("visibility").notNull().default("private")
 });
 
 export const databaseSelectCharacterSchema = createSelectSchema(characters);
