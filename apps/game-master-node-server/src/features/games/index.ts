@@ -73,6 +73,31 @@ gamesRoute.get("/:gameId", async (c) => {
 	}
 });
 
+gamesRoute.patch("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	const data = await validateOrThrowError(updateGameSchema, c);
+	try {
+		const updatedGame = await db
+			.update(games)
+			.set(data)
+			.where(eq(games.id, gameId))
+			.returning();
+		return successResponse(c, updatedGame);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.delete("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		await db.delete(games).where(eq(games.id, gameId)); // TODO: Delete all joins
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 gamesRoute.get("/:gameId/entities", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
@@ -114,16 +139,6 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 	}
 });
 
-gamesRoute.delete("/:gameId", async (c) => {
-	const gameId = c.req.param("gameId");
-	try {
-		await db.delete(games).where(eq(games.id, gameId)); // TODO: Delete all joins
-		return basicSuccessResponse(c);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
 gamesRoute.get("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
@@ -144,21 +159,6 @@ gamesRoute.post("/:gameId/notes", async (c) => {
 			gameId,
 		});
 		return successResponse(c, newNote);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.patch("/:gameId", async (c) => {
-	const gameId = c.req.param("gameId");
-	const data = await validateOrThrowError(updateGameSchema, c);
-	try {
-		const updatedGame = await db
-			.update(games)
-			.set(data)
-			.where(eq(games.id, gameId))
-			.returning();
-		return successResponse(c, updatedGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
