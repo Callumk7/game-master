@@ -1,4 +1,5 @@
 import {
+	addMemberSchema,
 	createGameSchema,
 	createNoteSchema,
 	updateGameSchema,
@@ -216,6 +217,38 @@ gamesRoute.get("/:gameId/factions", async (c) => {
 			where: eq(factions.gameId, gameId),
 		});
 		return c.json(gameFactions);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Member Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+gamesRoute.post("/:gameId/members", async (c) => {
+	const gameId = c.req.param("gameId");
+	const data = await validateOrThrowError(addMemberSchema, c);
+
+	try {
+		const newMember = await db
+			.insert(usersToGames)
+			.values({ gameId, userId: data.userId })
+			.returning()
+			.onConflictDoNothing();
+		return successResponse(c, newMember);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.delete("/:gameId/members/:userId", async (c) => {
+	const { gameId, userId } = c.req.param();
+	try {
+		await db
+			.delete(usersToGames)
+			.where(and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId)));
+		return basicSuccessResponse(c);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
