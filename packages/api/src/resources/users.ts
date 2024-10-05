@@ -1,6 +1,6 @@
 import type { Client } from "../client.js";
 import type { Game, GameWithData, GameWithNestedData } from "../types/games.js";
-import type { Id } from "../types/index.js";
+import type { Id, QueryOptions } from "../types/index.js";
 import type { Note } from "../types/notes.js";
 import type { User, UserWithSidebarData } from "../types/users.js";
 
@@ -9,6 +9,17 @@ export class Users {
 
 	async getUser(id: string): Promise<User> {
 		return this.client.get<User>(`users/${id}`);
+	}
+
+	async getAllUsers(options?: QueryOptions): Promise<User[]> {
+		const searchParams: Record<string, number> = {};
+
+		if (options?.limit) searchParams.limit = options.limit;
+		if (options?.offset) searchParams.offset = options.offset;
+
+		return this.client.get<User[]>("users", {
+			searchParams: Object.keys(searchParams).length ? searchParams : undefined,
+		});
 	}
 
 	// DONE
