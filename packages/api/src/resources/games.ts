@@ -10,15 +10,16 @@ import type {
 	GameWithNestedData,
 	GameWithNotes,
 	UpdateGameRequestBody,
+	UpdateMemberRequestBody,
 } from "../types/games.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 import type { Note } from "../types/notes.js";
-import type { User } from "../types/users.js";
+import type { GameMember, User } from "../types/users.js";
 
 export class Games {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
-	async getGame(gameId: Id): Promise<GameWithMembers> {
+	async getGameWithMembers(gameId: Id): Promise<GameWithMembers> {
 		return this.client.get<GameWithMembers>(`games/${gameId}`);
 	}
 
@@ -88,6 +89,17 @@ export class Games {
 	async removeMember(gameId: Id, userId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(
 			`games/${gameId}/members/${userId}`,
+		);
+	}
+
+	async editMember(
+		gameId: Id,
+		userId: Id,
+		update: UpdateMemberRequestBody,
+	): Promise<ServerResponse<GameMember>> {
+		return this.client.patch<ServerResponse<GameMember>>(
+			`games/${gameId}/members/${userId}`,
+			update,
 		);
 	}
 }

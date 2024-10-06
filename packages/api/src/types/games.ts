@@ -3,7 +3,7 @@ import type { BasicEntity, BasicEntityWithDates, Id } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
-import type { User } from "./users.js";
+import { roleSchema, type GameMember } from "./users.js";
 
 export interface Game {
 	id: Id;
@@ -14,7 +14,7 @@ export interface Game {
 }
 
 export interface GameWithMembers extends Game {
-	members: User[];
+	members: GameMember[];
 }
 
 export interface GameWithEntities extends Game {
@@ -72,3 +72,9 @@ export const addMemberSchema = z.object({
 	userId: z.string(),
 });
 export type AddMemberRequestBody = z.infer<typeof addMemberSchema>;
+
+export const updateMemberSchema = z.object({
+	role: roleSchema.optional(),
+	isOwner: z.boolean().optional()
+})
+export type UpdateMemberRequestBody = z.infer<typeof updateMemberSchema>;
