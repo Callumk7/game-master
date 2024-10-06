@@ -73,7 +73,7 @@ export class Games {
 		return this.client.post<ServerResponse<Game>>("games", input);
 	}
 
-	async joinGame(
+	async addMember(
 		gameId: Id,
 		userId: Id,
 	): Promise<ServerResponse<{ userId: Id; gameId: Id }>> {
@@ -85,7 +85,7 @@ export class Games {
 		);
 	}
 
-	async leaveGame(gameId: Id, userId: Id): Promise<BasicServerResponse> {
+	async removeMember(gameId: Id, userId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(
 			`games/${gameId}/members/${userId}`,
 		);
