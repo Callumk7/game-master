@@ -3,6 +3,7 @@ import {
 	createGameSchema,
 	createNoteSchema,
 	updateGameSchema,
+	updateMemberSchema,
 	type GameWithMembers,
 } from "@repo/api";
 import { and, eq } from "drizzle-orm";
@@ -21,6 +22,7 @@ import {
 import { createGameNote } from "./mutations";
 import { createGameInsert } from "./util";
 import { factions } from "~/db/schema/factions";
+import { getGameWithMembers } from "./queries";
 
 export const gamesRoute = new Hono();
 
@@ -48,27 +50,11 @@ gamesRoute.post("/", async (c) => {
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
-		const game = await db.query.games.findFirst({
-			where: eq(games.id, gameId),
-			with: {
-				members: {
-					with: {
-						user: true,
-					},
-				},
-			},
-		});
-
-		if (!game) {
+		const gameWithMembers = await getGameWithMembers(gameId);
+		if (!gameWithMembers) {
 			return handleNotFound(c);
 		}
-
-		const transformedResult: GameWithMembers = {
-			...game,
-			members: game.members.map((m) => m.user),
-		};
-
-		return c.json(transformedResult);
+		return c.json(gameWithMembers);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -249,6 +235,27 @@ gamesRoute.delete("/:gameId/members/:userId", async (c) => {
 			.delete(usersToGames)
 			.where(and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId)));
 		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.patch("/:gameId/members/:userId", async (c) => {
+	const { gameId, userId } = c.req.param();
+	const data = await validateOrThrowError(updateMemberSchema, c);
+	try {
+		const result = await db
+			.update(usersToGames)
+			.set(data)
+			.where(and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId)))
+			.returning()
+			.then((rows) => rows[0]);
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+
+		return successResponse(c, result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
