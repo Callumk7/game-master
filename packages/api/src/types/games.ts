@@ -67,3 +67,8 @@ export const updateGameSchema = z.object({
 	ownerId: z.string().optional(),
 });
 export type UpdateGameRequestBody = z.infer<typeof updateGameSchema>;
+
+export const addMemberSchema = z.object({
+	userId: z.string(),
+});
+export type AddMemberRequestBody = z.infer<typeof addMemberSchema>;

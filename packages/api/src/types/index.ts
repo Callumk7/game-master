@@ -22,3 +22,8 @@ export type EntityType = "notes" | "characters" | "factions";
 
 export const visibilitySchema = z.enum(["public", "private", "viewable", "partial"]);
 export type Visibility = z.infer<typeof visibilitySchema>;
+
+export type QueryOptions = {
+	limit?: number;
+	offset?: number;
+}
