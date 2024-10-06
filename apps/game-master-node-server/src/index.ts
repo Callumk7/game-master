@@ -6,9 +6,11 @@ import { logger } from "hono/logger";
 import { notesRoute } from "./features/notes";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
+import { cors } from "hono/cors";
 
 const app = new Hono();
 app.use("*", logger());
+app.use("*", cors());
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
