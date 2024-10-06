@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import type { User } from "@repo/api";
+import { useListData } from "react-stately";
 import { Button } from "~/components/ui/button";
 import {
 	DialogContent,
@@ -10,13 +11,13 @@ import {
 	DialogTrigger,
 } from "~/components/ui/dialog";
 import { GridList, GridListItem } from "~/components/ui/grid-list";
-import { clientApi } from "~/lib/queries";
+import { useGetAllUsers } from "~/queries/get-all-users";
 
-export function MemberSearchDialog() {
-	const { status, data, error } = useQuery({
-		queryKey: ["users", "all"],
-		queryFn: async () => clientApi.users.getAllUsers(),
-	});
+interface MemberSearchDialogProps {
+	memberIds: string[];
+}
+export function MemberSearchDialog({ memberIds }: MemberSearchDialogProps) {
+	const { status, data, error } = useGetAllUsers();
 
 	if (status !== "success") {
 		if (error) console.error(error);
@@ -35,14 +36,36 @@ export function MemberSearchDialog() {
 							otherwise.
 						</DialogDescription>
 					</DialogHeader>
-					<GridList items={data} selectionMode="multiple">
-						{(item) => <GridListItem>{item.username}</GridListItem>}
-					</GridList>
+            <SearchMemberGridlist memberIds={memberIds} allUsers={data} />
 					<DialogFooter>
 						<Button>Done</Button>
 					</DialogFooter>
 				</DialogContent>
 			</DialogOverlay>
 		</DialogTrigger>
+	);
+}
+
+interface SearchMemberGridlistProps {
+	memberIds: string[];
+	allUsers: User[];
+}
+
+export function SearchMemberGridlist({ memberIds, allUsers }: SearchMemberGridlistProps) {
+	const listState = useListData({
+		initialItems: allUsers,
+		initialSelectedKeys: new Set(memberIds),
+		getKey: (item) => item.id,
+	});
+
+	return (
+		<GridList aria-label="User list"
+			items={listState.items}
+			selectedKeys={listState.selectedKeys}
+			onSelectionChange={listState.setSelectedKeys}
+			selectionMode="multiple"
+		>
+			{(item) => <GridListItem>{item.username}</GridListItem>}
+		</GridList>
 	);
 }

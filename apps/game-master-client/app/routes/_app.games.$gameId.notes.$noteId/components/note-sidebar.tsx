@@ -1,8 +1,8 @@
 import { LinkDialog } from "~/components/link-dialog";
 import { Button } from "~/components/ui/button";
 import { ListBox, ListBoxHeader, ListBoxItem } from "~/components/ui/list-box";
+import { useNoteData } from "~/routes/_app.games.$gameId.notes.$noteId._index/route";
 import { useIsRightSidebarOpen } from "~/store/selection";
-import { useNoteData } from "../route";
 
 export function NoteSidebar() {
 	const { linkedNotes, linkedChars, linkedFactions } = useNoteData();
@@ -47,7 +47,10 @@ export function NoteSidebar() {
 			<ListBox aria-label="Linked faction list">
 				<ListBoxHeader>Factions</ListBoxHeader>
 				{linkedFactions.map((faction) => (
-					<ListBoxItem key={faction.id} href={`/games/${faction.gameId}/faction/${faction.id}`}>
+					<ListBoxItem
+						key={faction.id}
+						href={`/games/${faction.gameId}/faction/${faction.id}`}
+					>
 						{faction.name}
 					</ListBoxItem>
 				))}

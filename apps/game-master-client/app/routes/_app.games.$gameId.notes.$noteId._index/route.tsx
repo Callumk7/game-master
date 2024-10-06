@@ -8,7 +8,6 @@ import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { getNoteData } from "./queries.server";
-import { NoteSidebar } from "./components/note-sidebar";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -74,7 +73,6 @@ export default function NoteIndexRoute() {
 					suggestionItems={suggestionItems}
 				/>
 			</div>
-			<NoteSidebar />
 		</>
 	);
 }
