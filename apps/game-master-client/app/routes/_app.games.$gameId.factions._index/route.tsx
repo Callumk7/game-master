@@ -4,9 +4,9 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { createFactionAction } from "~/queries/create-faction";
 import { CreateFactionSlideover } from "~/components/forms/create-faction";
 import { FactionTable } from "./components/faction-table";
+import { createFactionAction } from "~/queries/server/create-faction.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });

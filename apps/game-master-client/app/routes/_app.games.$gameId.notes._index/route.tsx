@@ -5,8 +5,8 @@ import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { NoteTable } from "./components/note-table";
 import { CreateNoteSlideover } from "~/components/forms/create-note";
-import { createNoteAction } from "~/queries/create-note";
 import { methodNotAllowed } from "~/util/responses";
+import { createNoteAction } from "~/queries/server/create-note.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
