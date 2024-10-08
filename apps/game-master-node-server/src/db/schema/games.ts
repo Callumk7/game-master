@@ -17,6 +17,7 @@ import { factions } from "./factions";
 export const games = pgTable("games", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
+	description: text("description"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
 	ownerId: text("owner_id")

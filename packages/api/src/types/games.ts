@@ -8,6 +8,7 @@ import { roleSchema, type GameMember } from "./users.js";
 export interface Game {
 	id: Id;
 	name: string;
+	description?: string;
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
