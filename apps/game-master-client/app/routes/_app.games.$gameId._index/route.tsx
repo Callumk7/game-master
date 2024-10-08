@@ -49,7 +49,7 @@ export default function GameRoute() {
         inputLabel={"Game name input"}
         buttonLabel={"Edit game name"}
       />
-      <p>{game.description}</p>
+      <p className="whitespace-pre-wrap">{game.description}</p>
       </div>
       <div>
         <Text variant={"h2"} weight={"semi"}>
