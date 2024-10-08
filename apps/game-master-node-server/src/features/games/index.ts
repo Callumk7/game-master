@@ -271,7 +271,7 @@ gamesRoute.patch("/:gameId/members/:userId", async (c) => {
 
 gamesRoute.put("/:gameId/members", async (c) => {
 	const gameId = c.req.param("gameId");
-	
+
 	const data = await validateOrThrowError(updateGameMembersSchema, c);
 	const userIds = itemOrArrayToArray(data.userIds);
 
@@ -305,10 +305,11 @@ gamesRoute.put("/:gameId/members", async (c) => {
 		} catch (error) {
 			return handleDatabaseError(c, error);
 		}
+
+		return successResponse(c, { gameId, userIds });
 	} catch (error) {
 		// This will catch errors from getting current members from the database,
 		// line 290
 		return handleDatabaseError(c, error);
 	}
-	return handleNotFound(c);
 });
