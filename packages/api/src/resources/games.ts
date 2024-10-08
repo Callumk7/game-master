@@ -92,6 +92,16 @@ export class Games {
 		);
 	}
 
+	async updateMembers(
+		gameId: Id,
+		userIds: Id[],
+	): Promise<ServerResponse<{ gameId: Id; userIds: Id[] }>> {
+		return this.client.put<ServerResponse<{ gameId: Id; userIds: Id[] }>>(
+			`games/${gameId}/members`,
+			{ userIds },
+		);
+	}
+
 	async editMember(
 		gameId: Id,
 		userId: Id,
