@@ -1,9 +1,7 @@
 import type { GameWithMembers, Id } from "@repo/api";
 import { and, eq, inArray } from "drizzle-orm";
-import type { Context } from "hono";
 import { db } from "~/db";
 import { games, usersToGames } from "~/db/schema/games";
-import { handleDatabaseError } from "~/lib/http-helpers";
 
 export const getGameWithMembers = async (
 	gameId: Id,
