@@ -18,12 +18,10 @@ export function GameSettingsMenu({ gameId }: GameSettingsMenuProps) {
           <SettingsMenuItem href={`/games/${gameId}/members`} icon={<PersonIcon />}>
             Members
           </SettingsMenuItem>
-          <SettingsMenuItem icon={<FileTextIcon />}>
-            Manage Notes
+          <SettingsMenuItem href={`/games/${gameId}/manage`} icon={<FileTextIcon />}>
+            Manage Game
           </SettingsMenuItem>
-          <SettingsMenuItem icon={<TrashIcon />}>
-            Delete Game
-          </SettingsMenuItem>
+          <SettingsMenuItem icon={<TrashIcon />}>Delete Game</SettingsMenuItem>
         </Menu>
       </MenuPopover>
     </MenuTrigger>
