@@ -2,11 +2,12 @@ import {
 	addMemberSchema,
 	createGameSchema,
 	createNoteSchema,
+	updateGameMembersSchema,
 	updateGameSchema,
 	updateMemberSchema,
 	type GameWithMembers,
 } from "@repo/api";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
@@ -20,9 +21,16 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createGameNote } from "./mutations";
-import { createGameInsert } from "./util";
+import { createGameInsert, findMembersToAddAndRemove } from "./util";
 import { factions } from "~/db/schema/factions";
-import { getGameWithMembers } from "./queries";
+import {
+	deleteMembers,
+	getGameWithMembers,
+	getMemberIdArray,
+	handleAddMembers,
+	handleRemoveMembers,
+} from "./queries";
+import { itemOrArrayToArray } from "~/utils";
 
 export const gamesRoute = new Hono();
 
@@ -259,4 +267,48 @@ gamesRoute.patch("/:gameId/members/:userId", async (c) => {
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
+});
+
+gamesRoute.put("/:gameId/members", async (c) => {
+	const gameId = c.req.param("gameId");
+	
+	const data = await validateOrThrowError(updateGameMembersSchema, c);
+	const userIds = itemOrArrayToArray(data.userIds);
+
+	// if there are no userIds, then we just want to delete all users (apart from owner?)
+	if (userIds.length === 0) {
+		try {
+			await deleteMembers(gameId);
+			return basicSuccessResponse(c);
+		} catch (error) {
+			// handle database error
+			return handleDatabaseError(c, error);
+		}
+	}
+
+	// otherwise, we can process the data
+	try {
+		const currentMembers = await getMemberIdArray(gameId);
+
+		const { membersToAdd, membersToRemove } = findMembersToAddAndRemove(
+			currentMembers,
+			userIds,
+		);
+		try {
+			await handleAddMembers(gameId, membersToAdd);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+
+		try {
+			await handleRemoveMembers(gameId, membersToRemove);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	} catch (error) {
+		// This will catch errors from getting current members from the database,
+		// line 290
+		return handleDatabaseError(c, error);
+	}
+	return handleNotFound(c);
 });
