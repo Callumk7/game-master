@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type Id = string;
 
 type SuccessfulResponse<T> = { success: true; data: T };
@@ -17,3 +19,13 @@ export interface BasicEntityWithDates extends BasicEntity {
 }
 
 export type EntityType = "notes" | "characters" | "factions";
+
+export const visibilitySchema = z.enum(["public", "private", "viewable", "partial"]);
+export type Visibility = z.infer<typeof visibilitySchema>;
+
+export type QueryOptions = {
+	limit?: number;
+	offset?: number;
+}
+
+export const OptionalEntitySchema = z.array(z.string()).or(z.string()).optional();

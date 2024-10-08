@@ -6,18 +6,21 @@ import type {
 	GameWithCharacters,
 	GameWithData,
 	GameWithEntities,
+	GameWithMembers,
 	GameWithNestedData,
 	GameWithNotes,
 	UpdateGameRequestBody,
+	UpdateMemberRequestBody,
 } from "../types/games.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 import type { Note } from "../types/notes.js";
+import type { GameMember, User } from "../types/users.js";
 
 export class Games {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
-	async getGame(gameId: Id): Promise<Game> {
-		return this.client.get<Game>(`games/${gameId}`);
+	async getGameWithMembers(gameId: Id): Promise<GameWithMembers> {
+		return this.client.get<GameWithMembers>(`games/${gameId}`);
 	}
 
 	async getGameWithSidebar(gameId: Id): Promise<GameWithEntities> {
@@ -55,6 +58,10 @@ export class Games {
 		return this.client.get<GameWithNotes>(`games/${gameId}/notes`);
 	}
 
+	async getGameMembers(gameId: Id): Promise<User[]> {
+		return this.client.get<User[]>(`games/${gameId}/members`);
+	}
+
 	async getGameMembersNotes(gameId: Id, userId: Id): Promise<Note[]> {
 		return this.client.get<Note[]>(`games/${gameId}/members/${userId}/notes`);
 	}
@@ -67,7 +74,7 @@ export class Games {
 		return this.client.post<ServerResponse<Game>>("games", input);
 	}
 
-	async joinGame(
+	async addMember(
 		gameId: Id,
 		userId: Id,
 	): Promise<ServerResponse<{ userId: Id; gameId: Id }>> {
@@ -79,9 +86,30 @@ export class Games {
 		);
 	}
 
-	async leaveGame(gameId: Id, userId: Id): Promise<BasicServerResponse> {
+	async removeMember(gameId: Id, userId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(
 			`games/${gameId}/members/${userId}`,
+		);
+	}
+
+	async updateMembers(
+		gameId: Id,
+		userIds: Id[],
+	): Promise<ServerResponse<{ gameId: Id; userIds: Id[] }>> {
+		return this.client.put<ServerResponse<{ gameId: Id; userIds: Id[] }>>(
+			`games/${gameId}/members`,
+			{ userIds },
+		);
+	}
+
+	async editMember(
+		gameId: Id,
+		userId: Id,
+		update: UpdateMemberRequestBody,
+	): Promise<ServerResponse<GameMember>> {
+		return this.client.patch<ServerResponse<GameMember>>(
+			`games/${gameId}/members/${userId}`,
+			update,
 		);
 	}
 }

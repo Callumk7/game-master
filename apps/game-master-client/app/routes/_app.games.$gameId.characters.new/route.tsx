@@ -3,7 +3,8 @@ import { useActionData, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { CreateCharacterForm } from "~/components/forms/create-character";
 import { Text } from "~/components/ui/typeography";
-import { createCharacterAction } from "~/queries/create-character";
+import { createCharacterAction } from "~/queries/server/create-character.server";
+
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   return createCharacterAction(request);

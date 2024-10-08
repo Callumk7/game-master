@@ -10,6 +10,14 @@ export interface User {
 	email: string;
 }
 
+export const roleSchema = z.enum(["admin", "dm", "player", "guest"]);
+export type Role = z.infer<typeof roleSchema>;
+
+export interface GameMember extends User {
+	role: Role;
+	isOwner: boolean;
+}
+
 export interface UserWithSidebarData extends User {
 	games: GameWithDatedEntities[];
 }

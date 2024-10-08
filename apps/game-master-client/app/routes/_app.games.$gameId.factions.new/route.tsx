@@ -3,7 +3,7 @@ import { useActionData, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { CreateFactionForm } from "~/components/forms/create-faction";
 import { Text } from "~/components/ui/typeography";
-import { createFactionAction } from "~/queries/create-faction";
+import { createFactionAction } from "~/queries/server/create-faction.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	if (request.method === "POST") {

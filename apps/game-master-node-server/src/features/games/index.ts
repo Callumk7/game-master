@@ -1,5 +1,13 @@
-import { createGameSchema, createNoteSchema, updateGameSchema } from "@repo/api";
-import { and, eq } from "drizzle-orm";
+import {
+	addMemberSchema,
+	createGameSchema,
+	createNoteSchema,
+	updateGameMembersSchema,
+	updateGameSchema,
+	updateMemberSchema,
+	type GameWithMembers,
+} from "@repo/api";
+import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
@@ -8,12 +16,21 @@ import { notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
+	handleNotFound,
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createGameNote } from "./mutations";
-import { createGameInsert } from "./util";
+import { createGameInsert, findMembersToAddAndRemove } from "./util";
 import { factions } from "~/db/schema/factions";
+import {
+	deleteMembers,
+	getGameWithMembers,
+	getMemberIdArray,
+	handleAddMembers,
+	handleRemoveMembers,
+} from "./queries";
+import { itemOrArrayToArray } from "~/utils";
 
 export const gamesRoute = new Hono();
 
@@ -41,12 +58,36 @@ gamesRoute.post("/", async (c) => {
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
-		const game = await db
-			.select()
-			.from(games)
+		const gameWithMembers = await getGameWithMembers(gameId);
+		if (!gameWithMembers) {
+			return handleNotFound(c);
+		}
+		return c.json(gameWithMembers);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.patch("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	const data = await validateOrThrowError(updateGameSchema, c);
+	try {
+		const updatedGame = await db
+			.update(games)
+			.set(data)
 			.where(eq(games.id, gameId))
-			.then((result) => result[0]);
-		return c.json(game);
+			.returning();
+		return successResponse(c, updatedGame);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.delete("/:gameId", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		await db.delete(games).where(eq(games.id, gameId)); // TODO: Delete all joins
+		return basicSuccessResponse(c);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -63,21 +104,21 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 					factions: {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 					notes: {
 						columns: {
 							id: true,
 							name: true,
-							gameId: true
+							gameId: true,
 						},
 					},
 				},
@@ -88,16 +129,6 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 				notes: result?.notes ?? [],
 			}));
 		return c.json(gameData);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.delete("/:gameId", async (c) => {
-	const gameId = c.req.param("gameId");
-	try {
-		await db.delete(games).where(eq(games.id, gameId)); // TODO: Delete all joins
-		return basicSuccessResponse(c);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -123,21 +154,6 @@ gamesRoute.post("/:gameId/notes", async (c) => {
 			gameId,
 		});
 		return successResponse(c, newNote);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.patch("/:gameId", async (c) => {
-	const gameId = c.req.param("gameId");
-	const data = await validateOrThrowError(updateGameSchema, c);
-	try {
-		const updatedGame = await db
-			.update(games)
-			.set(data)
-			.where(eq(games.id, gameId))
-			.returning();
-		return successResponse(c, updatedGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -196,6 +212,104 @@ gamesRoute.get("/:gameId/factions", async (c) => {
 		});
 		return c.json(gameFactions);
 	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Member Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+gamesRoute.post("/:gameId/members", async (c) => {
+	const gameId = c.req.param("gameId");
+	const data = await validateOrThrowError(addMemberSchema, c);
+
+	try {
+		const newMember = await db
+			.insert(usersToGames)
+			.values({ gameId, userId: data.userId })
+			.returning()
+			.onConflictDoNothing();
+		return successResponse(c, newMember);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.delete("/:gameId/members/:userId", async (c) => {
+	const { gameId, userId } = c.req.param();
+	try {
+		await db
+			.delete(usersToGames)
+			.where(and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId)));
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.patch("/:gameId/members/:userId", async (c) => {
+	const { gameId, userId } = c.req.param();
+	const data = await validateOrThrowError(updateMemberSchema, c);
+	try {
+		const result = await db
+			.update(usersToGames)
+			.set(data)
+			.where(and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId)))
+			.returning()
+			.then((rows) => rows[0]);
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+
+		return successResponse(c, result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+gamesRoute.put("/:gameId/members", async (c) => {
+	const gameId = c.req.param("gameId");
+
+	const data = await validateOrThrowError(updateGameMembersSchema, c);
+	const userIds = itemOrArrayToArray(data.userIds);
+
+	// if there are no userIds, then we just want to delete all users (apart from owner?)
+	if (userIds.length === 0) {
+		try {
+			await deleteMembers(gameId);
+			return basicSuccessResponse(c);
+		} catch (error) {
+			// handle database error
+			return handleDatabaseError(c, error);
+		}
+	}
+
+	// otherwise, we can process the data
+	try {
+		const currentMembers = await getMemberIdArray(gameId);
+
+		const { membersToAdd, membersToRemove } = findMembersToAddAndRemove(
+			currentMembers,
+			userIds,
+		);
+		try {
+			await handleAddMembers(gameId, membersToAdd);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+
+		try {
+			await handleRemoveMembers(gameId, membersToRemove);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+
+		return successResponse(c, { gameId, userIds });
+	} catch (error) {
+		// This will catch errors from getting current members from the database,
+		// line 290
 		return handleDatabaseError(c, error);
 	}
 });

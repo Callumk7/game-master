@@ -12,7 +12,7 @@ import {
 } from "~/components/ui/dialog";
 import { JollyTextField } from "~/components/ui/textfield";
 import { JollySelect, SelectItem } from "../ui/select";
-import { NoteType } from "@repo/api";
+import type { NoteType } from "@repo/api";
 
 interface CreateNoteProps {
   gameId: string;

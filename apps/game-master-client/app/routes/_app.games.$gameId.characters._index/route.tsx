@@ -5,8 +5,8 @@ import { parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { CreateCharacterSlideover } from "~/components/forms/create-character";
-import { createCharacterAction } from "~/queries/create-character";
 import { CharacterTable } from "./components/character-table";
+import { createCharacterAction } from "~/queries/server/create-character.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { gameId } = parseParams(params, { gameId: z.string() });

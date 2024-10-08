@@ -17,6 +17,24 @@ import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries
 
 export const usersRoute = new Hono();
 
+usersRoute.get("/", async (c) => {
+	const { limit, offset } = c.req.query();
+	let queryLimit = 50;
+	let queryOffset = 0;
+	if (limit) queryLimit = Number(limit);
+	if (offset) queryOffset = Number(offset);
+
+	try {
+		const usersResult = await db.query.users.findMany({
+			limit: queryLimit,
+			offset: queryOffset,
+		});
+		return c.json(usersResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 usersRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(newUserSchema, c);
 	try {
@@ -96,7 +114,7 @@ usersRoute.get("/:userId/games", async (c) => {
 			if (!sidebarData) {
 				return handleNotFound(c);
 			}
-			return c.json(sidebarData)
+			return c.json(sidebarData);
 		} catch (error) {
 			return handleDatabaseError(c, error);
 		}

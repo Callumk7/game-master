@@ -1,8 +1,9 @@
 import { z } from "zod";
-import type { BasicEntity, BasicEntityWithDates, Id } from "./index.js";
+import { OptionalEntitySchema, type BasicEntity, type BasicEntityWithDates, type Id } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
+import { roleSchema, type GameMember } from "./users.js";
 
 export interface Game {
 	id: Id;
@@ -12,7 +13,9 @@ export interface Game {
 	ownerId: Id;
 }
 
-
+export interface GameWithMembers extends Game {
+	members: GameMember[];
+}
 
 export interface GameWithEntities extends Game {
 	notes: BasicEntity[];
@@ -64,3 +67,19 @@ export const updateGameSchema = z.object({
 	ownerId: z.string().optional(),
 });
 export type UpdateGameRequestBody = z.infer<typeof updateGameSchema>;
+
+export const addMemberSchema = z.object({
+	userId: z.string(),
+});
+export type AddMemberRequestBody = z.infer<typeof addMemberSchema>;
+
+export const updateMemberSchema = z.object({
+	role: roleSchema.optional(),
+	isOwner: z.boolean().optional()
+})
+export type UpdateMemberRequestBody = z.infer<typeof updateMemberSchema>;
+
+export const updateGameMembersSchema = z.object({
+	userIds: OptionalEntitySchema
+})
+export type UpdateGameMembersRequestBody = z.infer<typeof updateGameMembersSchema>;
