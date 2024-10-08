@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { BasicEntity, BasicEntityWithDates, Id } from "./index.js";
+import { OptionalEntitySchema, type BasicEntity, type BasicEntityWithDates, type Id } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
@@ -78,3 +78,8 @@ export const updateMemberSchema = z.object({
 	isOwner: z.boolean().optional()
 })
 export type UpdateMemberRequestBody = z.infer<typeof updateMemberSchema>;
+
+export const updateGameMembersSchema = z.object({
+	userIds: OptionalEntitySchema
+})
+export type UpdateGameMembersRequestBody = z.infer<typeof updateGameMembersSchema>;
