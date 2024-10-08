@@ -5,9 +5,8 @@ import {
 	updateGameMembersSchema,
 	updateGameSchema,
 	updateMemberSchema,
-	type GameWithMembers,
 } from "@repo/api";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
@@ -57,12 +56,30 @@ gamesRoute.post("/", async (c) => {
 
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
+
+	const withMembers = c.req.query().withMembers;
+	if (withMembers) {
+		try {
+			const gameWithMembers = await getGameWithMembers(gameId);
+			if (!gameWithMembers) {
+				return handleNotFound(c);
+			}
+			return c.json(gameWithMembers);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+
 	try {
-		const gameWithMembers = await getGameWithMembers(gameId);
-		if (!gameWithMembers) {
+		const gameData = await db.query.games.findFirst({
+			where: eq(games.id, gameId),
+		});
+
+		if (!gameData) {
 			return handleNotFound(c);
 		}
-		return c.json(gameWithMembers);
+
+		return c.json(gameData);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

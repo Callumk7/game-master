@@ -4,8 +4,6 @@ import type {
 	Game,
 	GameEntities,
 	GameWithCharacters,
-	GameWithData,
-	GameWithEntities,
 	GameWithMembers,
 	GameWithNestedData,
 	GameWithNotes,
@@ -19,12 +17,14 @@ import type { GameMember, User } from "../types/users.js";
 export class Games {
 	constructor(private client: Client) {}
 
-	async getGameWithMembers(gameId: Id): Promise<GameWithMembers> {
-		return this.client.get<GameWithMembers>(`games/${gameId}`);
+	async getGame(gameId: Id): Promise<Game> {
+		return this.client.get<Game>(`games/${gameId}`);
 	}
 
-	async getGameWithSidebar(gameId: Id): Promise<GameWithEntities> {
-		return this.client.get<GameWithEntities>(`games/${gameId}`);
+	async getGameWithMembers(gameId: Id): Promise<GameWithMembers> {
+		return this.client.get<GameWithMembers>(`games/${gameId}`, {
+			searchParams: { withMembers: "true" },
+		});
 	}
 
 	async deleteGame(gameId: string): Promise<BasicServerResponse> {
@@ -42,14 +42,11 @@ export class Games {
 		return this.client.get<Game[]>(`users/${userId}/games`);
 	}
 
-	async getAllGameData(gameId: Id): Promise<GameWithData> {
-		return this.client.get<GameWithData>(`games/${gameId}/all`);
-	}
-
 	async getAllGameEntities(gameId: Id): Promise<GameEntities> {
 		return this.client.get<GameEntities>(`games/${gameId}/entities`);
 	}
 
+	// TODO: Is this actually implemented or used?
 	async getAllGameDataWithNestedRelations(gameId: Id): Promise<GameWithNestedData> {
 		return this.client.get<GameWithNestedData>(`games/${gameId}/all?nested=true`);
 	}

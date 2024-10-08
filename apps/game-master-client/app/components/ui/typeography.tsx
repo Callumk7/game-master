@@ -122,7 +122,7 @@ export function EditableText({
 				name={fieldName}
 				defaultValue={value ?? ""}
 				className={cn(
-					"bg-background text-foreground w-full p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-primary",
+					"bg-background text-foreground w-full p-2 pl-0 rounded-md focus:outline-none focus:ring-1 focus:ring-primary",
 					typographyVariants({ variant, weight, italic, className }),
 				)}
 				onKeyDown={(event) => {
@@ -156,7 +156,7 @@ export function EditableText({
 				inputRef.current?.select();
 			}}
 			className={cn(
-				"p-2 w-full rounded-md text-left focus:outline-none focus:ring-1 focus:ring-primary",
+				"p-2 pl-0 w-full rounded-md text-left focus:outline-none focus:ring-1 focus:ring-primary",
 				typographyVariants({ variant, weight, italic, className }),
 			)}
 		>

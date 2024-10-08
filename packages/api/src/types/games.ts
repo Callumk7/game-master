@@ -8,6 +8,7 @@ import { roleSchema, type GameMember } from "./users.js";
 export interface Game {
 	id: Id;
 	name: string;
+	description: string | null;
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
@@ -62,8 +63,7 @@ export type CreateGameRequestBody = z.infer<typeof createGameSchema>;
 
 export const updateGameSchema = z.object({
 	name: z.string().optional(),
-	content: z.string().optional(),
-	htmlContent: z.string().optional(),
+	description: z.string().optional(),
 	ownerId: z.string().optional(),
 });
 export type UpdateGameRequestBody = z.infer<typeof updateGameSchema>;
