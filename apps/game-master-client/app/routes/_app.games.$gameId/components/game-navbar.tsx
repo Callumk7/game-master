@@ -1,16 +1,11 @@
 import { useLocation, useParams } from "@remix-run/react";
 import { Link } from "~/components/ui/link";
 import { GameSettingsMenu } from "./game-settings-menu";
-import { Button } from "~/components/ui/button";
-import { useIsRightSidebarOpen, useSetRightSidebarOpen } from "~/store/selection";
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
 export function GameNavbar() {
   const params = useParams();
   const { pathname } = useLocation();
   const links = createLinks(params.gameId!);
-  const isRightSidebarOpen = useIsRightSidebarOpen();
-  const setIsRightSidebarOpen = useSetRightSidebarOpen();
   return (
     <nav
       className="flex w-full p-4 justify-between items-center"
@@ -29,14 +24,6 @@ export function GameNavbar() {
       </div>
       <div className="flex gap-4">
         <GameSettingsMenu gameId={params.gameId!} />
-        <Button
-          size={"icon"}
-          variant={"outline"}
-          onPress={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
-          aria-label="Toggle right sidebar"
-        >
-          {isRightSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </Button>
       </div>
     </nav>
   );
