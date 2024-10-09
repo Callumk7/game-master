@@ -9,7 +9,6 @@ import { parseForm, parseParams } from "zodix";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { NoteSidebar } from "./components/note-sidebar";
 
 // Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -89,9 +88,6 @@ export async function clientAction({ params, serverAction }: ClientActionFunctio
 
 export default function NotesRoute() {
 	return (
-		<>
-			<Outlet />
-			<NoteSidebar />
-		</>
+    <Outlet />
 	);
 }
