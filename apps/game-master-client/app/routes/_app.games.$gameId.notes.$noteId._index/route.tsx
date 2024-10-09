@@ -148,6 +148,7 @@ export default function NoteIndexRoute() {
 					entityId={note.id}
 					gameId={note.gameId}
 					entityVisibility={note.visibility}
+					permissions={note.permissions}
 				/>
 				<EditableText
 					method="patch"

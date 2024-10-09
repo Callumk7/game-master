@@ -43,6 +43,20 @@
       "when": 1728405188274,
       "tag": "0005_known_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728486771294,
+      "tag": "0006_condemned_tattoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1728486808439,
+      "tag": "0007_secret_stature",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 } from "./ui/dialog";
 import { useState } from "react";
-import type { User, Visibility } from "@repo/api";
+import type { Permission, User, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { ComboboxItem, JollyComboBox } from "./ui/combobox";
@@ -23,11 +23,13 @@ interface EntityToolbarProps {
 	entityId: string;
 	gameId: string;
 	entityVisibility: Visibility;
+	permissions: Permission[];
 }
 export function EntityToolbar({
 	entityId,
 	gameId,
 	entityVisibility,
+	permissions,
 }: EntityToolbarProps) {
 	const submit = useSubmit();
 	const navigate = useNavigate();
@@ -64,6 +66,7 @@ export function EntityToolbar({
 						members={query.data.members}
 						entityId={entityId}
 						visibility={entityVisibility}
+						permissions={permissions}
 					/>
 				) : (
 					<Button isDisabled variant={"outline"}>
@@ -113,20 +116,26 @@ interface SharingPopoverProps {
 	entityId: string;
 	members: User[];
 	visibility: Visibility;
+	permissions: Permission[];
 }
 
-function SharingPopover({ members, entityId, visibility }: SharingPopoverProps) {
+function SharingPopover({
+	members,
+	entityId,
+	visibility,
+	permissions,
+}: SharingPopoverProps) {
 	return (
 		<PopoverTrigger>
 			<Button variant={"outline"}>Sharing</Button>
 			<Popover>
 				<PopoverDialog className="w-[40vw]">
 					<div className="space-y-4">
-            <DialogHeader>
-              <DialogTitle>Sharing Menu</DialogTitle>
-              </DialogHeader>
+						<DialogHeader>
+							<DialogTitle>Sharing Menu</DialogTitle>
+						</DialogHeader>
 						<GlobalVisibilityCombobox visibility={visibility} />
-						<MemberSharingList members={members} />
+						<MemberSharingList members={members} permissions={permissions} />
 					</div>
 				</PopoverDialog>
 			</Popover>
@@ -151,30 +160,49 @@ function GlobalVisibilityCombobox({ visibility }: GlobalVisibilityComboboxProps)
 
 interface MemberSharingListProps {
 	members: User[];
+	permissions: Permission[];
 }
 
-function MemberSharingList({ members }: MemberSharingListProps) {
+function MemberSharingList({ members, permissions }: MemberSharingListProps) {
+	const placeholderPermission: Permission = {
+		userId: "",
+		canView: false,
+		canEdit: false,
+	};
 	return (
 		<div className="grid divide-y">
-			{members.map((member) => (
-				<MemberSharingItem key={member.id} member={member} />
-			))}
+			{members.map((member) => {
+				const permission = permissions.find((p) => p.userId === member.id);
+				return (
+					<MemberSharingItem
+						key={member.id}
+						member={member}
+						permission={permission ?? placeholderPermission}
+					/>
+				);
+			})}
 		</div>
 	);
 }
 
 interface MemberSharingItemProps {
 	member: User;
+	permission: Permission;
 }
 
-function MemberSharingItem({ member }: MemberSharingItemProps) {
+function MemberSharingItem({ member, permission }: MemberSharingItemProps) {
+	const selectedKey = permission.canEdit
+		? "canEdit"
+		: permission.canView
+			? "canView"
+			: "blocked";
 	return (
 		<div className="w-full p-2 flex justify-between items-center">
 			<span className="text-sm">{member.username}</span>
-			<JollySelect>
-				<SelectItem>Can View</SelectItem>
-				<SelectItem>Can Edit</SelectItem>
-				<SelectItem>Blocked</SelectItem>
+			<JollySelect selectedKey={selectedKey}>
+				<SelectItem id="canView">Can View</SelectItem>
+				<SelectItem id="canEdit">Can Edit</SelectItem>
+				<SelectItem id="blocked">Blocked</SelectItem>
 			</JollySelect>
 		</div>
 	);

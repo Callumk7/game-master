@@ -21,6 +21,8 @@ export const visibilityEnum = pgEnum("visibility", [
 	"partial",
 ]);
 
+export const noteTypeEnum = pgEnum("note_type", ["note", "character", "faction", "location", "item", "quest"])
+
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
@@ -35,7 +37,7 @@ export const notes = pgTable("notes", {
 	gameId: text("game_id")
 		.references(() => games.id)
 		.notNull(),
-	type: text("type").notNull(),
+	type: noteTypeEnum("type").default("note").notNull(),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 

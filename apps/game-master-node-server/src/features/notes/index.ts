@@ -6,6 +6,7 @@ import {
 	linkNotesSchema,
 	updateNoteContentSchema,
 	type Id,
+	type NoteWithPermissions,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -109,6 +110,31 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 			.returning()
 			.then((result) => result[0]);
 		return successResponse(c, newNote);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.get("/:noteId/permissions", async (c) => {
+	const noteId = c.req.param("noteId");
+	try {
+		const result: NoteWithPermissions | undefined = await db.query.notes.findFirst({
+			where: eq(notes.id, noteId),
+			with: {
+				permissions: {
+					columns: {
+						userId: true,
+						canView: true,
+						canEdit: true,
+					},
+				},
+			},
+		});
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
