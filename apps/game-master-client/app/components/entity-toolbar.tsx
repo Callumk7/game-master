@@ -1,5 +1,5 @@
 import { GearIcon, Share1Icon, StarIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Form, useNavigate, useSubmit } from "@remix-run/react";
+import { Form, useFetcher, useNavigate, useSubmit } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { JollyTextField } from "~/components/ui/textfield";
 import { Toolbar } from "~/components/ui/toolbar";
@@ -13,11 +13,29 @@ import {
 	DialogTitle,
 } from "./ui/dialog";
 import { useState } from "react";
+import type { User, Visibility } from "@repo/api";
+import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
+import { useGetGameWithMembers } from "~/queries/get-game-with-members";
+import { ComboboxItem, JollyComboBox } from "./ui/combobox";
+import { JollySelect, SelectItem } from "./ui/select";
 
-export function EntityToolbar() {
+interface EntityToolbarProps {
+	entityId: string;
+	gameId: string;
+	entityVisibility: Visibility;
+}
+export function EntityToolbar({
+	entityId,
+	gameId,
+	entityVisibility,
+}: EntityToolbarProps) {
 	const submit = useSubmit();
 	const navigate = useNavigate();
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+
+	// fetch game members here, there is no reason that this won't work with each entity
+	const query = useGetGameWithMembers(gameId);
+
 	return (
 		<>
 			<Toolbar>
@@ -30,7 +48,7 @@ export function EntityToolbar() {
 						<MenuItem onAction={() => navigate("settings", { relative: "path" })}>
 							<GearIcon className="mr-2" /> <span>Settings</span>
 						</MenuItem>
-						<MenuItem onAction={() => setIsDialogOpen(true)}>
+						<MenuItem onAction={() => setIsDuplicateDialogOpen(true)}>
 							<Share1Icon className="mr-2" /> <span>Duplicate</span>
 						</MenuItem>
 					</MenuSection>
@@ -41,26 +59,33 @@ export function EntityToolbar() {
 						</MenuItem>
 					</MenuSection>
 				</JollyMenu>
-				<Button variant={"outline"}>Sharing</Button>
+				{query.status === "success" ? (
+					<SharingPopover
+						members={query.data.members}
+						entityId={entityId}
+						visibility={entityVisibility}
+					/>
+				) : (
+					<Button isDisabled variant={"outline"}>
+						Sharing
+					</Button>
+				)}
 			</Toolbar>
 			<DuplicateEntityDialog
-				isDialogOpen={isDialogOpen}
-				setIsDialogOpen={setIsDialogOpen}
+				isOpen={isDuplicateDialogOpen}
+				setIsOpen={setIsDuplicateDialogOpen}
 			/>
 		</>
 	);
 }
 
 interface DuplicateEntityDialogProps {
-	isDialogOpen: boolean;
-	setIsDialogOpen: (isOpen: boolean) => void;
+	isOpen: boolean;
+	setIsOpen: (isOpen: boolean) => void;
 }
-function DuplicateEntityDialog({
-	isDialogOpen,
-	setIsDialogOpen,
-}: DuplicateEntityDialogProps) {
+function DuplicateEntityDialog({ isOpen, setIsOpen }: DuplicateEntityDialogProps) {
 	return (
-		<DialogOverlay isOpen={isDialogOpen} onOpenChange={setIsDialogOpen}>
+		<DialogOverlay isOpen={isOpen} onOpenChange={setIsOpen}>
 			<DialogContent>
 				{({ close }) => (
 					<Form method="POST" onSubmit={close}>
@@ -81,5 +106,76 @@ function DuplicateEntityDialog({
 				)}
 			</DialogContent>
 		</DialogOverlay>
+	);
+}
+
+interface SharingPopoverProps {
+	entityId: string;
+	members: User[];
+	visibility: Visibility;
+}
+
+function SharingPopover({ members, entityId, visibility }: SharingPopoverProps) {
+	return (
+		<PopoverTrigger>
+			<Button variant={"outline"}>Sharing</Button>
+			<Popover>
+				<PopoverDialog className="w-[40vw]">
+					<div className="space-y-4">
+            <DialogHeader>
+              <DialogTitle>Sharing Menu</DialogTitle>
+              </DialogHeader>
+						<GlobalVisibilityCombobox visibility={visibility} />
+						<MemberSharingList members={members} />
+					</div>
+				</PopoverDialog>
+			</Popover>
+		</PopoverTrigger>
+	);
+}
+
+interface GlobalVisibilityComboboxProps {
+	visibility: Visibility;
+}
+
+function GlobalVisibilityCombobox({ visibility }: GlobalVisibilityComboboxProps) {
+	const fetcher = useFetcher();
+	return (
+		<JollyComboBox label="Global permissions" defaultSelectedKey={visibility}>
+			<ComboboxItem id="private">Private</ComboboxItem>
+			<ComboboxItem id="public">Public</ComboboxItem>
+			<ComboboxItem id="viewable">Viewable</ComboboxItem>
+		</JollyComboBox>
+	);
+}
+
+interface MemberSharingListProps {
+	members: User[];
+}
+
+function MemberSharingList({ members }: MemberSharingListProps) {
+	return (
+		<div className="grid divide-y">
+			{members.map((member) => (
+				<MemberSharingItem key={member.id} member={member} />
+			))}
+		</div>
+	);
+}
+
+interface MemberSharingItemProps {
+	member: User;
+}
+
+function MemberSharingItem({ member }: MemberSharingItemProps) {
+	return (
+		<div className="w-full p-2 flex justify-between items-center">
+			<span className="text-sm">{member.username}</span>
+			<JollySelect>
+				<SelectItem>Can View</SelectItem>
+				<SelectItem>Can Edit</SelectItem>
+				<SelectItem>Blocked</SelectItem>
+			</JollySelect>
+		</div>
 	);
 }

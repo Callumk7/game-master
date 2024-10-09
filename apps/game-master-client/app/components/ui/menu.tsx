@@ -20,7 +20,7 @@ import { Button, type buttonVariants } from "./button";
 import { ListBoxCollection, ListBoxSection } from "./list-box";
 import { SelectPopover } from "./select";
 import { cn } from "callum-util";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const MenuTrigger = AriaMenuTrigger;
 
