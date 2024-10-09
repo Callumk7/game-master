@@ -10,6 +10,7 @@ import type {
 	CreateNoteRequestBody,
 	DuplicateNoteRequestBody,
 	Note,
+	NoteWithPermissions,
 	UpdateNoteContentRequestBody,
 } from "../types/notes.js";
 
@@ -19,6 +20,10 @@ export class Notes {
 	// DONE
 	async getNote(noteId: Id): Promise<Note> {
 		return this.client.get<Note>(`notes/${noteId}`);
+	}
+
+	async getNoteWithPermissions(noteId: Id): Promise<NoteWithPermissions> {
+		return this.client.get<NoteWithPermissions>(`notes/${noteId}/permissions`)
 	}
 
 	// DONE

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Id, Visibility } from "./index.js";
+import type { Id, Permission, Visibility } from "./index.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -23,6 +23,10 @@ export interface Note {
 	gameId: Id;
 	type: NoteType;
 	visibility: Visibility;
+}
+
+export interface NoteWithPermissions extends Note {
+	permissions: Permission[];
 }
 
 export const createNoteSchema = z.object({

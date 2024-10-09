@@ -29,3 +29,11 @@ export type QueryOptions = {
 }
 
 export const OptionalEntitySchema = z.array(z.string()).or(z.string()).optional();
+
+export interface Permission {
+	userId: Id,
+	canView: boolean;
+	canEdit: boolean;
+}
+
+
