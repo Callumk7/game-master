@@ -5,7 +5,6 @@ import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { GameSidebar } from "./components/game-sidebar";
 import { GameSelectionProvider } from "~/store/selection";
-import { RightSidebarLayout } from "./components/right-sidebar";
 import { ThemeProvider } from "~/components/context/dark-mode";
 import { api } from "~/lib/api.server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -38,12 +37,12 @@ export default function AppLayout() {
 	return (
 		<RouterProvider navigate={navigate} useHref={useHref}>
 			<QueryClientProvider client={queryClient}>
-				<GameSelectionProvider gameSelectionId={defaultGameId} isRightSidebarOpen={false}>
+				<GameSelectionProvider gameSelectionId={defaultGameId}>
 					<ThemeProvider>
 						<GameSidebar gamesWithAllEntities={sidebarData.games} />
-						<RightSidebarLayout>
-							<Outlet />
-						</RightSidebarLayout>
+            <div className="ml-64">
+              <Outlet />
+            </div>
 					</ThemeProvider>
 				</GameSelectionProvider>
 			</QueryClientProvider>
