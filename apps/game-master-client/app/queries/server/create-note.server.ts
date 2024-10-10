@@ -12,6 +12,7 @@ export async function createNoteAction(request: Request) {
 		createNoteSchema.omit({ ownerId: true }),
 	);
 	const result = await api.notes.createNote({ ...data, ownerId: userId });
+	console.log(result)
 
 	if (result.success) {
 		const { gameId, id } = result.data;
@@ -19,7 +20,7 @@ export async function createNoteAction(request: Request) {
 	}
 
 	return json(
-		{ errorMsg: "There was a problem creating this faction, please try again." },
+		{ errorMsg: "There was a problem creating this note, please try again." },
 		{
 			status: StatusCodes.INTERNAL_SERVER_ERROR,
 			statusText: ReasonPhrases.INTERNAL_SERVER_ERROR,
