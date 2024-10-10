@@ -4,6 +4,11 @@ import { charactersPermissions } from "~/db/schema/characters";
 import { factionsPermissions } from "~/db/schema/factions";
 import { notesPermissions } from "~/db/schema/notes";
 
+// WARN: I am not using any of this code in the routes, because the logic isnt correct.
+// It is bad to have a separate DB call for each member - instead, I should batch the inserts 
+// and do a single call. The only issue is I need to do a check for the owner, and make sure they
+// have full permissions.
+
 export async function createNotePermission(
 	userId: string,
 	noteId: string,
