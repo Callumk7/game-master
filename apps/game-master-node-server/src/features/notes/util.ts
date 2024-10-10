@@ -1,4 +1,4 @@
-import type { CreateNoteRequestBody, UpdateNoteContentRequestBody } from "@repo/api";
+import type { CreateNoteRequestBody } from "@repo/api";
 import type { InsertDatabaseNote } from "~/db/schema/notes";
 import { generateNoteId } from "~/lib/ids";
 
@@ -13,6 +13,7 @@ export const createNoteInsert = (input: CreateNoteRequestBody): InsertDatabaseNo
 		updatedAt: currentDate,
 		content: input.content,
 		htmlContent: input.htmlContent,
-		type: input.type
+		type: input.type,
+		visibility: input.visibility,
 	}
 }
