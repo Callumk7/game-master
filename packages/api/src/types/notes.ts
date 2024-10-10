@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Id, Permission, Visibility } from "./index.js";
+import { visibilitySchema, type Id, type Permission, type Visibility } from "./index.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -36,6 +36,7 @@ export const createNoteSchema = z.object({
 	content: z.string(),
 	htmlContent: z.string(),
 	type: noteTypeSchema,
+	visibility: visibilitySchema,
 });
 export type CreateNoteRequestBody = z.infer<typeof createNoteSchema>;
 
