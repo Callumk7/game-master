@@ -12,11 +12,10 @@ import {
 	DialogOverlay,
 	DialogTitle,
 } from "./ui/dialog";
-import { useState } from "react";
+import { type Key, useState } from "react";
 import type { Permission, User, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
-import { ComboboxItem, JollyComboBox } from "./ui/combobox";
 import { JollySelect, SelectItem } from "./ui/select";
 
 interface EntityToolbarProps {
@@ -125,6 +124,44 @@ function SharingPopover({
 	visibility,
 	permissions,
 }: SharingPopoverProps) {
+	const fetcher = useFetcher();
+	const [globalVisibility, setGlobalVisibility] = useState<Visibility>(visibility);
+	const [uiPermissions, setUiPermissions] = useState<Permission[]>(permissions);
+
+	const handleChangeVisibility = (visibility: Key) => {
+		setGlobalVisibility(visibility as Visibility);
+		if (visibility === "private") {
+			const newPermissions = uiPermissions.map((permission) => ({
+				...permission,
+				canView: false,
+				canEdit: false,
+			}));
+			setUiPermissions(newPermissions);
+		}
+		if (visibility === "public") {
+			const newPermissions = uiPermissions.map((permission) => ({
+				...permission,
+				canView: true,
+				canEdit: true,
+			}));
+			setUiPermissions(newPermissions);
+		}
+		if (visibility === "viewable") {
+			const newPermissions = uiPermissions.map((permission) => ({
+				...permission,
+				canView: true,
+				canEdit: false,
+			}));
+			setUiPermissions(newPermissions);
+		}
+	};
+
+  const handlePermissionChange = (permission: Key) => {
+    // review the collection api from adobe components because 
+    // we should be able to get all the data that we need in this 
+    // handler
+  }
+
 	return (
 		<PopoverTrigger>
 			<Button variant={"outline"}>Sharing</Button>
@@ -134,8 +171,11 @@ function SharingPopover({
 						<DialogHeader>
 							<DialogTitle>Sharing Menu</DialogTitle>
 						</DialogHeader>
-						<GlobalVisibilityCombobox visibility={visibility} />
-						<MemberSharingList members={members} permissions={permissions} />
+						<GlobalVisibilityCombobox
+							visibility={globalVisibility}
+							handleChangeVisibility={handleChangeVisibility}
+						/>
+						<MemberSharingList members={members} permissions={uiPermissions} />
 					</div>
 				</PopoverDialog>
 			</Popover>
@@ -145,16 +185,23 @@ function SharingPopover({
 
 interface GlobalVisibilityComboboxProps {
 	visibility: Visibility;
+	handleChangeVisibility: (visibility: Key) => void;
 }
 
-function GlobalVisibilityCombobox({ visibility }: GlobalVisibilityComboboxProps) {
-	const fetcher = useFetcher();
+function GlobalVisibilityCombobox({
+	visibility,
+	handleChangeVisibility,
+}: GlobalVisibilityComboboxProps) {
 	return (
-		<JollyComboBox label="Global permissions" defaultSelectedKey={visibility}>
-			<ComboboxItem id="private">Private</ComboboxItem>
-			<ComboboxItem id="public">Public</ComboboxItem>
-			<ComboboxItem id="viewable">Viewable</ComboboxItem>
-		</JollyComboBox>
+		<JollySelect
+			label="Global permissions"
+			defaultSelectedKey={visibility}
+			onSelectionChange={handleChangeVisibility}
+		>
+			<SelectItem id="private">Private</SelectItem>
+			<SelectItem id="public">Public</SelectItem>
+			<SelectItem id="viewable">Viewable</SelectItem>
+		</JollySelect>
 	);
 }
 
@@ -164,6 +211,7 @@ interface MemberSharingListProps {
 }
 
 function MemberSharingList({ members, permissions }: MemberSharingListProps) {
+	// WARN: absolutely should not have this
 	const placeholderPermission: Permission = {
 		userId: "",
 		canView: false,
