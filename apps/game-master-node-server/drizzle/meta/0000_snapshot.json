@@ -1,5 +1,5 @@
 {
-  "id": "80d9d55d-965c-4fd0-9895-4cd8405511cf",
+  "id": "15f68282-d6e5-44db-817d-c9fbbca79169",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -68,6 +68,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'private'"
         }
       },
       "indexes": {},
@@ -159,6 +167,76 @@
           "name": "characters_in_factions_faction_id_character_id_pk",
           "columns": [
             "faction_id",
+            "character_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.characters_permissions": {
+      "name": "characters_permissions",
+      "schema": "",
+      "columns": {
+        "character_id": {
+          "name": "character_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_view": {
+          "name": "can_view",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_edit": {
+          "name": "can_edit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "characters_permissions_character_id_characters_id_fk": {
+          "name": "characters_permissions_character_id_characters_id_fk",
+          "tableFrom": "characters_permissions",
+          "tableTo": "characters",
+          "columnsFrom": [
+            "character_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "characters_permissions_user_id_users_id_fk": {
+          "name": "characters_permissions_user_id_users_id_fk",
+          "tableFrom": "characters_permissions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "characters_permissions_user_id_character_id_pk": {
+          "name": "characters_permissions_user_id_character_id_pk",
+          "columns": [
+            "user_id",
             "character_id"
           ]
         }
@@ -285,6 +363,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'private'"
         }
       },
       "indexes": {},
@@ -330,6 +416,76 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.factions_permissions": {
+      "name": "factions_permissions",
+      "schema": "",
+      "columns": {
+        "faction_id": {
+          "name": "faction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_view": {
+          "name": "can_view",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_edit": {
+          "name": "can_edit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "factions_permissions_faction_id_factions_id_fk": {
+          "name": "factions_permissions_faction_id_factions_id_fk",
+          "tableFrom": "factions_permissions",
+          "tableTo": "factions",
+          "columnsFrom": [
+            "faction_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "factions_permissions_user_id_users_id_fk": {
+          "name": "factions_permissions_user_id_users_id_fk",
+          "tableFrom": "factions_permissions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "factions_permissions_user_id_faction_id_pk": {
+          "name": "factions_permissions_user_id_faction_id_pk",
+          "columns": [
+            "user_id",
+            "faction_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.notes_on_factions": {
@@ -405,6 +561,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -463,14 +625,16 @@
           "name": "is_owner",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": false
         },
         "role": {
           "name": "role",
           "type": "role",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'player'"
         }
       },
       "indexes": {},
@@ -649,9 +813,19 @@
         },
         "type": {
           "name": "type",
-          "type": "text",
+          "type": "note_type",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'note'"
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'private'"
         }
       },
       "indexes": {},
@@ -697,6 +871,70 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.notes_permissions": {
+      "name": "notes_permissions",
+      "schema": "",
+      "columns": {
+        "note_id": {
+          "name": "note_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission": {
+          "name": "permission",
+          "type": "permission",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notes_permissions_note_id_notes_id_fk": {
+          "name": "notes_permissions_note_id_notes_id_fk",
+          "tableFrom": "notes_permissions",
+          "tableTo": "notes",
+          "columnsFrom": [
+            "note_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "notes_permissions_user_id_users_id_fk": {
+          "name": "notes_permissions_user_id_users_id_fk",
+          "tableFrom": "notes_permissions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "notes_permissions_user_id_note_id_pk": {
+          "name": "notes_permissions_user_id_note_id_pk",
+          "columns": [
+            "user_id",
+            "note_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.sessions": {
@@ -797,6 +1035,16 @@
     }
   },
   "enums": {
+    "public.visibility": {
+      "name": "visibility",
+      "schema": "public",
+      "values": [
+        "public",
+        "private",
+        "viewable",
+        "partial"
+      ]
+    },
     "public.role": {
       "name": "role",
       "schema": "public",
@@ -805,6 +1053,27 @@
         "dm",
         "player",
         "guest"
+      ]
+    },
+    "public.note_type": {
+      "name": "note_type",
+      "schema": "public",
+      "values": [
+        "note",
+        "character",
+        "faction",
+        "location",
+        "item",
+        "quest"
+      ]
+    },
+    "public.permission": {
+      "name": "permission",
+      "schema": "public",
+      "values": [
+        "none",
+        "view",
+        "edit"
       ]
     }
   },
