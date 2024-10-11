@@ -1,4 +1,5 @@
 import { json, type ActionFunction } from "@remix-run/node";
+import { ClientActionFunctionArgs } from "@remix-run/react";
 import { visibilitySchema } from "@repo/api";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
@@ -18,3 +19,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 		return json(result.data);
 	}
 };
+
+export async function clientAction({ params, serverAction }: ClientActionFunctionArgs) {
+	const { noteId } = parseParams(params, {
+		noteId: z.string(),
+	});
+
+	localStorage.removeItem(noteId);
+
+	const serverData = await serverAction();
+	return serverData;
+}
