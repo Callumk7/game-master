@@ -145,8 +145,6 @@ export default function NoteIndexRoute() {
     <>
       <div className="p-4 space-y-4">
         <EntityToolbar
-          entityId={note.id}
-          entityType={"notes"}
           gameId={note.gameId}
           entityVisibility={note.visibility}
           permissions={note.permissions}
