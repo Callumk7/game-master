@@ -1,5 +1,4 @@
 import {
-	boolean,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -18,18 +17,30 @@ export const visibilityEnum = pgEnum("visibility", [
 	"public",
 	"private",
 	"viewable",
-	"partial",
 ]);
 
-export const noteTypeEnum = pgEnum("note_type", ["note", "character", "faction", "location", "item", "quest"])
+export const noteTypeEnum = pgEnum("note_type", [
+	"note",
+	"character",
+	"faction",
+	"location",
+	"item",
+	"quest",
+]);
 
 export const notes = pgTable("notes", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	content: text("content"),
 	htmlContent: text("html_content"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
+	createdAt: timestamp("created_at", {
+		withTimezone: true,
+		mode: "date",
+	}).notNull(),
+	updatedAt: timestamp("updated_at", {
+		withTimezone: true,
+		mode: "date",
+	}).notNull(),
 	ownerId: text("owner_id")
 		.notNull()
 		.references(() => users.id),
@@ -97,6 +108,8 @@ export const folderRelations = relations(folders, ({ many }) => ({
 	notes: many(notes),
 }));
 
+export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
+
 export const notesPermissions = pgTable(
 	"notes_permissions",
 	{
@@ -106,21 +119,23 @@ export const notesPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		canView: boolean("can_view").notNull(),
-		canEdit: boolean("can_edit").notNull().default(false),
+		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.noteId] }),
-	}),
+	})
 );
 
-export const notesPermissionsRelations = relations(notesPermissions, ({ one }) => ({
-	note: one(notes, {
-		fields: [notesPermissions.noteId],
-		references: [notes.id],
-	}),
-	user: one(users, {
-		fields: [notesPermissions.userId],
-		references: [users.id],
-	}),
-}));
+export const notesPermissionsRelations = relations(
+	notesPermissions,
+	({ one }) => ({
+		note: one(notes, {
+			fields: [notesPermissions.noteId],
+			references: [notes.id],
+		}),
+		user: one(users, {
+			fields: [notesPermissions.userId],
+			references: [users.id],
+		}),
+	})
+);

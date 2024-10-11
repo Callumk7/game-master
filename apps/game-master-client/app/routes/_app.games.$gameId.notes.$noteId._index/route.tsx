@@ -60,7 +60,6 @@ export const clientLoader = async ({
 
 clientLoader.hydrate = true;
 
-// Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await validateUser(request);
   const { noteId } = parseParams(params, {
@@ -165,7 +164,6 @@ export default function NoteIndexRoute() {
         <EditorBody
           htmlContent={note.htmlContent ?? ""}
           suggestionItems={suggestionItems}
-          action={`/games/${note.gameId}/notes/${note.id}`}
         />
       </div>
     </>

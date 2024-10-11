@@ -1,9 +1,11 @@
 import {
 	createNoteSchema,
+	createPermissionSchema,
 	duplicateNoteSchema,
 	linkCharactersSchema,
 	linkFactionsSchema,
 	linkNotesSchema,
+	permissionSchema,
 	updateNoteContentSchema,
 	type Id,
 	type NoteWithPermissions,
@@ -24,6 +26,7 @@ import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
 import { createNote } from "./queries";
+import { createNotePermission } from "~/services/permissions";
 
 export const notesRoute = new Hono();
 
@@ -118,8 +121,7 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 				permissions: {
 					columns: {
 						userId: true,
-						canView: true,
-						canEdit: true,
+						permission: true,
 					},
 				},
 			},
@@ -129,6 +131,21 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 			return handleNotFound(c);
 		}
 		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/permissions", async (c) => {
+	const noteId = c.req.param("noteId");
+	const data = await validateOrThrowError(createPermissionSchema, c);
+	try {
+		const newPermission = await createNotePermission(
+			data.userId,
+			noteId,
+			data.permission,
+		);
+		return successResponse(c, newPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
