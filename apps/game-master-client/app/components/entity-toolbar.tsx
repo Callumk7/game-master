@@ -13,21 +13,17 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { type Key, useState } from "react";
-import type { EntityType, Permission, User, Visibility } from "@repo/api";
+import type { Permission, User, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
 
 interface EntityToolbarProps {
-  entityId: string;
-  entityType: EntityType;
   gameId: string;
   entityVisibility: Visibility;
   permissions: Permission[];
 }
 export function EntityToolbar({
-  entityId,
-  entityType,
   gameId,
   entityVisibility,
   permissions,
@@ -65,8 +61,6 @@ export function EntityToolbar({
         {query.status === "success" ? (
           <SharingPopover
             members={query.data.members}
-            entityId={entityId}
-            entityType={entityType}
             visibility={entityVisibility}
             permissions={permissions}
           />
@@ -115,8 +109,6 @@ function DuplicateEntityDialog({ isOpen, setIsOpen }: DuplicateEntityDialogProps
 }
 
 interface SharingPopoverProps {
-  entityId: string;
-  entityType: EntityType;
   members: User[];
   visibility: Visibility;
   permissions: Permission[];
@@ -124,8 +116,6 @@ interface SharingPopoverProps {
 
 function SharingPopover({
   members,
-  entityId,
-  entityType,
   visibility,
   permissions,
 }: SharingPopoverProps) {
@@ -133,8 +123,8 @@ function SharingPopover({
 
   const handleChangeVisibility = (key: Key) => {
     fetcher.submit(
-      { entityId, entityType, visibility: key.toString() },
-      { method: "patch" },
+      { visibility: key.toString() },
+      { method: "patch", action: "visibility" },
     );
   };
 
@@ -153,8 +143,6 @@ function SharingPopover({
             />
             <MemberSharingList
               members={members}
-              entityId={entityId}
-              entityType={entityType}
               permissions={permissions}
               visibility={visibility}
             />
@@ -189,19 +177,11 @@ function GlobalVisibilityCombobox({
 
 interface MemberSharingListProps {
   members: User[];
-  entityId: string;
-  entityType: EntityType;
   permissions: Permission[];
   visibility: Visibility;
 }
 
-function MemberSharingList({
-  members,
-  entityId,
-  entityType,
-  permissions,
-  visibility,
-}: MemberSharingListProps) {
+function MemberSharingList({ members, permissions, visibility }: MemberSharingListProps) {
   return (
     <div className="grid divide-y">
       {members.map((member) => {
@@ -210,8 +190,6 @@ function MemberSharingList({
           <MemberSharingItem
             key={member.id}
             member={member}
-            entityId={entityId}
-            entityType={entityType}
             permission={permission}
             visibility={visibility}
           />
@@ -223,31 +201,44 @@ function MemberSharingList({
 
 interface MemberSharingItemProps {
   member: User;
-  entityId: string;
-  entityType: EntityType;
   permission: Permission | undefined;
   visibility: Visibility;
 }
 
-function MemberSharingItem({
-  member,
-  entityId,
-  entityType,
-  permission,
-  visibility,
-}: MemberSharingItemProps) {
+function MemberSharingItem({ member, permission, visibility }: MemberSharingItemProps) {
+  const [selectedKey, setSelectedKey] = useState<Visibility>(
+    permission?.canEdit ? "public" : permission?.canView ? "viewable" : visibility,
+  );
+
+  console.log(
+    `${member.username} has permission: ${selectedKey} from prop: ${permission?.canEdit} and ${permission?.canView}`,
+  );
+
   const fetcher = useFetcher();
 
-  const selectedKey = permission?.canEdit
-    ? "public"
-    : permission?.canView
-      ? "viewable"
-      : visibility;
-
   const handleSelectionChange = (key: Key) => {
+    setSelectedKey(key.toString() as Visibility);
+    let canView = false;
+    let canEdit = false;
+    switch (key) {
+      case "viewable":
+        canView = true;
+        canEdit = false;
+        break;
+
+      case "public":
+        canView = true;
+        canEdit = true;
+        break;
+
+      case "private":
+        canView = false;
+        canEdit = false;
+        break;
+    }
     fetcher.submit(
-      { entityId, userId: member.id, entityType, permission: key.toString() },
-      { method: "patch" },
+      { userId: member.id, canView, canEdit },
+      { method: "patch", action: "permissions", encType: "application/json" },
     );
   };
   return (
