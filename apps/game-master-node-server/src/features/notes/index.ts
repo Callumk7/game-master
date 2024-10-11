@@ -6,12 +6,11 @@ import {
 	linkNotesSchema,
 	updateNoteContentSchema,
 	type Id,
-	type Note,
 	type NoteWithPermissions,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { links, notes, notesPermissions } from "~/db/schema/notes";
+import { links, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -24,7 +23,6 @@ import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
-import { usersToGames } from "~/db/schema/games";
 import { createNote } from "./queries";
 
 export const notesRoute = new Hono();
