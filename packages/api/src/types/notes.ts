@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { visibilitySchema, type Id, type Permission, type Visibility } from "./index.js";
+import { visibilitySchema, type Id, type Permission, type UserPermission, type Visibility } from "./index.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -26,7 +26,7 @@ export interface Note {
 }
 
 export interface NoteWithPermissions extends Note {
-	permissions: Permission[];
+	permissions: UserPermission[];
 }
 
 export const createNoteSchema = z.object({
@@ -44,6 +44,8 @@ export const updateNoteContentSchema = z.object({
 	name: z.string().optional(),
 	htmlContent: z.string().optional(),
 	content: z.string().optional(),
+	type: noteTypeSchema.optional(),
+	visibility: visibilitySchema.optional()
 });
 export type UpdateNoteContentRequestBody = z.infer<typeof updateNoteContentSchema>;
 

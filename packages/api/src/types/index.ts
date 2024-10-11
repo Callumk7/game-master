@@ -20,20 +20,26 @@ export interface BasicEntityWithDates extends BasicEntity {
 
 export type EntityType = "notes" | "characters" | "factions";
 
-export const visibilitySchema = z.enum(["public", "private", "viewable", "partial"]);
+export const visibilitySchema = z.enum(["public", "private", "viewable"]);
 export type Visibility = z.infer<typeof visibilitySchema>;
 
 export type QueryOptions = {
 	limit?: number;
 	offset?: number;
-}
+};
 
 export const OptionalEntitySchema = z.array(z.string()).or(z.string()).optional();
 
-export interface Permission {
-	userId: Id,
-	canView: boolean;
-	canEdit: boolean;
+export const permissionSchema = z.enum(["none", "view", "edit"]);
+export type Permission = z.infer<typeof permissionSchema>;
+
+export interface UserPermission {
+	userId: Id;
+	permission: Permission;
 }
 
-
+export const createPermissionSchema = z.object({
+	userId: z.string(),
+	permission: permissionSchema,
+});
+export type CreatePermissionRequestBody = z.infer<typeof createPermissionSchema>;
