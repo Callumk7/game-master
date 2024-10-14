@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NotesIndex() {
   const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
   return (
-    <div>
+    <div className="space-y-2">
       <CreateNoteSlideover gameId={gameId} />
       <NoteTable notes={allGameNotes} />
     </div>
