@@ -74,7 +74,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
   };
   return (
     <Form method="post" onSubmit={handleSubmit}>
-      <div className="grid gap-4 py-4 px-1">
+      <div className="grid gap-4 py-4 px-1 h-full">
         <JollyTextField
           autoFocus
           value={name}
@@ -107,7 +107,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="public">Everyone can edit</SelectItem>
           </JollySelect>
         </div>
-        <EditorWithControls editor={editor} bordered label="Body" className="h-[70vh]" />
+        <EditorWithControls editor={editor} bordered label="Body" className="min-h-[50vh] h-full" />
       </div>
       <DialogFooter>
         <Button onPress={close} type="submit">
