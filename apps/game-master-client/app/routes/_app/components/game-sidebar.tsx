@@ -14,8 +14,8 @@ import {
 } from "~/components/ui/select";
 import { useSyncSelectedGameWithParams } from "./sync-selected-game";
 import { Text } from "~/components/ui/typeography";
-import { ThemeToggle } from "~/components/context/dark-mode";
 import { useMemo } from "react";
+import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 
 interface GameSidebarProps {
   gamesWithAllEntities: GameWithDatedEntities[];

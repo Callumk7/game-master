@@ -4,10 +4,9 @@ import { RouterProvider } from "react-aria-components";
 import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { GameSidebar } from "./components/game-sidebar";
-import { GameSelectionProvider } from "~/store/selection";
-import { ThemeProvider } from "~/components/context/dark-mode";
 import { api } from "~/lib/api.server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GlobalStateProvider } from "~/store/global";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -37,14 +36,12 @@ export default function AppLayout() {
 	return (
 		<RouterProvider navigate={navigate} useHref={useHref}>
 			<QueryClientProvider client={queryClient}>
-				<GameSelectionProvider gameSelectionId={defaultGameId}>
-					<ThemeProvider>
-						<GameSidebar gamesWithAllEntities={sidebarData.games} />
-            <div className="ml-64">
-              <Outlet />
-            </div>
-					</ThemeProvider>
-				</GameSelectionProvider>
+				<GlobalStateProvider gameSelectionId={defaultGameId}>
+          <GameSidebar gamesWithAllEntities={sidebarData.games} />
+          <div className="ml-64">
+            <Outlet />
+          </div>
+				</GlobalStateProvider>
 			</QueryClientProvider>
 		</RouterProvider>
 	);
