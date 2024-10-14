@@ -11,7 +11,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
-import { notes } from "./notes";
+import { notes, permissionEnum } from "./notes";
 import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", [
@@ -94,8 +94,7 @@ export const factionsPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		canView: boolean("can_view").notNull(),
-		canEdit: boolean("can_edit").notNull().default(false),
+		permission: permissionEnum("permission").notNull()
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.factionId] }),

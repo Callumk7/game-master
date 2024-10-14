@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
-import { notes } from "./notes";
+import { notes, permissionEnum } from "./notes";
 import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -125,8 +125,7 @@ export const charactersPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		canView: boolean("can_view").notNull(),
-		canEdit: boolean("can_edit").notNull().default(false),
+		permission: permissionEnum("permission").notNull()
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.characterId] }),

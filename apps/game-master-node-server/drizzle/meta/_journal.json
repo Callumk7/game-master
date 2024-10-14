@@ -8,6 +8,13 @@
       "when": 1728659422882,
       "tag": "0000_lucky_rockslide",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1728915917668,
+      "tag": "0001_quick_puma",
+      "breakpoints": true
     }
   ]
 }
