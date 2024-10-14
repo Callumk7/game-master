@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function CharacterIndex() {
 	const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
 	return (
-		<div>
+		<div className="space-y-2">
 			<CreateCharacterSlideover gameId={gameId} />
 			<CharacterTable characters={gameChars} />
 		</div>
