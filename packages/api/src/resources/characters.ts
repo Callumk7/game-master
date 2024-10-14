@@ -2,11 +2,18 @@ import type { Client } from "../client.js";
 import type {
 	Character,
 	CharacterWithNotes,
+	CharacterWithPermissions,
 	CreateCharacterRequestBody,
 	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
-import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
+import type {
+	BasicServerResponse,
+	CreatePermissionRequestBody,
+	Id,
+	Permission,
+	ServerResponse,
+} from "../types/index.js";
 
 export class Characters {
 	constructor(private client: Client) { }
@@ -14,6 +21,12 @@ export class Characters {
 	// DONE
 	async getCharacter(charId: Id): Promise<Character> {
 		return this.client.get<Character>(`characters/${charId}`);
+	}
+
+	async getCharacterWithPermissions(charId: Id): Promise<CharacterWithPermissions> {
+		return this.client.get<CharacterWithPermissions>(
+			`characters/${charId}/permissions`,
+		);
 	}
 
 	// DONE
@@ -36,6 +49,16 @@ export class Characters {
 		return this.client.post<ServerResponse<Character>>(
 			`characters/${charId}/duplicate`,
 			duplicateData,
+		);
+	}
+
+	async createCharacterPermission(
+		charId: Id,
+		body: CreatePermissionRequestBody,
+	): Promise<ServerResponse<Permission>> {
+		return this.client.post<ServerResponse<Permission>>(
+			`characters/${charId}/permissions`,
+			body,
 		);
 	}
 

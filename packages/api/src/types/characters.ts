@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Id, Visibility } from "./index.js";
+import { visibilitySchema, type Id, type UserPermission, type Visibility } from "./index.js";
 import type { Note } from "./notes.js";
 
 export interface Character {
@@ -19,6 +19,10 @@ export interface CharacterWithNotes extends Character {
 	notes: Note[];
 }
 
+export interface CharacterWithPermissions extends Character {
+	permissions: UserPermission[];
+}
+
 export const createCharacterSchema = z.object({
 	name: z.string(),
 	content: z.string(),
@@ -32,6 +36,8 @@ export const updateCharacterSchema = z.object({
 	name: z.string().optional(),
 	content: z.string().optional(),
 	htmlContent: z.string().optional(),
+	isPlayer: z.boolean().optional(),
+	visibility: visibilitySchema.optional()
 })
 export type UpdateCharacterRequestBody = z.infer<typeof updateCharacterSchema>;
 
