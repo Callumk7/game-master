@@ -1,6 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
-import { useGameSelectionId, useSetGameSelection } from "~/store/selection";
+import { useGameSelectionId, useSetGameSelection } from "~/store/global";
 
 export const useSyncSelectedGameWithParams = () => {
 	const params = useParams();
