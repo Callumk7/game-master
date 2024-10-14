@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Outlet, useHref, useNavigate } from "@remix-run/react";
+import { Outlet, useHref, useNavigate, useRouteError } from "@remix-run/react";
 import { RouterProvider } from "react-aria-components";
 import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
@@ -7,6 +7,7 @@ import { GameSidebar } from "./components/game-sidebar";
 import { api } from "~/lib/api.server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalStateProvider } from "~/store/global";
+import { Text } from "~/components/ui/typeography";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -53,4 +54,14 @@ export function useAppData() {
 		throw new Error("useAppData must be used within the _app route or its children");
 	}
 	return data;
+}
+
+export function ErrorBoundary() {
+	const error = useRouteError();
+	console.error(error);
+	return (
+		<div className="w-4/5 mx-auto">
+			<Text variant={"h3"}>Something went wrong</Text>
+		</div>
+	);
 }
