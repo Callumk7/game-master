@@ -19,11 +19,13 @@ import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
 
 interface EntityToolbarProps {
+	entityOwnerId: string;
 	gameId: string;
 	entityVisibility: Visibility;
 	permissions: UserPermission[];
 }
 export function EntityToolbar({
+	entityOwnerId,
 	gameId,
 	entityVisibility,
 	permissions,
@@ -33,7 +35,14 @@ export function EntityToolbar({
 	const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
 	// fetch game members here, there is no reason that this won't work with each entity
-	const query = useGetGameWithMembers(gameId);
+	const gameWithMembersQuery = useGetGameWithMembers(gameId);
+	let members: User[] = [];
+
+	if (gameWithMembersQuery.status === "success") {
+		members = gameWithMembersQuery.data.members.filter(
+			(member) => member.id !== entityOwnerId,
+		);
+	}
 
 	return (
 		<>
@@ -58,9 +67,9 @@ export function EntityToolbar({
 						</MenuItem>
 					</MenuSection>
 				</JollyMenu>
-				{query.status === "success" ? (
+				{gameWithMembersQuery.status === "success" ? (
 					<SharingPopover
-						members={query.data.members}
+						members={members}
 						visibility={entityVisibility}
 						permissions={permissions}
 					/>
