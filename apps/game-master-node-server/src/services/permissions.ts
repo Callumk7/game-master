@@ -13,19 +13,19 @@ import { notesPermissions } from "~/db/schema/notes";
 export async function createNotePermission(
 	userId: string,
 	noteId: string,
-	permission: Permission
+	permission: Permission,
 ) {
 	const result = await db
 		.insert(notesPermissions)
 		.values({
 			userId,
 			noteId,
-			permission
+			permission,
 		})
 		.onConflictDoUpdate({
 			target: [notesPermissions.userId, notesPermissions.noteId],
 			set: {
-				permission: sql`excluded.permission`
+				permission: sql`excluded.permission`,
 			},
 		})
 		.returning()
@@ -41,25 +41,57 @@ export async function createNotePermission(
 export async function createCharacterPermission(
 	userId: string,
 	characterId: string,
-	permissions: { canView: boolean; canEdit: boolean },
+	permission: Permission,
 ) {
-	await db.insert(charactersPermissions).values({
-		userId,
-		characterId,
-		canView: permissions.canView,
-		canEdit: permissions.canEdit,
-	});
+	const result = await db
+		.insert(charactersPermissions)
+		.values({
+			userId,
+			characterId,
+			permission,
+		})
+		.onConflictDoUpdate({
+			target: [charactersPermissions.userId, charactersPermissions.characterId],
+			set: {
+				permission: sql`excluded.permission`,
+			},
+		})
+		.returning()
+		.then((rows) => rows[0]);
+
+	 if (!result) {
+		throw new Error("Error creating character permission in database");
+	}
+
+	return result;
 }
+
 
 export async function createFactionPermission(
 	userId: string,
 	factionId: string,
-	permissions: { canView: boolean; canEdit: boolean },
+	permission: Permission,
 ) {
-	await db.insert(factionsPermissions).values({
-		userId,
-		factionId,
-		canView: permissions.canView,
-		canEdit: permissions.canEdit,
-	});
+	const result = await db
+		.insert(factionsPermissions)
+		.values({
+			userId,
+			factionId,
+			permission,
+		})
+		.onConflictDoUpdate({
+			target: [factionsPermissions.userId, factionsPermissions.factionId],
+			set: {
+				permission: sql`excluded.permission`,
+			},
+		})
+		.returning()
+		.then((rows) => rows[0]);
+
+	 if (!result) {
+		throw new Error("Error creating faction permission in database");
+	}
+
+	return result;
 }
+

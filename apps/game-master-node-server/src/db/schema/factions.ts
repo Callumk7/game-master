@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-	boolean,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -11,14 +10,13 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
-import { notes, permissionEnum } from "./notes";
+import { notes } from "./notes";
 import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", [
 	"public",
 	"private",
 	"viewable",
-	"partial",
 ]);
 
 export const factions = pgTable("factions", {
@@ -84,6 +82,8 @@ export const notesOnFactionsRelations = relations(notesOnFactions, ({ one }) => 
 		references: [factions.id],
 	}),
 }));
+
+export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
 
 export const factionsPermissions = pgTable(
 	"factions_permissions",

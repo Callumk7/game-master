@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
-import { notes, permissionEnum } from "./notes";
+import { notes } from "./notes";
 import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -18,7 +18,6 @@ export const visibilityEnum = pgEnum("visibility", [
 	"public",
 	"private",
 	"viewable",
-	"partial",
 ]);
 
 export const characters = pgTable("characters", {
@@ -115,6 +114,8 @@ export const charactersInFactionsRelations = relations(
 		}),
 	}),
 );
+
+export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
 
 export const charactersPermissions = pgTable(
 	"characters_permissions",
