@@ -1,9 +1,11 @@
 import {
 	createCharacterSchema,
+	createPermissionSchema,
 	duplicateCharacterSchema,
 	updateCharacterSchema,
-    type CharacterWithNotes,
-    type NoteType,
+	type CharacterWithNotes,
+	type CharacterWithPermissions,
+	type NoteType,
 } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -18,6 +20,7 @@ import {
 } from "~/lib/http-helpers";
 import { createCharacterInsert } from "./util";
 import { generateCharacterId } from "~/lib/ids";
+import { createCharacterPermission } from "~/services/permissions";
 
 export const characterRoute = new Hono();
 
@@ -79,8 +82,48 @@ characterRoute.patch("/:charId", async (c) => {
 			.set(data)
 			.where(eq(characters.id, charId))
 			.returning()
-			.then((result) => result[0]);
 		return successResponse(c, charUpdate);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.get("/:charId/permissions", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const result: CharacterWithPermissions | undefined =
+			await db.query.characters.findFirst({
+				where: eq(characters.id, charId),
+				with: {
+					permissions: {
+						columns: {
+							userId: true,
+							permission: true,
+						},
+					},
+				},
+			});
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+
+		return c.json(result)
+	} catch (error) { 
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.post("/:charId/permissions", async (c) => {
+	const charId = c.req.param("charId");
+	const data = await validateOrThrowError(createPermissionSchema, c);
+	try {
+		const newPermission = await createCharacterPermission(
+			data.userId,
+			charId,
+			data.permission,
+		);
+		return successResponse(c, newPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -94,26 +137,26 @@ characterRoute.get("/:charId/notes", async (c) => {
 			with: {
 				notes: {
 					with: {
-						note: true
-					}
-				}
-			}
-		})
+						note: true,
+					},
+				},
+			},
+		});
 		if (!result) {
 			return handleNotFound(c);
 		}
 		const charWithNotes: CharacterWithNotes = {
 			...result,
-			notes: result.notes.map(note => ({
+			notes: result.notes.map((note) => ({
 				...note.note,
-				type: note.note.type as NoteType
+				type: note.note.type as NoteType,
 			})),
-		}
+		};
 		return c.json(charWithNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
-})
+});
 
 characterRoute.post("/:charId/duplicate", async (c) => {
 	const charId = c.req.param("charId");

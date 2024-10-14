@@ -1,17 +1,18 @@
 import {
 	createNoteSchema,
+	createPermissionSchema,
 	duplicateNoteSchema,
 	linkCharactersSchema,
 	linkFactionsSchema,
 	linkNotesSchema,
+	permissionSchema,
 	updateNoteContentSchema,
 	type Id,
-	type Note,
 	type NoteWithPermissions,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { links, notes, notesPermissions } from "~/db/schema/notes";
+import { links, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -24,7 +25,8 @@ import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
-import { usersToGames } from "~/db/schema/games";
+import { createNote } from "./queries";
+import { createNotePermission } from "~/services/permissions";
 
 export const notesRoute = new Hono();
 
@@ -34,77 +36,11 @@ const getNote = async (noteId: Id) => {
 	});
 };
 
-// api.createNote
 notesRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createNoteSchema, c);
 	const newNoteInsert = createNoteInsert(data);
-
-	let newNote: Note;
 	try {
-		const result = await db
-			.insert(notes)
-			.values(newNoteInsert)
-			.returning()
-			.then((result) => result[0]);
-
-		if (!result) {
-			return handleDatabaseError(c);
-		}
-
-		newNote = result;
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-
-	const memberList = await db.query.usersToGames
-		.findMany({
-			where: eq(usersToGames.gameId, newNote.gameId),
-			columns: { userId: true },
-		})
-		.then((result) => result.map((row) => row.userId));
-
-	const permissionsInsert = [];
-	for (const memberId of memberList) {
-		if (memberId !== newNote.ownerId) {
-			if (newNote.visibility === "private") {
-				permissionsInsert.push({
-					noteId: newNote.id,
-					userId: memberId,
-					canView: false,
-					canEdit: false,
-				});
-			}
-
-			if (newNote.visibility === "viewable") {
-				permissionsInsert.push({
-					noteId: newNote.id,
-					userId: memberId,
-					canView: true,
-					canEdit: false,
-				});
-			}
-
-			if (newNote.visibility === "public") {
-				permissionsInsert.push({
-					noteId: newNote.id,
-					userId: memberId,
-					canView: true,
-					canEdit: true,
-				});
-			}
-		}
-	}
-
-	// owner permissions
-	permissionsInsert.push({
-		noteId: newNote.id,
-		userId: newNote.ownerId,
-		canView: true,
-		canEdit: true,
-	});
-
-	try {
-		await db.insert(notesPermissions).values(permissionsInsert);
+		const newNote = await createNote(newNoteInsert);
 		return successResponse(c, newNote);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -185,8 +121,7 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 				permissions: {
 					columns: {
 						userId: true,
-						canView: true,
-						canEdit: true,
+						permission: true,
 					},
 				},
 			},
@@ -196,6 +131,21 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 			return handleNotFound(c);
 		}
 		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/permissions", async (c) => {
+	const noteId = c.req.param("noteId");
+	const data = await validateOrThrowError(createPermissionSchema, c);
+	try {
+		const newPermission = await createNotePermission(
+			data.userId,
+			noteId,
+			data.permission,
+		);
+		return successResponse(c, newPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

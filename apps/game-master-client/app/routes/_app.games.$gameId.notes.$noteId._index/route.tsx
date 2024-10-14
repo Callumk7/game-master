@@ -60,7 +60,6 @@ export const clientLoader = async ({
 
 clientLoader.hydrate = true;
 
-// Update note
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
 	const { noteId } = parseParams(params, {
@@ -145,8 +144,8 @@ export default function NoteIndexRoute() {
 		<>
 			<div className="p-4 space-y-4">
 				<EntityToolbar
-					entityId={note.id}
 					gameId={note.gameId}
+					entityOwnerId={note.ownerId}
 					entityVisibility={note.visibility}
 					permissions={note.permissions}
 				/>
@@ -166,7 +165,6 @@ export default function NoteIndexRoute() {
 				<EditorBody
 					htmlContent={note.htmlContent ?? ""}
 					suggestionItems={suggestionItems}
-					action={`/games/${note.gameId}/notes/${note.id}`}
 				/>
 			</div>
 		</>

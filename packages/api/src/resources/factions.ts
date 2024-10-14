@@ -5,15 +5,38 @@ import type {
 	Faction,
 	FactionWithMembers,
 	FactionWithNotes,
+	FactionWithPermissions,
 	UpdateFactionRequestBody,
 } from "../types/factions.js";
-import type { ServerResponse, Id, BasicServerResponse } from "../types/index.js";
+import type {
+	ServerResponse,
+	Id,
+	BasicServerResponse,
+	CreatePermissionRequestBody,
+	Permission,
+} from "../types/index.js";
 
 export class Factions {
 	constructor(private client: Client) { }
 
 	async getFaction(factionId: Id): Promise<Faction> {
 		return this.client.get<Faction>(`factions/${factionId}`);
+	}
+
+	async getFactionWithPermissions(factionId: Id): Promise<FactionWithPermissions> {
+		return this.client.get<FactionWithPermissions>(
+			`factions/${factionId}/permissions`,
+		);
+	}
+
+	async createFactionPermission(
+		factionId: Id,
+		body: CreatePermissionRequestBody,
+	): Promise<ServerResponse<Permission>> {
+		return this.client.post<ServerResponse<Permission>>(
+			`factions/${factionId}/permissions`,
+			body,
+		);
 	}
 
 	async createFaction(

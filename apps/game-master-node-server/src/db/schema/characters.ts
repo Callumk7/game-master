@@ -18,7 +18,6 @@ export const visibilityEnum = pgEnum("visibility", [
 	"public",
 	"private",
 	"viewable",
-	"partial",
 ]);
 
 export const characters = pgTable("characters", {
@@ -116,6 +115,8 @@ export const charactersInFactionsRelations = relations(
 	}),
 );
 
+export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
+
 export const charactersPermissions = pgTable(
 	"characters_permissions",
 	{
@@ -125,8 +126,7 @@ export const charactersPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		canView: boolean("can_view").notNull(),
-		canEdit: boolean("can_edit").notNull().default(false),
+		permission: permissionEnum("permission").notNull()
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.characterId] }),

@@ -13,19 +13,19 @@ import {
 	DialogTitle,
 } from "./ui/dialog";
 import { type Key, useState } from "react";
-import type { Permission, User, Visibility } from "@repo/api";
+import type { Permission, User, UserPermission, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
 
 interface EntityToolbarProps {
-	entityId: string;
+	entityOwnerId: string;
 	gameId: string;
 	entityVisibility: Visibility;
-	permissions: Permission[];
+	permissions: UserPermission[];
 }
 export function EntityToolbar({
-	entityId,
+	entityOwnerId,
 	gameId,
 	entityVisibility,
 	permissions,
@@ -35,7 +35,14 @@ export function EntityToolbar({
 	const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
 	// fetch game members here, there is no reason that this won't work with each entity
-	const query = useGetGameWithMembers(gameId);
+	const gameWithMembersQuery = useGetGameWithMembers(gameId);
+	let members: User[] = [];
+
+	if (gameWithMembersQuery.status === "success") {
+		members = gameWithMembersQuery.data.members.filter(
+			(member) => member.id !== entityOwnerId,
+		);
+	}
 
 	return (
 		<>
@@ -60,10 +67,9 @@ export function EntityToolbar({
 						</MenuItem>
 					</MenuSection>
 				</JollyMenu>
-				{query.status === "success" ? (
+				{gameWithMembersQuery.status === "success" ? (
 					<SharingPopover
-						members={query.data.members}
-						entityId={entityId}
+						members={members}
 						visibility={entityVisibility}
 						permissions={permissions}
 					/>
@@ -112,55 +118,21 @@ function DuplicateEntityDialog({ isOpen, setIsOpen }: DuplicateEntityDialogProps
 }
 
 interface SharingPopoverProps {
-	entityId: string;
 	members: User[];
 	visibility: Visibility;
-	permissions: Permission[];
+	permissions: UserPermission[];
 }
 
-function SharingPopover({
-	members,
-	entityId,
-	visibility,
-	permissions,
-}: SharingPopoverProps) {
+function SharingPopover({ members, visibility, permissions }: SharingPopoverProps) {
 	const fetcher = useFetcher();
-	const [globalVisibility, setGlobalVisibility] = useState<Visibility>(visibility);
-	const [uiPermissions, setUiPermissions] = useState<Permission[]>(permissions);
 
-	const handleChangeVisibility = (visibility: Key) => {
-		setGlobalVisibility(visibility as Visibility);
-		if (visibility === "private") {
-			const newPermissions = uiPermissions.map((permission) => ({
-				...permission,
-				canView: false,
-				canEdit: false,
-			}));
-			setUiPermissions(newPermissions);
-		}
-		if (visibility === "public") {
-			const newPermissions = uiPermissions.map((permission) => ({
-				...permission,
-				canView: true,
-				canEdit: true,
-			}));
-			setUiPermissions(newPermissions);
-		}
-		if (visibility === "viewable") {
-			const newPermissions = uiPermissions.map((permission) => ({
-				...permission,
-				canView: true,
-				canEdit: false,
-			}));
-			setUiPermissions(newPermissions);
-		}
+	// TODO: Handle state updates and use context to update the component properly
+	const handleChangeVisibility = (key: Key) => {
+		fetcher.submit(
+			{ visibility: key.toString() },
+			{ method: "patch", action: "visibility" },
+		);
 	};
-
-  const handlePermissionChange = (permission: Key) => {
-    // review the collection api from adobe components because 
-    // we should be able to get all the data that we need in this 
-    // handler
-  }
 
 	return (
 		<PopoverTrigger>
@@ -172,10 +144,14 @@ function SharingPopover({
 							<DialogTitle>Sharing Menu</DialogTitle>
 						</DialogHeader>
 						<GlobalVisibilityCombobox
-							visibility={globalVisibility}
+							visibility={visibility}
 							handleChangeVisibility={handleChangeVisibility}
 						/>
-						<MemberSharingList members={members} permissions={uiPermissions} />
+						<MemberSharingList
+							members={members}
+							permissions={permissions}
+							visibility={visibility}
+						/>
 					</div>
 				</PopoverDialog>
 			</Popover>
@@ -207,16 +183,11 @@ function GlobalVisibilityCombobox({
 
 interface MemberSharingListProps {
 	members: User[];
-	permissions: Permission[];
+	permissions: UserPermission[];
+	visibility: Visibility;
 }
 
-function MemberSharingList({ members, permissions }: MemberSharingListProps) {
-	// WARN: absolutely should not have this
-	const placeholderPermission: Permission = {
-		userId: "",
-		canView: false,
-		canEdit: false,
-	};
+function MemberSharingList({ members, permissions, visibility }: MemberSharingListProps) {
 	return (
 		<div className="grid divide-y">
 			{members.map((member) => {
@@ -225,7 +196,8 @@ function MemberSharingList({ members, permissions }: MemberSharingListProps) {
 					<MemberSharingItem
 						key={member.id}
 						member={member}
-						permission={permission ?? placeholderPermission}
+						permission={permission}
+						visibility={visibility}
 					/>
 				);
 			})}
@@ -235,22 +207,48 @@ function MemberSharingList({ members, permissions }: MemberSharingListProps) {
 
 interface MemberSharingItemProps {
 	member: User;
-	permission: Permission;
+	permission: UserPermission | undefined;
+	visibility: Visibility;
 }
 
-function MemberSharingItem({ member, permission }: MemberSharingItemProps) {
-	const selectedKey = permission.canEdit
-		? "canEdit"
-		: permission.canView
-			? "canView"
-			: "blocked";
+function MemberSharingItem({ member, permission, visibility }: MemberSharingItemProps) {
+	const getInitialPermission = (): Permission => {
+		if (permission?.permission) {
+			return permission.permission;
+		}
+
+		switch (visibility) {
+			case "public":
+				return "edit";
+			case "viewable":
+				return "view";
+			default:
+				return "none";
+		}
+	};
+	const [selectedKey, setSelectedKey] = useState<Permission>(getInitialPermission());
+
+	const fetcher = useFetcher();
+
+	const handleSelectionChange = (key: Key) => {
+		setSelectedKey(key.toString() as Permission);
+		fetcher.submit(
+			{ userId: member.id, permission: key.toString() },
+			{ method: "patch", action: "permissions" },
+		);
+	};
+
 	return (
 		<div className="w-full p-2 flex justify-between items-center">
 			<span className="text-sm">{member.username}</span>
-			<JollySelect selectedKey={selectedKey}>
-				<SelectItem id="canView">Can View</SelectItem>
-				<SelectItem id="canEdit">Can Edit</SelectItem>
-				<SelectItem id="blocked">Blocked</SelectItem>
+			<JollySelect
+				selectedKey={selectedKey}
+				onSelectionChange={handleSelectionChange}
+				className={"min-w-28"}
+			>
+				<SelectItem id="view">Can View</SelectItem>
+				<SelectItem id="edit">Can Edit</SelectItem>
+				<SelectItem id="none">Blocked</SelectItem>
 			</JollySelect>
 		</div>
 	);

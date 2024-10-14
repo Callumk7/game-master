@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-	boolean,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -18,7 +17,6 @@ export const visibilityEnum = pgEnum("visibility", [
 	"public",
 	"private",
 	"viewable",
-	"partial",
 ]);
 
 export const factions = pgTable("factions", {
@@ -85,6 +83,8 @@ export const notesOnFactionsRelations = relations(notesOnFactions, ({ one }) => 
 	}),
 }));
 
+export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
+
 export const factionsPermissions = pgTable(
 	"factions_permissions",
 	{
@@ -94,8 +94,7 @@ export const factionsPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		canView: boolean("can_view").notNull(),
-		canEdit: boolean("can_edit").notNull().default(false),
+		permission: permissionEnum("permission").notNull()
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.factionId] }),

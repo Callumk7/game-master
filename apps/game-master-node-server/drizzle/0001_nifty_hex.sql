@@ -1,1 +1,0 @@
-ALTER TABLE "users_to_games" ALTER COLUMN "role" SET NOT NULL;
