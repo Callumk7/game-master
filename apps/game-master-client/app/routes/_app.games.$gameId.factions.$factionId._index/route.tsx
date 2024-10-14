@@ -65,7 +65,7 @@ export default function FactionDetailRoute() {
 				buttonLabel={"Edit game name"}
 			/>
 			<EditorBody
-				htmlContent={factionDetails.htmlContent}
+				htmlContent={factionDetails.htmlContent ?? ""}
 				suggestionItems={suggestionItems}
 			/>
 		</div>
