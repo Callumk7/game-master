@@ -1,11 +1,14 @@
 import {
 	createNoteSchema,
+	createPermissionSchema,
 	duplicateNoteSchema,
 	linkCharactersSchema,
 	linkFactionsSchema,
 	linkNotesSchema,
+	permissionSchema,
 	updateNoteContentSchema,
 	type Id,
+	type NoteWithPermissions,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -22,6 +25,8 @@ import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
+import { createNote } from "./queries";
+import { createNotePermission } from "~/services/permissions";
 
 export const notesRoute = new Hono();
 
@@ -31,18 +36,11 @@ const getNote = async (noteId: Id) => {
 	});
 };
 
-// api.createNote
 notesRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createNoteSchema, c);
-
 	const newNoteInsert = createNoteInsert(data);
-
 	try {
-		const newNote = await db
-			.insert(notes)
-			.values(newNoteInsert)
-			.returning()
-			.then((result) => result[0]);
+		const newNote = await createNote(newNoteInsert);
 		return successResponse(c, newNote);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -109,6 +107,45 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 			.returning()
 			.then((result) => result[0]);
 		return successResponse(c, newNote);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.get("/:noteId/permissions", async (c) => {
+	const noteId = c.req.param("noteId");
+	try {
+		const result: NoteWithPermissions | undefined = await db.query.notes.findFirst({
+			where: eq(notes.id, noteId),
+			with: {
+				permissions: {
+					columns: {
+						userId: true,
+						permission: true,
+					},
+				},
+			},
+		});
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/permissions", async (c) => {
+	const noteId = c.req.param("noteId");
+	const data = await validateOrThrowError(createPermissionSchema, c);
+	try {
+		const newPermission = await createNotePermission(
+			data.userId,
+			noteId,
+			data.permission,
+		);
+		return successResponse(c, newPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

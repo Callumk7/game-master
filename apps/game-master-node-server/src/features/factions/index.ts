@@ -1,7 +1,9 @@
 import {
 	createFactionSchema,
+	createPermissionSchema,
 	duplicateFactionSchema,
 	updateFactionSchema,
+	type FactionWithPermissions,
 } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -16,6 +18,7 @@ import {
 } from "~/lib/http-helpers";
 import { createFactionInsert } from "./util";
 import { generateFactionId } from "~/lib/ids";
+import { createFactionPermission } from "~/services/permissions";
 
 export const factionRoute = new Hono();
 
@@ -77,7 +80,6 @@ factionRoute.patch("/:factionId", async (c) => {
 			.set(data)
 			.where(eq(factions.id, factionId))
 			.returning()
-			.then((result) => result[0]);
 		return successResponse(c, factionUpdate);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -104,6 +106,47 @@ factionRoute.post("/:factionId/duplicate", async (c) => {
 			.returning()
 			.then((result) => result[0]);
 		return successResponse(c, newFaction);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.get("/:factionId/permissions", async (c) => {
+	const factionId = c.req.param("factionId");
+	try {
+		const result: FactionWithPermissions | undefined =
+			await db.query.factions.findFirst({
+				where: eq(factions.id, factionId),
+				with: {
+					permissions: {
+						columns: {
+							userId: true,
+							permission: true,
+						},
+					},
+				},
+			});
+
+		if (!result) {
+			return handleNotFound(c);
+		}
+
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.post("/:factionId/permissions", async (c) => {
+	const factionId = c.req.param("factionId");
+	const data = await validateOrThrowError(createPermissionSchema, c);
+	try {
+		const newPermission = await createFactionPermission(
+			data.userId,
+			factionId,
+			data.permission,
+		);
+		return successResponse(c, newPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

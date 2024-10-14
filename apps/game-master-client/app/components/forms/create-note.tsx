@@ -12,7 +12,7 @@ import {
 } from "~/components/ui/dialog";
 import { JollyTextField } from "~/components/ui/textfield";
 import { JollySelect, SelectItem } from "../ui/select";
-import type { NoteType } from "@repo/api";
+import type { Visibility, NoteType, CreateNoteRequestBody } from "@repo/api";
 
 interface CreateNoteProps {
   gameId: string;
@@ -47,6 +47,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
   const editor = useDefaultEditor();
   const [name, setName] = useState("");
   const [type, setType] = useState<NoteType>("note");
+  const [visibility, setVisibility] = useState<Visibility>("private");
   const submit = useSubmit();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -58,11 +59,22 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
     const content = editor.getText();
     const htmlContent = editor.getHTML();
 
-    submit({ content, htmlContent, name, gameId, type }, { method: "post" });
+    const validData: Omit<CreateNoteRequestBody, "ownerId"> = {
+      content,
+      htmlContent,
+      name,
+      gameId,
+      type,
+      visibility,
+    };
+
+    console.log(validData)
+
+    submit(validData, { method: "post" });
   };
   return (
     <Form method="post" onSubmit={handleSubmit}>
-      <div className="grid gap-4 py-4 px-1">
+      <div className="grid gap-4 py-4 px-1 h-full">
         <JollyTextField
           autoFocus
           value={name}
@@ -70,19 +82,32 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
           label="Title"
           isRequired
         />
-        <JollySelect
-          label="Note Type"
-          defaultSelectedKey={"note"}
-          onSelectionChange={(key) => setType(key as NoteType)}
-        >
-          <SelectItem id="note">Note</SelectItem>
-          <SelectItem id="character">Character</SelectItem>
-          <SelectItem id="faction">Faction</SelectItem>
-          <SelectItem id="location">Location</SelectItem>
-          <SelectItem id="item">Item</SelectItem>
-          <SelectItem id="quest">Quest</SelectItem>
-        </JollySelect>
-        <EditorWithControls editor={editor} bordered label="Body" className="h-[70vh]" />
+        <div className="flex w-full justify-between gap-4">
+          <JollySelect
+            className={"flex-1"}
+            label="Note Type"
+            defaultSelectedKey={"note"}
+            onSelectionChange={(key) => setType(key as NoteType)}
+          >
+            <SelectItem id="note">Note</SelectItem>
+            <SelectItem id="character">Character</SelectItem>
+            <SelectItem id="faction">Faction</SelectItem>
+            <SelectItem id="location">Location</SelectItem>
+            <SelectItem id="item">Item</SelectItem>
+            <SelectItem id="quest">Quest</SelectItem>
+          </JollySelect>
+          <JollySelect
+            className={"flex-1"}
+            label="Visibility"
+            defaultSelectedKey={"private"}
+            onSelectionChange={(key) => setVisibility(key as Visibility)}
+          >
+            <SelectItem id="private">Private</SelectItem>
+            <SelectItem id="viewable">Everyone can view</SelectItem>
+            <SelectItem id="public">Everyone can edit</SelectItem>
+          </JollySelect>
+        </div>
+        <EditorWithControls editor={editor} bordered label="Body" className="min-h-[50vh] h-full" />
       </div>
       <DialogFooter>
         <Button onPress={close} type="submit">
