@@ -103,6 +103,7 @@ export const folders = pgTable("folders", {
 	ownerId: text("owner_id")
 		.notNull()
 		.references(() => users.id),
+	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
 export const folderRelations = relations(folders, ({ one, many }) => ({
@@ -119,6 +120,13 @@ export const folderRelations = relations(folders, ({ one, many }) => ({
 	}),
 	children: many(folders),
 }));
+
+export const databaseSelectFolderSchema = createSelectSchema(folders);
+export type DatabaseFolder = z.infer<typeof databaseSelectFolderSchema>;
+
+export const databaseInsertFolderSchema = createInsertSchema(folders);
+export type InsertDatabaseFolder = z.infer<typeof databaseInsertFolderSchema>;
+
 
 export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
 
