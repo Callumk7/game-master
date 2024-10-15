@@ -117,8 +117,9 @@ export const folderRelations = relations(folders, ({ one, many }) => ({
 	parent: one(folders, {
 		fields: [folders.parentFolderId],
 		references: [folders.id],
+		relationName: "parent"
 	}),
-	children: many(folders),
+	children: many(folders, {relationName: "parent"}),
 }));
 
 export const databaseSelectFolderSchema = createSelectSchema(folders);

@@ -1,6 +1,12 @@
-import { FilePlusIcon } from "@radix-ui/react-icons";
-import type { BasicEntity, EntityType, Game, GameWithDatedEntities } from "@repo/api";
-import { Group } from "react-aria-components";
+import { ChevronDownIcon, FilePlusIcon } from "@radix-ui/react-icons";
+import type {
+	BasicEntity,
+	EntityType,
+	FolderWithDatedEntities,
+	Game,
+	GameWithDatedEntities,
+} from "@repo/api";
+import { Collection, Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
@@ -26,6 +32,13 @@ import {
 import { JollyTextField } from "~/components/ui/textfield";
 import { Button } from "~/components/ui/button";
 import { Form } from "@remix-run/react";
+
+// Temp tree imports, will create a component later
+import {
+	UNSTABLE_Tree as Tree,
+	UNSTABLE_TreeItem as TreeItem,
+	UNSTABLE_TreeItemContent as TreeItemContent,
+} from "react-aria-components";
 
 interface GameSidebarProps {
 	gamesWithAllEntities: GameWithDatedEntities[];
@@ -69,14 +82,7 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
 					itemType="factions"
 					selectedGame={selectedGame}
 				/>
-				{gameFolders.map((folder) => (
-					<div key={folder.id}>
-						<p>{folder.name}</p>
-						{folder.notes.map((note) => (
-							<p key={note.id}>{note.name}</p>
-						))}
-					</div>
-				))}
+        <FolderTree folders={gameFolders} />
 			</div>
 		</aside>
 	);
@@ -133,7 +139,7 @@ interface EntityGroupProps {
 	itemType: EntityType;
 }
 
-export function EntityGroup({ title, items, selectedGame, itemType }: EntityGroupProps) {
+function EntityGroup({ title, items, selectedGame, itemType }: EntityGroupProps) {
 	return (
 		<div className="w-full py-1">
 			<Text variant={"label"} id="title">
@@ -152,6 +158,31 @@ export function EntityGroup({ title, items, selectedGame, itemType }: EntityGrou
 				))}
 			</Group>
 		</div>
+	);
+}
+
+interface FolderTreeProps {
+	folders: FolderWithDatedEntities[];
+}
+function FolderTree({ folders }: FolderTreeProps) {
+	return (
+		<Tree items={folders}>
+			{function renderItems(item) {
+				return (
+					<TreeItem textValue={item.name}>
+						<TreeItemContent>
+							{item.children?.length ? (
+								<Button size={"icon"}>
+									<ChevronDownIcon />
+								</Button>
+							) : null}
+            {item.name}
+						</TreeItemContent>
+						<Collection items={item.children}>{renderItems}</Collection>
+					</TreeItem>
+				);
+			}}
+		</Tree>
 	);
 }
 
