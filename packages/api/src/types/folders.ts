@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
-import type { Id } from "./index.js";
+import type { Id, Visibility } from "./index.js";
 import type { Note } from "./notes.js";
 
 export interface Folder {
@@ -12,10 +12,11 @@ export interface Folder {
 	parentFolderId?: Id | null;
 	gameId: Id;
 	ownerId: Id;
+	visibility: Visibility;
 }
 
 export interface FolderWithChildren extends Folder {
-	folders: FolderWithChildren[];
+	children?: FolderWithChildren[];
 	notes: Note[];
 	characters: Character[];
 	factions: Faction[];
