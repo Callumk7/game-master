@@ -1,5 +1,6 @@
 import {
 	createFolderSchema,
+	folderInteractionSchema,
 	updateFolderSchema,
 	type FolderWithChildren,
 } from "@repo/api/dist/types/folders";
@@ -12,9 +13,11 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createFolderInsert } from "./utils";
-import { folders } from "~/db/schema/notes";
+import { folders, notes } from "~/db/schema/notes";
 import { db } from "~/db";
 import { eq } from "drizzle-orm";
+import { characters } from "~/db/schema/characters";
+import { factions } from "~/db/schema/factions";
 
 export const folderRoute = new Hono();
 
@@ -88,6 +91,39 @@ folderRoute.patch("/:folderId", async (c) => {
 			.returning();
 		return successResponse(c, updatedFolder);
 	} catch (error) {
-		return handleDatabaseError(c, error)
+		return handleDatabaseError(c, error);
+	}
+});
+
+folderRoute.post("/:folderId/notes", async (c) => {
+	const folderId = c.req.param("folderId");
+	const { entityId } = await validateOrThrowError(folderInteractionSchema, c);
+	try {
+		await db.update(notes).set({ folderId }).where(eq(notes.id, entityId));
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+folderRoute.post("/:folderId/characters", async (c) => {
+	const folderId = c.req.param("folderId");
+	const { entityId } = await validateOrThrowError(folderInteractionSchema, c);
+	try {
+		await db.update(characters).set({ folderId }).where(eq(characters.id, entityId));
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+folderRoute.post("/:folderId/factions", async (c) => {
+	const folderId = c.req.param("folderId");
+	const { entityId } = await validateOrThrowError(folderInteractionSchema, c);
+	try {
+		await db.update(factions).set({ folderId }).where(eq(factions.id, entityId));
+		return basicSuccessResponse(c);
+	} catch (error) {
+		return handleDatabaseError(c, error);
 	}
 });
