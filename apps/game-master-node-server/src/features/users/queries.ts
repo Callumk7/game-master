@@ -73,7 +73,7 @@ export const getSidebarData = async (
 									name: true,
 									gameId: true,
 									createdAt: true,
-									updatedAt: true
+									updatedAt: true,
 								},
 							},
 							characters: {
@@ -82,7 +82,7 @@ export const getSidebarData = async (
 									name: true,
 									gameId: true,
 									createdAt: true,
-									updatedAt: true
+									updatedAt: true,
 								},
 							},
 							factions: {
@@ -91,7 +91,38 @@ export const getSidebarData = async (
 									name: true,
 									gameId: true,
 									createdAt: true,
-									updatedAt: true
+									updatedAt: true,
+								},
+							},
+							folders: {
+								with: {
+									notes: {
+										columns: {
+											id: true,
+											name: true,
+											gameId: true,
+											createdAt: true,
+											updatedAt: true,
+										},
+									},
+									characters: {
+										columns: {
+											id: true,
+											name: true,
+											gameId: true,
+											createdAt: true,
+											updatedAt: true,
+										},
+									},
+									factions: {
+										columns: {
+											id: true,
+											name: true,
+											gameId: true,
+											createdAt: true,
+											updatedAt: true,
+										},
+									},
 								},
 							},
 						},

@@ -1,4 +1,4 @@
-import { newUserSchema } from "@repo/api";
+import { newUserSchema, type UserWithSidebarData } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -110,12 +110,13 @@ usersRoute.get("/:userId/games", async (c) => {
 
 	if (withData === "sidebar") {
 		try {
-			const sidebarData = await getSidebarData(userId);
+			const sidebarData: UserWithSidebarData | undefined = await getSidebarData(userId);
 			if (!sidebarData) {
 				return handleNotFound(c);
 			}
 			return c.json(sidebarData);
 		} catch (error) {
+			console.log(error)
 			return handleDatabaseError(c, error);
 		}
 	}

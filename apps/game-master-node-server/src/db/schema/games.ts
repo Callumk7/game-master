@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
-import { notes } from "./notes";
+import { folders, notes } from "./notes";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters } from "./characters";
@@ -33,7 +33,8 @@ export const gamesRelations = relations(games, ({ one, many }) => ({
 	members: many(usersToGames),
 	notes: many(notes),
 	characters: many(characters),
-	factions: many(factions)
+	factions: many(factions),
+	folders: many(folders)
 }));
 
 export const databaseSelectGameSchema = createSelectSchema(games);

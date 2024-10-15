@@ -50,6 +50,10 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 		fields: [factions.gameId],
 		references: [games.id],
 	}),
+	folder: one(folders, {
+		fields: [factions.folderId],
+		references: [folders.id]
+	}),
 	owner: one(users, {
 		fields: [factions.ownerId],
 		references: [users.id],

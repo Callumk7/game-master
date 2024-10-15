@@ -55,6 +55,10 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 		fields: [characters.ownerId],
 		references: [users.id],
 	}),
+	folder: one(folders, {
+		fields: [characters.folderId],
+		references: [folders.id]
+	}),
 	factions: many(charactersInFactions), // ...a member of
 	permissions: many(charactersPermissions),
 }));

@@ -1,17 +1,16 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { Outlet, useHref, useNavigate, useRouteError } from "@remix-run/react";
-import { RouterProvider } from "react-aria-components";
-import { validateUser } from "~/lib/auth.server";
-import {
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
-} from "remix-typedjson";
-import { GameSidebar } from "./components/game-sidebar";
-import { api } from "~/lib/api.server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GlobalStateProvider } from "~/store/global";
+import { RouterProvider } from "react-aria-components";
+import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { Text } from "~/components/ui/typeography";
+import { api } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
+import { GlobalStateProvider } from "~/store/global";
+import { GameSidebar } from "./components/game-sidebar";
 
 export const meta: MetaFunction = () => {
   return [
@@ -29,6 +28,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return typedjson({ sidebarData });
 };
+
 
 export default function AppLayout() {
   const { sidebarData } = useTypedLoaderData<typeof loader>();
@@ -55,9 +55,7 @@ export default function AppLayout() {
 export function useAppData() {
   const data = useTypedRouteLoaderData<typeof loader>("routes/_app");
   if (data === undefined) {
-    throw new Error(
-      "useAppData must be used within the _app route or its children"
-    );
+    throw new Error("useAppData must be used within the _app route or its children");
   }
   return data;
 }
