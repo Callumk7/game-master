@@ -8,6 +8,7 @@ import type {
 	FactionWithPermissions,
 	UpdateFactionRequestBody,
 } from "../types/factions.js";
+import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
 	ServerResponse,
 	Id,
@@ -87,5 +88,10 @@ export class Factions {
 
 	async getFactionWithMembers(factionId: Id): Promise<FactionWithMembers> {
 		return this.client.get<FactionWithMembers>(`factions/${factionId}/members`);
+	}
+
+	async moveToFolder(factionId: Id, folderId: Id): Promise<BasicServerResponse> {
+		const body: FolderInteractionRequestBody = { entityId: factionId };
+		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
 }

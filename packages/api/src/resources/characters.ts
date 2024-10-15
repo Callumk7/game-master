@@ -7,6 +7,7 @@ import type {
 	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
+import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
@@ -91,5 +92,10 @@ export class Characters {
 	// DONE
 	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
 		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`);
+	}
+
+	async moveToFolder(charId: Id, folderId: Id): Promise<BasicServerResponse> {
+		const body: FolderInteractionRequestBody = { entityId: charId };
+		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
 }

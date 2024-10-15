@@ -1,6 +1,7 @@
 import type { Client } from "../client.js";
 import type { Character } from "../types/characters.js";
 import type { Faction } from "../types/factions.js";
+import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
@@ -158,5 +159,10 @@ export class Notes {
 				factionIds,
 			},
 		);
+	}
+
+	async moveToFolder(noteId: Id, folderId: Id): Promise<BasicServerResponse> {
+		const body: FolderInteractionRequestBody = { entityId: noteId };
+		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
 }
