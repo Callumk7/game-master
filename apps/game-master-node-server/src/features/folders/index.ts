@@ -3,7 +3,7 @@ import {
 	folderInteractionSchema,
 	updateFolderSchema,
 	type FolderWithChildren,
-} from "@repo/api/dist/types/folders";
+} from "@repo/api";
 import { Hono } from "hono";
 import {
 	basicSuccessResponse,
