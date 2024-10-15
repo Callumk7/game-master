@@ -15,6 +15,13 @@
       "when": 1728915917668,
       "tag": "0001_quick_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728992105424,
+      "tag": "0002_lethal_invaders",
+      "breakpoints": true
     }
   ]
 }
