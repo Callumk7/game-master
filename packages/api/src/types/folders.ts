@@ -37,3 +37,8 @@ export const updateFolderSchema = z.object({
 	ownerId: z.string().optional(),
 })
 export type UpdateFolderRequestBody = z.infer<typeof updateFolderSchema>;
+
+export const folderInteractionSchema = z.object({
+	entityId: z.string()
+})
+export type FolderInteractionRequestBody = z.infer<typeof folderInteractionSchema>;
