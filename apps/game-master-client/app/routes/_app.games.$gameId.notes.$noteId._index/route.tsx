@@ -21,6 +21,7 @@ import { OptionalEntitySchema } from "types/schemas";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { useAppData } from "../_app/route";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -28,8 +29,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 	});
 
 	const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(noteId);
+	const folders = await api.folders.getGameFolders(note.gameId);
 
-	return typedjson({ note, linkedNotes, linkedChars, linkedFactions });
+	return typedjson({ note, linkedNotes, linkedChars, linkedFactions, folders });
 };
 
 let isInitialRequest = true;
@@ -136,7 +138,7 @@ export async function clientAction({ params, serverAction }: ClientActionFunctio
 }
 
 export default function NoteIndexRoute() {
-	const { note } = useTypedLoaderData<typeof loader>();
+	const { note, folders } = useTypedLoaderData<typeof loader>();
 
 	const { suggestionItems } = useGameData();
 
@@ -148,6 +150,7 @@ export default function NoteIndexRoute() {
 					entityOwnerId={note.ownerId}
 					entityVisibility={note.visibility}
 					permissions={note.permissions}
+					folders={folders}
 				/>
 				<EditableText
 					method="patch"
