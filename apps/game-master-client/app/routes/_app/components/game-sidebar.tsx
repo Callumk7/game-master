@@ -6,7 +6,7 @@ import type {
 	Game,
 	GameWithDatedEntities,
 } from "@repo/api";
-import { Collection, Group } from "react-aria-components";
+import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
