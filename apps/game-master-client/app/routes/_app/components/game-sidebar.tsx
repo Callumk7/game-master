@@ -32,13 +32,9 @@ import {
 import { JollyTextField } from "~/components/ui/textfield";
 import { Button } from "~/components/ui/button";
 import { Form } from "@remix-run/react";
-
-// Temp tree imports, will create a component later
-import {
-	UNSTABLE_Tree as Tree,
-	UNSTABLE_TreeItem as TreeItem,
-	UNSTABLE_TreeItemContent as TreeItemContent,
-} from "react-aria-components";
+import { Tree, TreeItem, TreeItemContent } from "~/components/ui/tree";
+import { ListBox } from "~/components/ui/list-box";
+import { Checkbox } from "~/components/ui/checkbox";
 
 interface GameSidebarProps {
 	gamesWithAllEntities: GameWithDatedEntities[];
@@ -82,7 +78,7 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
 					itemType="factions"
 					selectedGame={selectedGame}
 				/>
-        <FolderTree folders={gameFolders} />
+				<FolderTree folders={gameFolders} />
 			</div>
 		</aside>
 	);
@@ -165,20 +161,26 @@ interface FolderTreeProps {
 	folders: FolderWithDatedEntities[];
 }
 function FolderTree({ folders }: FolderTreeProps) {
+	console.log(folders);
 	return (
 		<Tree items={folders}>
 			{function renderItems(item) {
 				return (
-					<TreeItem textValue={item.name}>
-						<TreeItemContent>
+					<TreeItem
+						textValue={item.name}
+						itemChildren={item.children}
+						renderFunction={renderItems}
+					>
+						<div className="flex w-full gap-2 items-center">
 							{item.children?.length ? (
-								<Button size={"icon"}>
+								<Button size={"icon"} variant={"ghost"} slot="chevron">
 									<ChevronDownIcon />
 								</Button>
 							) : null}
-            {item.name}
-						</TreeItemContent>
-						<Collection items={item.children}>{renderItems}</Collection>
+                <Link href="/" variant={"link"}>
+                  {item.name}
+                </Link>
+						</div>
 					</TreeItem>
 				);
 			}}
