@@ -21,7 +21,6 @@ import { OptionalEntitySchema } from "types/schemas";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { useAppData } from "../_app/route";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
