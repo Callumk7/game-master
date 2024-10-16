@@ -28,4 +28,8 @@ export class Folders {
 	async deleteFolder(folderId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(`folders/${folderId}`);
 	}
+
+	async getGameFolders(gameId: Id): Promise<Folder[]> {
+		return this.client.get<Folder[]>(`games/${gameId}/folders`)
+	}
 }
