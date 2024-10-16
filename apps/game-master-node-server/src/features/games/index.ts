@@ -11,7 +11,7 @@ import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
 import { games, usersToGames } from "~/db/schema/games";
-import { notes } from "~/db/schema/notes";
+import { folders, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -151,6 +151,10 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 	}
 });
 
+////////////////////////////////////////////////////////////////////////////////
+//                                NOTE STUFF
+////////////////////////////////////////////////////////////////////////////////
+
 gamesRoute.get("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
 	try {
@@ -228,6 +232,22 @@ gamesRoute.get("/:gameId/factions", async (c) => {
 			where: eq(factions.gameId, gameId),
 		});
 		return c.json(gameFactions);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Folder Stuff
+////////////////////////////////////////////////////////////////////////////////
+
+gamesRoute.get("/:gameId/folders", async (c) => {
+	const gameId = c.req.param("gameId");
+	try {
+		const gameFolders = await db.query.folders.findMany({
+			where: eq(folders.gameId, gameId),
+		});
+		return c.json(gameFolders);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
