@@ -13,7 +13,7 @@ import {
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
+import { getGameFolderTree, getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
 
 export const usersRoute = new Hono();
 
@@ -114,6 +114,7 @@ usersRoute.get("/:userId/games", async (c) => {
 			if (!sidebarData) {
 				return handleNotFound(c);
 			}
+			console.dir(sidebarData, {depth: null})
 			return c.json(sidebarData);
 		} catch (error) {
 			console.log(error)
