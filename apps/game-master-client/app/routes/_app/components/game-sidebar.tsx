@@ -76,7 +76,7 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
 					itemType="factions"
 					selectedGame={selectedGame}
 				/>
-				<FolderTree folders={gameFolders} />
+				<FolderTree folders={gameFolders} gameId={selectedGame} />
 			</div>
 		</aside>
 	);
@@ -155,13 +155,51 @@ function EntityGroup({ title, items, selectedGame, itemType }: EntityGroupProps)
 	);
 }
 
+type TreeEntry = {
+	id: string;
+	name: string;
+	type: EntityType | "folders";
+	children?: TreeEntry[] | undefined;
+};
+
 interface FolderTreeProps {
+  gameId: string;
 	folders: FolderWithDatedEntities[];
 }
-function FolderTree({ folders }: FolderTreeProps) {
-	console.log(folders);
+function FolderTree({ folders, gameId }: FolderTreeProps) {
+	const mapFolderToTree = (folder: FolderWithDatedEntities): TreeEntry => {
+		const children: TreeEntry[] = [
+			...folder.notes.map(({ id, name }) => ({
+				id,
+				name,
+				type: "notes" as const,
+				children: [],
+			})),
+			...folder.characters.map(({ id, name }) => ({
+				id,
+				name,
+				type: "characters" as const,
+				children: [],
+			})),
+			...folder.factions.map(({ id, name }) => ({
+				id,
+				name,
+				type: "factions" as const,
+				children: [],
+			})),
+			...(folder.children?.map(mapFolderToTree) || []),
+		];
+
+		return { id: folder.id, name: folder.name, type: "folders" as const, children };
+	};
+
+	const mappedFolders: TreeEntry[] = [];
+	for (const folder of folders) {
+		mappedFolders.push(mapFolderToTree(folder));
+	}
+
 	return (
-		<Tree items={folders}>
+		<Tree items={mappedFolders}>
 			{function renderItems(item) {
 				return (
 					<TreeItem
@@ -175,9 +213,9 @@ function FolderTree({ folders }: FolderTreeProps) {
 									<ChevronDownIcon />
 								</Button>
 							) : null}
-                <Link href="/" variant={"link"}>
-                  {item.name}
-                </Link>
+							<Link href={`/games/${gameId}/${item.type}/${item.id}`} variant={"link"}>
+								{item.name}
+							</Link>
 						</div>
 					</TreeItem>
 				);
