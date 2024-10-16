@@ -13,7 +13,7 @@ import {
 	DialogTitle,
 } from "./ui/dialog";
 import { type Key, useState } from "react";
-import type { Permission, User, UserPermission, Visibility } from "@repo/api";
+import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
@@ -23,12 +23,14 @@ interface EntityToolbarProps {
 	gameId: string;
 	entityVisibility: Visibility;
 	permissions: UserPermission[];
+	folders: Folder[] | undefined;
 }
 export function EntityToolbar({
 	entityOwnerId,
 	gameId,
 	entityVisibility,
 	permissions,
+	folders,
 }: EntityToolbarProps) {
 	const submit = useSubmit();
 	const navigate = useNavigate();
@@ -78,6 +80,7 @@ export function EntityToolbar({
 						Sharing
 					</Button>
 				)}
+				{folders ? <FolderMenu folders={folders} /> : null}
 			</Toolbar>
 			<DuplicateEntityDialog
 				isOpen={isDuplicateDialogOpen}
@@ -251,5 +254,21 @@ function MemberSharingItem({ member, permission, visibility }: MemberSharingItem
 				<SelectItem id="none">Blocked</SelectItem>
 			</JollySelect>
 		</div>
+	);
+}
+
+interface FolderMenuProps {
+	folders: Folder[];
+}
+function FolderMenu({ folders }: FolderMenuProps) {
+	const submit = useSubmit();
+	return (
+		<JollyMenu items={folders} label={"Move..."} variant={"outline"}>
+			{(item) => (
+				<MenuItem onAction={() => submit({ folderId: item.id }, { method: "patch" })}>
+					{item.name}
+				</MenuItem>
+			)}
+		</JollyMenu>
 	);
 }
