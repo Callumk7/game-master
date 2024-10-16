@@ -11,6 +11,7 @@ export interface Faction {
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
+	folderId: Id | null;
 	gameId: Id;
 	leaderId: Id | null;
 	visibility: Visibility; 
@@ -46,6 +47,7 @@ export const updateFactionSchema = z.object({
 	htmlContent: z.string().optional(),
 	coverImageUrl: z.string().optional(),
 	leaderId: z.string().optional(),
+	folderId: z.string().optional(),
 	visibility: visibilitySchema.optional()
 })
 export type UpdateFactionRequestBody = z.infer<typeof updateFactionSchema>;

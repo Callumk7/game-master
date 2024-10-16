@@ -45,6 +45,7 @@ export const updateNoteContentSchema = z.object({
 	htmlContent: z.string().optional(),
 	content: z.string().optional(),
 	type: noteTypeSchema.optional(),
+	folderId: z.string().optional(),
 	visibility: visibilitySchema.optional()
 });
 export type UpdateNoteContentRequestBody = z.infer<typeof updateNoteContentSchema>;
