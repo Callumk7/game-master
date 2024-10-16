@@ -32,9 +32,7 @@ import {
 import { JollyTextField } from "~/components/ui/textfield";
 import { Button } from "~/components/ui/button";
 import { Form } from "@remix-run/react";
-import { Tree, TreeItem, TreeItemContent } from "~/components/ui/tree";
-import { ListBox } from "~/components/ui/list-box";
-import { Checkbox } from "~/components/ui/checkbox";
+import { Tree, TreeItem } from "~/components/ui/tree";
 
 interface GameSidebarProps {
 	gamesWithAllEntities: GameWithDatedEntities[];
