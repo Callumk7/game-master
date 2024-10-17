@@ -4,6 +4,7 @@ import { Users } from "./resources/users.js";
 import { Notes } from "./resources/notes.js";
 import { Characters } from "./resources/characters.js";
 import { Factions } from "./resources/factions.js";
+import { Folders } from "./resources/folders.js";
 
 export interface ClientOptions {
 	baseUrl: string;
@@ -65,6 +66,7 @@ export class SDK {
 	notes: Notes;
 	characters: Characters;
 	factions: Factions;
+	folders: Folders;
 
 	constructor(options: ClientOptions) {
 		this.client = new Client(options);
@@ -73,5 +75,6 @@ export class SDK {
 		this.notes = new Notes(this.client);
 		this.characters = new Characters(this.client);
 		this.factions = new Factions(this.client);
+		this.folders = new Folders(this.client);
 	}
 }

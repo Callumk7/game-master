@@ -14,7 +14,8 @@ import { validateUser } from "~/lib/auth.server";
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { factionId } = parseParams(params, { factionId: z.string() });
 	const factionDetails = await api.factions.getFactionWithPermissions(factionId);
-	return typedjson({ factionDetails });
+	const folders = await api.folders.getGameFolders(factionDetails.gameId);
+	return typedjson({ factionDetails, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -45,7 +46,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function FactionDetailRoute() {
-	const { factionDetails } = useTypedLoaderData<typeof loader>();
+	const { factionDetails, folders } = useTypedLoaderData<typeof loader>();
 	const { suggestionItems } = useGameData();
 	return (
 		<div className="p-4 space-y-4">
@@ -54,6 +55,7 @@ export default function FactionDetailRoute() {
 				gameId={factionDetails.gameId}
 				entityVisibility={factionDetails.visibility}
 				permissions={factionDetails.permissions}
+				folders={folders}
 			/>
 			<EditableText
 				method="patch"

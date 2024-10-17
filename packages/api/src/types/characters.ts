@@ -12,6 +12,7 @@ export interface Character {
 	ownerId: Id;
 	gameId: Id;
 	isPlayer: boolean;
+	folderId: string | null;
 	visibility: Visibility;
 }
 
@@ -37,6 +38,7 @@ export const updateCharacterSchema = z.object({
 	content: z.string().optional(),
 	htmlContent: z.string().optional(),
 	isPlayer: z.boolean().optional(),
+	folderId: z.string().optional(),
 	visibility: visibilitySchema.optional()
 })
 export type UpdateCharacterRequestBody = z.infer<typeof updateCharacterSchema>;

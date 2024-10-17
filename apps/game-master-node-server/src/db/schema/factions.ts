@@ -10,7 +10,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
-import { notes } from "./notes";
+import { folders, notes } from "./notes";
 import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", [
@@ -33,6 +33,7 @@ export const factions = pgTable("factions", {
 	ownerId: text("owner_id")
 		.references(() => users.id)
 		.notNull(),
+	folderId: text("folder_id").references(() => folders.id),
 	leaderId: text("leader_id").references(() => characters.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
@@ -48,6 +49,10 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 	game: one(games, {
 		fields: [factions.gameId],
 		references: [games.id],
+	}),
+	folder: one(folders, {
+		fields: [factions.folderId],
+		references: [folders.id]
 	}),
 	owner: one(users, {
 		fields: [factions.ownerId],

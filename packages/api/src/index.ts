@@ -8,3 +8,4 @@ export * from "./types/users.js";
 export * from "./types/notes.js";
 export * from "./types/characters.js";
 export * from "./types/factions.js";
+export * from "./types/folders.js";

@@ -1,23 +1,13 @@
-import {
-	pgEnum,
-	pgTable,
-	primaryKey,
-	text,
-	timestamp,
-} from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { games } from "./games";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { notesOnCharacters } from "./characters";
-import { notesOnFactions } from "./factions";
+import { characters, notesOnCharacters } from "./characters";
+import { factions, notesOnFactions } from "./factions";
 
-export const visibilityEnum = pgEnum("visibility", [
-	"public",
-	"private",
-	"viewable",
-]);
+export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
 export const noteTypeEnum = pgEnum("note_type", [
 	"note",
@@ -98,15 +88,46 @@ export type InsertDatabaseNote = z.infer<typeof databaseInsertNoteSchema>;
 export const folders = pgTable("folders", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
+	createdAt: timestamp("created_at", {
+		withTimezone: true,
+		mode: "date",
+	}).notNull(),
+	updatedAt: timestamp("updated_at", {
+		withTimezone: true,
+		mode: "date",
+	}).notNull(),
 	parentFolderId: text("parent_folder_id"),
+	gameId: text("game_id")
+		.notNull()
+		.references(() => games.id),
 	ownerId: text("owner_id")
 		.notNull()
 		.references(() => users.id),
+	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
-export const folderRelations = relations(folders, ({ many }) => ({
+export const folderRelations = relations(folders, ({ one, many }) => ({
+	game: one(games, {
+		fields: [folders.gameId],
+		references: [games.id],
+	}),
 	notes: many(notes),
+	characters: many(characters),
+	factions: many(factions),
+	parent: one(folders, {
+		fields: [folders.parentFolderId],
+		references: [folders.id],
+		relationName: "parent"
+	}),
+	children: many(folders, {relationName: "parent"}),
 }));
+
+export const databaseSelectFolderSchema = createSelectSchema(folders);
+export type DatabaseFolder = z.infer<typeof databaseSelectFolderSchema>;
+
+export const databaseInsertFolderSchema = createInsertSchema(folders);
+export type InsertDatabaseFolder = z.infer<typeof databaseInsertFolderSchema>;
+
 
 export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
 
@@ -123,19 +144,43 @@ export const notesPermissions = pgTable(
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.noteId] }),
-	})
+	}),
 );
 
-export const notesPermissionsRelations = relations(
-	notesPermissions,
-	({ one }) => ({
-		note: one(notes, {
-			fields: [notesPermissions.noteId],
-			references: [notes.id],
-		}),
-		user: one(users, {
-			fields: [notesPermissions.userId],
-			references: [users.id],
-		}),
-	})
+export const notesPermissionsRelations = relations(notesPermissions, ({ one }) => ({
+	note: one(notes, {
+		fields: [notesPermissions.noteId],
+		references: [notes.id],
+	}),
+	user: one(users, {
+		fields: [notesPermissions.userId],
+		references: [users.id],
+	}),
+}));
+
+export const foldersPermissions = pgTable(
+	"folders_permissions",
+	{
+		folderId: text("folder_id")
+			.notNull()
+			.references(() => folders.id),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id),
+		permission: permissionEnum("permission").notNull(),
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.userId, t.folderId] }),
+	}),
 );
+
+export const foldersPermissionsRelations = relations(foldersPermissions, ({ one }) => ({
+	folder: one(folders, {
+		fields: [foldersPermissions.folderId],
+		references: [folders.id],
+	}),
+	user: one(users, {
+		fields: [foldersPermissions.userId],
+		references: [users.id],
+	}),
+}));

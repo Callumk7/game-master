@@ -7,6 +7,7 @@ import { notesRoute } from "./features/notes";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { cors } from "hono/cors";
+import { folderRoute } from "./features/folders";
 
 const app = new Hono();
 app.use("*", logger());
@@ -16,6 +17,7 @@ app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
 app.route("/characters", characterRoute);
 app.route("/factions", factionRoute);
+app.route("/folders", folderRoute);
 
 const port = 3000;
 console.log(`Server is running on port ${port}`);

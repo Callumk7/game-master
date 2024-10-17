@@ -15,3 +15,7 @@ export function generateCharacterId() {
 export function generateFactionId() {
 	return `faction_${uuidv4()}`;
 }
+
+export function generateFolderId() {
+	return `folder_${uuidv4()}`;
+}

@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { games } from "./games";
 import { users } from "./users";
-import { notes } from "./notes";
+import { folders, notes } from "./notes";
 import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -34,6 +34,7 @@ export const characters = pgTable("characters", {
 	ownerId: text("owner_id")
 		.references(() => users.id)
 		.notNull(),
+	folderId: text("folder_id").references(() => folders.id),
 	isPlayer: boolean("is_player").notNull().default(false),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
@@ -53,6 +54,10 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 	owner: one(users, {
 		fields: [characters.ownerId],
 		references: [users.id],
+	}),
+	folder: one(folders, {
+		fields: [characters.folderId],
+		references: [folders.id]
 	}),
 	factions: many(charactersInFactions), // ...a member of
 	permissions: many(charactersPermissions),

@@ -14,7 +14,8 @@ import { validateUser } from "~/lib/auth.server";
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { charId } = parseParams(params, { charId: z.string() });
 	const characterDetails = await api.characters.getCharacterWithPermissions(charId);
-	return typedjson({ characterDetails });
+	const folders = await api.folders.getGameFolders(characterDetails.gameId);
+	return typedjson({ characterDetails, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -55,7 +56,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export default function CharacterRoute() {
-	const { characterDetails } = useTypedLoaderData<typeof loader>();
+	const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
 	const { suggestionItems } = useGameData();
 	return (
 		<div className="p-4 space-y-4">
@@ -64,6 +65,7 @@ export default function CharacterRoute() {
 				gameId={characterDetails.gameId}
 				entityVisibility={characterDetails.visibility}
 				permissions={characterDetails.permissions}
+				folders={folders}
 			/>
 			<EditableText
 				method="patch"

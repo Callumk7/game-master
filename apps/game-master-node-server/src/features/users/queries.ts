@@ -1,8 +1,12 @@
 import type { Id, User, UserWithSidebarData } from "@repo/api";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "~/db";
-import { games } from "~/db/schema/games";
+import { characters } from "~/db/schema/characters";
+import { factions } from "~/db/schema/factions";
+import { games, usersToGames } from "~/db/schema/games";
+import { folders, notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
+import { resolve } from "~/utils";
 
 export const getOwnedGamesWithConnections = async (userId: Id) => {
 	return await db.query.games.findMany({
@@ -51,62 +55,118 @@ export const getUser = async (userId: Id): Promise<User | undefined> => {
 };
 
 export const getSidebarData = async (
-	userId: Id,
+  userId: Id
 ): Promise<UserWithSidebarData | undefined> => {
-	const result = await db.query.users.findFirst({
-		where: eq(users.id, userId),
-		columns: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			username: true,
-			email: true,
-		},
-		with: {
-			games: {
-				with: {
-					game: {
-						with: {
-							notes: {
-								columns: {
-									id: true,
-									name: true,
-									gameId: true,
-									createdAt: true,
-									updatedAt: true
-								},
-							},
-							characters: {
-								columns: {
-									id: true,
-									name: true,
-									gameId: true,
-									createdAt: true,
-									updatedAt: true
-								},
-							},
-							factions: {
-								columns: {
-									id: true,
-									name: true,
-									gameId: true,
-									createdAt: true,
-									updatedAt: true
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	});
+  // Fetch user data
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
 
-	if (!result) {
-		return undefined;
-	}
+  if (!user) {
+    return undefined;
+  }
 
-	return {
-		...result,
-		games: result.games.map((game) => game.game),
-	};
+  // Fetch user's games
+  const userGames = await db.query.usersToGames.findMany({
+    where: eq(usersToGames.userId, userId),
+    columns: {
+      gameId: true,
+    },
+  });
+
+  const gameIds = userGames.map((ug) => ug.gameId);
+
+  // Fetch all relevant data in parallel
+  const [gameData, noteData, characterData, factionsData, folderData] = await Promise.all([
+    db.query.games.findMany({
+      where: inArray(games.id, gameIds),
+      columns: {
+        id: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        ownerId: true,
+        // Add other relevant game columns
+      },
+    }),
+    db.query.notes.findMany({
+      where: inArray(notes.gameId, gameIds),
+      columns: {
+        id: true,
+        name: true,
+        gameId: true,
+        folderId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+    db.query.characters.findMany({
+      where: inArray(characters.gameId, gameIds),
+      columns: {
+        id: true,
+        name: true,
+        gameId: true,
+        folderId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+    db.query.factions.findMany({
+      where: inArray(factions.gameId, gameIds),
+      columns: {
+        id: true,
+        name: true,
+        gameId: true,
+        folderId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+    db.query.folders.findMany({
+      where: inArray(folders.gameId, gameIds),
+      columns: {
+        id: true,
+        name: true,
+        gameId: true,
+        parentFolderId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+  ]);
+
+  // Helper function to create a nested folder structure
+  const createNestedFolders = (
+    gameFolders: typeof folderData,
+    parentId: Id | null = null
+  ): any[] => {
+    return gameFolders
+      .filter((f) => f.parentFolderId === parentId)
+      .map((folder) => ({
+        ...folder,
+        notes: noteData.filter((n) => n.folderId === folder.id),
+        characters: characterData.filter((c) => c.folderId === folder.id),
+        factions: factionsData.filter((f) => f.folderId === folder.id),
+        children: createNestedFolders(gameFolders, folder.id),
+      }));
+  };
+
+  // Assemble the final structure
+  const gamesWithData = gameData.map((game) => {
+    const gameFolders = folderData.filter((f) => f.gameId === game.id);
+    return {
+      ...game,
+      notes: noteData.filter((n) => n.gameId === game.id && !n.folderId),
+      characters: characterData.filter((c) => c.gameId === game.id && !c.folderId),
+      factions: factionsData.filter((f) => f.gameId === game.id && !f.folderId),
+      folders: createNestedFolders(gameFolders),
+    };
+  });
+
+  return {
+    ...user,
+    games: gamesWithData,
+  };
 };
+

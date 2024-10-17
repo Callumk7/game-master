@@ -4,6 +4,7 @@ import type { Note } from "./notes.js";
 import type { Character } from "./characters.js";
 import type { Faction } from "./factions.js";
 import { roleSchema, type GameMember } from "./users.js";
+import type { FolderWithDatedEntities } from "./folders.js";
 
 export interface Game {
 	id: Id;
@@ -25,6 +26,7 @@ export interface GameWithEntities extends Game {
 }
 
 export interface GameWithDatedEntities extends Game {
+	folders?: FolderWithDatedEntities[];
 	notes: BasicEntityWithDates[];
 	characters: BasicEntityWithDates[];
 	factions: BasicEntityWithDates[];
