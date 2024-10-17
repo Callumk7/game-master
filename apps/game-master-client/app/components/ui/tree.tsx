@@ -36,7 +36,7 @@ const TreeItem = <T extends object>({
 }: TreeItemProps<T>) => {
 	return (
 		<AriaTreeItem
-			className={composeRenderProps(className, (className) => cn("", className))}
+			className={composeRenderProps(className, (className) => cn("pl-[calc((var(--tree-item-level)-1)*10px)]", className))}
 			{...props}
 		>
 				<AriaTreeItemContent>{children}</AriaTreeItemContent>
