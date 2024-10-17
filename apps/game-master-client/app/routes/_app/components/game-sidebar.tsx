@@ -193,36 +193,38 @@ function FolderTree({ folders, gameId }: FolderTreeProps) {
 		return { id: folder.id, name: folder.name, type: "folders" as const, children };
 	};
 
-	const mappedFolders: TreeEntry[] = [];
-	for (const folder of folders) {
-		mappedFolders.push(mapFolderToTree(folder));
-	}
+	// biome-ignore lint/correctness/useExhaustiveDependencies: incorrect rule.
+	const mappedFolders = useMemo(() => {
+		const mappedFolders: TreeEntry[] = [];
+		for (const folder of folders) {
+			mappedFolders.push(mapFolderToTree(folder));
+		}
+		return mappedFolders;
+	}, [folders])
 
 	return (
 		<Tree items={mappedFolders}>
 			{function renderItems(item) {
 				return (
-					<div className={"pl-[calc(20px * (var(--tree-item-level)))]"}>
-						<TreeItem
+					<TreeItem
 						textValue={item.name}
 						itemChildren={item.children}
 						renderFunction={renderItems}
 					>
-							<div className="flex w-full gap-2 items-center">
-								{item.children?.length ? (
-									<Button size={"icon"} variant={"ghost"} slot="chevron">
-										<ChevronDownIcon />
-										</Button>
-								) : null}
-								<Link
+						<div className="flex w-full gap-2 items-center">
+							{item.children?.length ? (
+								<Button size={"icon"} variant={"ghost"} slot="chevron">
+									<ChevronDownIcon />
+								</Button>
+							) : null}
+							<Link
 								href={`/games/${gameId}/${item.type}/${item.id}`}
 								variant={item.type !== "folders" ? "link" : "ghost"}
 							>
-									{item.name}
-								</Link>
-							</div>
-						</TreeItem>
+								{item.name}
+							</Link>
 						</div>
+					</TreeItem>
 				);
 			}}
 		</Tree>

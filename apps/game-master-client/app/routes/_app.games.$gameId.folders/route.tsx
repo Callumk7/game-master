@@ -1,4 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
@@ -19,3 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return typedjson({ newFolder: newFolder.data });
 };
+
+export default function FolderLayout() {
+	return <Outlet />
+}

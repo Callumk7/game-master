@@ -114,7 +114,6 @@ usersRoute.get("/:userId/games", async (c) => {
 			if (!sidebarData) {
 				return handleNotFound(c);
 			}
-			console.dir(sidebarData, {depth: null})
 			return c.json(sidebarData);
 		} catch (error) {
 			console.log(error)

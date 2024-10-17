@@ -71,6 +71,22 @@ folderRoute.get("/:folderId", async (c) => {
 folderRoute.delete("/:folderId", async (c) => {
 	const folderId = c.req.param("folderId");
 	try {
+		await db
+			.update(notes)
+			.set({ folderId: null })
+			.where(eq(notes.folderId, folderId));
+		await db
+			.update(characters)
+			.set({ folderId: null })
+			.where(eq(characters.folderId, folderId));
+		await db
+			.update(factions)
+			.set({ folderId: null })
+			.where(eq(factions.folderId, folderId));
+		await db
+			.update(folders)
+			.set({ parentFolderId: null })
+			.where(eq(folders.parentFolderId, folderId));
 		await db.delete(folders).where(eq(folders.id, folderId));
 		return basicSuccessResponse(c);
 	} catch (error) {
