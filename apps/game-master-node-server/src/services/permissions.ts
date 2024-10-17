@@ -38,35 +38,6 @@ export async function createNotePermission(
 	return result;
 }
 
-export async function createCharacterPermission(
-	userId: string,
-	characterId: string,
-	permission: Permission,
-) {
-	const result = await db
-		.insert(charactersPermissions)
-		.values({
-			userId,
-			characterId,
-			permission,
-		})
-		.onConflictDoUpdate({
-			target: [charactersPermissions.userId, charactersPermissions.characterId],
-			set: {
-				permission: sql`excluded.permission`,
-			},
-		})
-		.returning()
-		.then((rows) => rows[0]);
-
-	 if (!result) {
-		throw new Error("Error creating character permission in database");
-	}
-
-	return result;
-}
-
-
 export async function createFactionPermission(
 	userId: string,
 	factionId: string,
