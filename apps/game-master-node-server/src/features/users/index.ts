@@ -13,7 +13,7 @@ import {
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getGameFolderTree, getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
+import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
 
 export const usersRoute = new Hono();
 

@@ -54,20 +54,6 @@ export const getUser = async (userId: Id): Promise<User | undefined> => {
 		.then((rows) => rows[0]);
 };
 
-export const getGameFolderTree = async (gameId: string) => {
-	const result = await db
-		.select()
-		.from(games)
-		.where(eq(games.id, gameId))
-		.leftJoin(notes, eq(games.id, notes.gameId))
-		.leftJoin(factions, eq(games.id, factions.gameId))
-		.leftJoin(characters, eq(games.id, characters.gameId))
-		.leftJoin(folders, eq(games.id, folders.gameId));
-
-	return result;
-};
-
-
 export const getSidebarData = async (
   userId: Id
 ): Promise<UserWithSidebarData | undefined> => {
