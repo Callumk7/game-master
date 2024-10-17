@@ -4,7 +4,6 @@ import {
 	duplicateCharacterSchema,
 	updateCharacterSchema,
 	type CharacterWithNotes,
-	type CharacterWithPermissions,
 	type NoteType,
 } from "@repo/api";
 import { eq } from "drizzle-orm";
@@ -20,7 +19,7 @@ import {
 } from "~/lib/http-helpers";
 import { createCharacterInsert } from "./util";
 import { generateCharacterId } from "~/lib/ids";
-import { createCharacterPermission } from "~/services/permissions";
+import { createCharacter, createCharacterPermission, getCharacterWithNotes, getCharacterWithPermissions, updateCharacter } from "./queries";
 
 export const characterRoute = new Hono();
 
@@ -36,11 +35,7 @@ characterRoute.post("/", async (c) => {
 	const newCharacterInsert = createCharacterInsert(data);
 
 	try {
-		const newChar = await db
-			.insert(characters)
-			.values(newCharacterInsert)
-			.returning()
-			.then((result) => result[0]);
+		const newChar = await createCharacter(newCharacterInsert);
 		return successResponse(c, newChar);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -50,9 +45,7 @@ characterRoute.post("/", async (c) => {
 characterRoute.get("/:charId", async (c) => {
 	const charId = c.req.param("charId");
 	try {
-		const characterResult = await db.query.characters.findFirst({
-			where: eq(characters.id, charId),
-		});
+		const characterResult = await getCharacter(charId);
 		if (!characterResult) {
 			return handleNotFound(c);
 		}
@@ -77,11 +70,7 @@ characterRoute.patch("/:charId", async (c) => {
 	const data = await validateOrThrowError(updateCharacterSchema, c);
 
 	try {
-		const charUpdate = await db
-			.update(characters)
-			.set(data)
-			.where(eq(characters.id, charId))
-			.returning()
+		const charUpdate = await updateCharacter(charId, data);
 		return successResponse(c, charUpdate);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -91,25 +80,9 @@ characterRoute.patch("/:charId", async (c) => {
 characterRoute.get("/:charId/permissions", async (c) => {
 	const charId = c.req.param("charId");
 	try {
-		const result: CharacterWithPermissions | undefined =
-			await db.query.characters.findFirst({
-				where: eq(characters.id, charId),
-				with: {
-					permissions: {
-						columns: {
-							userId: true,
-							permission: true,
-						},
-					},
-				},
-			});
-
-		if (!result) {
-			return handleNotFound(c);
-		}
-
-		return c.json(result)
-	} catch (error) { 
+		const charResult = await getCharacterWithPermissions(charId);
+		return c.json(charResult);
+	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
 });
@@ -132,27 +105,8 @@ characterRoute.post("/:charId/permissions", async (c) => {
 characterRoute.get("/:charId/notes", async (c) => {
 	const charId = c.req.param("charId");
 	try {
-		const result = await db.query.characters.findFirst({
-			where: eq(characters.id, charId),
-			with: {
-				notes: {
-					with: {
-						note: true,
-					},
-				},
-			},
-		});
-		if (!result) {
-			return handleNotFound(c);
-		}
-		const charWithNotes: CharacterWithNotes = {
-			...result,
-			notes: result.notes.map((note) => ({
-				...note.note,
-				type: note.note.type as NoteType,
-			})),
-		};
-		return c.json(charWithNotes);
+		const characterWithNotes = await getCharacterWithNotes(charId);
+		return c.json(characterWithNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

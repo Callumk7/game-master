@@ -5,10 +5,8 @@ import {
 	linkCharactersSchema,
 	linkFactionsSchema,
 	linkNotesSchema,
-	permissionSchema,
 	updateNoteContentSchema,
 	type Id,
-	type NoteWithPermissions,
 } from "@repo/api";
 import { Hono } from "hono";
 import { db } from "~/db";
@@ -25,8 +23,7 @@ import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
-import { createNote } from "./queries";
-import { createNotePermission } from "~/services/permissions";
+import { createNote, createNotePermission, getNoteWithPermissions, updateNote } from "./queries";
 
 export const notesRoute = new Hono();
 
@@ -64,11 +61,7 @@ notesRoute.patch("/:noteId", async (c) => {
 	const noteId = c.req.param("noteId");
 	const data = await validateOrThrowError(updateNoteContentSchema, c);
 	try {
-		const noteUpdate = await db
-			.update(notes)
-			.set(data)
-			.where(eq(notes.id, noteId))
-			.returning();
+		const noteUpdate = await updateNote(noteId, data);
 		return successResponse(c, noteUpdate);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -115,22 +108,8 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 notesRoute.get("/:noteId/permissions", async (c) => {
 	const noteId = c.req.param("noteId");
 	try {
-		const result: NoteWithPermissions | undefined = await db.query.notes.findFirst({
-			where: eq(notes.id, noteId),
-			with: {
-				permissions: {
-					columns: {
-						userId: true,
-						permission: true,
-					},
-				},
-			},
-		});
-
-		if (!result) {
-			return handleNotFound(c);
-		}
-		return c.json(result);
+		const noteResult = await getNoteWithPermissions(noteId);
+		return c.json(noteResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
