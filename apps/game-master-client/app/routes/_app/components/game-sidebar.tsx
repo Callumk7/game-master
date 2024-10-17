@@ -163,7 +163,7 @@ type TreeEntry = {
 };
 
 interface FolderTreeProps {
-  gameId: string;
+	gameId: string;
 	folders: FolderWithDatedEntities[];
 }
 function FolderTree({ folders, gameId }: FolderTreeProps) {
@@ -202,22 +202,27 @@ function FolderTree({ folders, gameId }: FolderTreeProps) {
 		<Tree items={mappedFolders}>
 			{function renderItems(item) {
 				return (
-					<TreeItem
+					<div className={"pl-[calc(20px * (var(--tree-item-level)))]"}>
+						<TreeItem
 						textValue={item.name}
 						itemChildren={item.children}
 						renderFunction={renderItems}
 					>
-						<div className="flex w-full gap-2 items-center">
-							{item.children?.length ? (
-								<Button size={"icon"} variant={"ghost"} slot="chevron">
-									<ChevronDownIcon />
-								</Button>
-							) : null}
-							<Link href={`/games/${gameId}/${item.type}/${item.id}`} variant={"link"}>
-								{item.name}
-							</Link>
+							<div className="flex w-full gap-2 items-center">
+								{item.children?.length ? (
+									<Button size={"icon"} variant={"ghost"} slot="chevron">
+										<ChevronDownIcon />
+										</Button>
+								) : null}
+								<Link
+								href={`/games/${gameId}/${item.type}/${item.id}`}
+								variant={item.type !== "folders" ? "link" : "ghost"}
+							>
+									{item.name}
+								</Link>
+							</div>
+						</TreeItem>
 						</div>
-					</TreeItem>
 				);
 			}}
 		</Tree>

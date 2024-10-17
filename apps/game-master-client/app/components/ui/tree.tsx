@@ -36,11 +36,11 @@ const TreeItem = <T extends object>({
 }: TreeItemProps<T>) => {
 	return (
 		<AriaTreeItem
-			className={composeRenderProps(className, (className) => cn(className, ""))}
+			className={composeRenderProps(className, (className) => cn("", className))}
 			{...props}
 		>
-			<AriaTreeItemContent>{children}</AriaTreeItemContent>
-			<Collection items={itemChildren}>{renderFunction}</Collection>
+				<AriaTreeItemContent>{children}</AriaTreeItemContent>
+				<Collection items={itemChildren}>{renderFunction}</Collection>
 		</AriaTreeItem>
 	);
 };
