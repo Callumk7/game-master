@@ -3,7 +3,6 @@ import {
 	createPermissionSchema,
 	duplicateFactionSchema,
 	updateFactionSchema,
-	type FactionWithPermissions,
 } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -18,7 +17,7 @@ import {
 } from "~/lib/http-helpers";
 import { createFactionInsert } from "./util";
 import { generateFactionId } from "~/lib/ids";
-import { createFactionPermission } from "~/services/permissions";
+import { createFaction, createFactionPermission, getFactionWithPermissions, updateFaction } from "./queries";
 
 export const factionRoute = new Hono();
 
@@ -31,9 +30,7 @@ const getFaction = async (factionId: string) => {
 factionRoute.get("/:factionId", async (c) => {
 	const factionId = c.req.param("factionId");
 	try {
-		const factionResult = await db.query.factions.findFirst({
-			where: eq(factions.id, factionId),
-		});
+		const factionResult = await getFaction(factionId);
 		if (!factionResult) {
 			return handleNotFound(c);
 		}
@@ -49,11 +46,7 @@ factionRoute.post("/", async (c) => {
 	const newFactionInsert = createFactionInsert(data);
 
 	try {
-		const newFaction = await db
-			.insert(factions)
-			.values(newFactionInsert)
-			.returning()
-			.then((result) => result[0]);
+		const newFaction = await createFaction(newFactionInsert);
 		return successResponse(c, newFaction);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -75,11 +68,7 @@ factionRoute.patch("/:factionId", async (c) => {
 	const data = await validateOrThrowError(updateFactionSchema, c);
 
 	try {
-		const factionUpdate = await db
-			.update(factions)
-			.set(data)
-			.where(eq(factions.id, factionId))
-			.returning()
+		const factionUpdate = await updateFaction(factionId, data);
 		return successResponse(c, factionUpdate);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -114,24 +103,8 @@ factionRoute.post("/:factionId/duplicate", async (c) => {
 factionRoute.get("/:factionId/permissions", async (c) => {
 	const factionId = c.req.param("factionId");
 	try {
-		const result: FactionWithPermissions | undefined =
-			await db.query.factions.findFirst({
-				where: eq(factions.id, factionId),
-				with: {
-					permissions: {
-						columns: {
-							userId: true,
-							permission: true,
-						},
-					},
-				},
-			});
-
-		if (!result) {
-			return handleNotFound(c);
-		}
-
-		return c.json(result);
+		const factionResult = await getFactionWithPermissions(factionId);
+		return c.json(factionResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

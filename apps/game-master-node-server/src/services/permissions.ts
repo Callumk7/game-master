@@ -37,32 +37,3 @@ export async function createNotePermission(
 
 	return result;
 }
-
-export async function createFactionPermission(
-	userId: string,
-	factionId: string,
-	permission: Permission,
-) {
-	const result = await db
-		.insert(factionsPermissions)
-		.values({
-			userId,
-			factionId,
-			permission,
-		})
-		.onConflictDoUpdate({
-			target: [factionsPermissions.userId, factionsPermissions.factionId],
-			set: {
-				permission: sql`excluded.permission`,
-			},
-		})
-		.returning()
-		.then((rows) => rows[0]);
-
-	 if (!result) {
-		throw new Error("Error creating faction permission in database");
-	}
-
-	return result;
-}
-
