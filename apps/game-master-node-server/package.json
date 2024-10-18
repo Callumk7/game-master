@@ -16,6 +16,7 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.674.0",
 		"@hono/node-server": "^1.12.1",
 		"@repo/api": "workspace:*",
 		"callum-util": "^2.0.1",
