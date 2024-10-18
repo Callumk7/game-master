@@ -10,6 +10,13 @@ export function methodNotAllowed() {
 export function unsuccessfulResponse(errorMessage: string) {
 	return new Response(errorMessage, {
 		status: StatusCodes.INTERNAL_SERVER_ERROR,
-		statusText: errorMessage
+		statusText: errorMessage,
+	});
+}
+
+export function badRequest(message?: string) {
+	return new Response(message ?? ReasonPhrases.BAD_REQUEST, {
+		status: StatusCodes.BAD_REQUEST,
+		statusText: ReasonPhrases.BAD_REQUEST,
 	});
 }

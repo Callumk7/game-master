@@ -21,6 +21,7 @@ import { OptionalEntitySchema } from "types/schemas";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { ImageUploader } from "~/components/image-uploader";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -151,6 +152,7 @@ export default function NoteIndexRoute() {
 					permissions={note.permissions}
 					folders={folders}
 				/>
+				<ImageUploader action="images" ownerId={note.ownerId} />
 				<EditableText
 					method="patch"
 					fieldName={"name"}
