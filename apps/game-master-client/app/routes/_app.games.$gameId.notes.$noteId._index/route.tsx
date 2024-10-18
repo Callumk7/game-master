@@ -152,7 +152,6 @@ export default function NoteIndexRoute() {
 					permissions={note.permissions}
 					folders={folders}
 				/>
-				<ImageUploader action="images" ownerId={note.ownerId} />
 				<EditableText
 					method="patch"
 					fieldName={"name"}

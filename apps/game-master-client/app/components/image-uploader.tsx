@@ -32,10 +32,14 @@ export function ImageUploader({ action, ownerId }: ImageUploaderProps) {
 			<input type="hidden" value={ownerId} name="ownerId" />
 			{fileName ? (
 				<div className="flex items-center gap-2">
-					<Button type="submit">Upload</Button>
+					<Button type="submit" variant={"outline"}>
+						Upload
+					</Button>
 				</div>
 			) : (
-				<Button onPress={simulateInputClick}>Select Image</Button>
+				<Button onPress={simulateInputClick} variant={"outline"}>
+					Select Image
+				</Button>
 			)}
 		</fetcher.Form>
 	);

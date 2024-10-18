@@ -17,6 +17,7 @@ import type { Folder, Permission, User, UserPermission, Visibility } from "@repo
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
+import { ImageUploader } from "./image-uploader";
 
 interface EntityToolbarProps {
 	entityOwnerId: string;
@@ -81,6 +82,7 @@ export function EntityToolbar({
 					</Button>
 				)}
 				{folders ? <FolderMenu folders={folders} /> : null}
+				<ImageUploader action="images" ownerId={entityOwnerId} />
 			</Toolbar>
 			<DuplicateEntityDialog
 				isOpen={isDuplicateDialogOpen}
