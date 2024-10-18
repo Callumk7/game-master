@@ -46,6 +46,19 @@ export class Client {
 		return this.ky.post(url, { json: data, ...options }).json<T>();
 	}
 
+	async postImage<T>(
+		url: string,
+		uploadStream: ReadableStream<Uint8Array>,
+		options?: Options,
+	): Promise<T> {
+		return this.ky
+			.post(url, {
+				body: uploadStream,
+				...options,
+			})
+			.json<T>();
+	}
+
 	async put<T>(url: string, data: unknown, options?: Options): Promise<T> {
 		return this.ky.put(url, { json: data, ...options }).json<T>();
 	}
