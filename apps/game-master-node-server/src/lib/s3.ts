@@ -3,7 +3,6 @@ import {
 	S3Client,
 	type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
-import { uuidv4 } from "callum-util";
 import "dotenv/config";
 import { generateImageId } from "./ids";
 
