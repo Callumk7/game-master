@@ -30,11 +30,13 @@ export async function validateUploadIsImageOrThrow(req: HonoRequest) {
 	const body = await req.parseBody();
 	const image = body.image;
 	if (!(image instanceof File)) {
+		console.error("image from body is not an instance of File")
 		throw httpException(StatusCodes.BAD_REQUEST);
 	}
 
 	const ownerId = body.ownerId;
 	if (typeof ownerId !== "string") {
+		console.error("owner id field is not of type string")
 		throw httpException(StatusCodes.BAD_REQUEST);
 	}
 
