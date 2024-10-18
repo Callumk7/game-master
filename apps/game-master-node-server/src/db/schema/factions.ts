@@ -12,6 +12,7 @@ import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
 import { folders, notes } from "./notes";
 import { users } from "./users";
+import { images } from "./images";
 
 export const visibilityEnum = pgEnum("visibility", [
 	"public",
@@ -60,6 +61,7 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 	}),
 	members: many(charactersInFactions),
 	permissions: many(factionsPermissions),
+	images: many(images)
 }));
 
 export const notesOnFactions = pgTable(
