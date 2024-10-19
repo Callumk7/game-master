@@ -13,11 +13,19 @@ import {
 	DialogTitle,
 } from "./ui/dialog";
 import { type Key, useState } from "react";
-import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
+import {
+	SDK,
+	type Folder,
+	type Permission,
+	type User,
+	type UserPermission,
+	type Visibility,
+} from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
 import { ImageUploader } from "./image-uploader";
+import { useAppData } from "~/routes/_app/route";
 
 interface EntityToolbarProps {
 	entityOwnerId: string;
@@ -38,7 +46,11 @@ export function EntityToolbar({
 	const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
 	// fetch game members here, there is no reason that this won't work with each entity
-	const gameWithMembersQuery = useGetGameWithMembers(gameId);
+	const { serverUrl } = useAppData();
+	const gameWithMembersQuery = useGetGameWithMembers(
+		new SDK({ baseUrl: serverUrl, apiKey: "test-api-key-client" }),
+		gameId,
+	);
 	let members: User[] = [];
 
 	if (gameWithMembersQuery.status === "success") {
