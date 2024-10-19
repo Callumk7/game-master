@@ -1,6 +1,6 @@
 import { type FormMethod, useFetcher } from "@remix-run/react";
 import { useDefaultEditor } from ".";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import type { MentionItem } from "~/types/mentions";
 
 type SyncEditorOptions = {
@@ -42,11 +42,11 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	// the app, but the warning is annoying. Using the browser queueMicrotask
 	// api fixes the error, at the expense of potential delayed content load
 	// on quick navigations.
-	queueMicrotask(() => {
+	useLayoutEffect(() => {
 		if (editor) {
 			editor.commands.setContent(optimisticContent);
 		}
-	});
+	}, [optimisticContent]);
 
 	const saveContent = () => {
 		if (editor && isEdited) {
