@@ -1,9 +1,9 @@
+import type { SDK } from "@repo/api";
 import { useQuery } from "@tanstack/react-query";
-import { clientApi } from "~/lib/queries";
 
-export const useGetAllUsers = () => {
+export const useGetAllUsers = (api: SDK) => {
 	return useQuery({
 		queryKey: ["users", "all"],
-		queryFn: async () => clientApi.users.getAllUsers(),
+		queryFn: async () => api.users.getAllUsers(),
 	});
 };

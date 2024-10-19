@@ -22,8 +22,9 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
 	const sidebarData = await api.users.getAllUserGamesWithSidebarData(userId);
+	const serverUrl = process.env.SERVER_URL!;
 
-	return typedjson({ sidebarData });
+	return typedjson({ sidebarData, serverUrl });
 };
 
 export default function AppLayout() {
