@@ -24,7 +24,7 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 	}
 }
 
-export function notFoundExeption(status?: StatusCode) {
+export function httpException(status?: StatusCode) {
 	return new HTTPException(status);
 }
 

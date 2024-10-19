@@ -13,6 +13,7 @@ import { relations } from "drizzle-orm";
 import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { images } from "./images";
 
 export const visibilityEnum = pgEnum("visibility", [
 	"public",
@@ -61,6 +62,7 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 	}),
 	factions: many(charactersInFactions), // ...a member of
 	permissions: many(charactersPermissions),
+	images: many(images)
 }));
 
 export const notesOnCharacters = pgTable(

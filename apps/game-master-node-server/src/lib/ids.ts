@@ -19,3 +19,7 @@ export function generateFactionId() {
 export function generateFolderId() {
 	return `folder_${uuidv4()}`;
 }
+
+export function generateImageId() {
+	return `img_${uuidv4()}`;
+}

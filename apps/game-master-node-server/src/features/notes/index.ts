@@ -23,7 +23,15 @@ import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
 import { notesOnCharacters } from "~/db/schema/characters";
 import { notesOnFactions } from "~/db/schema/factions";
-import { createNote, createNotePermission, getNoteWithPermissions, updateNote } from "./queries";
+import {
+	createNote,
+	createNotePermission,
+	getNoteWithPermissions,
+	updateNote,
+} from "./queries";
+import { validateUploadIsImageOrThrow } from "~/utils";
+import { s3 } from "~/lib/s3";
+import { images } from "~/db/schema/images";
 
 export const notesRoute = new Hono();
 
@@ -278,6 +286,42 @@ notesRoute.put("/:noteId/links/factions", async (c) => {
 			.returning()
 			.onConflictDoNothing();
 		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                Images
+////////////////////////////////////////////////////////////////////////////////
+
+notesRoute.post("/:noteId/images", async (c) => {
+	const noteId = c.req.param("noteId");
+
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	let imageId: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: noteId });
+		imageUrl = result.imageUrl;
+		imageId = result.imageId;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		const imageResult = await db
+			.insert(images)
+			.values({ id: imageId, ownerId, noteId, imageUrl })
+			.returning()
+			.then((result) => result[0]);
+
+		if (!imageResult) {
+			return handleDatabaseError(c, "image result not returned from database");
+		}
+
+		return successResponse(c, imageResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

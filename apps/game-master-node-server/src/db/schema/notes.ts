@@ -6,6 +6,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, notesOnCharacters } from "./characters";
 import { factions, notesOnFactions } from "./factions";
+import { images } from "./images";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
@@ -58,6 +59,7 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 	characters: many(notesOnCharacters),
 	factions: many(notesOnFactions),
 	permissions: many(notesPermissions),
+	images: many(images)
 }));
 
 export const links = pgTable("links", {
