@@ -24,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const sidebarData = await api.users.getAllUserGamesWithSidebarData(userId);
 	const serverUrl = process.env.SERVER_URL!;
 
-	return typedjson({ sidebarData, serverUrl });
+	return typedjson({ sidebarData, serverUrl, userId });
 };
 
 export default function AppLayout() {
@@ -40,7 +40,7 @@ export default function AppLayout() {
 			<QueryClientProvider client={queryClient}>
 				<GlobalStateProvider gameSelectionId={defaultGameId}>
 					<GameSidebar gamesWithAllEntities={sidebarData.games} />
-					<div className="ml-64">
+					<div className="ml-64 flex-1">
 						<Outlet />
 					</div>
 				</GlobalStateProvider>

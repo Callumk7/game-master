@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import type { ClientLoaderFunctionArgs } from "@remix-run/react";
 import {
 	redirect,
 	typedjson,
@@ -14,53 +13,38 @@ import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { getNoteData } from "./queries.server";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import type { ClientActionFunctionArgs } from "@remix-run/react";
 import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
 import { stringOrArrayToArray } from "callum-util";
 import { OptionalEntitySchema } from "types/schemas";
 import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { ImageUploader } from "~/components/image-uploader";
+import { userHasVisibility } from "~/lib/permissions";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
 		noteId: z.string(),
 	});
 
+	const userId = await validateUser(request);
 	const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(noteId);
+
+	const isVisible = userHasVisibility(userId, {
+		ownerId: note.ownerId,
+		visbility: note.visibility,
+		permissions: note.permissions,
+	});
+
+	console.log(isVisible);
+
+	if (!isVisible) {
+		return redirect(`/games/${note.gameId}/notes`);
+	}
+
 	const folders = await api.folders.getGameFolders(note.gameId);
 
 	return typedjson({ note, linkedNotes, linkedChars, linkedFactions, folders });
 };
-
-let isInitialRequest = true;
-
-export const clientLoader = async ({
-	params,
-	serverLoader,
-}: ClientLoaderFunctionArgs) => {
-	const { noteId } = parseParams(params, {
-		noteId: z.string(),
-	});
-	if (isInitialRequest) {
-		isInitialRequest = false;
-		const serverData = await serverLoader();
-		localStorage.setItem(noteId, JSON.stringify(serverData));
-		return serverData;
-	}
-
-	const cachedData = localStorage.getItem(noteId);
-	if (cachedData) {
-		return JSON.parse(cachedData);
-	}
-
-	const serverData = await serverLoader();
-	localStorage.setItem(noteId, JSON.stringify(serverData));
-	return serverData;
-};
-
-clientLoader.hydrate = true;
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
@@ -126,20 +110,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	return methodNotAllowed();
 };
 
-export async function clientAction({ params, serverAction }: ClientActionFunctionArgs) {
-	const { noteId } = parseParams(params, {
-		noteId: z.string(),
-	});
-
-	localStorage.removeItem(noteId);
-
-	const serverData = await serverAction();
-	return serverData;
-}
-
 export default function NoteIndexRoute() {
 	const { note, folders } = useTypedLoaderData<typeof loader>();
-
 	const { suggestionItems } = useGameData();
 
 	return (
@@ -162,9 +134,6 @@ export default function NoteIndexRoute() {
 					buttonLabel={"Edit game name"}
 					action={`/games/${note.gameId}/notes/${note.id}`}
 				/>
-				<span className="rounded-full px-2.5 py-0.5 bg-accent text-accent-foreground text-xs font-semibold ml-1">
-					{note.type}
-				</span>
 				<EditorBody
 					htmlContent={note.htmlContent ?? ""}
 					suggestionItems={suggestionItems}
