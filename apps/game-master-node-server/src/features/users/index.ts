@@ -14,8 +14,9 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
+import type { Variables } from "~/types";
 
-export const usersRoute = new Hono();
+export const usersRoute = new Hono<{Variables: Variables}>();
 
 usersRoute.get("/", async (c) => {
 	const { limit, offset } = c.req.query();

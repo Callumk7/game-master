@@ -8,8 +8,20 @@ import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { cors } from "hono/cors";
 import { folderRoute } from "./features/folders";
+import { jwt } from "hono/jwt";
+import { env } from "./env";
+import type { Variables } from "./types";
 
-const app = new Hono();
+const app = new Hono<{ Variables: Variables }>();
+
+// jwt server-to-server validation
+app.use(
+	"*",
+	jwt({
+		secret: env.SERVER_SECRET,
+	}),
+);
+
 app.use("*", logger());
 app.use("*", cors());
 app.route("/users", usersRoute);
