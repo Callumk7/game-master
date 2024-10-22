@@ -5,11 +5,12 @@ import { z } from "zod";
 import { parseForm } from "zodix";
 import { Button } from "~/components/ui/button";
 import { JollyTextField } from "~/components/ui/textfield";
-import { api, extractDataFromResponseOrThrow } from "~/lib/api.server";
+import { createApi, extractDataFromResponseOrThrow } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
+  const api = createApi(userId);
 
 	const { name } = await parseForm(request, { name: z.string() });
 

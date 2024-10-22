@@ -4,21 +4,25 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
-import { api } from "~/lib/api.server";
 import { useGameData } from "../_app.games.$gameId/route";
 import { duplicateCharacterSchema, updateCharacterSchema } from "@repo/api";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { validateUser } from "~/lib/auth.server";
+import { createApi } from "~/lib/api.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-	const { charId } = parseParams(params, { charId: z.string() });
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
+  const { charId } = parseParams(params, { charId: z.string() });
 	const characterDetails = await api.characters.getCharacterWithPermissions(charId);
 	const folders = await api.folders.getGameFolders(characterDetails.gameId);
 	return typedjson({ characterDetails, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
 	const { charId } = parseParams(params, { charId: z.string() });
 
 	if (request.method === "POST") {

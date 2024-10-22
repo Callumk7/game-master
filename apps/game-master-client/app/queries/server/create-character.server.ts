@@ -2,11 +2,12 @@ import { json, redirect } from "@remix-run/react";
 import { createCharacterSchema } from "@repo/api";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { parseForm } from "zodix";
-import { api } from "~/lib/api.server";
+import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export async function createCharacterAction(request: Request) {
 	const userId = await validateUser(request);
+	const api = createApi(userId);
 	const data = await parseForm(request, createCharacterSchema.omit({ ownerId: true }));
 	try {
 		const result = await api.characters.createCharacter({ ...data, ownerId: userId });

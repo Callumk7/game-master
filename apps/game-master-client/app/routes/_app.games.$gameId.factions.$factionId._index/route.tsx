@@ -4,15 +4,17 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorBody } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
-import { api } from "~/lib/api.server";
 import { useGameData } from "../_app.games.$gameId/route";
 import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { validateUser } from "~/lib/auth.server";
+import { createApi } from "~/lib/api.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const { factionId } = parseParams(params, { factionId: z.string() });
+  const userId = await validateUser(request);
+  const api = createApi(userId);
 	const factionDetails = await api.factions.getFactionWithPermissions(factionId);
 	const folders = await api.folders.getGameFolders(factionDetails.gameId);
 	return typedjson({ factionDetails, folders });
@@ -20,6 +22,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const { factionId } = parseParams(params, { factionId: z.string() });
+  const userId = await validateUser(request);
+  const api = createApi(userId);
 	if (request.method === "POST") {
 		const userId = await validateUser(request);
 		const data = await parseForm(request, duplicateFactionSchema.omit({ ownerId: true }));

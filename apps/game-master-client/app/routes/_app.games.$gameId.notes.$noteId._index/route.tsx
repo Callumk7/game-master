@@ -16,10 +16,10 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
 import { stringOrArrayToArray } from "callum-util";
 import { OptionalEntitySchema } from "types/schemas";
-import { api } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { userHasVisibility } from "~/lib/permissions";
+import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const { noteId } = parseParams(params, {
@@ -27,7 +27,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	});
 
 	const userId = await validateUser(request);
-	const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(noteId);
+  const api = createApi(userId);
+	const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(api, noteId);
 
 	const isVisible = userHasVisibility(userId, {
 		ownerId: note.ownerId,
@@ -48,6 +49,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const userId = await validateUser(request);
+  const api = createApi(userId);
 	const { noteId } = parseParams(params, {
 		noteId: z.string(),
 	});

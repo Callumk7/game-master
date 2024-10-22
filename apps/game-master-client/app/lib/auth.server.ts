@@ -1,5 +1,7 @@
 import { type Session, createCookie, redirect } from "@remix-run/node";
 import { createCookieSessionStorage } from "@remix-run/node";
+import jwt from "jsonwebtoken";
+import { env } from "./env.server";
 
 const secret = "5upErsEce7";
 
@@ -54,3 +56,8 @@ export const getUserSession = async (request: Request) => {
 	const session = await getSession(request.headers.get("Cookie"));
 	return session;
 };
+
+// JWT for server-to-server communication
+export const generateServerToken = (userId: string) => {
+	return jwt.sign({ userId }, env.SERVER_SECRET, { expiresIn: "1h" });
+}

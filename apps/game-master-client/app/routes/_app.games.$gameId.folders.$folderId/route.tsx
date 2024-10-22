@@ -1,13 +1,16 @@
 import { Text } from "~/components/ui/typeography";
 import { FolderControls } from "./components/folder-controls";
 import { json, redirect, useParams } from "@remix-run/react";
-import { api } from "~/lib/api.server";
 import { parseForm, parseParams } from "zodix";
 import { z } from "zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { updateFolderSchema } from "@repo/api";
+import { validateUser } from "~/lib/auth.server";
+import { createApi } from "~/lib/api.server";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
 	const { folderId } = parseParams(params, { folderId: z.string() });
 	if (request.method === "PATCH") {
 		const { name } = await parseForm(request, updateFolderSchema);

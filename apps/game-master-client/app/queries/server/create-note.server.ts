@@ -2,11 +2,12 @@ import { json, redirect } from "@remix-run/react";
 import { createNoteSchema } from "@repo/api";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { parseForm } from "zodix";
-import { api } from "~/lib/api.server";
+import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export async function createNoteAction(request: Request) {
 	const userId = await validateUser(request);
+	const api = createApi(userId);
 	const data = await parseForm(
 		request,
 		createNoteSchema.omit({ ownerId: true }),

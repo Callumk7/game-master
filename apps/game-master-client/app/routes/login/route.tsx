@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, json, redirect, useLoaderData } from "@remix-run/react";
 import { db } from "db";
 import { users } from "db/schema/users";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { parseFormSafe } from "zodix";
 import { Button } from "~/components/ui/button";

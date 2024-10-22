@@ -2,13 +2,16 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { api } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { CreateFactionSlideover } from "~/components/forms/create-faction";
 import { FactionTable } from "./components/faction-table";
 import { createFactionAction } from "~/queries/server/create-faction.server";
+import { validateUser } from "~/lib/auth.server";
+import { createApi } from "~/lib/api.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
 	const { gameId } = parseParams(params, { gameId: z.string() });
 
 	const gameFactions = await api.factions.getAllGameFactions(gameId);

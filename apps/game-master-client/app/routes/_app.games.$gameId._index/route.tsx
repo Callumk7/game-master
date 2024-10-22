@@ -3,17 +3,22 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditableText, Text } from "~/components/ui/typeography";
-import { api } from "~/lib/api.server";
+import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed } from "~/util/responses";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const userId = await validateUser(request);
   const { gameId } = parseParams(params, { gameId: z.string() });
+  const api = createApi(userId);
   const game = await api.games.getGameWithMembers(gameId);
 
   return typedjson({ game });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
   const { gameId } = parseParams(params, {
     gameId: z.string(),
   });
