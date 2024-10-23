@@ -1,7 +1,9 @@
-import type { GameWithMembers, Id } from "@repo/api";
-import { and, eq, inArray } from "drizzle-orm";
+import type { GameWithMembers, Id, Note } from "@repo/api";
+import { and, eq, inArray, ne } from "drizzle-orm";
 import { db } from "~/db";
 import { games, usersToGames } from "~/db/schema/games";
+import { notes, notesPermissions } from "~/db/schema/notes";
+import { resolve } from "~/utils";
 
 export const getGameWithMembers = async (
 	gameId: Id,
@@ -65,4 +67,42 @@ export const handleRemoveMembers = async (gameId: Id, membersToRemove: Id[]) => 
 				),
 			);
 	}
+};
+
+export const getUserNotesForGame = async (gameId: Id, userId: Id): Promise<Note[]> => {
+	const [ownedNotes, visibleNotes] = await resolve(
+		getOwnedNotes(gameId, userId),
+		getVisibileNotes(gameId, userId),
+	);
+
+	return ownedNotes.concat(
+		visibleNotes.filter(
+			(note) => !ownedNotes.some((ownedNote) => ownedNote.id === note.id),
+		),
+	);
+};
+
+const getOwnedNotes = async (gameId: Id, userId: Id) => {
+	const notesResult = await db.query.notes.findMany({
+		where: and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)),
+	});
+
+	return notesResult;
+};
+
+const getVisibileNotes = async (gameId: Id, userId: Id) => {
+	const notesResult = await db.query.notes
+		.findMany({
+			where: and(eq(notes.gameId, gameId), ne(notes.visibility, "private")),
+			with: {
+				permissions: {
+					where: eq(notesPermissions.userId, userId),
+				},
+			},
+		})
+		.then((result) =>
+			result.filter((note) => note.permissions[0]?.permission !== "none"),
+		);
+
+	return notesResult;
 };

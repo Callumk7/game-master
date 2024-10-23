@@ -6,7 +6,7 @@ import * as factionsSchema from "./schema/factions";
 
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { env } from "~/env";
+import { env } from "~/lib/env";
 
 const queryClient = postgres(env.DB_URL);
 export const db = drizzle(queryClient, {

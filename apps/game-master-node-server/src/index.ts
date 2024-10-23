@@ -9,8 +9,8 @@ import { factionRoute } from "./features/factions";
 import { cors } from "hono/cors";
 import { folderRoute } from "./features/folders";
 import { jwt } from "hono/jwt";
-import { env } from "./env";
 import type { Variables } from "./types";
+import { env } from "./lib/env";
 
 const app = new Hono<{ Variables: Variables }>();
 

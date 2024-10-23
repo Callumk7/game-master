@@ -14,7 +14,6 @@ import {
 } from "./ui/dialog";
 import { type Key, useState } from "react";
 import {
-  SDK,
   type Folder,
   type Permission,
   type User,
@@ -48,7 +47,6 @@ export function EntityToolbar({
   const { serverUrl, userId } = useAppData();
   // fetch game members here, there is no reason that this won't work with each entity
   const gameWithMembersQuery = useGetGameWithMembers(
-    new SDK({ baseUrl: serverUrl, apiKey: "test-api-key-client" }),
     gameId,
   );
   let members: User[] = [];

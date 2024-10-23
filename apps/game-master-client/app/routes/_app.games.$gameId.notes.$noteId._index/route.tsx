@@ -36,8 +36,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		permissions: note.permissions,
 	});
 
-	console.log(isVisible);
-
 	if (!isVisible) {
 		return redirect(`/games/${note.gameId}/notes`);
 	}

@@ -1,7 +1,6 @@
 import {
 	addMemberSchema,
 	createGameSchema,
-	createNoteSchema,
 	updateGameMembersSchema,
 	updateGameSchema,
 	updateMemberSchema,
@@ -19,17 +18,18 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createGameNote } from "./mutations";
 import { createGameInsert, findMembersToAddAndRemove } from "./util";
 import { factions } from "~/db/schema/factions";
 import {
 	deleteMembers,
 	getGameWithMembers,
 	getMemberIdArray,
+	getUserNotesForGame,
 	handleAddMembers,
 	handleRemoveMembers,
 } from "./queries";
 import { itemOrArrayToArray } from "~/utils";
+import { getPayload } from "~/lib/jwt";
 
 export const gamesRoute = new Hono();
 
@@ -157,24 +157,10 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 
 gamesRoute.get("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameNotes = await db.select().from(notes).where(eq(notes.gameId, gameId));
-		return c.json(gameNotes);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.post("/:gameId/notes", async (c) => {
-	const gameId = c.req.param("gameId");
-	const data = await validateOrThrowError(createNoteSchema, c);
-	try {
-		const newNote = await createGameNote(data.ownerId, {
-			name: data.name,
-			htmlContent: data.htmlContent,
-			gameId,
-		});
-		return successResponse(c, newNote);
+		const userGameNotes = await getUserNotesForGame(gameId, userId);
+		return c.json(userGameNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
