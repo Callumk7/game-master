@@ -1,19 +1,10 @@
 import { z } from "zod";
 import { visibilitySchema, type Id, type UserPermission, type Visibility } from "./index.js";
 import type { Note } from "./notes.js";
+import type { Entity } from "./entity.js";
 
-export interface Character {
-	id: Id;
-	name: string;
-	content: string | null;
-	htmlContent: string | null;
-	createdAt: Date;
-	updatedAt: Date;
-	ownerId: Id;
-	gameId: Id;
+export interface Character extends Entity {
 	isPlayer: boolean;
-	folderId: string | null;
-	visibility: Visibility;
 }
 
 export interface CharacterWithNotes extends Character {

@@ -1,20 +1,11 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
-import { visibilitySchema, type Id, type UserPermission, type Visibility } from "./index.js";
+import { visibilitySchema, type Id, type UserPermission } from "./index.js";
 import type { Note } from "./notes.js";
+import type { Entity } from "./entity.js";
 
-export interface Faction {
-	id: Id;
-	name: string;
-	content: string | null;
-	htmlContent: string | null;
-	createdAt: Date;
-	updatedAt: Date;
-	ownerId: Id;
-	folderId: Id | null;
-	gameId: Id;
+export interface Faction extends Entity {
 	leaderId: Id | null;
-	visibility: Visibility; 
 }
 
 export interface FactionWithMembers extends Faction {

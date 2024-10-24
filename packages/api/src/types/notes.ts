@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { visibilitySchema, type Id, type Permission, type UserPermission, type Visibility } from "./index.js";
+import { visibilitySchema, type UserPermission } from "./index.js";
+import type { Entity } from "./entity.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -11,18 +12,9 @@ const noteTypeSchema = z.enum([
 ]);
 export type NoteType = z.infer<typeof noteTypeSchema>;
 
-export interface Note {
-	id: Id;
-	name: string;
-	content: string | null;
-	htmlContent: string | null;
-	createdAt: Date;
-	updatedAt: Date;
-	ownerId: Id;
-	folderId: Id | null;
-	gameId: Id;
+export interface Note extends Entity {
 	type: NoteType;
-	visibility: Visibility;
+	isPlayer: boolean;
 }
 
 export interface NoteWithPermissions extends Note {

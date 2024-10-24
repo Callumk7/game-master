@@ -18,7 +18,6 @@ import { stringOrArrayToArray } from "callum-util";
 import { OptionalEntitySchema } from "types/schemas";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { userHasVisibility } from "~/lib/permissions";
 import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -29,16 +28,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
   const api = createApi(userId);
 	const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(api, noteId);
-
-	const isVisible = userHasVisibility(userId, {
-		ownerId: note.ownerId,
-		visbility: note.visibility,
-		permissions: note.permissions,
-	});
-
-	if (!isVisible) {
-		return redirect(`/games/${note.gameId}/notes`);
-	}
 
 	const folders = await api.folders.getGameFolders(note.gameId);
 

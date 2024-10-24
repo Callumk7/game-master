@@ -32,6 +32,7 @@ import {
 import { validateUploadIsImageOrThrow } from "~/utils";
 import { s3 } from "~/lib/s3";
 import { images } from "~/db/schema/images";
+import { getPayload } from "~/lib/jwt";
 
 export const notesRoute = new Hono();
 
@@ -115,6 +116,7 @@ notesRoute.post("/:noteId/duplicate", async (c) => {
 
 notesRoute.get("/:noteId/permissions", async (c) => {
 	const noteId = c.req.param("noteId");
+	const { userId } = getPayload(c);
 	try {
 		const noteResult = await getNoteWithPermissions(noteId);
 		return c.json(noteResult);
