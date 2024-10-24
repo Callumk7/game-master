@@ -75,16 +75,6 @@ export class Notes {
 	}
 
 	// DONE
-	async getUserNotesForGame(gameId: Id, userId: Id): Promise<Note[]> {
-		return this.client.get<Note[]>(`games/${gameId}/users/${userId}/notes`);
-	}
-
-	// DONE
-	async getAllUserNotes(userId: Id): Promise<Note[]> {
-		return this.client.get<Note[]>(`users/${userId}/notes`);
-	}
-
-	// DONE
 	async getLinkedNotes(
 		noteId: Id,
 	): Promise<{ backLinks: Note[]; outgoingLinks: Note[] }> {

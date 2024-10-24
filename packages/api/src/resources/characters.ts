@@ -80,16 +80,6 @@ export class Characters {
 	}
 
 	// DONE
-	async getUserCharactersForGame(gameId: Id, userId: Id): Promise<Character[]> {
-		return this.client.get<Character[]>(`games/${gameId}/users/${userId}/characters`);
-	}
-
-	// DONE
-	async getAllUserCharacters(userId: Id): Promise<Character[]> {
-		return this.client.get<Character[]>(`users/${userId}/characters`);
-	}
-
-	// DONE
 	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
 		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`);
 	}
