@@ -21,8 +21,9 @@ import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { noteId } = parseParams(params, {
+  const { noteId, gameId } = parseParams(params, {
     noteId: z.string(),
+    gameId: z.string()
   });
 
   const userId = await validateUser(request);
@@ -31,6 +32,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     api,
     noteId,
   );
+
+  if (note.userPermissionLevel === "none") {
+    return redirect(`/games/${gameId}/notes`)
+  }
 
   const folders = await api.folders.getGameFolders(note.gameId);
 

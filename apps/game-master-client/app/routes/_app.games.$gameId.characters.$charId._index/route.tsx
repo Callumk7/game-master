@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody } from "~/components/editor";
+import { EditorBody, EditorPreview } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { duplicateCharacterSchema, updateCharacterSchema } from "@repo/api";
@@ -14,8 +14,16 @@ import { createApi } from "~/lib/api.server";
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
   const api = createApi(userId);
-  const { charId } = parseParams(params, { charId: z.string() });
+  const { charId, gameId } = parseParams(params, {
+    charId: z.string(),
+    gameId: z.string(),
+  });
   const characterDetails = await api.characters.getCharacterWithPermissions(charId);
+
+  if (characterDetails.userPermissionLevel === "none") {
+    return redirect(`/games/${gameId}/characters`);
+  }
+
   const folders = await api.folders.getGameFolders(characterDetails.gameId);
   return typedjson({ characterDetails, folders });
 };
@@ -80,10 +88,19 @@ export default function CharacterRoute() {
         inputLabel={"Game name input"}
         buttonLabel={"Edit game name"}
       />
-      <EditorBody
-        htmlContent={characterDetails.htmlContent ?? ""}
-        suggestionItems={suggestionItems}
-      />
+      {characterDetails.userPermissionLevel === "view" ? (
+        <>
+          <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">
+            You have permission to view
+          </span>
+          <EditorPreview htmlContent={characterDetails.htmlContent ?? ""} />
+        </>
+      ) : (
+        <EditorBody
+          htmlContent={characterDetails.htmlContent ?? ""}
+          suggestionItems={suggestionItems}
+        />
+      )}
     </div>
   );
 }

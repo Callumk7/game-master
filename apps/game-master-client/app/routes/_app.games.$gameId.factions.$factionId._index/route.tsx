@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody } from "~/components/editor";
+import { EditorBody, EditorPreview } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
@@ -12,10 +12,17 @@ import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { factionId } = parseParams(params, { factionId: z.string() });
+  const { factionId, gameId } = parseParams(params, {
+    factionId: z.string(),
+    gameId: z.string(),
+  });
   const userId = await validateUser(request);
   const api = createApi(userId);
   const factionDetails = await api.factions.getFactionWithPermissions(factionId);
+
+  if (factionDetails.userPermissionLevel === "none") {
+    return redirect(`/games/${gameId}/factions`)
+  }
   const folders = await api.folders.getGameFolders(factionDetails.gameId);
   return typedjson({ factionDetails, folders });
 };
@@ -70,10 +77,19 @@ export default function FactionDetailRoute() {
         inputLabel={"Game name input"}
         buttonLabel={"Edit game name"}
       />
-      <EditorBody
-        htmlContent={factionDetails.htmlContent ?? ""}
-        suggestionItems={suggestionItems}
-      />
+      {factionDetails.userPermissionLevel === "view" ? (
+        <>
+          <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">
+            You have permission to view
+          </span>
+          <EditorPreview htmlContent={factionDetails.htmlContent ?? ""} />
+        </>
+      ) : (
+        <EditorBody
+          htmlContent={factionDetails.htmlContent ?? ""}
+          suggestionItems={suggestionItems}
+        />
+      )}
     </div>
   );
 }
