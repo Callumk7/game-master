@@ -1,22 +1,20 @@
-import { newUserSchema, type UserWithSidebarData } from "@repo/api";
+import { newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
-import { games } from "~/db/schema/games";
 import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
-	badRequestResponse,
 	handleDatabaseError,
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getOwnedGamesWithConnections, getSidebarData, getUser } from "./queries";
+import { getSidebarData, getUser } from "./queries";
 import type { Variables } from "~/types";
 
-export const usersRoute = new Hono<{Variables: Variables}>();
+export const usersRoute = new Hono<{ Variables: Variables }>();
 
 usersRoute.get("/", async (c) => {
 	const { limit, offset } = c.req.query();
@@ -74,52 +72,15 @@ usersRoute.get("/:userId", async (c) => {
 
 // TODO: Edit users
 
-usersRoute.get("/:userId/games", async (c) => {
+usersRoute.get("/:userId/sidebar", async (c) => {
 	const userId = c.req.param("userId");
 
-	// should only be "nested", "flat" or "sidebar"
-	const withData = c.req.query().withData;
-
-	if (!withData || !["nested", "flat", "sidebar"].includes(withData)) {
-		return badRequestResponse("withData param not provided or was not correct value");
-	}
-
-	if (withData === "nested") {
-		try {
-			const allGames = await getOwnedGamesWithConnections(userId);
-			return c.json(allGames);
-		} catch (error) {
-			return handleDatabaseError(c, error);
-		}
-	}
-
-	if (withData === "flat") {
-		try {
-			const allGames = await db.query.games.findMany({
-				where: eq(games.ownerId, userId),
-				with: {
-					notes: true,
-					characters: true,
-					factions: true,
-				},
-			});
-			return c.json(allGames);
-		} catch (error) {
-			return handleDatabaseError(c, error);
-		}
-	}
-
-	if (withData === "sidebar") {
-		try {
-			const sidebarData: UserWithSidebarData | undefined = await getSidebarData(userId);
-			if (!sidebarData) {
-				return handleNotFound(c);
-			}
-			return c.json(sidebarData);
-		} catch (error) {
-			console.log(error)
-			return handleDatabaseError(c, error);
-		}
+	try {
+		const sidebarData = await getSidebarData(userId);
+		return c.json(sidebarData);
+	} catch (error) {
+		console.log(error);
+		return handleDatabaseError(c, error);
 	}
 });
 

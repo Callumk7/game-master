@@ -8,6 +8,7 @@ import { validateUser } from "~/lib/auth.server";
 import { GlobalStateProvider } from "~/store/global";
 import { GameSidebar } from "./components/game-sidebar";
 import { createApi } from "~/lib/api.server";
+import { env } from "~/lib/env.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -22,8 +23,8 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
   const api = createApi(userId);
-  const sidebarData = await api.users.getAllUserGamesWithSidebarData(userId);
-  const serverUrl = process.env.SERVER_URL!;
+  const sidebarData = await api.users.getUserSidebarData(userId);
+  const serverUrl = env.SERVER_URL;
 
   return typedjson({ sidebarData, serverUrl, userId });
 };
