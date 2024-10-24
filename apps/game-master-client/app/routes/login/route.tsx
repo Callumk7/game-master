@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, json, redirect, useLoaderData } from "@remix-run/react";
 import { db } from "db";
 import { users } from "db/schema/users";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { parseFormSafe } from "zodix";
 import { Button } from "~/components/ui/button";
@@ -91,7 +91,9 @@ export default function LoginRoute() {
           <JollyTextField name="password" label="Password" type="password" isRequired />
           <div className="flex flex-col gap-2">
             <Button type="submit">Login</Button>
-            <Link variant={"secondary"} href={"/signup"}>Need an account? Sign up</Link>
+            <Link variant={"secondary"} href={"/signup"}>
+              Need an account? Sign up
+            </Link>
           </div>
         </Form>
       </Card>

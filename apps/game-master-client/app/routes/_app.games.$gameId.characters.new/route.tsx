@@ -5,14 +5,13 @@ import { CreateCharacterForm } from "~/components/forms/create-character";
 import { Text } from "~/components/ui/typeography";
 import { createCharacterAction } from "~/queries/server/create-character.server";
 
-
 export const action = async ({ request }: ActionFunctionArgs) => {
   return createCharacterAction(request);
 };
 
 export default function NewCharacterRoute() {
   const params = useParams();
-  const result = useActionData<typeof action>()
+  const result = useActionData<typeof action>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   if (result) {
     setErrorMessage(result.errorMsg);

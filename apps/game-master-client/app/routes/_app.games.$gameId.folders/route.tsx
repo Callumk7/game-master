@@ -3,11 +3,12 @@ import { Outlet } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
-import { api } from "~/lib/api.server";
+import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await validateUser(request);
+  const api = createApi(userId);
   const { name, gameId } = await parseForm(request, {
     name: z.string(),
     gameId: z.string(),
@@ -22,5 +23,5 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function FolderLayout() {
-	return <Outlet />
+  return <Outlet />;
 }

@@ -1,7 +1,11 @@
 import { SDK, type ServerResponse } from "@repo/api";
-import { SERVER_URL } from "~/config";
+import { env } from "./env.server";
+import { generateServerToken } from "./auth.server";
 
-export const api = new SDK({ baseUrl: SERVER_URL, apiKey: "temp_key" });
+export const createApi = (userId: string) => {
+	const serverToken = generateServerToken(userId);
+	return new SDK({ baseUrl: env.SERVER_URL, apiKey: serverToken });
+};
 
 export function extractDataFromResponseOrThrow<T>(result: ServerResponse<T>) {
 	if (!result.success) {

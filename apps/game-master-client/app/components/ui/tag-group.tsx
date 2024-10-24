@@ -1,4 +1,4 @@
-import { cva } from "class-variance-authority"
+import { cva } from "class-variance-authority";
 import {
   Button as AriaButton,
   Tag as AriaTag,
@@ -9,18 +9,15 @@ import {
   type TagProps as AriaTagProps,
   Text,
   composeRenderProps,
-} from "react-aria-components"
+} from "react-aria-components";
 
-import { Label } from "./field"
-import { cn } from "callum-util"
-import { Cross1Icon } from "@radix-ui/react-icons"
+import { Label } from "./field";
+import { cn } from "callum-util";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
-const TagGroup = AriaTagGroup
+const TagGroup = AriaTagGroup;
 
-function TagList<T extends object>({
-  className,
-  ...props
-}: AriaTagListProps<T>) {
+function TagList<T extends object>({ className, ...props }: AriaTagListProps<T>) {
   return (
     <AriaTagList
       className={composeRenderProps(className, (className) =>
@@ -28,12 +25,12 @@ function TagList<T extends object>({
           "flex flex-wrap gap-2",
           /* Empty */
           "data-[empty]:text-sm data-[empty]:text-muted-foreground",
-          className
-        )
+          className,
+        ),
       )}
       {...props}
     />
-  )
+  );
 }
 
 const badgeVariants = cva(
@@ -68,11 +65,11 @@ const badgeVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
-)
+  },
+);
 
 function Tag({ children, className, ...props }: AriaTagProps) {
-  const textValue = typeof children === "string" ? children : undefined
+  const textValue = typeof children === "string" ? children : undefined;
   return (
     <AriaTag
       textValue={textValue}
@@ -85,8 +82,8 @@ function Tag({ children, className, ...props }: AriaTagProps) {
                 : "secondary",
           }),
           renderProps.allowsRemoving && "pr-1",
-          className
-        )
+          className,
+        ),
       )}
       {...props}
     >
@@ -102,7 +99,7 @@ function Tag({ children, className, ...props }: AriaTagProps) {
                 "data-[hovered]:opacity-100",
                 /* Resets */
                 "focus-visible:outline-none",
-                className
+                className,
               )}
             >
               <Cross1Icon aria-hidden className="size-3" />
@@ -111,15 +108,15 @@ function Tag({ children, className, ...props }: AriaTagProps) {
         </>
       ))}
     </AriaTag>
-  )
+  );
 }
 
 interface JollyTagGroupProps<T>
   extends Omit<AriaTagGroupProps, "children">,
     Pick<AriaTagListProps<T>, "items" | "children" | "renderEmptyState"> {
-  label?: string
-  description?: string
-  errorMessage?: string
+  label?: string;
+  description?: string;
+  errorMessage?: string;
 }
 
 function JollyTagGroup<T extends object>({
@@ -149,8 +146,8 @@ function JollyTagGroup<T extends object>({
         </Text>
       )}
     </TagGroup>
-  )
+  );
 }
 
-export { TagGroup, TagList, Tag, badgeVariants, JollyTagGroup }
-export type { JollyTagGroupProps }
+export { TagGroup, TagList, Tag, badgeVariants, JollyTagGroup };
+export type { JollyTagGroupProps };

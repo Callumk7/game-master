@@ -1,7 +1,7 @@
-import { api } from "~/lib/api.server";
+import type { SDK } from "@repo/api";
 import { resolve } from "~/util/await-all";
 
-export const getNoteData = async (noteId: string) => {
+export const getNoteData = async (api: SDK, noteId: string) => {
 	const noteCall = api.notes.getNoteWithPermissions(noteId);
 	const linkedCharsCall = api.notes.getLinkedCharacters(noteId);
 	const linkedFactionsCall = api.notes.getLinkedFactions(noteId);
@@ -11,7 +11,7 @@ export const getNoteData = async (noteId: string) => {
 		noteCall,
 		linkedCharsCall,
 		linkedFactionsCall,
-		linkedNotesCall
+		linkedNotesCall,
 	);
 
 	return { note, linkedChars, linkedFactions, linkedNotes };

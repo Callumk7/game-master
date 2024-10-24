@@ -13,16 +13,21 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { JollyTextField } from "~/components/ui/textfield";
-import { api } from "~/lib/api.server";
+import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
 import { unsuccessfulResponse } from "~/util/responses";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
   const { gameId } = parseParams(params, { gameId: z.string() });
   const gameData = await api.games.getGame(gameId);
   return json({ game: gameData });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const userId = await validateUser(request);
+  const api = createApi(userId);
   const { gameId } = parseParams(params, { gameId: z.string() });
   const { name, description } = await parseForm(request, updateGameSchema);
   const result = await api.games.updateGameDetails(gameId, { name, description });

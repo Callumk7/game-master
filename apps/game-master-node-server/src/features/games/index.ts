@@ -1,7 +1,6 @@
 import {
 	addMemberSchema,
 	createGameSchema,
-	createNoteSchema,
 	updateGameMembersSchema,
 	updateGameSchema,
 	updateMemberSchema,
@@ -19,17 +18,20 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createGameNote } from "./mutations";
 import { createGameInsert, findMembersToAddAndRemove } from "./util";
-import { factions } from "~/db/schema/factions";
 import {
+	createGame,
 	deleteMembers,
 	getGameWithMembers,
 	getMemberIdArray,
+	getUserCharactersForGame,
+	getUserFactionsForGame,
+	getUserNotesForGame,
 	handleAddMembers,
 	handleRemoveMembers,
 } from "./queries";
 import { itemOrArrayToArray } from "~/utils";
+import { getPayload } from "~/lib/jwt";
 
 export const gamesRoute = new Hono();
 
@@ -38,16 +40,7 @@ gamesRoute.post("/", async (c) => {
 	const newGameInsert = createGameInsert(data);
 
 	try {
-		const newGame = await db
-			.insert(games)
-			.values(newGameInsert)
-			.returning()
-			.then((result) => result[0]);
-		await db.insert(usersToGames).values({
-			gameId: newGameInsert.id,
-			userId: newGameInsert.ownerId,
-			isOwner: true,
-		});
+		const newGame = await createGame(newGameInsert);
 		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -61,9 +54,6 @@ gamesRoute.get("/:gameId", async (c) => {
 	if (withMembers) {
 		try {
 			const gameWithMembers = await getGameWithMembers(gameId);
-			if (!gameWithMembers) {
-				return handleNotFound(c);
-			}
 			return c.json(gameWithMembers);
 		} catch (error) {
 			return handleDatabaseError(c, error);
@@ -157,24 +147,10 @@ gamesRoute.get("/:gameId/entities", async (c) => {
 
 gamesRoute.get("/:gameId/notes", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameNotes = await db.select().from(notes).where(eq(notes.gameId, gameId));
-		return c.json(gameNotes);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.post("/:gameId/notes", async (c) => {
-	const gameId = c.req.param("gameId");
-	const data = await validateOrThrowError(createNoteSchema, c);
-	try {
-		const newNote = await createGameNote(data.ownerId, {
-			name: data.name,
-			htmlContent: data.htmlContent,
-			gameId,
-		});
-		return successResponse(c, newNote);
+		const userGameNotes = await getUserNotesForGame(gameId, userId);
+		return c.json(userGameNotes);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -199,23 +175,10 @@ gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
 
 gamesRoute.get("/:gameId/characters", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameCharacters = await db.query.characters.findMany({
-			where: eq(characters.gameId, gameId),
-		});
-		return c.json(gameCharacters);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
-	const { gameId, userId } = c.req.param();
-	try {
-		const userChars = await db.query.characters.findMany({
-			where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
-		});
-		return c.json(userChars);
+		const gameChars = await getUserCharactersForGame(gameId, userId);
+		return c.json(gameChars);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -227,10 +190,9 @@ gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
 
 gamesRoute.get("/:gameId/factions", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameFactions = await db.query.factions.findMany({
-			where: eq(factions.gameId, gameId),
-		});
+		const gameFactions = await getUserFactionsForGame(gameId, userId);
 		return c.json(gameFactions);
 	} catch (error) {
 		return handleDatabaseError(c, error);

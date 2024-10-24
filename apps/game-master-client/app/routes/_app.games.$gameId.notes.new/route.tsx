@@ -8,24 +8,24 @@ import { methodNotAllowed } from "~/util/responses";
 import { createNoteAction } from "~/queries/server/create-note.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-	const { gameId } = parseParams(params, { gameId: z.string() });
-	const userId = await validateUser(request);
-	return json({ userId, gameId });
+  const { gameId } = parseParams(params, { gameId: z.string() });
+  const userId = await validateUser(request);
+  return json({ userId, gameId });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	if (request.method === "POST") {
-		return await createNoteAction(request);
-	}
+  if (request.method === "POST") {
+    return await createNoteAction(request);
+  }
 
-	return methodNotAllowed();
+  return methodNotAllowed();
 };
 
 export default function NewNoteRoute() {
-	const { gameId } = useLoaderData<typeof loader>();
-	return (
-		<div>
-			<CreateNoteForm gameId={gameId} />
-		</div>
-	);
+  const { gameId } = useLoaderData<typeof loader>();
+  return (
+    <div>
+      <CreateNoteForm gameId={gameId} />
+    </div>
+  );
 }

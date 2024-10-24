@@ -5,7 +5,6 @@ import type {
 	GameEntities,
 	GameWithCharacters,
 	GameWithMembers,
-	GameWithNestedData,
 	GameWithNotes,
 	UpdateGameRequestBody,
 	UpdateMemberRequestBody,
@@ -44,11 +43,6 @@ export class Games {
 
 	async getAllGameEntities(gameId: Id): Promise<GameEntities> {
 		return this.client.get<GameEntities>(`games/${gameId}/entities`);
-	}
-
-	// TODO: Is this actually implemented or used?
-	async getAllGameDataWithNestedRelations(gameId: Id): Promise<GameWithNestedData> {
-		return this.client.get<GameWithNestedData>(`games/${gameId}/all?nested=true`);
 	}
 
 	async getGameNotes(gameId: Id): Promise<GameWithNotes> {

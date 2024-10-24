@@ -40,21 +40,10 @@ export interface GameWithNotes extends Game {
 	notes: Note[];
 }
 
-export interface GameWithData extends Game {
-	notes: Note[];
-	characters: Character[];
-	factions: Faction[];
-}
-
 export interface GameEntities {
 	notes: BasicEntity[];
 	characters: BasicEntity[];
 	factions: BasicEntity[];
-}
-
-export interface GameWithNestedData extends GameWithNotes {
-	characters: Character & { notes: Id[] };
-	factions: Faction & { notes: Id[]; members: Id[] };
 }
 
 export const createGameSchema = z.object({

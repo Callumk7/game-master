@@ -1,4 +1,4 @@
-import { cn } from "callum-util"
+import { cn } from "callum-util";
 import {
   Dialog as AriaDialog,
   type DialogProps as AriaDialogProps,
@@ -6,10 +6,9 @@ import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps,
   composeRenderProps,
-} from "react-aria-components"
+} from "react-aria-components";
 
-
-const PopoverTrigger = AriaDialogTrigger
+const PopoverTrigger = AriaDialogTrigger;
 
 const Popover = ({ className, offset = 4, ...props }: AriaPopoverProps) => (
   <AriaPopover
@@ -23,17 +22,15 @@ const Popover = ({ className, offset = 4, ...props }: AriaPopoverProps) => (
         "data-[exiting]:animate-out data-[exiting]:fade-out-0 data-[exiting]:zoom-out-95",
         /* Placement */
         "data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
-        className
-      )
+        className,
+      ),
     )}
     {...props}
   />
-)
+);
 
 function PopoverDialog({ className, ...props }: AriaDialogProps) {
-  return (
-    <AriaDialog className={cn("p-4 outline outline-0", className)} {...props} />
-  )
+  return <AriaDialog className={cn("p-4 outline outline-0", className)} {...props} />;
 }
 
-export { Popover, PopoverTrigger, PopoverDialog }
+export { Popover, PopoverTrigger, PopoverDialog };

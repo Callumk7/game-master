@@ -74,14 +74,6 @@ export class Factions {
 		return this.client.get<Faction[]>(`games/${gameId}/factions`);
 	}
 
-	async getUserFactionsForGame(gameId: Id, userId: Id): Promise<Faction[]> {
-		return this.client.get<Faction[]>(`games/${gameId}/users/${userId}/factions`);
-	}
-
-	async getAllUserFactions(userId: Id): Promise<Faction[]> {
-		return this.client.get<Faction[]>(`users/${userId}/factions`);
-	}
-
 	async getFactionWithNotes(factionId: Id): Promise<FactionWithNotes> {
 		return this.client.get<FactionWithNotes>(`factions/${factionId}/notes`);
 	}

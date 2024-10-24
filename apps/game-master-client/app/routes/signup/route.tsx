@@ -43,18 +43,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function SignUpRoute() {
   return (
-      <div className="h-screen flex items-center justify-center">
-        <Card className="mx-auto md:w-1/2">
-          <CardHeader>
-            <CardTitle>Signup for Game Master</CardTitle>
-          </CardHeader>
-          <Form className="p-6 space-y-4" method="POST">
-            <JollyTextField name="email" label="Email" type="email" isRequired />
-            <JollyTextField name="username" label="Username" type="text" isRequired />
-            <JollyTextField name="password" label="Password" type="password" isRequired />
-            <Button type="submit">Create Account</Button>
-          </Form>
-        </Card>
-      </div>
+    <div className="h-screen flex items-center justify-center">
+      <Card className="mx-auto md:w-1/2">
+        <CardHeader>
+          <CardTitle>Signup for Game Master</CardTitle>
+        </CardHeader>
+        <Form className="p-6 space-y-4" method="POST">
+          <JollyTextField name="email" label="Email" type="email" isRequired />
+          <JollyTextField name="username" label="Username" type="text" isRequired />
+          <JollyTextField name="password" label="Password" type="password" isRequired />
+          <Button type="submit">Create Account</Button>
+        </Form>
+      </Card>
+    </div>
   );
 }

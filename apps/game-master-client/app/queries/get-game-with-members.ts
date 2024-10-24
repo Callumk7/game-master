@@ -1,9 +1,12 @@
-import type { SDK } from "@repo/api";
+import type { SDK, User } from "@repo/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetGameWithMembers = (api: SDK, gameId: string) => {
+export const useGetGameWithMembers = (gameId: string) => {
 	return useQuery({
 		queryKey: ["games", gameId],
-		queryFn: async () => api.games.getGameWithMembers(gameId),
+		queryFn: async () =>
+			fetch(`/members/${gameId}`).then(
+				(result) => result.json() as Promise<{members: User[]}>,
+			),
 	});
 };

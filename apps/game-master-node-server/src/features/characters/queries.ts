@@ -1,5 +1,6 @@
 import type {
 	CharacterWithNotes,
+	CharacterWithPermissions,
 	NoteType,
 	Permission,
 	UpdateCharacterRequestBody,
@@ -44,7 +45,9 @@ export const updateCharacter = async (
 	return charUpdate;
 };
 
-export const getCharacterWithPermissions = async (characterId: string) => {
+export const getCharacterWithPermissions = async (
+	characterId: string,
+): Promise<CharacterWithPermissions> => {
 	const charResult = await db.query.characters.findFirst({
 		where: eq(characters.id, characterId),
 		with: {

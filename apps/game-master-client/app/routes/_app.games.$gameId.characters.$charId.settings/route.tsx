@@ -1,3 +1,3 @@
 export default function CharacterSettings() {
-  return <div>Character Settings</div>
+  return <div>Character Settings</div>;
 }
