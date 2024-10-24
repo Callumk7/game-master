@@ -24,9 +24,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
   const api = createApi(userId);
   const sidebarData = await api.users.getUserSidebarData(userId);
-  const serverUrl = env.SERVER_URL;
 
-  return typedjson({ sidebarData, serverUrl, userId });
+  return typedjson({ sidebarData, userId });
 };
 
 export default function AppLayout() {
