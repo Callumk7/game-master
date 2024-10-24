@@ -7,7 +7,7 @@ import {
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody } from "~/components/editor";
+import { EditorBody, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
@@ -126,10 +126,19 @@ export default function NoteIndexRoute() {
           buttonLabel={"Edit game name"}
           action={`/games/${note.gameId}/notes/${note.id}`}
         />
-        <EditorBody
-          htmlContent={note.htmlContent ?? ""}
-          suggestionItems={suggestionItems}
-        />
+        {note.userPermissionLevel === "view" ? (
+          <>
+            <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">
+              You have permission to view
+            </span>
+            <EditorPreview htmlContent={note.htmlContent ?? ""} />
+          </>
+        ) : (
+          <EditorBody
+            htmlContent={note.htmlContent ?? ""}
+            suggestionItems={suggestionItems}
+          />
+        )}
       </div>
     </>
   );
