@@ -1,13 +1,38 @@
 import type { GameWithMembers, Id, Note } from "@repo/api";
 import { and, eq, inArray, ne } from "drizzle-orm";
 import { db } from "~/db";
-import { games, usersToGames } from "~/db/schema/games";
+import { games, usersToGames, type InsertDatabaseGame } from "~/db/schema/games";
 import { notes, notesPermissions } from "~/db/schema/notes";
 import { resolve } from "~/utils";
 
+export const createGame = async (insert: InsertDatabaseGame) => {
+	const result = await db
+		.insert(games)
+		.values(insert)
+		.returning()
+		.then((result) => result[0]);
+
+	if (!result) {
+		throw new Error("Database failed to create new game");
+	}
+
+	try {
+		await db.insert(usersToGames).values({
+			gameId: insert.id,
+			userId: insert.ownerId,
+			isOwner: true,
+		});
+	} catch (error) { 
+		console.error(error)
+		throw new Error("Failed to create a game and user link");
+	}
+
+	return result;
+};
+
 export const getGameWithMembers = async (
 	gameId: Id,
-): Promise<GameWithMembers | undefined> => {
+): Promise<GameWithMembers> => {
 	const game = await db.query.games.findFirst({
 		where: eq(games.id, gameId),
 		with: {
@@ -20,7 +45,7 @@ export const getGameWithMembers = async (
 	});
 
 	if (!game) {
-		return undefined;
+		throw new Error("Unable to find game in database")
 	}
 
 	const transformedResult: GameWithMembers = {

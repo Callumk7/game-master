@@ -21,6 +21,7 @@ import {
 import { createGameInsert, findMembersToAddAndRemove } from "./util";
 import { factions } from "~/db/schema/factions";
 import {
+    createGame,
 	deleteMembers,
 	getGameWithMembers,
 	getMemberIdArray,
@@ -38,16 +39,7 @@ gamesRoute.post("/", async (c) => {
 	const newGameInsert = createGameInsert(data);
 
 	try {
-		const newGame = await db
-			.insert(games)
-			.values(newGameInsert)
-			.returning()
-			.then((result) => result[0]);
-		await db.insert(usersToGames).values({
-			gameId: newGameInsert.id,
-			userId: newGameInsert.ownerId,
-			isOwner: true,
-		});
+		const newGame = await createGame(newGameInsert);
 		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -61,9 +53,6 @@ gamesRoute.get("/:gameId", async (c) => {
 	if (withMembers) {
 		try {
 			const gameWithMembers = await getGameWithMembers(gameId);
-			if (!gameWithMembers) {
-				return handleNotFound(c);
-			}
 			return c.json(gameWithMembers);
 		} catch (error) {
 			return handleDatabaseError(c, error);
