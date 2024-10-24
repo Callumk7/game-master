@@ -21,7 +21,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const factionDetails = await api.factions.getFactionWithPermissions(factionId);
 
   if (factionDetails.userPermissionLevel === "none") {
-    return redirect(`/games/${gameId}/factions`)
+    return redirect(`/games/${gameId}/factions`);
   }
   const folders = await api.folders.getGameFolders(factionDetails.gameId);
   return typedjson({ factionDetails, folders });
@@ -66,6 +66,7 @@ export default function FactionDetailRoute() {
         gameId={factionDetails.gameId}
         entityVisibility={factionDetails.visibility}
         permissions={factionDetails.permissions}
+        userPermissionLevel={factionDetails.userPermissionLevel!}
         folders={folders}
       />
       <EditableText

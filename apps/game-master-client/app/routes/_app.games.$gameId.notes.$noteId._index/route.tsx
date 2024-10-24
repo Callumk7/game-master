@@ -23,7 +23,7 @@ import { createApi } from "~/lib/api.server";
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { noteId, gameId } = parseParams(params, {
     noteId: z.string(),
-    gameId: z.string()
+    gameId: z.string(),
   });
 
   const userId = await validateUser(request);
@@ -34,7 +34,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   );
 
   if (note.userPermissionLevel === "none") {
-    return redirect(`/games/${gameId}/notes`)
+    return redirect(`/games/${gameId}/notes`);
   }
 
   const folders = await api.folders.getGameFolders(note.gameId);
@@ -119,6 +119,7 @@ export default function NoteIndexRoute() {
           entityOwnerId={note.ownerId}
           entityVisibility={note.visibility}
           permissions={note.permissions}
+          userPermissionLevel={note.userPermissionLevel!}
           folders={folders}
         />
         <EditableText

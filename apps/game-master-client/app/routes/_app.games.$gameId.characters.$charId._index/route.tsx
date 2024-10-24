@@ -77,6 +77,7 @@ export default function CharacterRoute() {
         gameId={characterDetails.gameId}
         entityVisibility={characterDetails.visibility}
         permissions={characterDetails.permissions}
+        userPermissionLevel={characterDetails.userPermissionLevel!}
         folders={folders}
       />
       <EditableText

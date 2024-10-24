@@ -13,13 +13,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { type Key, useState } from "react";
-import {
-  type Folder,
-  type Permission,
-  type User,
-  type UserPermission,
-  type Visibility,
-} from "@repo/api";
+import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
@@ -31,6 +25,7 @@ interface EntityToolbarProps {
   gameId: string;
   entityVisibility: Visibility;
   permissions: UserPermission[];
+  userPermissionLevel: Permission;
   folders: Folder[] | undefined;
 }
 export function EntityToolbar({
@@ -38,13 +33,14 @@ export function EntityToolbar({
   gameId,
   entityVisibility,
   permissions,
+  userPermissionLevel,
   folders,
 }: EntityToolbarProps) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
-  const { serverUrl, userId } = useAppData();
+  const { userId } = useAppData();
   // fetch game members here, there is no reason that this won't work with each entity
   const gameWithMembersQuery = useGetGameWithMembers(gameId);
   let members: User[] = [];
@@ -55,6 +51,9 @@ export function EntityToolbar({
     );
   }
 
+  const hasEditPermission = userPermissionLevel === "edit";
+  const isOwner = userId === entityOwnerId;
+
   return (
     <>
       <Toolbar>
@@ -64,7 +63,10 @@ export function EntityToolbar({
             <MenuItem>
               <StarIcon className="mr-2" /> <span>Favourite</span>
             </MenuItem>
-            <MenuItem onAction={() => navigate("settings", { relative: "path" })}>
+            <MenuItem
+              isDisabled={!hasEditPermission}
+              onAction={() => navigate("settings", { relative: "path" })}
+            >
               <GearIcon className="mr-2" /> <span>Settings</span>
             </MenuItem>
             <MenuItem onAction={() => setIsDuplicateDialogOpen(true)}>
@@ -73,12 +75,15 @@ export function EntityToolbar({
           </MenuSection>
           <MenuSection>
             <MenuHeader>Danger Zone</MenuHeader>
-            <MenuItem onAction={() => submit({}, { method: "delete" })}>
+            <MenuItem
+              isDisabled={!hasEditPermission}
+              onAction={() => submit({}, { method: "delete" })}
+            >
               <TrashIcon className="mr-2" /> <span>Delete</span>
             </MenuItem>
           </MenuSection>
         </JollyMenu>
-        {userId === entityOwnerId ? (
+        {isOwner ? (
           gameWithMembersQuery.status === "success" ? (
             <SharingPopover
               members={members}
@@ -91,7 +96,7 @@ export function EntityToolbar({
             </Button>
           )
         ) : null}
-        {folders ? <FolderMenu folders={folders} /> : null}
+        {hasEditPermission && folders ? <FolderMenu folders={folders} /> : null}
         <ImageUploader action="images" ownerId={entityOwnerId} />
       </Toolbar>
       <DuplicateEntityDialog
