@@ -33,6 +33,7 @@ import { validateUploadIsImageOrThrow } from "~/utils";
 import { s3 } from "~/lib/s3";
 import { images } from "~/db/schema/images";
 import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 
 export const notesRoute = new Hono();
 
@@ -119,6 +120,13 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 	const { userId } = getPayload(c);
 	try {
 		const noteResult = await getNoteWithPermissions(noteId);
+		const userPermission = PermissionService.calculateUserPermissionLevel({
+			userId,
+			ownerId: noteResult.ownerId,
+			globalVisibility: noteResult.visibility,
+			userPermissions: noteResult.permissions,
+		});
+		noteResult.userPermissionLevel = userPermission;
 		return c.json(noteResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);

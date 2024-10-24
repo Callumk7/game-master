@@ -17,7 +17,14 @@ import {
 } from "~/lib/http-helpers";
 import { createFactionInsert } from "./util";
 import { generateFactionId } from "~/lib/ids";
-import { createFaction, createFactionPermission, getFactionWithPermissions, updateFaction } from "./queries";
+import {
+	createFaction,
+	createFactionPermission,
+	getFactionWithPermissions,
+	updateFaction,
+} from "./queries";
+import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 
 export const factionRoute = new Hono();
 
@@ -102,8 +109,16 @@ factionRoute.post("/:factionId/duplicate", async (c) => {
 
 factionRoute.get("/:factionId/permissions", async (c) => {
 	const factionId = c.req.param("factionId");
+	const { userId } = getPayload(c);
 	try {
 		const factionResult = await getFactionWithPermissions(factionId);
+		const userPermissionLevel = PermissionService.calculateUserPermissionLevel({
+			userId,
+			ownerId: factionResult.ownerId,
+			globalVisibility: factionResult.visibility,
+			userPermissions: factionResult.permissions,
+		});
+		factionResult.userPermissionLevel = userPermissionLevel;
 		return c.json(factionResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);

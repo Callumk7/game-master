@@ -1,4 +1,4 @@
-import type { Id, Visibility } from "./index.js"
+import type { Id, Permission, Visibility } from "./index.js"
 
 export interface Entity {
 	id: Id;
@@ -11,5 +11,6 @@ export interface Entity {
 	folderId?: Id | null;
 	gameId: Id;
 	visibility: Visibility;
+	userPermissionLevel?: Permission;
 	coverImageUrl?: string | null;
 }

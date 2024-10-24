@@ -14,7 +14,6 @@ export type NoteType = z.infer<typeof noteTypeSchema>;
 
 export interface Note extends Entity {
 	type: NoteType;
-	isPlayer: boolean;
 }
 
 export interface NoteWithPermissions extends Note {

@@ -19,7 +19,15 @@ import {
 } from "~/lib/http-helpers";
 import { createCharacterInsert } from "./util";
 import { generateCharacterId } from "~/lib/ids";
-import { createCharacter, createCharacterPermission, getCharacterWithNotes, getCharacterWithPermissions, updateCharacter } from "./queries";
+import {
+	createCharacter,
+	createCharacterPermission,
+	getCharacterWithNotes,
+	getCharacterWithPermissions,
+	updateCharacter,
+} from "./queries";
+import { PermissionService } from "~/services/permissions";
+import { getPayload } from "~/lib/jwt";
 
 export const characterRoute = new Hono();
 
@@ -79,8 +87,16 @@ characterRoute.patch("/:charId", async (c) => {
 
 characterRoute.get("/:charId/permissions", async (c) => {
 	const charId = c.req.param("charId");
+	const { userId } = getPayload(c);
 	try {
 		const charResult = await getCharacterWithPermissions(charId);
+		const userPermissionLevel = PermissionService.calculateUserPermissionLevel({
+			userId,
+			ownerId: charResult.ownerId,
+			globalVisibility: charResult.visibility,
+			userPermissions: charResult.permissions,
+		});
+		charResult.userPermissionLevel = userPermissionLevel;
 		return c.json(charResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);

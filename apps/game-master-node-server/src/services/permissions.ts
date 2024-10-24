@@ -1,37 +1,33 @@
-import { and, eq } from "drizzle-orm";
-import { db } from "~/db";
-import { notes, notesPermissions } from "~/db/schema/notes";
-import { resolve } from "~/utils";
+import type { Permission, UserPermission, Visibility } from "@repo/api";
 
-class PermissionService {
-	async canAccessNote(
-		userId: string,
-		noteId: string,
-		requiredLevel: "edit" | "view" = "view",
-	) {
-		const [note, permission] = await resolve(
-			db.query.notes.findFirst({
-				where: eq(notes.id, noteId),
-			}),
-			db.query.notesPermissions.findFirst({
-				where: and(
-					eq(notesPermissions.noteId, noteId),
-					eq(notesPermissions.userId, userId),
-				),
-			}),
-		);
+type CanAccessArgs = {
+	userId: string;
+	ownerId: string;
+	globalVisibility: Visibility;
+	userPermissions?: UserPermission[];
+};
 
-		if (!note) return false;
-		if (note.ownerId === userId) return true;
+export const PermissionService = {
+	calculateUserPermissionLevel({
+		userId,
+		ownerId,
+		globalVisibility,
+		userPermissions,
+	}: CanAccessArgs): Permission {
+		if (ownerId === userId) return "edit";
+		const userPermission = userPermissions?.find(
+			(p) => p.userId === userId,
+		)?.permission;
+		if (userPermission) return userPermission;
+		switch (globalVisibility) {
+			case "private":
+				return "none";
 
-		if (permission) {
-			if (permission.permission === "none") return false;
-			if (permission.permission === "view") return true;
-			return permission.permission === "edit";
+			case "public":
+				return "edit";
+
+			case "viewable":
+				return "view";
 		}
-
-		if (note.visibility === "private") return false;
-		if (requiredLevel === "view") return true;
-		return note.visibility === "public";
-	}
-}
+	},
+};
