@@ -7,11 +7,7 @@ import {
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Typography from "@tiptap/extension-typography";
-import {
-  FontBoldIcon,
-  FontItalicIcon,
-  HeadingIcon,
-} from "@radix-ui/react-icons";
+import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
 import { Toolbar } from "~/ui/toolbar";
 import { Button } from "~/ui/button";
 import { useSyncEditorContent } from "./sync";
@@ -31,7 +27,7 @@ import { useEffect, useState } from "react";
 export const useDefaultEditor = (
   content?: string | undefined,
   suggestionItems?: () => MentionItem[],
-  editable?: boolean
+  editable?: boolean,
 ) => {
   const extensions: Extensions = [StarterKit, Typography];
   if (suggestionItems) {
@@ -46,7 +42,7 @@ export const useDefaultEditor = (
             return fuse.search(query).map((result) => result.item);
           },
         },
-      })
+      }),
     );
   }
   return useEditor({
@@ -132,11 +128,7 @@ export function EditorWithControls({
     <div>
       {label && <Label id="editor-label">{label}</Label>}
       <EditorContent
-        className={cn(
-          "flex-auto",
-          bordered ? "border rounded-md" : "",
-          className
-        )}
+        className={cn("flex-auto", bordered ? "border rounded-md" : "", className)}
         editor={editor}
         aria-labelledby="editor-label"
       />

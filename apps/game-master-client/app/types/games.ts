@@ -1,4 +1,4 @@
-// TODO: Move these to a separate package like before maybe - or find another 
+// TODO: Move these to a separate package like before maybe - or find another
 // way to share
 
 export interface Game {

@@ -91,7 +91,9 @@ export default function LoginRoute() {
           <JollyTextField name="password" label="Password" type="password" isRequired />
           <div className="flex flex-col gap-2">
             <Button type="submit">Login</Button>
-            <Link variant={"secondary"} href={"/signup"}>Need an account? Sign up</Link>
+            <Link variant={"secondary"} href={"/signup"}>
+              Need an account? Sign up
+            </Link>
           </div>
         </Form>
       </Card>

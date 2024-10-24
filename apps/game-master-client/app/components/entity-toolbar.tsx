@@ -46,9 +46,7 @@ export function EntityToolbar({
 
   const { serverUrl, userId } = useAppData();
   // fetch game members here, there is no reason that this won't work with each entity
-  const gameWithMembersQuery = useGetGameWithMembers(
-    gameId,
-  );
+  const gameWithMembersQuery = useGetGameWithMembers(gameId);
   let members: User[] = [];
 
   if (gameWithMembersQuery.status === "success") {

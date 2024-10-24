@@ -10,29 +10,29 @@ import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-	const { gameId } = parseParams(params, { gameId: z.string() });
+  const { gameId } = parseParams(params, { gameId: z.string() });
   const userId = await validateUser(request);
   const api = createApi(userId);
 
-	const gameChars = await api.characters.getAllGameCharacters(gameId);
+  const gameChars = await api.characters.getAllGameCharacters(gameId);
 
-	return typedjson({ gameId, gameChars });
+  return typedjson({ gameId, gameChars });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	if (request.method === "POST") {
-		return createCharacterAction(request);
-	}
+  if (request.method === "POST") {
+    return createCharacterAction(request);
+  }
 
-	return methodNotAllowed();
+  return methodNotAllowed();
 };
 
 export default function CharacterIndex() {
-	const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
-	return (
-		<div className="space-y-2">
-			<CreateCharacterSlideover gameId={gameId} />
-			<CharacterTable characters={gameChars} />
-		</div>
-	);
+  const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
+  return (
+    <div className="space-y-2">
+      <CreateCharacterSlideover gameId={gameId} />
+      <CharacterTable characters={gameChars} />
+    </div>
+  );
 }

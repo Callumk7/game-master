@@ -1,3 +1,3 @@
 export default function FolderIndex() {
-	return <p>The folder index</p>
+  return <p>The folder index</p>;
 }

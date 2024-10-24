@@ -46,15 +46,15 @@ export default function GameRoute() {
     <div className="p-4 space-y-10">
       <div>
         <EditableText
-        method="patch"
-        fieldName={"name"}
-        value={game.name}
-        variant={"h2"}
-        weight={"bold"}
-        inputLabel={"Game name input"}
-        buttonLabel={"Edit game name"}
-      />
-      <p className="whitespace-pre-wrap">{game.description}</p>
+          method="patch"
+          fieldName={"name"}
+          value={game.name}
+          variant={"h2"}
+          weight={"bold"}
+          inputLabel={"Game name input"}
+          buttonLabel={"Edit game name"}
+        />
+        <p className="whitespace-pre-wrap">{game.description}</p>
       </div>
       <div>
         <Text variant={"h2"} weight={"semi"}>

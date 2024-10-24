@@ -26,7 +26,7 @@ export const CustomMention = MentionExtension.extend({
 			"mention-component",
 			mergeAttributes(
 				{ href: node.attrs.href, label: node.attrs.label },
-				HTMLAttributes
+				HTMLAttributes,
 			),
 		];
 	},

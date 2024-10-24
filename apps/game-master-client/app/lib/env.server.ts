@@ -8,5 +8,5 @@ if (!process.env.DB_URL) {
 export const env = {
 	SERVER_SECRET: process.env.SERVER_SECRET,
 	DB_URL: process.env.DB_URL,
-	SERVER_URL: process.env.SERVER_URL || "http://localhost:3000"
-}
+	SERVER_URL: process.env.SERVER_URL || "http://localhost:3000",
+};

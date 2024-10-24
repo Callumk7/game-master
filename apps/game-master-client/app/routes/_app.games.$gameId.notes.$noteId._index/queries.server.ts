@@ -11,7 +11,7 @@ export const getNoteData = async (api: SDK, noteId: string) => {
 		noteCall,
 		linkedCharsCall,
 		linkedFactionsCall,
-		linkedNotesCall
+		linkedNotesCall,
 	);
 
 	return { note, linkedChars, linkedFactions, linkedNotes };

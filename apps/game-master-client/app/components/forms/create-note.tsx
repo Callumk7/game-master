@@ -68,7 +68,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
       visibility,
     };
 
-    console.log(validData)
+    console.log(validData);
 
     submit(validData, { method: "post" });
   };
@@ -107,7 +107,12 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="public">Everyone can edit</SelectItem>
           </JollySelect>
         </div>
-        <EditorWithControls editor={editor} bordered label="Body" className="min-h-[50vh] h-full" />
+        <EditorWithControls
+          editor={editor}
+          bordered
+          label="Body"
+          className="min-h-[50vh] h-full"
+        />
       </div>
       <DialogFooter>
         <Button onPress={close} type="submit">

@@ -23,5 +23,5 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function FolderLayout() {
-	return <Outlet />
+  return <Outlet />;
 }

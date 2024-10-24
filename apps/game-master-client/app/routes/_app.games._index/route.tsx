@@ -1,3 +1,3 @@
 export default function GamesIndex() {
-  return <p>Game Index</p>
+  return <p>Game Index</p>;
 }
