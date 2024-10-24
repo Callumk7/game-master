@@ -83,32 +83,3 @@ usersRoute.get("/:userId/sidebar", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
-
-usersRoute.get("/:userId/notes", async (c) => {
-	const userId = c.req.param("userId");
-	try {
-		const allUserNotes = await db
-			.select()
-			.from(notes)
-			.where(eq(notes.ownerId, userId));
-		return c.json(allUserNotes);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-////////////////////////////////////////////////////////////////////////////////
-//                                Character Stuff
-////////////////////////////////////////////////////////////////////////////////
-
-usersRoute.get("/:userId/chracters", async (c) => {
-	const userId = c.req.param("userId");
-	try {
-		const userChars = await db.query.characters.findMany({
-			where: eq(characters.ownerId, userId),
-		});
-		return c.json(userChars);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});

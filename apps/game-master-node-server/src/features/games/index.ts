@@ -184,18 +184,6 @@ gamesRoute.get("/:gameId/characters", async (c) => {
 	}
 });
 
-gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
-	const { gameId, userId } = c.req.param();
-	try {
-		const userChars = await db.query.characters.findMany({
-			where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
-		});
-		return c.json(userChars);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
 ////////////////////////////////////////////////////////////////////////////////
 //                                Faction Stuff
 ////////////////////////////////////////////////////////////////////////////////
