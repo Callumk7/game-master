@@ -19,12 +19,13 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createGameInsert, findMembersToAddAndRemove } from "./util";
-import { factions } from "~/db/schema/factions";
 import {
-    createGame,
+	createGame,
 	deleteMembers,
 	getGameWithMembers,
 	getMemberIdArray,
+	getUserCharactersForGame,
+	getUserFactionsForGame,
 	getUserNotesForGame,
 	handleAddMembers,
 	handleRemoveMembers,
@@ -174,11 +175,10 @@ gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
 
 gamesRoute.get("/:gameId/characters", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameCharacters = await db.query.characters.findMany({
-			where: eq(characters.gameId, gameId),
-		});
-		return c.json(gameCharacters);
+		const gameChars = await getUserCharactersForGame(gameId, userId);
+		return c.json(gameChars);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -202,10 +202,9 @@ gamesRoute.get("/:gameId/users/:userId/characters", async (c) => {
 
 gamesRoute.get("/:gameId/factions", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 	try {
-		const gameFactions = await db.query.factions.findMany({
-			where: eq(factions.gameId, gameId),
-		});
+		const gameFactions = await getUserFactionsForGame(gameId, userId);
 		return c.json(gameFactions);
 	} catch (error) {
 		return handleDatabaseError(c, error);
