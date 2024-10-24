@@ -1,10 +1,7 @@
 import { newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
-import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { characters } from "~/db/schema/characters";
-import { notes } from "~/db/schema/notes";
 import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
