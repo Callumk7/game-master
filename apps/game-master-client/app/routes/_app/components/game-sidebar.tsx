@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { useSyncSelectedGameWithParams } from "./sync-selected-game";
-import { Text } from "~/components/ui/typeography";
 import { useMemo, useState } from "react";
 import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 import {
@@ -57,21 +56,14 @@ export function GameSidebar({ gamesWithAllEntities }: GameSidebarProps) {
         selectedGame={selectedGame}
         setSelectedGame={updateSelection}
       />
-      <div className="flex flex-col items-start space-y-4 divide-y w-full">
+      <div className="flex flex-col items-start">
+        <EntityGroup items={gameNotes} itemType="notes" selectedGame={selectedGame} />
         <EntityGroup
-          title="Notes"
-          items={gameNotes}
-          itemType="notes"
-          selectedGame={selectedGame}
-        />
-        <EntityGroup
-          title="Characters"
           items={gameChars}
           itemType="characters"
           selectedGame={selectedGame}
         />
         <EntityGroup
-          title="Factions"
           items={gameFactions}
           itemType="factions"
           selectedGame={selectedGame}
@@ -127,18 +119,14 @@ const findGameEntities = (
 };
 
 interface EntityGroupProps {
-  title: string;
   items: BasicEntity[];
   selectedGame: string;
   itemType: EntityType;
 }
 
-function EntityGroup({ title, items, selectedGame, itemType }: EntityGroupProps) {
+function EntityGroup({ items, selectedGame, itemType }: EntityGroupProps) {
   return (
     <div className="w-full py-1">
-      <Text variant={"label"} id="title">
-        {title}
-      </Text>
       <Group className={"flex flex-col gap-y-2 items-start"} aria-labelledby="title">
         {items.map((note) => (
           <Link
@@ -203,7 +191,7 @@ function FolderTree({ folders, gameId }: FolderTreeProps) {
   }, [folders]);
 
   return (
-    <Tree items={mappedFolders}>
+    <Tree items={mappedFolders} defaultExpandedKeys={mappedFolders.map((f) => f.id)}>
       {function renderItems(item) {
         return (
           <TreeItem
