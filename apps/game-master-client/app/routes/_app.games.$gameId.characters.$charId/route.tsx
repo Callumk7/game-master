@@ -13,6 +13,7 @@ import { EntityToolbar } from "~/components/entity-toolbar";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { CharacterNavigation } from "./components/navigation";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
@@ -22,13 +23,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     gameId: z.string(),
   });
   const characterDetails = await api.characters.getCharacterWithPermissions(charId);
+  const charNotes = await api.characters.getNotes(charId);
 
   if (characterDetails.userPermissionLevel === "none") {
     return redirect(`/games/${gameId}/characters`);
   }
 
   const folders = await api.folders.getGameFolders(characterDetails.gameId);
-  return typedjson({ characterDetails, folders });
+  return typedjson({ characterDetails, charNotes, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -74,14 +76,20 @@ export default function CharacterRoute() {
   const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
   return (
     <div className="space-y-4">
-      <EntityToolbar
-        entityOwnerId={characterDetails.ownerId}
-        gameId={characterDetails.gameId}
-        entityVisibility={characterDetails.visibility}
-        permissions={characterDetails.permissions}
-        userPermissionLevel={characterDetails.userPermissionLevel!}
-        folders={folders}
-      />
+      <div className="flex items-center w-full justify-between">
+        <CharacterNavigation
+          charId={characterDetails.id}
+          gameId={characterDetails.gameId}
+        />
+        <EntityToolbar
+          entityOwnerId={characterDetails.ownerId}
+          gameId={characterDetails.gameId}
+          entityVisibility={characterDetails.visibility}
+          permissions={characterDetails.permissions}
+          userPermissionLevel={characterDetails.userPermissionLevel!}
+          folders={folders}
+        />
+      </div>
       <Outlet />
     </div>
   );
