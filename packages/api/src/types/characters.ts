@@ -39,3 +39,7 @@ export const duplicateCharacterSchema = z.object({
 	ownerId: z.string()
 })
 export type DuplicateCharacterRequestBody = z.infer<typeof duplicateCharacterSchema>;
+
+export const linkCharacterSchema = z.object({
+	toIds: z.array(z.string()),
+})

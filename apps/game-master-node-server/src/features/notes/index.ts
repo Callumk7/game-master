@@ -255,7 +255,7 @@ notesRoute.post("/:noteId/links/factions", async (c) => {
 			.values(linkInsert)
 			.returning()
 			.onConflictDoNothing();
-		return c.json(result);
+		return c.json(result); // TODO: should be success response
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
