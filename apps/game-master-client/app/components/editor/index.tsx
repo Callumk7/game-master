@@ -128,7 +128,7 @@ export function EditorWithControls({
     <div>
       {label && <Label id="editor-label">{label}</Label>}
       <EditorContent
-        className={cn("flex-auto", bordered ? "border rounded-md" : "", className)}
+        className={cn("flex-auto max-w-2xl", bordered ? "border rounded-md" : "", className)}
         editor={editor}
         aria-labelledby="editor-label"
       />
