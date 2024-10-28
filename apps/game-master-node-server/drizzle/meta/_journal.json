@@ -36,6 +36,13 @@
       "when": 1729268700984,
       "tag": "0004_nifty_marvel_zombies",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1730114175105,
+      "tag": "0005_fresh_pyro",
+      "breakpoints": true
     }
   ]
 }

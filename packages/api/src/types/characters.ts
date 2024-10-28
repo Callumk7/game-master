@@ -30,7 +30,9 @@ export const updateCharacterSchema = z.object({
 	htmlContent: z.string().optional(),
 	isPlayer: z.boolean().optional(),
 	folderId: z.string().optional(),
-	visibility: visibilitySchema.optional()
+	visibility: visibilitySchema.optional(),
+	primaryFactionId: z.string().optional()
+
 })
 export type UpdateCharacterRequestBody = z.infer<typeof updateCharacterSchema>;
 

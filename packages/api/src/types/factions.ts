@@ -4,9 +4,7 @@ import { visibilitySchema, type Id, type UserPermission } from "./index.js";
 import type { Note } from "./notes.js";
 import type { Entity } from "./entity.js";
 
-export interface Faction extends Entity {
-	leaderId: Id | null;
-}
+export interface Faction extends Entity { }
 
 export interface FactionWithMembers extends Faction {
 	members: Character[];
@@ -39,12 +37,12 @@ export const updateFactionSchema = z.object({
 	coverImageUrl: z.string().optional(),
 	leaderId: z.string().optional(),
 	folderId: z.string().optional(),
-	visibility: visibilitySchema.optional()
-})
+	visibility: visibilitySchema.optional(),
+});
 export type UpdateFactionRequestBody = z.infer<typeof updateFactionSchema>;
 
 export const duplicateFactionSchema = z.object({
 	name: z.string(),
-	ownerId: z.string()
-})
+	ownerId: z.string(),
+});
 export type DuplicateFactionRequestBody = z.infer<typeof duplicateFactionSchema>;

@@ -135,8 +135,7 @@ export const getUserCharactersForGame = async (
 
 	return ownedChars.concat(
 		visibleChars.filter(
-			(char) =>
-				!ownedChars.some((ownedChar) => ownedChar.id === char.id),
+			(char) => !ownedChars.some((ownedChar) => ownedChar.id === char.id),
 		),
 	);
 };
@@ -144,7 +143,7 @@ export const getUserCharactersForGame = async (
 const getOwnedNotes = async (gameId: Id, userId: Id) => {
 	const notesResult = await db.query.notes.findMany({
 		where: and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)),
-	});
+	})
 
 	return notesResult;
 };
@@ -202,7 +201,10 @@ const getOwnedCharacters = async (gameId: Id, userId: Id) => {
 const getVisibleCharacters = async (gameId: Id, userId: Id) => {
 	const charResult = await db.query.characters
 		.findMany({
-			where: and(eq(characters.gameId, gameId), ne(characters.visibility, "private")),
+			where: and(
+				eq(characters.gameId, gameId),
+				ne(characters.visibility, "private"),
+			),
 			with: {
 				permissions: {
 					where: eq(charactersPermissions.userId, userId),

@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { characters, charactersInFactions } from "./characters";
+import { charactersInFactions } from "./characters";
 import { games } from "./games";
 import { folders, notes } from "./notes";
 import { users } from "./users";
@@ -35,7 +35,6 @@ export const factions = pgTable("factions", {
 		.references(() => users.id)
 		.notNull(),
 	folderId: text("folder_id").references(() => folders.id),
-	leaderId: text("leader_id").references(() => characters.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 

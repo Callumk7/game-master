@@ -38,6 +38,7 @@ export const characters = pgTable("characters", {
 	folderId: text("folder_id").references(() => folders.id),
 	isPlayer: boolean("is_player").notNull().default(false),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
+	primaryFactionId: text("primary_faction_id").references(() => factions.id)
 });
 
 export const databaseSelectCharacterSchema = createSelectSchema(characters);
@@ -60,7 +61,11 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 		fields: [characters.folderId],
 		references: [folders.id]
 	}),
-	factions: many(charactersInFactions), // ...a member of
+	factions: many(charactersInFactions),
+	primaryFaction: one(factions, {
+		fields: [characters.primaryFactionId],
+		references: [factions.id]
+	}),
 	permissions: many(charactersPermissions),
 	images: many(images)
 }));

@@ -1,4 +1,10 @@
-import type { Permission, UserPermission, Visibility } from "@repo/api";
+import type {
+	Note,
+	NoteWithPermissions,
+	Permission,
+	UserPermission,
+	Visibility,
+} from "@repo/api";
 
 type CanAccessArgs = {
 	userId: string;
@@ -29,5 +35,17 @@ export const PermissionService = {
 			case "viewable":
 				return "view";
 		}
+	},
+
+	appendPermissionLevel(note: NoteWithPermissions, userId: string) {
+		const noteUpdate = note;
+		noteUpdate.userPermissionLevel = this.calculateUserPermissionLevel({
+			userId,
+			ownerId: note.ownerId,
+			globalVisibility: note.visibility,
+			userPermissions: note.permissions,
+		});
+
+		return noteUpdate;
 	},
 };

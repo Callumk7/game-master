@@ -1,13 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { Button } from "~/components/ui/button";
-import { JollySelect, SelectItem } from "~/components/ui/select";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
-import { FactionTable } from "./components/faction-table";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { FactionTable } from "~/components/tables/faction-table";
+import { LinkFactionDialog } from "./components/link-faction-dialog";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
@@ -30,7 +28,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   });
   const api = createApi(userId);
   if (request.method === "POST") {
-    const { factionId } = await parseForm(request, { factionId: z.string() });
+    const { factionId, isPrimary } = await parseForm(request, {
+      factionId: z.string(),
+      isPrimary: z.string().optional(),
+    });
+    if (isPrimary) {
+      await api.characters.updateCharacterDetails(charId, {
+        primaryFactionId: factionId,
+      });
+    }
     const result = await api.characters.linkFactions(charId, [factionId]);
     return typedjson(result);
   }
@@ -39,14 +45,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function CharacterFactionsRoute() {
   const { allFactions, charFactions } = useTypedLoaderData<typeof loader>();
   return (
-    <div>
+    <div className="space-y-4">
+      <LinkFactionDialog allFactions={allFactions} />
       <FactionTable factions={charFactions} />
-      <Form className="w-64" method="POST">
-        <JollySelect items={allFactions} name="factionId">
-          {(item) => <SelectItem>{item.name}</SelectItem>}
-        </JollySelect>
-        <Button type="submit">send</Button>
-      </Form>
     </div>
   );
 }
