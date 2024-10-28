@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 export const useDefaultEditor = (
   content?: string | undefined,
   suggestionItems?: () => MentionItem[],
-  editable?: boolean,
+  editable = true,
 ) => {
   const extensions: Extensions = [StarterKit, Typography];
   if (suggestionItems) {

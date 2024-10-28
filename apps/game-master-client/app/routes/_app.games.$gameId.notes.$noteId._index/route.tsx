@@ -7,7 +7,7 @@ import {
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody, EditorPreview } from "~/components/editor";
+import { EditorBody, EditorPreview, useDefaultEditor } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
@@ -110,7 +110,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function NoteIndexRoute() {
   const { note, folders } = useTypedLoaderData<typeof loader>();
   const { suggestionItems } = useGameData();
-  console.log(suggestionItems());
 
   return (
     <>

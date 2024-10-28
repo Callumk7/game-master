@@ -19,7 +19,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
-	const editor = useDefaultEditor(optimisticContent, options.suggestionItems);
+	const editor = useDefaultEditor(optimisticContent, options.suggestionItems, true);
 
 	const [isEdited, setIsEdited] = useState(false);
 
