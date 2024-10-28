@@ -6,7 +6,7 @@ import type {
 	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
-import type { Faction } from "../types/factions.js";
+import type { Faction, FactionWithMembers } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
 	BasicServerResponse,
@@ -18,7 +18,7 @@ import type {
 import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	// DONE
 	async getCharacter(charId: Id): Promise<Character> {
@@ -83,6 +83,10 @@ export class Characters {
 	async moveToFolder(charId: Id, folderId: Id): Promise<BasicServerResponse> {
 		const body: FolderInteractionRequestBody = { entityId: charId };
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
+	}
+
+	async getPrimaryFaction(charId: Id): Promise<FactionWithMembers | null> {
+		return this.client.get<FactionWithMembers | null>(`characters/${charId}/factions/primary`);
 	}
 
 	async getFactions(charId: Id): Promise<Faction[]> {

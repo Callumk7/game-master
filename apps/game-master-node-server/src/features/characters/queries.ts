@@ -1,6 +1,7 @@
 import type {
 	CharacterWithNotes,
 	CharacterWithPermissions,
+	FactionWithMembers,
 	NoteType,
 	Permission,
 	UpdateCharacterRequestBody,
@@ -141,4 +142,34 @@ export const linkCharacterToNotes = async (charId: string, noteIds: string[]) =>
 		.values(linkInsert)
 		.returning()
 		.onConflictDoNothing();
+};
+
+export const getCharactersPrimaryFaction = async (
+	charId: string,
+): Promise<FactionWithMembers | null> => {
+	const charFactionResult = await db.query.characters
+		.findFirst({
+			where: eq(characters.id, charId),
+			with: {
+				primaryFaction: {
+					with: {
+						members: { with: { character: true } },
+					},
+				},
+			},
+		})
+		.then((result) => {
+			if (result?.primaryFaction) {
+				return {
+					...result.primaryFaction,
+					members: result.primaryFaction.members.map((m) => m.character),
+				};
+			}
+		});
+
+	if (!charFactionResult) {
+		return null;
+	}
+
+	return charFactionResult;
 };

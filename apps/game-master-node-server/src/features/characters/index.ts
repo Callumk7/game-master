@@ -24,6 +24,7 @@ import {
 	createCharacterPermission,
 	getCharacterFactions,
 	getCharacterNotes,
+	getCharactersPrimaryFaction,
 	getCharacterWithPermissions,
 	linkCharacterToFactions,
 	linkCharacterToNotes,
@@ -189,6 +190,17 @@ characterRoute.post("/:charId/notes", async (c) => {
 	try {
 		const links = await linkCharacterToNotes(charId, noteIds);
 		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Primary Faction
+characterRoute.get("/:charId/factions/primary", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const factionResult = await getCharactersPrimaryFaction(charId);
+		return c.json(factionResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

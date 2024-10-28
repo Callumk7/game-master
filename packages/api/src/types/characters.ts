@@ -19,6 +19,8 @@ export const createCharacterSchema = z.object({
 	name: z.string(),
 	content: z.string(),
 	htmlContent: z.string(),
+	primaryFactionId: z.string().optional(),
+	isPlayer: z.boolean().optional(),
 	ownerId: z.string(),
 	gameId: z.string()
 })
