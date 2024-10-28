@@ -4,10 +4,10 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { methodNotAllowed } from "~/util/responses";
 import { CreateFactionSlideover } from "~/components/forms/create-faction";
-import { FactionTable } from "./components/faction-table";
 import { createFactionAction } from "~/queries/server/create-faction.server";
 import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
+import { FactionTable } from "~/components/tables/faction-table";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);

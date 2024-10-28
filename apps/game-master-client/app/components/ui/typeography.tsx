@@ -7,10 +7,10 @@ import { cn } from "callum-util";
 const typographyVariants = cva("font-medium", {
   variants: {
     variant: {
-      h1: "text-4xl font-bold",
-      h2: "text-3xl font-semibold",
-      h3: "text-2xl",
-      h4: "text-xl",
+      h1: "text-4xl",
+      h2: "text-2xl",
+      h3: "text-xl",
+      h4: "text-lg",
       p: "text-base",
       label: "text-muted-foreground text-[0.8rem]",
     },

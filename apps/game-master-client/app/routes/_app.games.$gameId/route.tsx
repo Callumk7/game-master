@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function GameLayout() {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-y-4">
       <GameNavbar />
       <div className="p-3">
         <Outlet />

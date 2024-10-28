@@ -120,14 +120,11 @@ notesRoute.get("/:noteId/permissions", async (c) => {
 	const { userId } = getPayload(c);
 	try {
 		const noteResult = await getNoteWithPermissions(noteId);
-		const userPermission = PermissionService.calculateUserPermissionLevel({
+		const noteWithPermission = PermissionService.appendPermissionLevel(
+			noteResult,
 			userId,
-			ownerId: noteResult.ownerId,
-			globalVisibility: noteResult.visibility,
-			userPermissions: noteResult.permissions,
-		});
-		noteResult.userPermissionLevel = userPermission;
-		return c.json(noteResult);
+		);
+		return c.json(noteWithPermission);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -180,10 +177,10 @@ notesRoute.get("/:noteId/links/notes", async (c) => {
 
 notesRoute.post("/:noteId/links/notes", async (c) => {
 	const fromId = c.req.param("noteId"); // note id is always the fromId
-	const { toIds } = await validateOrThrowError(linkNotesSchema, c);
+	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
 
 	try {
-		const linkInsert = toIds.map((id) => ({ fromId, toId: id }));
+		const linkInsert = noteIds.map((id) => ({ fromId, toId: id }));
 		const result = await db.insert(links).values(linkInsert).returning();
 		return c.json(result);
 	} catch (error) {
@@ -255,7 +252,7 @@ notesRoute.post("/:noteId/links/factions", async (c) => {
 			.values(linkInsert)
 			.returning()
 			.onConflictDoNothing();
-		return c.json(result);
+		return c.json(result); // TODO: should be success response
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

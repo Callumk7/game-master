@@ -1,9 +1,22 @@
-import { GearIcon, Share1Icon, StarIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  FileIcon,
+  GearIcon,
+  Share1Icon,
+  StarIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { Form, useFetcher, useNavigate, useSubmit } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { JollyTextField } from "~/components/ui/textfield";
 import { Toolbar } from "~/components/ui/toolbar";
-import { JollyMenu, MenuHeader, MenuItem, MenuSection } from "./ui/menu";
+import {
+  JollyMenu,
+  Menu,
+  MenuHeader,
+  MenuItem,
+  MenuPopover,
+  MenuSection,
+} from "./ui/menu";
 import {
   DialogContent,
   DialogDescription,
@@ -19,6 +32,7 @@ import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
 import { ImageUploader } from "./image-uploader";
 import { useAppData } from "~/routes/_app/route";
+import { SubmenuTrigger } from "react-aria-components";
 
 interface EntityToolbarProps {
   entityOwnerId: string;
@@ -72,6 +86,27 @@ export function EntityToolbar({
             <MenuItem onAction={() => setIsDuplicateDialogOpen(true)}>
               <Share1Icon className="mr-2" /> <span>Duplicate</span>
             </MenuItem>
+            {hasEditPermission && folders ? (
+              <SubmenuTrigger>
+                <MenuItem>
+                  <FileIcon className="mr-2" />
+                  <span>Move..</span>
+                </MenuItem>
+                <MenuPopover>
+                  <Menu items={folders}>
+                    {(item) => (
+                      <MenuItem
+                        onAction={() =>
+                          submit({ folderId: item.id }, { method: "patch" })
+                        }
+                      >
+                        {item.name}
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </MenuPopover>
+              </SubmenuTrigger>
+            ) : null}
           </MenuSection>
           <MenuSection>
             <MenuHeader>Danger Zone</MenuHeader>
@@ -96,7 +131,6 @@ export function EntityToolbar({
             </Button>
           )
         ) : null}
-        {hasEditPermission && folders ? <FolderMenu folders={folders} /> : null}
         <ImageUploader action="images" ownerId={entityOwnerId} />
       </Toolbar>
       <DuplicateEntityDialog
@@ -271,21 +305,5 @@ function MemberSharingItem({ member, permission, visibility }: MemberSharingItem
         <SelectItem id="none">Blocked</SelectItem>
       </JollySelect>
     </div>
-  );
-}
-
-interface FolderMenuProps {
-  folders: Folder[];
-}
-function FolderMenu({ folders }: FolderMenuProps) {
-  const submit = useSubmit();
-  return (
-    <JollyMenu items={folders} label={"Move..."} variant={"outline"}>
-      {(item) => (
-        <MenuItem onAction={() => submit({ folderId: item.id }, { method: "patch" })}>
-          {item.name}
-        </MenuItem>
-      )}
-    </JollyMenu>
   );
 }

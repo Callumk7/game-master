@@ -12,6 +12,8 @@ export const createCharacterInsert = (input: CreateCharacterRequestBody): Insert
 		createdAt: currentDate,
 		updatedAt: currentDate,
 		content: input.content,
-		htmlContent: input.htmlContent
+		htmlContent: input.htmlContent,
+		primaryFactionId: input.primaryFactionId,
+		isPlayer: input.isPlayer
 	}
 }

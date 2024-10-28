@@ -12,10 +12,10 @@ export function GameNavbar() {
   const links = createLinks(params.gameId!);
   return (
     <nav
-      className="flex w-full p-4 justify-between items-center"
+      className="sticky z-40 flex top-0 w-full right-0 bg-background/80 backdrop-blur p-4 justify-between items-center"
       aria-label="Game navigation bar"
     >
-      <div className="flex justify-between w-full items-center">
+      <div className="relative flex justify-between w-full items-center">
         <Button
           size={"icon"}
           variant={"ghost"}
@@ -36,7 +36,7 @@ export function GameNavbar() {
             </Link>
           ))}
         </div>
-        <div className="hidden lg:block">
+        <div className="lg:flex z-50">
           <GameSettingsMenu gameId={params.gameId!} />
         </div>
       </div>

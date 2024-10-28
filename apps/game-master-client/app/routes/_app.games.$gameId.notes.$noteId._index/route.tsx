@@ -7,7 +7,7 @@ import {
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody, EditorPreview } from "~/components/editor";
+import { EditorClient, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
@@ -140,7 +140,7 @@ export default function NoteIndexRoute() {
             <EditorPreview htmlContent={note.htmlContent ?? ""} />
           </>
         ) : (
-          <EditorBody
+          <EditorClient
             htmlContent={note.htmlContent ?? ""}
             suggestionItems={suggestionItems}
           />

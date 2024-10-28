@@ -1,12 +1,12 @@
 import type { Client } from "../client.js";
 import type {
 	Character,
-	CharacterWithNotes,
 	CharacterWithPermissions,
 	CreateCharacterRequestBody,
 	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
+import type { Faction, FactionWithMembers } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
 	BasicServerResponse,
@@ -15,9 +15,10 @@ import type {
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
+import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	// DONE
 	async getCharacter(charId: Id): Promise<Character> {
@@ -79,13 +80,40 @@ export class Characters {
 		return this.client.get<Character[]>(`games/${gameId}/characters`);
 	}
 
-	// DONE
-	async getCharacterWithNotes(charId: Id): Promise<CharacterWithNotes> {
-		return this.client.get<CharacterWithNotes>(`characters/${charId}/notes`);
-	}
-
 	async moveToFolder(charId: Id, folderId: Id): Promise<BasicServerResponse> {
 		const body: FolderInteractionRequestBody = { entityId: charId };
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
+	}
+
+	async getPrimaryFaction(charId: Id): Promise<FactionWithMembers | null> {
+		return this.client.get<FactionWithMembers | null>(`characters/${charId}/factions/primary`);
+	}
+
+	async getFactions(charId: Id): Promise<Faction[]> {
+		return this.client.get<Faction[]>(`characters/${charId}/factions`);
+	}
+
+	async linkFactions(
+		charId: Id,
+		factionIds: Id[],
+	): Promise<ServerResponse<{ factionIds: Id[] }>> {
+		return this.client.post<ServerResponse<{ factionIds: Id[] }>>(
+			`characters/${charId}/factions`,
+			{ factionIds },
+		);
+	}
+
+	async getNotes(charId: Id): Promise<Note[]> {
+		return this.client.get<Note[]>(`characters/${charId}/notes`);
+	}
+
+	async linkNotes(
+		charId: Id,
+		noteIds: Id[],
+	): Promise<ServerResponse<{ noteIds: Id[] }>> {
+		return this.client.post<ServerResponse<{ noteIds: Id[] }>>(
+			`characters/${charId}/notes`,
+			{ noteIds },
+		);
 	}
 }

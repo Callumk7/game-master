@@ -36,7 +36,7 @@ const columns = [
     header: () => "Name",
   }),
   helper.accessor("type", {
-    cell: (info) => info.cell.getValue(),
+    cell: ({ cell }) => cell.getValue(),
     header: () => "Type",
   }),
   helper.accessor("createdAt", {
@@ -45,6 +45,10 @@ const columns = [
       return <p>{date.toLocaleString("gmt")}</p>;
     },
     header: () => "Created At",
+  }),
+  helper.accessor("userPermissionLevel", {
+    cell: ({ cell }) => <p>{cell.getValue()}</p>,
+    header: "Permission Level"
   }),
   helper.display({
     id: "controls",

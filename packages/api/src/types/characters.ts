@@ -19,6 +19,8 @@ export const createCharacterSchema = z.object({
 	name: z.string(),
 	content: z.string(),
 	htmlContent: z.string(),
+	primaryFactionId: z.string().optional(),
+	isPlayer: z.boolean().optional(),
 	ownerId: z.string(),
 	gameId: z.string()
 })
@@ -30,7 +32,9 @@ export const updateCharacterSchema = z.object({
 	htmlContent: z.string().optional(),
 	isPlayer: z.boolean().optional(),
 	folderId: z.string().optional(),
-	visibility: visibilitySchema.optional()
+	visibility: visibilitySchema.optional(),
+	primaryFactionId: z.string().optional()
+
 })
 export type UpdateCharacterRequestBody = z.infer<typeof updateCharacterSchema>;
 
@@ -39,3 +43,7 @@ export const duplicateCharacterSchema = z.object({
 	ownerId: z.string()
 })
 export type DuplicateCharacterRequestBody = z.infer<typeof duplicateCharacterSchema>;
+
+export const linkCharacterSchema = z.object({
+	toIds: z.array(z.string()),
+})

@@ -2,9 +2,9 @@ import {
 	createCharacterSchema,
 	createPermissionSchema,
 	duplicateCharacterSchema,
+	linkFactionsSchema,
+	linkNotesSchema,
 	updateCharacterSchema,
-	type CharacterWithNotes,
-	type NoteType,
 } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -22,8 +22,12 @@ import { generateCharacterId } from "~/lib/ids";
 import {
 	createCharacter,
 	createCharacterPermission,
-	getCharacterWithNotes,
+	getCharacterFactions,
+	getCharacterNotes,
+	getCharactersPrimaryFaction,
 	getCharacterWithPermissions,
+	linkCharacterToFactions,
+	linkCharacterToNotes,
 	updateCharacter,
 } from "./queries";
 import { PermissionService } from "~/services/permissions";
@@ -118,16 +122,6 @@ characterRoute.post("/:charId/permissions", async (c) => {
 	}
 });
 
-characterRoute.get("/:charId/notes", async (c) => {
-	const charId = c.req.param("charId");
-	try {
-		const characterWithNotes = await getCharacterWithNotes(charId);
-		return c.json(characterWithNotes);
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
 characterRoute.post("/:charId/duplicate", async (c) => {
 	const charId = c.req.param("charId");
 	const data = await validateOrThrowError(duplicateCharacterSchema, c);
@@ -148,6 +142,65 @@ characterRoute.post("/:charId/duplicate", async (c) => {
 			.returning()
 			.then((result) => result[0]);
 		return successResponse(c, newChar);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                LINKING
+////////////////////////////////////////////////////////////////////////////////
+
+// Factions
+characterRoute.get("/:charId/factions", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const characterFactions = await getCharacterFactions(charId);
+		return c.json(characterFactions);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.post("/:charId/factions", async (c) => {
+	const charId = c.req.param("charId");
+	const { factionIds } = await validateOrThrowError(linkFactionsSchema, c);
+	try {
+		const links = await linkCharacterToFactions(charId, factionIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Notes
+characterRoute.get("/:charId/notes", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const characterNotes = await getCharacterNotes(charId);
+		return c.json(characterNotes);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.post("/:charId/notes", async (c) => {
+	const charId = c.req.param("charId");
+	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
+	try {
+		const links = await linkCharacterToNotes(charId, noteIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Primary Faction
+characterRoute.get("/:charId/factions/primary", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const factionResult = await getCharactersPrimaryFaction(charId);
+		return c.json(factionResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

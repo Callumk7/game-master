@@ -1,6 +1,7 @@
 import type {
 	CharacterWithNotes,
 	CharacterWithPermissions,
+	FactionWithMembers,
 	NoteType,
 	Permission,
 	UpdateCharacterRequestBody,
@@ -9,7 +10,9 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
 import {
 	characters,
+	charactersInFactions,
 	charactersPermissions,
+	notesOnCharacters,
 	type InsertDatabaseCharacter,
 } from "~/db/schema/characters";
 
@@ -95,29 +98,78 @@ export async function createCharacterPermission(
 	return result;
 }
 
-export const getCharacterWithNotes = async (
-	characterId: string,
-): Promise<CharacterWithNotes> => {
-	const characterResult = await db.query.characters.findFirst({
-		where: eq(characters.id, characterId),
-		with: {
-			notes: {
-				with: {
-					note: true,
+export const getCharacterFactions = async (charId: string) => {
+	return await db.query.charactersInFactions
+		.findMany({
+			where: eq(charactersInFactions.characterId, charId),
+			with: {
+				faction: true,
+			},
+		})
+		.then((result) => result.map((row) => row.faction));
+};
+
+export const linkCharacterToFactions = async (charId: string, factionIds: string[]) => {
+	const linkInsert = factionIds.map((id) => ({
+		characterId: charId,
+		factionId: id,
+	}));
+	return await db
+		.insert(charactersInFactions)
+		.values(linkInsert)
+		.returning()
+		.onConflictDoNothing();
+};
+
+export const getCharacterNotes = async (charId: string) => {
+	return await db.query.notesOnCharacters
+		.findMany({
+			where: eq(notesOnCharacters.characterId, charId),
+			with: {
+				note: true,
+			},
+		})
+		.then((result) => result.map((row) => row.note));
+};
+
+export const linkCharacterToNotes = async (charId: string, noteIds: string[]) => {
+	const linkInsert = noteIds.map((id) => ({
+		characterId: charId,
+		noteId: id,
+	}));
+	return await db
+		.insert(notesOnCharacters)
+		.values(linkInsert)
+		.returning()
+		.onConflictDoNothing();
+};
+
+export const getCharactersPrimaryFaction = async (
+	charId: string,
+): Promise<FactionWithMembers | null> => {
+	const charFactionResult = await db.query.characters
+		.findFirst({
+			where: eq(characters.id, charId),
+			with: {
+				primaryFaction: {
+					with: {
+						members: { with: { character: true } },
+					},
 				},
 			},
-		},
-	});
+		})
+		.then((result) => {
+			if (result?.primaryFaction) {
+				return {
+					...result.primaryFaction,
+					members: result.primaryFaction.members.map((m) => m.character),
+				};
+			}
+		});
 
-	if (!characterResult) {
-		throw new Error("Failed to find a character from the database.");
+	if (!charFactionResult) {
+		return null;
 	}
 
-	return {
-		...characterResult,
-		notes: characterResult.notes.map((note) => ({
-			...note.note,
-			type: note.note.type as NoteType,
-		})),
-	};
+	return charFactionResult;
 };

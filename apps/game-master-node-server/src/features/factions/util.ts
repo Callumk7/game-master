@@ -14,6 +14,5 @@ export const createFactionInsert = (input: CreateFactionRequestBody): InsertData
 		coverImageUrl: input.coverImageUrl,
 		gameId: input.gameId,
 		ownerId: input.ownerId,
-		leaderId: input.leaderId
 	}
 }

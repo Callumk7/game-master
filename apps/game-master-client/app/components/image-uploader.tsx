@@ -37,8 +37,8 @@ export function ImageUploader({ action, ownerId }: ImageUploaderProps) {
           </Button>
         </div>
       ) : (
-        <Button onPress={simulateInputClick} variant={"outline"}>
-          Select Image
+        <Button onPress={simulateInputClick} variant={"secondary"}>
+          Upload cover image
         </Button>
       )}
     </fetcher.Form>

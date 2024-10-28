@@ -4,10 +4,10 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { methodNotAllowed } from "~/util/responses";
 import { CreateCharacterSlideover } from "~/components/forms/create-character";
-import { CharacterTable } from "./components/character-table";
 import { createCharacterAction } from "~/queries/server/create-character.server";
 import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
+import { CharacterTable } from "~/components/tables/character-table";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
