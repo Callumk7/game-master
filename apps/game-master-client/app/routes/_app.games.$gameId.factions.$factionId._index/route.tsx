@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect, typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody, EditorPreview } from "~/components/editor";
+import { EditorClient, EditorPreview } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
@@ -86,7 +86,7 @@ export default function FactionDetailRoute() {
           <EditorPreview htmlContent={factionDetails.htmlContent ?? ""} />
         </>
       ) : (
-        <EditorBody
+        <EditorClient
           htmlContent={factionDetails.htmlContent ?? ""}
           suggestionItems={suggestionItems}
         />

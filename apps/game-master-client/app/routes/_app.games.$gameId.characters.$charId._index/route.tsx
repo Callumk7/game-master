@@ -2,8 +2,8 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { EditorBody, EditorPreview } from "~/components/editor";
-import { EditableText, Text } from "~/components/ui/typeography";
+import { EditorClient, EditorPreview } from "~/components/editor";
+import { EditableText } from "~/components/ui/typeography";
 import { useGameData } from "../_app.games.$gameId/route";
 import { updateCharacterSchema } from "@repo/api";
 import { methodNotAllowed } from "~/util/responses";
@@ -55,7 +55,7 @@ export default function CharacterRoute() {
               <EditorPreview htmlContent={characterDetails.htmlContent ?? ""} />
             </>
           ) : (
-            <EditorBody
+            <EditorClient
               htmlContent={characterDetails.htmlContent ?? ""}
               suggestionItems={suggestionItems}
             />

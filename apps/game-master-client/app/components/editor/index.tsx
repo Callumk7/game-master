@@ -20,6 +20,7 @@ import Fuse from "fuse.js";
 import { CustomMention } from "./extensions/mention-extension";
 import type { MentionItem } from "~/types/mentions";
 import { useEffect, useState } from "react";
+import { useIsClient } from "~/hooks/is-client";
 
 // Core editor hook. A wrapper around the tiptap useEditor
 // hook, which ensures consistent settings when spawning a
@@ -73,12 +74,6 @@ export function EditorBody({
   method,
   suggestionItems,
 }: EditorBodyProps) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const { editor, isEdited, status, saveContent } = useSyncEditorContent({
     initContent: htmlContent,
     suggestionItems,
@@ -89,20 +84,24 @@ export function EditorBody({
   return (
     <div className="editor">
       <Toolbar className={"flex p-2"}>
-        {isClient && (
-          <Button
-            size={"sm"}
-            onPress={saveContent}
-            isDisabled={!isEdited}
-            variant={isEdited ? "default" : "outline"}
-          >
-            {isEdited ? "Save" : "Content Saved"}
-          </Button>
-        )}
+        <Button
+          size={"sm"}
+          onPress={saveContent}
+          isDisabled={!isEdited}
+          variant={isEdited ? "default" : "outline"}
+        >
+          {isEdited ? "Save" : "Content Saved"}
+        </Button>
       </Toolbar>
       <EditorWithControls editor={editor} />
     </div>
   );
+}
+
+export function EditorClient(props: EditorBodyProps) {
+  const isClient = useIsClient();
+  if (!isClient) return null;
+  return <EditorBody {...props} />;
 }
 
 export function EditorPreview({ htmlContent }: { htmlContent: string }) {
@@ -128,7 +127,11 @@ export function EditorWithControls({
     <div>
       {label && <Label id="editor-label">{label}</Label>}
       <EditorContent
-        className={cn("flex-auto max-w-2xl", bordered ? "border rounded-md" : "", className)}
+        className={cn(
+          "flex-auto max-w-2xl",
+          bordered ? "border rounded-md" : "",
+          className,
+        )}
         editor={editor}
         aria-labelledby="editor-label"
       />
