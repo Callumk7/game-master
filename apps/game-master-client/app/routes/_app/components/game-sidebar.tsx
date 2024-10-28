@@ -191,13 +191,18 @@ function FolderTree({ folders, gameId }: FolderTreeProps) {
   }, [folders]);
 
   return (
-    <Tree items={mappedFolders} defaultExpandedKeys={mappedFolders.map((f) => f.id)}>
+    <Tree
+      items={mappedFolders}
+      defaultExpandedKeys={mappedFolders.map((f) => f.id)}
+      aria-label="Sidebar folders"
+    >
       {function renderItems(item) {
         return (
           <TreeItem
             textValue={item.name}
             itemChildren={item.children}
             renderFunction={renderItems}
+            aria-label="Sidebar items"
           >
             <div className="flex w-full gap-2 items-center">
               {item.children?.length ? (

@@ -1,5 +1,5 @@
 import { Link1Icon } from "@radix-ui/react-icons";
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import type { Note } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -13,9 +13,9 @@ interface NoteCardProps {
 
 export function NoteCard({ notes }: NoteCardProps) {
   return (
-    <Card className="p-4">
+    <div className="p-4 border rounded-md space-y-3 h-fit">
       <div className="flex w-full items-center justify-between">
-        <Text variant={"h3"}>Notes</Text>
+        <Text variant={"h4"}>Linked Notes</Text>
         <DialogTrigger>
           <Button variant={"outline"} size={"icon"}>
             <Link1Icon />
@@ -32,14 +32,18 @@ export function NoteCard({ notes }: NoteCardProps) {
           </DialogOverlay>
         </DialogTrigger>
       </div>
-      {notes.map((note) => (
-        <Card key={note.id} className="p-3">
-          <Text variant={"h4"}>{note.name}</Text>
-          <p className="text-xs whitespace-pre-wrap max-h-20 overflow-clip">
-            {note.content}
-          </p>
-        </Card>
-      ))}
-    </Card>
+      <div className="space-y-2">
+        {notes.map((note) => (
+          <Card key={note.id} className="p-3">
+            <Link to={`/games/${note.gameId}/notes/${note.id}`} className="text-primary hover:text-lime-50">
+              <Text variant={"h4"}>{note.name}</Text>
+            </Link>
+            <p className="text-xs whitespace-pre-wrap max-h-20 overflow-clip">
+              {note.content}
+            </p>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 }

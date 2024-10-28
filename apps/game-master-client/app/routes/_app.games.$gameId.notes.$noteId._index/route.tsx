@@ -110,6 +110,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function NoteIndexRoute() {
   const { note, folders } = useTypedLoaderData<typeof loader>();
   const { suggestionItems } = useGameData();
+  console.log(suggestionItems());
 
   return (
     <>
