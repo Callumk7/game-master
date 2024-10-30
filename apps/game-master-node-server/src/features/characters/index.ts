@@ -28,6 +28,7 @@ import {
 	getCharacterWithPermissions,
 	linkCharacterToFactions,
 	linkCharacterToNotes,
+	unlinkCharacterFromFaction,
 	updateCharacter,
 } from "./queries";
 import { PermissionService } from "~/services/permissions";
@@ -168,6 +169,16 @@ characterRoute.post("/:charId/factions", async (c) => {
 	try {
 		const links = await linkCharacterToFactions(charId, factionIds);
 		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.delete("/:charId/factions/:factionId", async (c) => {
+	const {charId, factionId} = c.req.param();
+	try {
+		await unlinkCharacterFromFaction(charId, factionId);
+		return basicSuccessResponse(c);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

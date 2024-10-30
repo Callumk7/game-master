@@ -18,7 +18,7 @@ import type {
 import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	// DONE
 	async getCharacter(charId: Id): Promise<Character> {
@@ -86,7 +86,9 @@ export class Characters {
 	}
 
 	async getPrimaryFaction(charId: Id): Promise<FactionWithMembers | null> {
-		return this.client.get<FactionWithMembers | null>(`characters/${charId}/factions/primary`);
+		return this.client.get<FactionWithMembers | null>(
+			`characters/${charId}/factions/primary`,
+		);
 	}
 
 	async getFactions(charId: Id): Promise<Faction[]> {
@@ -100,6 +102,12 @@ export class Characters {
 		return this.client.post<ServerResponse<{ factionIds: Id[] }>>(
 			`characters/${charId}/factions`,
 			{ factionIds },
+		);
+	}
+
+	async unlinkFaction(charId: Id, factionId: Id): Promise<BasicServerResponse> {
+		return this.client.delete<BasicServerResponse>(
+			`characters/${charId}/factions/${factionId}`,
 		);
 	}
 
