@@ -1,156 +1,57 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
-import { stringOrArrayToArray } from "callum-util";
 import {
   redirect,
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
+  typedjson, useTypedRouteLoaderData
 } from "remix-typedjson";
-import { OptionalEntitySchema } from "types/schemas";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
-import { EditorClient, EditorPreview } from "~/components/editor";
-import { EntityToolbar } from "~/components/entity-toolbar";
-import { Pill } from "~/components/pill";
-import { EditableText } from "~/components/ui/typeography";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { useGameData } from "../_app.games.$gameId/route";
+import { parseParams } from "zodix";
+import { createApiFromReq } from "~/lib/api.server";
+import { methodNotAllowed } from "~/util/responses";
 import { getNoteData } from "./queries.server";
+import { NoteIndexRoute } from "./notes-index-route";
+import type { Params } from "@remix-run/react";
+import { deleteNote, duplicateNote, updateNote } from "./actions.server";
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { noteId, gameId } = parseParams(params, {
+const getParams = (params: Params) => {
+  return parseParams(params, {
     noteId: z.string(),
     gameId: z.string(),
   });
+};
 
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { note, linkedNotes, linkedChars, linkedFactions } = await getNoteData(
-    api,
-    noteId,
-  );
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const { api } = await createApiFromReq(request);
+  const { noteId, gameId } = getParams(params);
+  const noteData = await getNoteData(api, noteId, gameId);
 
-  if (note.userPermissionLevel === "none") {
+  if (noteData.note.userPermissionLevel === "none") {
     return redirect(`/games/${gameId}/notes`);
   }
 
-  const folders = await api.folders.getGameFolders(note.gameId);
-
-  return typedjson({ note, linkedNotes, linkedChars, linkedFactions, folders });
+  return typedjson(noteData);
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { noteId } = parseParams(params, {
-    noteId: z.string(),
-  });
+  const { api, userId } = await createApiFromReq(request);
+  const { noteId } = getParams(params);
 
   if (request.method === "POST") {
-    const data = await parseForm(request, duplicateNoteSchema.omit({ ownerId: true }));
-
-    const duplicatedNote = await api.notes.duplicateNote(noteId, {
-      ...data,
-      ownerId: userId,
-    });
-
-    if (!duplicatedNote.success) {
-      return unsuccessfulResponse(duplicatedNote.message);
-    }
-
-    return redirect(
-      `/games/${duplicatedNote.data.gameId}/notes/${duplicatedNote.data.id}`,
-    );
+    return await duplicateNote(request, api, noteId, userId);
   }
 
   if (request.method === "PATCH") {
-    const data = await parseForm(request, updateNoteContentSchema);
-    const result = await api.notes.updateNote(noteId, data);
-
-    if (!result.success) {
-      return unsuccessfulResponse(result.message);
-    }
-
-    return typedjson(result.data);
-  }
-
-  if (request.method === "PUT") {
-    const data = await parseForm(request, {
-      characterIds: OptionalEntitySchema,
-      factionIds: OptionalEntitySchema,
-    });
-
-    if (data.factionIds) {
-      await api.notes.updateLinkedFactions(noteId, stringOrArrayToArray(data.factionIds));
-    }
-    if (data.characterIds) {
-      await api.notes.updateLinkedCharacters(
-        noteId,
-        stringOrArrayToArray(data.characterIds),
-      );
-    }
-
-    return null;
+    return await updateNote(request, api, noteId);
   }
 
   if (request.method === "DELETE") {
-    const result = await api.notes.deleteNote(noteId);
-    if (!result.success) {
-      return new Response("Error");
-    }
-    return redirect("/");
+    return await deleteNote(api, noteId);
   }
 
   return methodNotAllowed();
 };
 
-export default function NoteIndexRoute() {
-  const { note, folders } = useTypedLoaderData<typeof loader>();
-  const { suggestionItems } = useGameData();
-
-  return (
-    <>
-      <div className="p-4 space-y-4">
-        <EntityToolbar
-          gameId={note.gameId}
-          entityOwnerId={note.ownerId}
-          entityVisibility={note.visibility}
-          permissions={note.permissions}
-          userPermissionLevel={note.userPermissionLevel!}
-          folders={folders}
-        />
-        <div>
-          <Pill
-            size={"xs"}
-            variant={"secondary"}
-          >{`permission level: ${note.userPermissionLevel}`}</Pill>
-          <EditableText
-            method="patch"
-            fieldName={"name"}
-            value={note.name}
-            variant={"h2"}
-            weight={"semi"}
-            inputLabel={"Game name input"}
-            buttonLabel={"Edit game name"}
-            action={`/games/${note.gameId}/notes/${note.id}`}
-          />
-        </div>
-        {note.userPermissionLevel === "view" ? (
-          <EditorPreview htmlContent={note.htmlContent ?? ""} />
-        ) : (
-          <EditorClient
-            htmlContent={note.htmlContent ?? ""}
-            suggestionItems={suggestionItems}
-          />
-        )}
-      </div>
-    </>
-  );
-}
+export { NoteIndexRoute as default };
 
 export function useNoteData() {
   const data = useTypedRouteLoaderData<typeof loader>(

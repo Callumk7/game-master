@@ -30,5 +30,8 @@ export const duplicateCharacter = async (
 
 export const deleteCharacter = async (api: SDK, charId: string) => {
 	const result = await api.characters.deleteCharacter(charId);
+	if (result.success) {
+		return redirect("/games");
+	}
 	return typedjson(result);
 };

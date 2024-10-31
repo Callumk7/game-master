@@ -26,6 +26,9 @@ export const duplicateFaction = async (
 };
 
 export const deleteFaction = async (api: SDK, factionId: string) => {
-	const result = api.factions.deleteFaction(factionId);
+	const result = await api.factions.deleteFaction(factionId);
+	if (result.success) {
+		return redirect("/games");
+	}
 	return typedjson(result);
 };

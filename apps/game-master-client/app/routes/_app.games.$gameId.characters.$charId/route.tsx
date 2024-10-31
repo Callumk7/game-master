@@ -1,21 +1,18 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, type Params } from "@remix-run/react";
-import { duplicateCharacterSchema, updateCharacterSchema } from "@repo/api";
 import {
-  redirect,
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
+    redirect,
+    typedjson,
+    useTypedLoaderData,
+    useTypedRouteLoaderData,
 } from "remix-typedjson";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
+import { parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
-import { createApi, createApiFromReq } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createApiFromReq } from "~/lib/api.server";
 import { resolve } from "~/util/await-all";
-import { characterHref } from "~/util/generate-hrefs";
 import { getData } from "~/util/handle-error";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { methodNotAllowed } from "~/util/responses";
 import { deleteCharacter, duplicateCharacter } from "./actions.server";
 import { CharacterNavigation } from "./components/navigation";
 
