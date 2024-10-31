@@ -1,13 +1,10 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Outlet, useHref, useNavigate, useRouteError } from "@remix-run/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "react-aria-components";
-import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
+import { useRouteError } from "@remix-run/react";
+import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
-import { GlobalStateProvider } from "~/store/global";
 import { getData } from "~/util/handle-error";
-import { GameSidebar } from "./components/game-sidebar";
+import { AppLayout } from "./root-layout";
 
 export const meta: MetaFunction = () => {
   return [
@@ -26,28 +23,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return typedjson({ sidebarData, userId });
 };
 
-export default function AppLayout() {
-  const { sidebarData } = useTypedLoaderData<typeof loader>();
-  const navigate = useNavigate();
-
-  const queryClient = new QueryClient();
-
-  const defaultGameId = sidebarData.games[0]?.id ?? ""; // TODO: This is a temporary hack
-
-  return (
-    <RouterProvider navigate={navigate} useHref={useHref}>
-      <QueryClientProvider client={queryClient}>
-        <GlobalStateProvider gameSelectionId={defaultGameId}>
-          <GameSidebar gamesWithAllEntities={sidebarData.games} />
-          <div className="ml-64 flex-1">
-            <Outlet />
-          </div>
-        </GlobalStateProvider>
-      </QueryClientProvider>
-    </RouterProvider>
-  );
-}
-
 export function useAppData() {
   const data = useTypedRouteLoaderData<typeof loader>("routes/_app");
   if (data === undefined) {
@@ -65,3 +40,5 @@ export function ErrorBoundary() {
     </div>
   );
 }
+
+export { AppLayout as default };

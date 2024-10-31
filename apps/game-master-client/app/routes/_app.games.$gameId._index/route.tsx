@@ -1,11 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
-import { EditableText, Text } from "~/components/ui/typeography";
-import { createApi, createApiFromReq } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { parseParams } from "zodix";
+import { createApiFromReq } from "~/lib/api.server";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { updateGameDetails } from "./actions.server";

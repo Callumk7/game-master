@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useRouteError } from "@remix-run/react";
+import { useRouteError } from "@remix-run/react";
 import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
@@ -7,7 +7,7 @@ import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
 import type { MentionItem } from "~/types/mentions";
 import { getData } from "~/util/handle-error";
-import { GameNavbar } from "./components/game-navbar";
+import GameLayout from "./game-layout";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
@@ -16,16 +16,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return typedjson(data);
 };
 
-export default function GameLayout() {
-  return (
-    <div className="flex flex-col gap-y-4">
-      <GameNavbar />
-      <div className="p-3">
-        <Outlet />
-      </div>
-    </div>
-  );
-}
+export { GameLayout as default };
 
 export function useGameData() {
   const data = useTypedRouteLoaderData<typeof loader>("routes/_app.games.$gameId");
