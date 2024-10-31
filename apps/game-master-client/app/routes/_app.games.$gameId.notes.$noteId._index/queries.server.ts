@@ -14,7 +14,7 @@ export const getNoteData = async (api: SDK, noteId: string, gameId: string) => {
 		linkedCharsCall,
 		linkedFactionsCall,
 		linkedNotesCall,
-		foldersCall
+		foldersCall,
 	);
 
 	return { note, linkedChars, linkedFactions, linkedNotes, folders };

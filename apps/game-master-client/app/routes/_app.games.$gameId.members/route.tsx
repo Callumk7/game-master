@@ -1,13 +1,13 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
-import { methodNotAllowed } from "~/util/responses";
-import { MembersRoute } from "./members-route";
-import type { Params } from "@remix-run/react";
 import { getData } from "~/util/handle-error";
+import { methodNotAllowed } from "~/util/responses";
 import { removeMember, updateGameMembers, updateMemberDetails } from "./actions.server";
+import { MembersRoute } from "./members-route";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() }).gameId;

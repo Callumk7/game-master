@@ -1,10 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, type Params } from "@remix-run/react";
 import {
-    redirect,
-    typedjson,
-    useTypedLoaderData,
-    useTypedRouteLoaderData,
+  redirect,
+  typedjson,
+  useTypedLoaderData,
+  useTypedRouteLoaderData,
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";

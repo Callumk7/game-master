@@ -1,4 +1,4 @@
-import { duplicateNoteSchema, updateNoteContentSchema, type SDK } from "@repo/api";
+import { type SDK, duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
 import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { unsuccessfulResponse } from "~/util/responses";
@@ -32,9 +32,9 @@ export const updateNote = async (request: Request, api: SDK, noteId: string) => 
 };
 
 export const deleteNote = async (api: SDK, noteId: string) => {
-    const result = await api.notes.deleteNote(noteId);
-    if (result.success) {
-      return redirect("/games")
-    }
-    return typedjson(result);
-}
+	const result = await api.notes.deleteNote(noteId);
+	if (result.success) {
+		return redirect("/games");
+	}
+	return typedjson(result);
+};

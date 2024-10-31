@@ -1,17 +1,14 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import {
-  redirect,
-  typedjson, useTypedRouteLoaderData
-} from "remix-typedjson";
+import type { Params } from "@remix-run/react";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { getNoteData } from "./queries.server";
-import { NoteIndexRoute } from "./notes-index-route";
-import type { Params } from "@remix-run/react";
 import { deleteNote, duplicateNote, updateNote } from "./actions.server";
+import { NoteIndexRoute } from "./notes-index-route";
+import { getNoteData } from "./queries.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {

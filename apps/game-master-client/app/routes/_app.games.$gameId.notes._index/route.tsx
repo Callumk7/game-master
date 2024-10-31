@@ -1,12 +1,12 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { createNoteAction } from "~/queries/server/create-note.server";
-import { methodNotAllowed } from "~/util/responses";
 import { createApiFromReq } from "~/lib/api.server";
-import type { Params } from "@remix-run/react";
+import { createNoteAction } from "~/queries/server/create-note.server";
 import { getData } from "~/util/handle-error";
+import { methodNotAllowed } from "~/util/responses";
 import { NotesIndex } from "./notes-index";
 
 const getParams = (params: Params) => {

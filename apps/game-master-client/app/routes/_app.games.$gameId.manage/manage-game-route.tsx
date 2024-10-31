@@ -1,5 +1,6 @@
+import { Form } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
-import type { loader } from "./route";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,9 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Form } from "@remix-run/react";
 import { JollyTextField } from "~/components/ui/textfield";
-import { Button } from "~/components/ui/button";
+import type { loader } from "./route";
 
 export function ManageGameRoute() {
   const { game } = useTypedLoaderData<typeof loader>();

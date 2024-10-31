@@ -1,10 +1,10 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import type { loader } from "./route";
-import { useGameData } from "../_app.games.$gameId/route";
+import { EditorClient, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
-import { EditorClient, EditorPreview } from "~/components/editor";
+import { useGameData } from "../_app.games.$gameId/route";
+import type { loader } from "./route";
 
 export function NoteIndexRoute() {
   const { note, folders } = useTypedLoaderData<typeof loader>();

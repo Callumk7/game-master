@@ -1,4 +1,4 @@
-import { roleSchema, type SDK } from "@repo/api";
+import { type SDK, roleSchema } from "@repo/api";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
@@ -26,7 +26,7 @@ export const updateGameMembers = async (request: Request, api: SDK, gameId: stri
 };
 
 export const removeMember = async (request: Request, api: SDK, gameId: string) => {
-    const { userId } = await parseForm(request, { userId: z.string() });
-    const result = await api.games.removeMember(gameId, userId);
-    return typedjson(result);
-}
+	const { userId } = await parseForm(request, { userId: z.string() });
+	const result = await api.games.removeMember(gameId, userId);
+	return typedjson(result);
+};
