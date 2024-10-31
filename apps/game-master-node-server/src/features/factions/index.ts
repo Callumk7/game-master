@@ -20,6 +20,7 @@ import { generateFactionId } from "~/lib/ids";
 import {
 	createFaction,
 	createFactionPermission,
+	getFactionMembers,
 	getFactionWithPermissions,
 	updateFaction,
 } from "./queries";
@@ -135,6 +136,16 @@ factionRoute.post("/:factionId/permissions", async (c) => {
 			data.permission,
 		);
 		return successResponse(c, newPermission);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.get("/:factionId/members", async (c) => {
+	const factionId = c.req.param("factionId");
+	try {
+		const factionMembersResult = await getFactionMembers(factionId);
+		return c.json(factionMembersResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

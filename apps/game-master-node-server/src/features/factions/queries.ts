@@ -1,10 +1,12 @@
 import type {
+	FactionMember,
 	FactionWithPermissions,
 	Permission,
 	UpdateFactionRequestBody,
 } from "@repo/api";
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
+import { charactersInFactions } from "~/db/schema/characters";
 import {
 	factions,
 	factionsPermissions,
@@ -91,4 +93,15 @@ export async function createFactionPermission(
 	}
 
 	return result;
+}
+
+export async function getFactionMembers(factionId: string): Promise<FactionMember[]> {
+	const result = await db.query.charactersInFactions.findMany({
+		where: eq(charactersInFactions.factionId, factionId),
+		with: {
+			character: true,
+		},
+	});
+
+	return result.map((row) => ({ ...row.character, role: row.role }));
 }
