@@ -1,86 +1,52 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
-import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
-import {
-  redirect,
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
-} from "remix-typedjson";
+import type { Params } from "@remix-run/react";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
-import { EntityToolbar } from "~/components/entity-toolbar";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
-import { factionHref } from "~/util/generate-hrefs";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { FactionNavigation } from "./components/navigation";
+import { parseParams } from "zodix";
+import { createApiFromReq } from "~/lib/api.server";
+import { methodNotAllowed } from "~/util/responses";
+import { resolve } from "~/util/await-all";
+import { getData } from "~/util/handle-error";
+import { FactionLayout } from "./faction-layout";
+import { deleteFaction, duplicateFaction } from "./actions.server";
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { factionId, gameId } = parseParams(params, {
+const getParams = (params: Params) => {
+  return parseParams(params, {
     factionId: z.string(),
     gameId: z.string(),
   });
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const factionDetails = await api.factions.getFactionWithPermissions(factionId);
+};
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const { api } = await createApiFromReq(request);
+  const { factionId, gameId } = getParams(params);
+
+  const [factionDetails, folders] = await resolve(
+    getData(() => api.factions.getFactionWithPermissions(factionId)),
+    getData(() => api.folders.getGameFolders(gameId)),
+  );
 
   if (factionDetails.userPermissionLevel === "none") {
     return redirect(`/games/${gameId}/factions`);
   }
-  const folders = await api.folders.getGameFolders(factionDetails.gameId);
+
   return typedjson({ factionDetails, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const { factionId } = parseParams(params, { factionId: z.string() });
-  const userId = await validateUser(request);
-  const api = createApi(userId);
+  const { factionId } = getParams(params);
+  const { api, userId } = await createApiFromReq(request);
+
   if (request.method === "POST") {
-    const userId = await validateUser(request);
-    const data = await parseForm(request, duplicateFactionSchema.omit({ ownerId: true }));
-
-    const dupeResult = await api.factions.duplicateFaction(factionId, {
-      ...data,
-      ownerId: userId,
-    });
-
-    if (!dupeResult.success) {
-      return unsuccessfulResponse(dupeResult.message);
-    }
-
-    const { gameId, id } = dupeResult.data;
-    return redirect(factionHref(gameId, id));
+    return duplicateFaction(request, api, factionId, userId);
   }
-  if (request.method === "PATCH") {
-    const data = await parseForm(request, updateFactionSchema);
 
-    const result = await api.factions.updateFactionDetails(factionId, data);
-
-    return typedjson(result);
+  if (request.method === "DELETE") {
+    return deleteFaction(api, factionId);
   }
+
   return methodNotAllowed();
 };
-
-export default function FactionsRoute() {
-  const { factionDetails, folders } = useTypedLoaderData<typeof loader>();
-  return (
-    <div className="p-4 space-y-4">
-      <div className="flex items-center w-full justify-between">
-        <FactionNavigation gameId={factionDetails.gameId} factionId={factionDetails.id} />
-        <EntityToolbar
-          entityOwnerId={factionDetails.ownerId}
-          gameId={factionDetails.gameId}
-          entityVisibility={factionDetails.visibility}
-          permissions={factionDetails.permissions}
-          userPermissionLevel={factionDetails.userPermissionLevel!}
-          folders={folders}
-        />
-      </div>
-      <Outlet />
-    </div>
-  );
-}
 
 export const useFactionData = () => {
   const data = useTypedRouteLoaderData<typeof loader>(
@@ -95,3 +61,5 @@ export const useFactionData = () => {
 
   return data;
 };
+
+export { FactionLayout as default };
