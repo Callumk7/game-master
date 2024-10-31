@@ -1,7 +1,7 @@
 import {
 	PutObjectCommand,
-	S3Client,
 	type PutObjectCommandInput,
+	S3Client,
 } from "@aws-sdk/client-s3";
 import "dotenv/config";
 import { generateImageId } from "./ids";

@@ -1,4 +1,5 @@
 import { Form, useSubmit } from "@remix-run/react";
+import type { CreateNoteRequestBody, NoteType, Visibility } from "@repo/api";
 import { type FormEventHandler, useState } from "react";
 import { EditorWithControls, useDefaultEditor } from "~/components/editor";
 import { Button } from "~/components/ui/button";
@@ -12,7 +13,6 @@ import {
 } from "~/components/ui/dialog";
 import { JollyTextField } from "~/components/ui/textfield";
 import { JollySelect, SelectItem } from "../ui/select";
-import type { Visibility, NoteType, CreateNoteRequestBody } from "@repo/api";
 
 interface CreateNoteProps {
   gameId: string;

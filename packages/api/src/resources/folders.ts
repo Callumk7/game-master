@@ -8,7 +8,7 @@ import type {
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
 
 export class Folders {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	async getFolderWithChildren(folderId: Id): Promise<FolderWithChildren> {
 		return this.client.get<FolderWithChildren>(`folders/${folderId}`);
@@ -30,6 +30,6 @@ export class Folders {
 	}
 
 	async getGameFolders(gameId: Id): Promise<Folder[]> {
-		return this.client.get<Folder[]>(`games/${gameId}/folders`)
+		return this.client.get<Folder[]>(`games/${gameId}/folders`);
 	}
 }

@@ -3,11 +3,11 @@ import { Outlet, useRouteError } from "@remix-run/react";
 import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { GameNavbar } from "./components/game-navbar";
 import { Text } from "~/components/ui/typeography";
-import type { MentionItem } from "~/types/mentions";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
+import type { MentionItem } from "~/types/mentions";
+import { GameNavbar } from "./components/game-navbar";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });

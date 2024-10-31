@@ -17,22 +17,22 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createCharacterInsert } from "./util";
 import { generateCharacterId } from "~/lib/ids";
+import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 import {
 	createCharacter,
 	createCharacterPermission,
 	getCharacterFactions,
 	getCharacterNotes,
-	getCharactersPrimaryFaction,
 	getCharacterWithPermissions,
+	getCharactersPrimaryFaction,
 	linkCharacterToFactions,
 	linkCharacterToNotes,
 	unlinkCharacterFromFaction,
 	updateCharacter,
 } from "./queries";
-import { PermissionService } from "~/services/permissions";
-import { getPayload } from "~/lib/jwt";
+import { createCharacterInsert } from "./util";
 
 export const characterRoute = new Hono();
 
@@ -175,7 +175,7 @@ characterRoute.post("/:charId/factions", async (c) => {
 });
 
 characterRoute.delete("/:charId/factions/:factionId", async (c) => {
-	const {charId, factionId} = c.req.param();
+	const { charId, factionId } = c.req.param();
 	try {
 		await unlinkCharacterFromFaction(charId, factionId);
 		return basicSuccessResponse(c);

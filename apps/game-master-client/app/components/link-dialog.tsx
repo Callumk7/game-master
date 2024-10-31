@@ -1,5 +1,10 @@
+import { useFetcher } from "@remix-run/react";
 import type { BasicEntity } from "@repo/api";
 import type { ReactNode } from "react";
+import type { GridListProps } from "react-aria-components";
+import { useListData } from "react-stately";
+import { useGameData } from "~/routes/_app.games.$gameId/route";
+import { appendFormWithArray } from "~/util/form-array";
 import {
   DialogContent,
   DialogHeader,
@@ -7,13 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Tab, TabList, TabPanel, Tabs } from "./ui/tabs";
-import { useGameData } from "~/routes/_app.games.$gameId/route";
 import { GridList, GridListItem } from "./ui/grid-list";
-import { useListData } from "react-stately";
-import type { GridListProps } from "react-aria-components";
-import { useFetcher } from "@remix-run/react";
-import { appendFormWithArray } from "~/util/form-array";
+import { Tab, TabList, TabPanel, Tabs } from "./ui/tabs";
 
 interface LinkDialogProps {
   trigger: ReactNode;

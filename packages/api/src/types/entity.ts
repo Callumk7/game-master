@@ -1,4 +1,4 @@
-import type { Id, Permission, Visibility } from "./index.js"
+import type { Id, Permission, Visibility } from "./index.js";
 
 export interface Entity {
 	id: Id;

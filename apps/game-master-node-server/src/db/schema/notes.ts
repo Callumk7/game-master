@@ -1,12 +1,12 @@
-import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
-import { users } from "./users";
 import { relations } from "drizzle-orm";
-import { games } from "./games";
+import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters, notesOnCharacters } from "./characters";
 import { factions, notesOnFactions } from "./factions";
+import { games } from "./games";
 import { images } from "./images";
+import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
@@ -59,7 +59,7 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 	characters: many(notesOnCharacters),
 	factions: many(notesOnFactions),
 	permissions: many(notesPermissions),
-	images: many(images)
+	images: many(images),
 }));
 
 export const links = pgTable("links", {
@@ -119,9 +119,9 @@ export const folderRelations = relations(folders, ({ one, many }) => ({
 	parent: one(folders, {
 		fields: [folders.parentFolderId],
 		references: [folders.id],
-		relationName: "parent"
+		relationName: "parent",
 	}),
-	children: many(folders, {relationName: "parent"}),
+	children: many(folders, { relationName: "parent" }),
 }));
 
 export const databaseSelectFolderSchema = createSelectSchema(folders);
@@ -129,7 +129,6 @@ export type DatabaseFolder = z.infer<typeof databaseSelectFolderSchema>;
 
 export const databaseInsertFolderSchema = createInsertSchema(folders);
 export type InsertDatabaseFolder = z.infer<typeof databaseInsertFolderSchema>;
-
 
 export const permissionEnum = pgEnum("permission", ["none", "view", "edit"]);
 

@@ -1,9 +1,9 @@
+import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { users } from "./users";
-import { notes } from "./notes";
 import { characters } from "./characters";
 import { factions } from "./factions";
-import { relations } from "drizzle-orm";
+import { notes } from "./notes";
+import { users } from "./users";
 
 export const images = pgTable("images", {
 	id: text("id").notNull().primaryKey(),
@@ -23,14 +23,14 @@ export const imageRelations = relations(images, ({ one }) => ({
 	}),
 	note: one(notes, {
 		fields: [images.noteId],
-		references: [notes.id]
+		references: [notes.id],
 	}),
 	character: one(characters, {
 		fields: [images.characterId],
-		references: [characters.id]
+		references: [characters.id],
 	}),
 	faction: one(factions, {
 		fields: [images.factionId],
-		references: [factions.id]
-	})
+		references: [factions.id],
+	}),
 }));

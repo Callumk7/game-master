@@ -16,11 +16,11 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
+import { cn } from "callum-util";
+import type { ReactNode } from "react";
 import { Button, type buttonVariants } from "./button";
 import { ListBoxCollection, ListBoxSection } from "./list-box";
 import { SelectPopover } from "./select";
-import { cn } from "callum-util";
-import type { ReactNode } from "react";
 
 const MenuTrigger = AriaMenuTrigger;
 

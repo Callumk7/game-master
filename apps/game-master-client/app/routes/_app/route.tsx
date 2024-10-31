@@ -4,11 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-aria-components";
 import { typedjson, useTypedLoaderData, useTypedRouteLoaderData } from "remix-typedjson";
 import { Text } from "~/components/ui/typeography";
+import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
+import { env } from "~/lib/env.server";
 import { GlobalStateProvider } from "~/store/global";
 import { GameSidebar } from "./components/game-sidebar";
-import { createApi } from "~/lib/api.server";
-import { env } from "~/lib/env.server";
 
 export const meta: MetaFunction = () => {
   return [

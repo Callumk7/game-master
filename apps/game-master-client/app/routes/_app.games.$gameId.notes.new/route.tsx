@@ -2,10 +2,10 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { validateUser } from "~/lib/auth.server";
 import { CreateNoteForm } from "~/components/forms/create-note";
-import { methodNotAllowed } from "~/util/responses";
+import { validateUser } from "~/lib/auth.server";
 import { createNoteAction } from "~/queries/server/create-note.server";
+import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });

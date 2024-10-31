@@ -1,7 +1,7 @@
 import { type FormMethod, useFetcher } from "@remix-run/react";
-import { useDefaultEditor } from ".";
 import { useEffect, useLayoutEffect, useState } from "react";
 import type { MentionItem } from "~/types/mentions";
+import { useDefaultEditor } from ".";
 
 type SyncEditorOptions = {
 	action?: string;

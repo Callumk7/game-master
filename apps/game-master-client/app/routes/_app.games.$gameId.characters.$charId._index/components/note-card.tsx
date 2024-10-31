@@ -35,7 +35,10 @@ export function NoteCard({ notes }: NoteCardProps) {
       <div className="space-y-2">
         {notes.map((note) => (
           <Card key={note.id} className="p-3">
-            <Link to={`/games/${note.gameId}/notes/${note.id}`} className="text-primary hover:text-lime-50">
+            <Link
+              to={`/games/${note.gameId}/notes/${note.id}`}
+              className="text-primary hover:text-lime-50"
+            >
               <Text variant={"h4"}>{note.name}</Text>
             </Link>
             <p className="text-xs whitespace-pre-wrap max-h-20 overflow-clip">

@@ -1,6 +1,6 @@
 import { SDK, type ServerResponse } from "@repo/api";
-import { env } from "./env.server";
 import { generateServerToken } from "./auth.server";
+import { env } from "./env.server";
 
 export const createApi = (userId: string) => {
 	const serverToken = generateServerToken(userId);

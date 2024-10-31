@@ -1,24 +1,24 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
+import { stringOrArrayToArray } from "callum-util";
 import {
   redirect,
   typedjson,
   useTypedLoaderData,
   useTypedRouteLoaderData,
 } from "remix-typedjson";
+import { OptionalEntitySchema } from "types/schemas";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditableText } from "~/components/ui/typeography";
-import { useGameData } from "../_app.games.$gameId/route";
-import { getNoteData } from "./queries.server";
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { duplicateNoteSchema, updateNoteContentSchema } from "@repo/api";
-import { stringOrArrayToArray } from "callum-util";
-import { OptionalEntitySchema } from "types/schemas";
+import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { createApi } from "~/lib/api.server";
+import { useGameData } from "../_app.games.$gameId/route";
+import { getNoteData } from "./queries.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { noteId, gameId } = parseParams(params, {

@@ -1,4 +1,4 @@
-import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApi } from "~/lib/api.server";

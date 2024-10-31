@@ -15,8 +15,9 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createFactionInsert } from "./util";
 import { generateFactionId } from "~/lib/ids";
+import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 import {
 	createFaction,
 	createFactionPermission,
@@ -24,8 +25,7 @@ import {
 	getFactionWithPermissions,
 	updateFaction,
 } from "./queries";
-import { getPayload } from "~/lib/jwt";
-import { PermissionService } from "~/services/permissions";
+import { createFactionInsert } from "./util";
 
 export const factionRoute = new Hono();
 

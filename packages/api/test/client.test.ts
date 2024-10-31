@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { SDK, Client } from "../src/index";
+import { beforeAll, describe, expect, it } from "vitest";
+import { Client, SDK } from "../src/index";
 
 describe("SDK", () => {
 	it("should initialize with correct options", () => {

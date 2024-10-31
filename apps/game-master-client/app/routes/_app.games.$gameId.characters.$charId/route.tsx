@@ -12,9 +12,9 @@ import { parseForm, parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
+import { characterHref } from "~/util/generate-hrefs";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { CharacterNavigation } from "./components/navigation";
-import { characterHref } from "~/util/generate-hrefs";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
@@ -55,7 +55,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return unsuccessfulResponse(dupeResult.message);
     }
 
-    const {gameId, id} = dupeResult.data;
+    const { gameId, id } = dupeResult.data;
     return redirect(characterHref(gameId, id));
   }
 

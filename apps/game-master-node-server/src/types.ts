@@ -1,5 +1,5 @@
 export type Variables = {
 	jwtPayload: {
-		userId: string
-	}
-}
+		userId: string;
+	};
+};

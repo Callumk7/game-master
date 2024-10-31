@@ -3,7 +3,7 @@ import { and, eq, inArray, ne } from "drizzle-orm";
 import { db } from "~/db";
 import { characters, charactersPermissions } from "~/db/schema/characters";
 import { factions, factionsPermissions } from "~/db/schema/factions";
-import { games, usersToGames, type InsertDatabaseGame } from "~/db/schema/games";
+import { type InsertDatabaseGame, games, usersToGames } from "~/db/schema/games";
 import { notes, notesPermissions } from "~/db/schema/notes";
 import { resolve } from "~/utils";
 
@@ -143,7 +143,7 @@ export const getUserCharactersForGame = async (
 const getOwnedNotes = async (gameId: Id, userId: Id) => {
 	const notesResult = await db.query.notes.findMany({
 		where: and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)),
-	})
+	});
 
 	return notesResult;
 };

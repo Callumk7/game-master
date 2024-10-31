@@ -1,8 +1,4 @@
-import type {
-	Id,
-	User,
-	UserWithSidebarData,
-} from "@repo/api";
+import type { Id, User, UserWithSidebarData } from "@repo/api";
 import { eq, inArray } from "drizzle-orm";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
@@ -27,16 +23,14 @@ export const getUser = async (userId: Id): Promise<User | undefined> => {
 		.then((rows) => rows[0]);
 };
 
-export const getSidebarData = async (
-	userId: Id,
-): Promise<UserWithSidebarData> => {
+export const getSidebarData = async (userId: Id): Promise<UserWithSidebarData> => {
 	// Fetch user data
 	const user = await db.query.users.findFirst({
 		where: eq(users.id, userId),
 	});
 
 	if (!user) {
-		throw new Error("Unable to get user and data from database")
+		throw new Error("Unable to get user and data from database");
 	}
 
 	// Fetch user's games

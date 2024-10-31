@@ -1,13 +1,13 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { parseForm, parseParams } from "zodix";
-import { z } from "zod";
+import { roleSchema } from "@repo/api";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { z } from "zod";
+import { parseForm, parseParams } from "zodix";
+import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { MemberSearchDialog } from "./components/member-search-dialog";
 import { MemberTable } from "./components/member-table";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { roleSchema } from "@repo/api";
-import { validateUser } from "~/lib/auth.server";
-import { createApi } from "~/lib/api.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);

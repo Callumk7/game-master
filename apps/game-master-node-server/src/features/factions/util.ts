@@ -2,7 +2,9 @@ import type { CreateFactionRequestBody } from "@repo/api/dist/types/factions";
 import type { InsertDatabaseFaction } from "~/db/schema/factions";
 import { generateFactionId } from "~/lib/ids";
 
-export const createFactionInsert = (input: CreateFactionRequestBody): InsertDatabaseFaction => {
+export const createFactionInsert = (
+	input: CreateFactionRequestBody,
+): InsertDatabaseFaction => {
 	const currentDate = new Date();
 	return {
 		id: generateFactionId(),
@@ -14,5 +16,5 @@ export const createFactionInsert = (input: CreateFactionRequestBody): InsertData
 		coverImageUrl: input.coverImageUrl,
 		gameId: input.gameId,
 		ownerId: input.ownerId,
-	}
-}
+	};
+};

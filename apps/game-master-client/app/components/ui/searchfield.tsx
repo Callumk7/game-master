@@ -13,8 +13,8 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { FieldError, FieldGroup, Label } from "./field";
 import { cn } from "callum-util";
+import { FieldError, FieldGroup, Label } from "./field";
 
 function SearchField({ className, ...props }: AriaSearchFieldProps) {
   return (

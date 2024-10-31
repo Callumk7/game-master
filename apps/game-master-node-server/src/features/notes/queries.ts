@@ -1,7 +1,11 @@
-import type { NoteWithPermissions, Permission, UpdateNoteContentRequestBody } from "@repo/api";
+import type {
+	NoteWithPermissions,
+	Permission,
+	UpdateNoteContentRequestBody,
+} from "@repo/api";
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
-import { notes, notesPermissions, type InsertDatabaseNote } from "~/db/schema/notes";
+import { type InsertDatabaseNote, notes, notesPermissions } from "~/db/schema/notes";
 
 export const createNote = async (insert: InsertDatabaseNote) => {
 	const result = await db
@@ -29,31 +33,33 @@ export const updateNote = async (
 		.then((result) => result[0]);
 
 	if (!noteUpdateResult) {
-		throw new Error("Unable to return data from database")
+		throw new Error("Unable to return data from database");
 	}
 
 	return noteUpdateResult;
 };
 
-export const getNoteWithPermissions = async (noteId: string): Promise<NoteWithPermissions> => {
-		const noteResult = await db.query.notes.findFirst({
-			where: eq(notes.id, noteId),
-			with: {
-				permissions: {
-					columns: {
-						userId: true,
-						permission: true,
-					},
+export const getNoteWithPermissions = async (
+	noteId: string,
+): Promise<NoteWithPermissions> => {
+	const noteResult = await db.query.notes.findFirst({
+		where: eq(notes.id, noteId),
+		with: {
+			permissions: {
+				columns: {
+					userId: true,
+					permission: true,
 				},
 			},
-		});
+		},
+	});
 
 	if (!noteResult) {
-		throw new Error("Unable to find note in database")
+		throw new Error("Unable to find note in database");
 	}
 
 	return noteResult;
-}
+};
 
 export async function createNotePermission(
 	userId: string,
@@ -82,4 +88,3 @@ export async function createNotePermission(
 
 	return result;
 }
-

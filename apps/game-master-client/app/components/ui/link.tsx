@@ -5,8 +5,8 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { buttonVariants } from "./button";
 import { cn } from "callum-util";
+import { buttonVariants } from "./button";
 
 interface LinkProps extends AriaLinkProps, VariantProps<typeof buttonVariants> {}
 

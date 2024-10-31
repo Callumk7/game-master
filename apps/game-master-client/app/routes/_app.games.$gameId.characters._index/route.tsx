@@ -2,12 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { methodNotAllowed } from "~/util/responses";
 import { CreateCharacterSlideover } from "~/components/forms/create-character";
-import { createCharacterAction } from "~/queries/server/create-character.server";
-import { validateUser } from "~/lib/auth.server";
-import { createApi } from "~/lib/api.server";
 import { CharacterTable } from "~/components/tables/character-table";
+import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
+import { createCharacterAction } from "~/queries/server/create-character.server";
+import { methodNotAllowed } from "~/util/responses";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });

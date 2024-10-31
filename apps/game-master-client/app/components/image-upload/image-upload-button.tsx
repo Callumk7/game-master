@@ -1,7 +1,7 @@
-import { useFetcher } from "@remix-run/react";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { useCustomUploadButton } from "./upload-hook";
+import { useFetcher } from "@remix-run/react";
 import { Button } from "../ui/button";
+import { useCustomUploadButton } from "./upload-hook";
 
 interface ImageUploadProps {
   imageSrc: string | null;

@@ -1,16 +1,16 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { usersRoute } from "./features/users";
-import { gamesRoute } from "./features/games";
+import { cors } from "hono/cors";
+import { jwt } from "hono/jwt";
 import { logger } from "hono/logger";
-import { notesRoute } from "./features/notes";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
-import { cors } from "hono/cors";
 import { folderRoute } from "./features/folders";
-import { jwt } from "hono/jwt";
-import type { Variables } from "./types";
+import { gamesRoute } from "./features/games";
+import { notesRoute } from "./features/notes";
+import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
+import type { Variables } from "./types";
 
 const app = new Hono<{ Variables: Variables }>();
 

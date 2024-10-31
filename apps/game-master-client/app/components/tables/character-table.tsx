@@ -1,10 +1,10 @@
 import type { Character } from "@repo/api";
 import {
+  type SortingState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";

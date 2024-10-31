@@ -14,7 +14,7 @@ export const handlers = [
 		return HttpResponse.json({ id: 1, name: "test" });
 	}),
 	http.delete(`${testUrl}/delete/:id`, async () => {
-		return HttpResponse.json({ success: true })
+		return HttpResponse.json({ success: true });
 	}),
 
 	// Specific API endpoint mocks

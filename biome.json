@@ -3,6 +3,18 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"files": {
+		"ignore": [
+			"apps/game-master-node-server/drizzle/**/*",
+			"apps/game-master-node-server/build/**/*",
+			"apps/game-master-node-server/.turbo/**/*",
+			"apps/game-master-client/build/**/*",
+			"apps/game-master-client/.turbo/**/*",
+			"packages/api/dist/**/*",
+			"packages/api/.turbo/**/*",
+			".turbo/**/*"
+		]
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {

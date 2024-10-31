@@ -9,11 +9,11 @@ import type {
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "~/db";
 import {
+	type InsertDatabaseCharacter,
 	characters,
 	charactersInFactions,
 	charactersPermissions,
 	notesOnCharacters,
-	type InsertDatabaseCharacter,
 } from "~/db/schema/characters";
 
 export const createCharacter = async (insert: InsertDatabaseCharacter) => {
@@ -121,10 +121,7 @@ export const linkCharacterToFactions = async (charId: string, factionIds: string
 		.onConflictDoNothing();
 };
 
-export const unlinkCharacterFromFaction = async (
-	charId: string,
-	factionId: string,
-) => {
+export const unlinkCharacterFromFaction = async (charId: string, factionId: string) => {
 	await db
 		.delete(charactersInFactions)
 		.where(

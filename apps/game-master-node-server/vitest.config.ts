@@ -1,9 +1,9 @@
-import { defineConfig } from "vitest/config";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { resolve } from "node:path";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from "vitest/config";
 
-dotenv.config({ path: '.env.test' });
+dotenv.config({ path: ".env.test" });
 
 export default defineConfig({
 	plugins: [tsconfigPaths()],
@@ -11,7 +11,7 @@ export default defineConfig({
 		globals: true,
 		environment: "node",
 		setupFiles: ["./test/setup.ts"],
-		silent: true
+		silent: true,
 	},
 	resolve: {
 		alias: {

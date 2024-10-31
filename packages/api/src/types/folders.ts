@@ -33,8 +33,8 @@ export const createFolderSchema = z.object({
 	name: z.string(),
 	parentFolderId: z.string().optional(),
 	gameId: z.string(),
-	ownerId: z.string()
-})
+	ownerId: z.string(),
+});
 export type CreateFolderRequestBody = z.infer<typeof createFolderSchema>;
 
 export const updateFolderSchema = z.object({
@@ -42,10 +42,10 @@ export const updateFolderSchema = z.object({
 	parentFolderId: z.string().optional(),
 	gameId: z.string().optional(),
 	ownerId: z.string().optional(),
-})
+});
 export type UpdateFolderRequestBody = z.infer<typeof updateFolderSchema>;
 
 export const folderInteractionSchema = z.object({
-	entityId: z.string()
-})
+	entityId: z.string(),
+});
 export type FolderInteractionRequestBody = z.infer<typeof folderInteractionSchema>;

@@ -1,9 +1,9 @@
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useLocation, useParams } from "@remix-run/react";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
 import { GameSettingsMenu } from "./game-settings-menu";
-import { Button } from "~/components/ui/button";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 
 export function GameNavbar() {
   const params = useParams();

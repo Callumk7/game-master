@@ -1,4 +1,4 @@
-import { json, type ActionFunction } from "@remix-run/node";
+import { type ActionFunction, json } from "@remix-run/node";
 import { permissionSchema } from "@repo/api";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";

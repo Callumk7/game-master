@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { z } from "zod";
 import { HTTPException } from "hono/http-exception";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 import { successResponse, validateOrThrowError } from "./http-helpers";
 
 describe("validateOrThrowError", () => {
@@ -167,116 +167,115 @@ describe("validateOrThrowError", () => {
 	});
 });
 
-describe('successResponse', () => {
-  // Mock Context object
-  const mockJson = vi.fn();
-  const mockContext = {
-    json: mockJson,
-  // biome-ignore lint/suspicious/noExplicitAny: Test suite
-  } as any;
+describe("successResponse", () => {
+	// Mock Context object
+	const mockJson = vi.fn();
+	const mockContext = {
+		json: mockJson,
+		// biome-ignore lint/suspicious/noExplicitAny: Test suite
+	} as any;
 
-  it('should return a success response with the provided data', () => {
-    const testData = { id: 1, name: 'Test' };
-    successResponse(mockContext, testData);
+	it("should return a success response with the provided data", () => {
+		const testData = { id: 1, name: "Test" };
+		successResponse(mockContext, testData);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: testData,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: testData,
+		});
+	});
 
-  it('should handle empty object as data', () => {
-    successResponse(mockContext, {});
+	it("should handle empty object as data", () => {
+		successResponse(mockContext, {});
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: {},
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: {},
+		});
+	});
 
-  it('should handle null as data', () => {
-    successResponse(mockContext, null);
+	it("should handle null as data", () => {
+		successResponse(mockContext, null);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: null,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: null,
+		});
+	});
 
-  it('should handle undefined as data', () => {
-    successResponse(mockContext, undefined);
+	it("should handle undefined as data", () => {
+		successResponse(mockContext, undefined);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: undefined,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: undefined,
+		});
+	});
 
-  it('should handle array as data', () => {
-    const arrayData = [1, 2, 3];
-    successResponse(mockContext, arrayData);
+	it("should handle array as data", () => {
+		const arrayData = [1, 2, 3];
+		successResponse(mockContext, arrayData);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: arrayData,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: arrayData,
+		});
+	});
 
-  it('should handle string as data', () => {
-    successResponse(mockContext, 'test string');
+	it("should handle string as data", () => {
+		successResponse(mockContext, "test string");
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: 'test string',
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: "test string",
+		});
+	});
 
-  it('should handle number as data', () => {
-    successResponse(mockContext, 42);
+	it("should handle number as data", () => {
+		successResponse(mockContext, 42);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: 42,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: 42,
+		});
+	});
 
-  it('should handle boolean as data', () => {
-    successResponse(mockContext, true);
+	it("should handle boolean as data", () => {
+		successResponse(mockContext, true);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: true,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: true,
+		});
+	});
 
-  it('should handle complex nested object as data', () => {
-    const complexData = {
-      id: 1,
-      name: 'Test',
-      details: {
-        age: 30,
-        addresses: [
-          { street: '123 Main St', city: 'Testville' },
-          { street: '456 Oak Rd', city: 'Exampletown' },
-        ],
-      },
-      active: true,
-    };
-    successResponse(mockContext, complexData);
+	it("should handle complex nested object as data", () => {
+		const complexData = {
+			id: 1,
+			name: "Test",
+			details: {
+				age: 30,
+				addresses: [
+					{ street: "123 Main St", city: "Testville" },
+					{ street: "456 Oak Rd", city: "Exampletown" },
+				],
+			},
+			active: true,
+		};
+		successResponse(mockContext, complexData);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: complexData,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: complexData,
+		});
+	});
 
-  it('should always set success to true regardless of data', () => {
-    successResponse(mockContext, false);
+	it("should always set success to true regardless of data", () => {
+		successResponse(mockContext, false);
 
-    expect(mockJson).toHaveBeenCalledWith({
-      success: true,
-      data: false,
-    });
-  });
+		expect(mockJson).toHaveBeenCalledWith({
+			success: true,
+			data: false,
+		});
+	});
 });
-

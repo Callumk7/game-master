@@ -10,8 +10,8 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { FieldError, Label } from "./field";
 import { cn } from "callum-util";
+import { FieldError, Label } from "./field";
 
 const TextField = AriaTextField;
 

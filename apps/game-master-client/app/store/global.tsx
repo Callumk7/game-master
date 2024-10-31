@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useRef } from "react";
+import { type PropsWithChildren, createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
 
 interface GlobalStateProps {

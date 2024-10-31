@@ -8,9 +8,9 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
 import { charactersInFactions } from "~/db/schema/characters";
 import {
+	type InsertDatabaseFaction,
 	factions,
 	factionsPermissions,
-	type InsertDatabaseFaction,
 } from "~/db/schema/factions";
 
 export const createFaction = async (factionInsert: InsertDatabaseFaction) => {

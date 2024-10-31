@@ -1,8 +1,8 @@
-import { cva, type VariantProps } from "class-variance-authority";
 import { type FormMethod, useFetcher } from "@remix-run/react";
-import { type ReactNode, useState, useRef, useEffect } from "react";
-import { flushSync } from "react-dom";
 import { cn } from "callum-util";
+import { type VariantProps, cva } from "class-variance-authority";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 const typographyVariants = cva("font-medium", {
   variants: {
