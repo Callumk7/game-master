@@ -32,6 +32,7 @@ import { JollyTextField } from "~/components/ui/textfield";
 import { Button } from "~/components/ui/button";
 import { Form } from "@remix-run/react";
 import { Tree, TreeItem } from "~/components/ui/tree";
+import { hrefFor } from "~/util/generate-hrefs";
 
 interface GameSidebarProps {
   gamesWithAllEntities: GameWithDatedEntities[];
@@ -132,7 +133,7 @@ function EntityGroup({ items, selectedGame, itemType }: EntityGroupProps) {
           <Link
             key={note.id}
             variant={"link"}
-            href={`/games/${selectedGame}/${itemType}/${note.id}`}
+            href={hrefFor(itemType, selectedGame, note.id)}
             className={"text-wrap h-fit pl-0"}
           >
             {note.name}
@@ -211,7 +212,7 @@ function FolderTree({ folders, gameId }: FolderTreeProps) {
                 </Button>
               ) : null}
               <Link
-                href={`/games/${gameId}/${item.type}/${item.id}`}
+                href={hrefFor(item.type, gameId, item.id)}
                 variant={item.type !== "folders" ? "link" : "ghost"}
               >
                 {item.name}
