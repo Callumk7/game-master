@@ -44,20 +44,17 @@
 		"lineEnding": "lf",
 		"ignore": []
 	},
+	"css": {
+		"formatter": {
+			"enabled": true
+		}
+	},
 	"overrides": [
 		{
 			"include": ["*.jsx", "*.tsx"],
 			"formatter": {
 				"indentWidth": 2,
 				"indentStyle": "space"
-			}
-		},
-		{
-			"include": ["*.css"],
-			"formatter": {
-				"indentWidth": 4,
-				"indentStyle": "tab",
-				"lineWidth": 80
 			}
 		}
 	]
