@@ -11,6 +11,7 @@ import { methodNotAllowed } from "~/util/responses";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 import { NoteCard } from "./components/note-card";
+import { Pill } from "~/components/pill";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await validateUser(request);
@@ -38,6 +39,9 @@ export default function CharacterRoute() {
     <div className="p-4 space-y-4">
       <div className="grid grid-cols-4 gap-1">
         <div className="col-span-3">
+          <Pill size={"xs"} variant={"secondary"}>
+            {`permission level: ${characterDetails.userPermissionLevel}`}
+          </Pill>
           <EditableText
             method="patch"
             fieldName={"name"}

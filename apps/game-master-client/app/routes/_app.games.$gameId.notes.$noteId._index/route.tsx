@@ -19,6 +19,7 @@ import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { useGameData } from "../_app.games.$gameId/route";
 import { getNoteData } from "./queries.server";
+import { Pill } from "~/components/pill";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { noteId, gameId } = parseParams(params, {
@@ -122,23 +123,24 @@ export default function NoteIndexRoute() {
           userPermissionLevel={note.userPermissionLevel!}
           folders={folders}
         />
-        <EditableText
-          method="patch"
-          fieldName={"name"}
-          value={note.name}
-          variant={"h2"}
-          weight={"semi"}
-          inputLabel={"Game name input"}
-          buttonLabel={"Edit game name"}
-          action={`/games/${note.gameId}/notes/${note.id}`}
-        />
+        <div>
+          <Pill
+            size={"xs"}
+            variant={"secondary"}
+          >{`permission level: ${note.userPermissionLevel}`}</Pill>
+          <EditableText
+            method="patch"
+            fieldName={"name"}
+            value={note.name}
+            variant={"h2"}
+            weight={"semi"}
+            inputLabel={"Game name input"}
+            buttonLabel={"Edit game name"}
+            action={`/games/${note.gameId}/notes/${note.id}`}
+          />
+        </div>
         {note.userPermissionLevel === "view" ? (
-          <>
-            <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">
-              You have permission to view
-            </span>
-            <EditorPreview htmlContent={note.htmlContent ?? ""} />
-          </>
+          <EditorPreview htmlContent={note.htmlContent ?? ""} />
         ) : (
           <EditorClient
             htmlContent={note.htmlContent ?? ""}
