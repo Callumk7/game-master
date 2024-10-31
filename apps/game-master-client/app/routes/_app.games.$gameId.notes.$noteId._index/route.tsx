@@ -13,13 +13,13 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
+import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { useGameData } from "../_app.games.$gameId/route";
 import { getNoteData } from "./queries.server";
-import { Pill } from "~/components/pill";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { noteId, gameId } = parseParams(params, {

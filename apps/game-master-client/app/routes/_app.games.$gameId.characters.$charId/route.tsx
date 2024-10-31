@@ -10,12 +10,12 @@ import {
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
+import { Pill } from "~/components/pill";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { characterHref } from "~/util/generate-hrefs";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { CharacterNavigation } from "./components/navigation";
-import { Pill } from "~/components/pill";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);

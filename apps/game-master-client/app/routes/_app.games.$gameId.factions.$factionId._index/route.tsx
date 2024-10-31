@@ -3,11 +3,11 @@ import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 import { updateFactionDetails } from "./actions.server";
-import { Pill } from "~/components/pill";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const { factionId } = parseParams(params, { factionId: z.string() });
@@ -25,14 +25,14 @@ export default function FactionDetailRoute() {
           {`permission level: ${factionDetails.userPermissionLevel}`}
         </Pill>
         <EditableText
-        method="patch"
-        fieldName={"name"}
-        value={factionDetails.name}
-        variant={"h2"}
-        weight={"semi"}
-        inputLabel={"Game name input"}
-        buttonLabel={"Edit game name"}
-      />
+          method="patch"
+          fieldName={"name"}
+          value={factionDetails.name}
+          variant={"h2"}
+          weight={"semi"}
+          inputLabel={"Game name input"}
+          buttonLabel={"Edit game name"}
+        />
       </div>
       {factionDetails.userPermissionLevel === "view" ? (
         <EditorPreview htmlContent={factionDetails.htmlContent ?? ""} />

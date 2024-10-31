@@ -1,5 +1,5 @@
 import { cn } from "callum-util";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import type { ReactNode } from "react";
 
 const pillVariants = cva(
@@ -12,7 +12,7 @@ const pillVariants = cva(
       },
       size: {
         default: "text-sm h-7 px-3 py-1",
-        xs: "text-xs h-5 px-2 py-1"
+        xs: "text-xs h-5 px-2 py-1",
       },
     },
     defaultVariants: {

@@ -4,6 +4,7 @@ import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
@@ -11,7 +12,6 @@ import { methodNotAllowed } from "~/util/responses";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 import { NoteCard } from "./components/note-card";
-import { Pill } from "~/components/pill";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const userId = await validateUser(request);
