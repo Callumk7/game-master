@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
-import { duplicateCharacterSchema, updateCharacterSchema } from "@repo/api";
+import { Outlet, type Params } from "@remix-run/react";
 import {
   redirect,
   typedjson,
@@ -8,68 +7,48 @@ import {
   useTypedRouteLoaderData,
 } from "remix-typedjson";
 import { z } from "zod";
-import { parseForm, parseParams } from "zodix";
+import { parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
-import { Pill } from "~/components/pill";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
-import { characterHref } from "~/util/generate-hrefs";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
+import { createApiFromReq } from "~/lib/api.server";
+import { resolve } from "~/util/await-all";
+import { getData } from "~/util/handle-error";
+import { methodNotAllowed } from "~/util/responses";
+import { deleteCharacter, duplicateCharacter } from "./actions.server";
 import { CharacterNavigation } from "./components/navigation";
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { charId, gameId } = parseParams(params, {
+const getParams = (params: Params) => {
+  return parseParams(params, {
     charId: z.string(),
     gameId: z.string(),
   });
-  const characterDetails = await api.characters.getCharacterWithPermissions(charId);
-  const charNotes = await api.characters.getNotes(charId);
+};
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const { api } = await createApiFromReq(request);
+  const { charId, gameId } = getParams(params);
+  const [characterDetails, charNotes, folders] = await resolve(
+    getData(() => api.characters.getCharacterWithPermissions(charId)),
+    getData(() => api.characters.getNotes(charId)),
+    getData(() => api.folders.getGameFolders(gameId)),
+  );
 
   if (characterDetails.userPermissionLevel === "none") {
     return redirect(`/games/${gameId}/characters`);
   }
 
-  const folders = await api.folders.getGameFolders(characterDetails.gameId);
   return typedjson({ characterDetails, charNotes, folders });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { charId } = parseParams(params, { charId: z.string() });
+  const { api, userId } = await createApiFromReq(request);
+  const { charId } = getParams(params);
 
   if (request.method === "POST") {
-    const userId = await validateUser(request);
-    const data = await parseForm(
-      request,
-      duplicateCharacterSchema.omit({ ownerId: true }),
-    );
-
-    const dupeResult = await api.characters.duplicateCharacter(charId, {
-      ...data,
-      ownerId: userId,
-    });
-
-    if (!dupeResult.success) {
-      return unsuccessfulResponse(dupeResult.message);
-    }
-
-    const { gameId, id } = dupeResult.data;
-    return redirect(characterHref(gameId, id));
+    return duplicateCharacter(request, api, charId, userId);
   }
 
-  if (request.method === "PATCH") {
-    const data = await parseForm(request, updateCharacterSchema);
-
-    const result = await api.characters.updateCharacterDetails(charId, data);
-
-    if (!result.success) {
-      return new Response("Error");
-    }
-
-    return typedjson(result);
+  if (request.method === "DELETE") {
+    return deleteCharacter(api, charId);
   }
 
   return methodNotAllowed();

@@ -19,10 +19,7 @@ interface MemberSearchDialogProps {
   memberIds: string[];
 }
 export function MemberSearchDialog({ memberIds }: MemberSearchDialogProps) {
-  const { serverUrl } = useAppData();
-  const { status, data, error } = useGetAllUsers(
-    new SDK({ baseUrl: serverUrl, apiKey: "test-key-client" }),
-  );
+  const { status, data, error } = useGetAllUsers();
 
   if (status !== "success") {
     if (error) console.error(error);

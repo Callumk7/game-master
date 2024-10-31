@@ -1,4 +1,4 @@
-import type { SDK, User } from "@repo/api";
+import type { User } from "@repo/api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetGameWithMembers = (gameId: string) => {

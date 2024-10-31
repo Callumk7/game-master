@@ -1,20 +1,18 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { CreateFactionSlideover } from "~/components/forms/create-faction";
-import { FactionTable } from "~/components/tables/faction-table";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createApiFromReq } from "~/lib/api.server";
 import { createFactionAction } from "~/queries/server/create-faction.server";
+import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
+import { FactionsIndex } from "./factions-index";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const userId = await validateUser(request);
-  const api = createApi(userId);
+  const { api } = await createApiFromReq(request);
   const { gameId } = parseParams(params, { gameId: z.string() });
 
-  const gameFactions = await api.factions.getAllGameFactions(gameId);
+  const gameFactions = await getData(() => api.factions.getAllGameFactions(gameId));
 
   return typedjson({ gameId, gameFactions });
 };
@@ -27,12 +25,4 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return methodNotAllowed();
 };
 
-export default function CharacterIndex() {
-  const { gameId, gameFactions } = useTypedLoaderData<typeof loader>();
-  return (
-    <div className="space-y-2">
-      <CreateFactionSlideover gameId={gameId} />
-      <FactionTable factions={gameFactions} />
-    </div>
-  );
-}
+export { FactionsIndex as default };

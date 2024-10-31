@@ -8,7 +8,6 @@ import {
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { characters } from "~/db/schema/characters";
 import { games, usersToGames } from "~/db/schema/games";
 import { folders, notes } from "~/db/schema/notes";
 import {

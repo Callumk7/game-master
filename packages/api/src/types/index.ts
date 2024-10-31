@@ -3,8 +3,8 @@ import { z } from "zod";
 export type Id = string;
 
 type SuccessfulResponse<T> = { success: true; data: T };
-type Unsuccessfulresponse = { success: false; message: string };
-export type ServerResponse<T> = SuccessfulResponse<T> | Unsuccessfulresponse;
+type UnsuccessfulResponse = { success: false; message: string };
+export type ServerResponse<T> = SuccessfulResponse<T> | UnsuccessfulResponse;
 export type BasicServerResponse = { success: boolean };
 
 export interface BasicEntity {

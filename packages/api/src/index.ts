@@ -10,3 +10,6 @@ export * from "./types/characters.js";
 export * from "./types/factions.js";
 export * from "./types/folders.js";
 export * from "./types/links.js";
+
+// Error type
+export * from "./error.js";
