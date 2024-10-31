@@ -1,4 +1,5 @@
 import ky, { type Options } from "ky";
+import { DatabaseError } from "./error.js";
 import { Characters } from "./resources/characters.js";
 import { Factions } from "./resources/factions.js";
 import { Folders } from "./resources/folders.js";
@@ -25,6 +26,11 @@ export class Client {
 				beforeError: [
 					(error) => {
 						const { response } = error;
+						if (response.statusText === "Database Error") {
+							throw new DatabaseError();
+						}
+
+						// handle other types of errors
 						if (response?.body) {
 							error.name = "ApiError";
 							error.message = `${response.status} ${response.statusText}`;
@@ -36,14 +42,20 @@ export class Client {
 		});
 	}
 
-	// TODO: Add runtime type checking with zod to api calls
-
 	async get<T>(url: string, options?: Options): Promise<T> {
-		return this.ky.get(url, options).json<T>();
+		try {
+			return this.ky.get(url, options).json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
 	}
 
 	async post<T>(url: string, data: unknown, options?: Options): Promise<T> {
-		return this.ky.post(url, { json: data, ...options }).json<T>();
+		try {
+			return this.ky.post(url, { json: data, ...options }).json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
 	}
 
 	async postImage<T>(
@@ -51,24 +63,52 @@ export class Client {
 		uploadStream: ReadableStream<Uint8Array>,
 		options?: Options,
 	): Promise<T> {
-		return this.ky
-			.post(url, {
-				body: uploadStream,
-				...options,
-			})
-			.json<T>();
+		try {
+			return this.ky
+				.post(url, {
+					body: uploadStream,
+					...options,
+				})
+				.json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
 	}
 
 	async put<T>(url: string, data: unknown, options?: Options): Promise<T> {
-		return this.ky.put(url, { json: data, ...options }).json<T>();
+		try {
+			return this.ky.put(url, { json: data, ...options }).json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
 	}
 
 	async patch<T>(url: string, data: unknown, options?: Options): Promise<T> {
-		return this.ky.patch(url, { json: data, ...options }).json<T>();
+		try {
+			return this.ky.patch(url, { json: data, ...options }).json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
 	}
 
 	async delete<T>(url: string, options?: Options): Promise<T> {
-		return this.ky.delete(url, options).json<T>();
+		try {
+			return this.ky.delete(url, options).json<T>();
+		} catch (error) {
+			this.handleError(error);
+		}
+	}
+
+	private handleError(error: unknown): never {
+		if (error instanceof DatabaseError) {
+			throw error;
+		}
+
+		if (error instanceof Error) {
+			throw error;
+		}
+
+		throw new Error("An unknown error occurred");
 	}
 }
 

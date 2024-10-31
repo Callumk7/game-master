@@ -4,17 +4,16 @@ import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { Text } from "~/components/ui/typeography";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createApiFromReq } from "~/lib/api.server";
 import type { MentionItem } from "~/types/mentions";
+import { getData } from "~/util/handle-error";
 import { GameNavbar } from "./components/game-navbar";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { characters, factions, notes } = await api.games.getAllGameEntities(gameId);
-  return typedjson({ characters, factions, notes });
+  const { api } = await createApiFromReq(request);
+  const data = await getData(() => api.games.getAllGameEntities(gameId));
+  return typedjson(data);
 };
 
 export default function GameLayout() {
