@@ -1,8 +1,8 @@
+import { EditorClient, EditorPreview } from "~/components/editor";
 import { Pill } from "~/components/pill";
+import { EditableText } from "~/components/ui/typeography";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
-import { EditableText } from "~/components/ui/typeography";
-import { EditorClient, EditorPreview } from "~/components/editor";
 
 export function FactionIndex() {
   const { factionDetails } = useFactionData();

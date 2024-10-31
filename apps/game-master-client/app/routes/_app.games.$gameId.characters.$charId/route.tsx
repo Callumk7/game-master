@@ -12,12 +12,12 @@ import { parseForm, parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { createApi, createApiFromReq } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
-import { characterHref } from "~/util/generate-hrefs";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
-import { CharacterNavigation } from "./components/navigation";
-import { getData } from "~/util/handle-error";
 import { resolve } from "~/util/await-all";
+import { characterHref } from "~/util/generate-hrefs";
+import { getData } from "~/util/handle-error";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { deleteCharacter, duplicateCharacter } from "./actions.server";
+import { CharacterNavigation } from "./components/navigation";
 
 const getParams = (params: Params) => {
   return parseParams(params, {

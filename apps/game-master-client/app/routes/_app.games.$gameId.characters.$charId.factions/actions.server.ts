@@ -28,4 +28,3 @@ export const unlinkFaction = async (request: Request, api: SDK, charId: string) 
 	const result = await api.characters.unlinkFaction(charId, factionId);
 	return typedjson(result);
 };
-

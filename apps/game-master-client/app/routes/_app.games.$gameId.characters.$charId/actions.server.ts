@@ -1,4 +1,4 @@
-import { duplicateCharacterSchema, type SDK } from "@repo/api";
+import { type SDK, duplicateCharacterSchema } from "@repo/api";
 import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { characterHref } from "~/util/generate-hrefs";
@@ -28,7 +28,7 @@ export const duplicateCharacter = async (
 	return redirect(characterHref(gameId, id));
 };
 
-export const deleteCharacter = async(api: SDK, charId: string) => {
-	const result = await api.characters.deleteCharacter(charId)
+export const deleteCharacter = async (api: SDK, charId: string) => {
+	const result = await api.characters.deleteCharacter(charId);
 	return typedjson(result);
-}
+};

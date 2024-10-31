@@ -5,8 +5,8 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { getData } from "~/util/handle-error";
-import { unlinkCharacter } from "./actions.server";
 import { methodNotAllowed } from "~/util/responses";
+import { unlinkCharacter } from "./actions.server";
 import { MembersRoute } from "./members-route";
 
 const getParams = (params: Params) => {

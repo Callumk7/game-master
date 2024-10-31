@@ -1,7 +1,7 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import type { loader } from "./route";
 import { CreateCharacterSlideover } from "~/components/forms/create-character";
 import { CharacterTable } from "~/components/tables/character-table";
+import type { loader } from "./route";
 
 export function CharacterIndex() {
   const { gameId, gameChars } = useTypedLoaderData<typeof loader>();

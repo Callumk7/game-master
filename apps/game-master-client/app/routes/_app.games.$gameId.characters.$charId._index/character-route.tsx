@@ -1,8 +1,8 @@
+import { EditorClient, EditorPreview } from "~/components/editor";
 import { Pill } from "~/components/pill";
+import { EditableText } from "~/components/ui/typeography";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
 import { useGameData } from "../_app.games.$gameId/route";
-import { EditableText } from "~/components/ui/typeography";
-import { EditorClient, EditorPreview } from "~/components/editor";
 import { NoteCard } from "./components/note-card";
 
 export default function CharacterRoute() {

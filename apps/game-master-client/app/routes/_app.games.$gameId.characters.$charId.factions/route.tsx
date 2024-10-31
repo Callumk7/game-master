@@ -1,13 +1,13 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
-import type { Params } from "@remix-run/react";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
-import { unlinkFaction, updateCharacterFaction } from "./actions.server";
 import { methodNotAllowed } from "~/util/responses";
+import { unlinkFaction, updateCharacterFaction } from "./actions.server";
 import { CharacterFactionsRoute } from "./character-factions-route";
 
 export const getParams = (params: Params) => {
