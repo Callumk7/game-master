@@ -4,6 +4,7 @@ import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
@@ -38,6 +39,9 @@ export default function CharacterRoute() {
     <div className="p-4 space-y-4">
       <div className="grid grid-cols-4 gap-1">
         <div className="col-span-3">
+          <Pill size={"xs"} variant={"secondary"}>
+            {`permission level: ${characterDetails.userPermissionLevel}`}
+          </Pill>
           <EditableText
             method="patch"
             fieldName={"name"}

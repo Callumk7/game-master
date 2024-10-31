@@ -13,6 +13,7 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
 import { EntityToolbar } from "~/components/entity-toolbar";
+import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
@@ -122,23 +123,24 @@ export default function NoteIndexRoute() {
           userPermissionLevel={note.userPermissionLevel!}
           folders={folders}
         />
-        <EditableText
-          method="patch"
-          fieldName={"name"}
-          value={note.name}
-          variant={"h2"}
-          weight={"semi"}
-          inputLabel={"Game name input"}
-          buttonLabel={"Edit game name"}
-          action={`/games/${note.gameId}/notes/${note.id}`}
-        />
+        <div>
+          <Pill
+            size={"xs"}
+            variant={"secondary"}
+          >{`permission level: ${note.userPermissionLevel}`}</Pill>
+          <EditableText
+            method="patch"
+            fieldName={"name"}
+            value={note.name}
+            variant={"h2"}
+            weight={"semi"}
+            inputLabel={"Game name input"}
+            buttonLabel={"Edit game name"}
+            action={`/games/${note.gameId}/notes/${note.id}`}
+          />
+        </div>
         {note.userPermissionLevel === "view" ? (
-          <>
-            <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">
-              You have permission to view
-            </span>
-            <EditorPreview htmlContent={note.htmlContent ?? ""} />
-          </>
+          <EditorPreview htmlContent={note.htmlContent ?? ""} />
         ) : (
           <EditorClient
             htmlContent={note.htmlContent ?? ""}
