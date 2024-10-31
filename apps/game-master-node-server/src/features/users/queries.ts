@@ -97,6 +97,7 @@ export const getSidebarData = async (userId: Id): Promise<UserWithSidebarData> =
 	const createNestedFolders = (
 		gameFolders: typeof folderData,
 		parentId: Id | null = null,
+		// biome-ignore lint/suspicious/noExplicitAny: This complex nested structure needs to be figured out..
 	): any[] => {
 		return gameFolders
 			.filter((f) => f.parentFolderId === parentId)

@@ -41,7 +41,8 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	// regarding tiptap's use of flushSync during render. It doesn't break
 	// the app, but the warning is annoying. Using the browser queueMicrotask
 	// api fixes the error, at the expense of potential delayed content load
-	// on quick navigations.
+	// on quick navigations, and breaks the component for edits.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: We are only triggering the effect if content changes
 	useLayoutEffect(() => {
 		if (editor) {
 			editor.commands.setContent(optimisticContent);
