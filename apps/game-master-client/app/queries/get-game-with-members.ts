@@ -6,7 +6,7 @@ export const useGetGameWithMembers = (gameId: string) => {
 		queryKey: ["games", gameId],
 		queryFn: async () =>
 			fetch(`/members/${gameId}`).then(
-				(result) => result.json() as Promise<{members: User[]}>,
+				(result) => result.json() as Promise<{ members: User[] }>,
 			),
 	});
 };

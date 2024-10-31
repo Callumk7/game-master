@@ -1,15 +1,15 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { updateCharacterSchema } from "@repo/api";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { EditorClient, EditorPreview } from "~/components/editor";
 import { EditableText } from "~/components/ui/typeography";
-import { useGameData } from "../_app.games.$gameId/route";
-import { updateCharacterSchema } from "@repo/api";
-import { methodNotAllowed } from "~/util/responses";
-import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
+import { methodNotAllowed } from "~/util/responses";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
+import { useGameData } from "../_app.games.$gameId/route";
 import { NoteCard } from "./components/note-card";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

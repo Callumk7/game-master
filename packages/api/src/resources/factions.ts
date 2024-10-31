@@ -12,15 +12,15 @@ import type {
 } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type {
-	ServerResponse,
-	Id,
 	BasicServerResponse,
 	CreatePermissionRequestBody,
+	Id,
 	Permission,
+	ServerResponse,
 } from "../types/index.js";
 
 export class Factions {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	async getFaction(factionId: Id): Promise<Faction> {
 		return this.client.get<Faction>(`factions/${factionId}`);

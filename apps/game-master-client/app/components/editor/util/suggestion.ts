@@ -1,8 +1,8 @@
 import { ReactRenderer } from "@tiptap/react";
-import tippy, { type Instance } from "tippy.js";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
-import { MentionList } from "../components/mention-list";
+import tippy, { type Instance } from "tippy.js";
 import type { MentionItem } from "~/types/mentions";
+import { MentionList } from "../components/mention-list";
 
 export const suggestion: Partial<SuggestionOptions<MentionItem>> = {
 	allowSpaces: true,

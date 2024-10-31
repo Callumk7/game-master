@@ -9,8 +9,8 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { FieldError, Label, labelVariants } from "./field";
 import { cn } from "callum-util";
+import { FieldError, Label, labelVariants } from "./field";
 
 const CheckboxGroup = AriaCheckboxGroup;
 

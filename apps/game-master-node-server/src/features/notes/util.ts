@@ -15,5 +15,5 @@ export const createNoteInsert = (input: CreateNoteRequestBody): InsertDatabaseNo
 		htmlContent: input.htmlContent,
 		type: input.type,
 		visibility: input.visibility,
-	}
-}
+	};
+};

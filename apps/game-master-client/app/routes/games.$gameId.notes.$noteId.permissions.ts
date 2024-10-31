@@ -1,4 +1,4 @@
-import { json, type ActionFunction } from "@remix-run/node";
+import { type ActionFunction, json } from "@remix-run/node";
 import type { ClientActionFunctionArgs } from "@remix-run/react";
 import { permissionSchema } from "@repo/api";
 import { z } from "zod";

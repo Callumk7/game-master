@@ -1,9 +1,9 @@
 import { cn } from "callum-util";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import {
   Button as AriaButton,
-  composeRenderProps,
   type ButtonProps as AriaButtonProps,
+  composeRenderProps,
 } from "react-aria-components";
 
 const buttonVariants = cva(

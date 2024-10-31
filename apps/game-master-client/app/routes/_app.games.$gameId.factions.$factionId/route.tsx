@@ -1,5 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
+import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
 import {
   redirect,
   typedjson,
@@ -8,12 +9,11 @@ import {
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { EntityToolbar } from "~/components/entity-toolbar";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
-import { EntityToolbar } from "~/components/entity-toolbar";
-import { duplicateFactionSchema, updateFactionSchema } from "@repo/api";
-import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { factionHref } from "~/util/generate-hrefs";
+import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { FactionNavigation } from "./components/navigation";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

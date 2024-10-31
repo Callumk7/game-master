@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { visibilitySchema, type UserPermission } from "./index.js";
 import type { Entity } from "./entity.js";
+import { type UserPermission, visibilitySchema } from "./index.js";
 
 const noteTypeSchema = z.enum([
 	"note",
@@ -37,7 +37,7 @@ export const updateNoteContentSchema = z.object({
 	content: z.string().optional(),
 	type: noteTypeSchema.optional(),
 	folderId: z.string().optional(),
-	visibility: visibilitySchema.optional()
+	visibility: visibilitySchema.optional(),
 });
 export type UpdateNoteContentRequestBody = z.infer<typeof updateNoteContentSchema>;
 
@@ -46,4 +46,3 @@ export const duplicateNoteSchema = z.object({
 	ownerId: z.string(),
 });
 export type DuplicateNoteRequestBody = z.infer<typeof duplicateNoteSchema>;
-

@@ -1,6 +1,6 @@
 import { GearIcon, TrashIcon } from "@radix-ui/react-icons";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useSubmit, type Params } from "@remix-run/react";
+import { type Params, useSubmit } from "@remix-run/react";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";

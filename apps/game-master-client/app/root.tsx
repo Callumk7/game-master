@@ -1,17 +1,17 @@
 import {
-  json,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  json,
   useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
 import "./editor.css";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { getTheme } from "./lib/theme/theme.server";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
+import { getTheme } from "./lib/theme/theme.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);

@@ -1,10 +1,10 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
-import { visibilitySchema, type Id, type UserPermission } from "./index.js";
-import type { Note } from "./notes.js";
 import type { Entity } from "./entity.js";
+import { type Id, type UserPermission, visibilitySchema } from "./index.js";
+import type { Note } from "./notes.js";
 
-export interface Faction extends Entity { }
+export interface Faction extends Entity {}
 
 export interface FactionMember extends Character {
 	role: string | null;

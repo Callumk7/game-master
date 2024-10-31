@@ -14,6 +14,7 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
+import { cn } from "callum-util";
 import { FieldError, Label } from "./field";
 import {
   ListBoxCollection,
@@ -22,7 +23,6 @@ import {
   ListBoxSection,
 } from "./list-box";
 import { Popover } from "./popover";
-import { cn } from "callum-util";
 
 const Select = AriaSelect;
 

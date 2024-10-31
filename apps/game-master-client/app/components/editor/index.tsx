@@ -1,25 +1,25 @@
+import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
+import type { FormMethod } from "@remix-run/react";
+import Typography from "@tiptap/extension-typography";
 import {
-  useEditor,
-  EditorContent,
   BubbleMenu,
   type Editor,
+  EditorContent,
   type Extensions,
+  useEditor,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Typography from "@tiptap/extension-typography";
-import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
-import { Toolbar } from "~/ui/toolbar";
-import { Button } from "~/ui/button";
-import { useSyncEditorContent } from "./sync";
-import type { FormMethod } from "@remix-run/react";
 import { cn } from "callum-util";
+import { Button } from "~/ui/button";
+import { Toolbar } from "~/ui/toolbar";
 import { Label } from "../ui/field";
+import { useSyncEditorContent } from "./sync";
 
-import { suggestion } from "./util/suggestion";
 import Fuse from "fuse.js";
-import { CustomMention } from "./extensions/mention-extension";
-import type { MentionItem } from "~/types/mentions";
 import { useIsClient } from "~/hooks/is-client";
+import type { MentionItem } from "~/types/mentions";
+import { CustomMention } from "./extensions/mention-extension";
+import { suggestion } from "./util/suggestion";
 
 // Core editor hook. A wrapper around the tiptap useEditor
 // hook, which ensures consistent settings when spawning a
@@ -126,11 +126,7 @@ export function EditorWithControls({
     <div>
       {label && <Label id="editor-label">{label}</Label>}
       <EditorContent
-        className={cn(
-          "flex-auto",
-          bordered ? "border rounded-md" : "",
-          className,
-        )}
+        className={cn("flex-auto", bordered ? "border rounded-md" : "", className)}
         editor={editor}
         aria-labelledby="editor-label"
       />

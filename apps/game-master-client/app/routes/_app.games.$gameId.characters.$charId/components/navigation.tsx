@@ -15,10 +15,7 @@ export function CharacterNavigation({ charId, gameId }: CharacterNavigationProps
   return (
     <nav>
       <Toolbar>
-        <Button
-          onPress={() => navigate(characterHref(gameId, charId))}
-          variant={"link"}
-        >
+        <Button onPress={() => navigate(characterHref(gameId, charId))} variant={"link"}>
           Overview
         </Button>
         <Button

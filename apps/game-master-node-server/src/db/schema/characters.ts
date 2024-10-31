@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
 	boolean,
 	pgEnum,
@@ -6,20 +7,15 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-import { games } from "./games";
-import { users } from "./users";
-import { folders, notes } from "./notes";
-import { relations } from "drizzle-orm";
-import { factions } from "./factions";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { factions } from "./factions";
+import { games } from "./games";
 import { images } from "./images";
+import { folders, notes } from "./notes";
+import { users } from "./users";
 
-export const visibilityEnum = pgEnum("visibility", [
-	"public",
-	"private",
-	"viewable",
-]);
+export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
 export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
@@ -38,7 +34,7 @@ export const characters = pgTable("characters", {
 	folderId: text("folder_id").references(() => folders.id),
 	isPlayer: boolean("is_player").notNull().default(false),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
-	primaryFactionId: text("primary_faction_id").references(() => factions.id)
+	primaryFactionId: text("primary_faction_id").references(() => factions.id),
 });
 
 export const databaseSelectCharacterSchema = createSelectSchema(characters);
@@ -59,15 +55,15 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 	}),
 	folder: one(folders, {
 		fields: [characters.folderId],
-		references: [folders.id]
+		references: [folders.id],
 	}),
 	factions: many(charactersInFactions),
 	primaryFaction: one(factions, {
 		fields: [characters.primaryFactionId],
-		references: [factions.id]
+		references: [factions.id],
 	}),
 	permissions: many(charactersPermissions),
-	images: many(images)
+	images: many(images),
 }));
 
 export const notesOnCharacters = pgTable(
@@ -138,7 +134,7 @@ export const charactersPermissions = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => users.id),
-		permission: permissionEnum("permission").notNull()
+		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.userId, t.characterId] }),

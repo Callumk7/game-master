@@ -1,4 +1,5 @@
 import {
+	type Id,
 	createNoteSchema,
 	createPermissionSchema,
 	duplicateNoteSchema,
@@ -6,10 +7,13 @@ import {
 	linkFactionsSchema,
 	linkNotesSchema,
 	updateNoteContentSchema,
-	type Id,
 } from "@repo/api";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
+import { notesOnCharacters } from "~/db/schema/characters";
+import { notesOnFactions } from "~/db/schema/factions";
+import { images } from "~/db/schema/images";
 import { links, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
@@ -18,22 +22,18 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createNoteInsert } from "./util";
-import { eq } from "drizzle-orm";
 import { generateNoteId } from "~/lib/ids";
-import { notesOnCharacters } from "~/db/schema/characters";
-import { notesOnFactions } from "~/db/schema/factions";
+import { getPayload } from "~/lib/jwt";
+import { s3 } from "~/lib/s3";
+import { PermissionService } from "~/services/permissions";
+import { validateUploadIsImageOrThrow } from "~/utils";
 import {
 	createNote,
 	createNotePermission,
 	getNoteWithPermissions,
 	updateNote,
 } from "./queries";
-import { validateUploadIsImageOrThrow } from "~/utils";
-import { s3 } from "~/lib/s3";
-import { images } from "~/db/schema/images";
-import { getPayload } from "~/lib/jwt";
-import { PermissionService } from "~/services/permissions";
+import { createNoteInsert } from "./util";
 
 export const notesRoute = new Hono();
 

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
 	boolean,
 	pgEnum,
@@ -6,13 +7,12 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
-import { relations } from "drizzle-orm";
-import { folders, notes } from "./notes";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { characters } from "./characters";
 import { factions } from "./factions";
+import { folders, notes } from "./notes";
+import { users } from "./users";
 
 export const games = pgTable("games", {
 	id: text("id").primaryKey().notNull(),
@@ -34,7 +34,7 @@ export const gamesRelations = relations(games, ({ one, many }) => ({
 	notes: many(notes),
 	characters: many(characters),
 	factions: many(factions),
-	folders: many(folders)
+	folders: many(folders),
 }));
 
 export const databaseSelectGameSchema = createSelectSchema(games);
@@ -55,7 +55,7 @@ export const usersToGames = pgTable(
 			.notNull()
 			.references(() => games.id),
 		isOwner: boolean("is_owner").notNull().default(false),
-		role: roleEnum("role").notNull().default("player")
+		role: roleEnum("role").notNull().default("player"),
 	},
 	(t) => ({ pk: primaryKey({ columns: [t.userId, t.gameId] }) }),
 );

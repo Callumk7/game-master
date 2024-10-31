@@ -18,7 +18,8 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { createGameInsert, findMembersToAddAndRemove } from "./util";
+import { getPayload } from "~/lib/jwt";
+import { itemOrArrayToArray } from "~/utils";
 import {
 	createGame,
 	deleteMembers,
@@ -30,8 +31,7 @@ import {
 	handleAddMembers,
 	handleRemoveMembers,
 } from "./queries";
-import { itemOrArrayToArray } from "~/utils";
-import { getPayload } from "~/lib/jwt";
+import { createGameInsert, findMembersToAddAndRemove } from "./util";
 
 export const gamesRoute = new Hono();
 

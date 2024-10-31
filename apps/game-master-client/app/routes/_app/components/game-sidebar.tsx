@@ -1,4 +1,5 @@
 import { ChevronDownIcon, FilePlusIcon } from "@radix-ui/react-icons";
+import { Form } from "@remix-run/react";
 import type {
   BasicEntity,
   EntityType,
@@ -6,8 +7,17 @@ import type {
   Game,
   GameWithDatedEntities,
 } from "@repo/api";
+import { useMemo, useState } from "react";
 import { Group } from "react-aria-components";
 import { SignoutButton } from "~/components/signout";
+import { Button } from "~/components/ui/button";
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import {
@@ -18,21 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useSyncSelectedGameWithParams } from "./sync-selected-game";
-import { useMemo, useState } from "react";
-import { ThemeToggle } from "~/lib/theme/dark-mode-context";
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-} from "~/components/ui/dialog";
 import { JollyTextField } from "~/components/ui/textfield";
-import { Button } from "~/components/ui/button";
-import { Form } from "@remix-run/react";
 import { Tree, TreeItem } from "~/components/ui/tree";
+import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 import { hrefFor } from "~/util/generate-hrefs";
+import { useSyncSelectedGameWithParams } from "./sync-selected-game";
 
 interface GameSidebarProps {
   gamesWithAllEntities: GameWithDatedEntities[];

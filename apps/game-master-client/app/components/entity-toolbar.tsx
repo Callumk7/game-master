@@ -6,17 +6,15 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Form, useFetcher, useNavigate, useSubmit } from "@remix-run/react";
+import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
+import { type Key, useState } from "react";
+import { SubmenuTrigger } from "react-aria-components";
 import { Button } from "~/components/ui/button";
 import { JollyTextField } from "~/components/ui/textfield";
 import { Toolbar } from "~/components/ui/toolbar";
-import {
-  JollyMenu,
-  Menu,
-  MenuHeader,
-  MenuItem,
-  MenuPopover,
-  MenuSection,
-} from "./ui/menu";
+import { useGetGameWithMembers } from "~/queries/get-game-with-members";
+import { useAppData } from "~/routes/_app/route";
+import { ImageUploader } from "./image-uploader";
 import {
   DialogContent,
   DialogDescription,
@@ -25,14 +23,16 @@ import {
   DialogOverlay,
   DialogTitle,
 } from "./ui/dialog";
-import { type Key, useState } from "react";
-import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
+import {
+  JollyMenu,
+  Menu,
+  MenuHeader,
+  MenuItem,
+  MenuPopover,
+  MenuSection,
+} from "./ui/menu";
 import { Popover, PopoverDialog, PopoverTrigger } from "./ui/popover";
-import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { JollySelect, SelectItem } from "./ui/select";
-import { ImageUploader } from "./image-uploader";
-import { useAppData } from "~/routes/_app/route";
-import { SubmenuTrigger } from "react-aria-components";
 
 interface EntityToolbarProps {
   entityOwnerId: string;

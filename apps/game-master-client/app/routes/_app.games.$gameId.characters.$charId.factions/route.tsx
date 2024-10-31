@@ -1,12 +1,12 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { LinkedFactionList } from "./components/faction-list";
 import { LinkFactionDialog } from "./components/link-faction-dialog";
 import { PrimaryFaction } from "./components/primary-faction";
-import { LinkedFactionList } from "./components/faction-list";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);

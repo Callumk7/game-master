@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { Id } from "./index.js";
 import type { GameWithDatedEntities } from "./games.js";
+import type { Id } from "./index.js";
 
 export interface User {
 	id: Id;
@@ -22,7 +22,6 @@ export interface UserWithSidebarData extends User {
 	games: GameWithDatedEntities[];
 }
 
-
 export const newUserSchema = z.object({
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
@@ -31,4 +30,3 @@ export const newUserSchema = z.object({
 	passwordHash: z.string(),
 });
 export type NewUserRequestBody = z.infer<typeof newUserSchema>;
-

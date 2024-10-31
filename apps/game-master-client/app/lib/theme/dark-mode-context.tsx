@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react";
-import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import { type ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { JollySelect, SelectItem } from "~/components/ui/select";
 
 type Theme = "light" | "dark" | "system";

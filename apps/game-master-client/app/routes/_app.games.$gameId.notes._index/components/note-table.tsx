@@ -48,7 +48,7 @@ const columns = [
   }),
   helper.accessor("userPermissionLevel", {
     cell: ({ cell }) => <p>{cell.getValue()}</p>,
-    header: "Permission Level"
+    header: "Permission Level",
   }),
   helper.display({
     id: "controls",

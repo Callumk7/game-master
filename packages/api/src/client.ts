@@ -1,10 +1,10 @@
 import ky, { type Options } from "ky";
-import { Games } from "./resources/games.js";
-import { Users } from "./resources/users.js";
-import { Notes } from "./resources/notes.js";
 import { Characters } from "./resources/characters.js";
 import { Factions } from "./resources/factions.js";
 import { Folders } from "./resources/folders.js";
+import { Games } from "./resources/games.js";
+import { Notes } from "./resources/notes.js";
+import { Users } from "./resources/users.js";
 
 export interface ClientOptions {
 	baseUrl: string;

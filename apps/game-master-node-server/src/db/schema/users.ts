@@ -2,9 +2,9 @@ import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { usersToGames } from "./games";
 import { charactersPermissions } from "./characters";
 import { factionsPermissions } from "./factions";
+import { usersToGames } from "./games";
 import { notesPermissions } from "./notes";
 
 export const users = pgTable("users", {
@@ -20,7 +20,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 	games: many(usersToGames),
 	characterPermissions: many(charactersPermissions),
 	factionPermissions: many(factionsPermissions),
-	notePermissions: many(notesPermissions)
+	notePermissions: many(notesPermissions),
 }));
 
 export const databaseSelectUserSchema = createSelectSchema(users);

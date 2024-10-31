@@ -3,10 +3,10 @@ import {
   UNSTABLE_Tree as AriaTree,
   UNSTABLE_TreeItem as AriaTreeItem,
   UNSTABLE_TreeItemContent as AriaTreeItemContent,
-  type TreeProps as AriaTreeProps,
   type TreeItemProps as AriaTreeItemProps,
-  composeRenderProps,
+  type TreeProps as AriaTreeProps,
   Collection,
+  composeRenderProps,
 } from "react-aria-components";
 
 function Tree<T extends object>({ className, ...props }: AriaTreeProps<T>) {

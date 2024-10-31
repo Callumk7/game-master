@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApi } from "~/lib/api.server";

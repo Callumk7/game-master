@@ -1,4 +1,4 @@
-import { SDK, type CreateGameRequestBody, type CreateNoteRequestBody } from "@repo/api";
+import { type CreateGameRequestBody, type CreateNoteRequestBody, SDK } from "@repo/api";
 
 const gameData: CreateGameRequestBody[] = [
 	{ name: "The Dark Journey", ownerId: "staging" },

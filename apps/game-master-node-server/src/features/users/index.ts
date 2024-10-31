@@ -8,8 +8,8 @@ import {
 	handleNotFound,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import { getSidebarData, getUser } from "./queries";
 import type { Variables } from "~/types";
+import { getSidebarData, getUser } from "./queries";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
 

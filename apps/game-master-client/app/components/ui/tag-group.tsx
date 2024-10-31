@@ -11,9 +11,9 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { Label } from "./field";
-import { cn } from "callum-util";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { cn } from "callum-util";
+import { Label } from "./field";
 
 const TagGroup = AriaTagGroup;
 

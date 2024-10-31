@@ -12,6 +12,6 @@ export function noteHref(gameId: string, noteId: string) {
 	return `/games/${gameId}/notes/${noteId}`;
 }
 
-export function hrefFor(entityType: EntityType, gameId: string, entityId: string ) {
+export function hrefFor(entityType: EntityType, gameId: string, entityId: string) {
 	return `/games/${gameId}/${entityType}/${entityId}`;
 }

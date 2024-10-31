@@ -1,16 +1,16 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { Form } from "@remix-run/react";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { redirect } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
+import { Button } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { JollyTextField } from "~/components/ui/textfield";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
 import { hashPassword } from "./queries.server";
-import { Form } from "@remix-run/react";
-import { JollyTextField } from "~/components/ui/textfield";
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(request, {

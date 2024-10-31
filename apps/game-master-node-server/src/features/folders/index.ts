@@ -1,10 +1,15 @@
 import {
+	type FolderWithChildren,
 	createFolderSchema,
 	folderInteractionSchema,
 	updateFolderSchema,
-	type FolderWithChildren,
 } from "@repo/api";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
+import { db } from "~/db";
+import { characters } from "~/db/schema/characters";
+import { factions } from "~/db/schema/factions";
+import { folders, notes } from "~/db/schema/notes";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -13,11 +18,6 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { createFolderInsert } from "./utils";
-import { folders, notes } from "~/db/schema/notes";
-import { db } from "~/db";
-import { eq } from "drizzle-orm";
-import { characters } from "~/db/schema/characters";
-import { factions } from "~/db/schema/factions";
 
 export const folderRoute = new Hono();
 

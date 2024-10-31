@@ -2,12 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { NoteTable } from "./components/note-table";
 import { CreateNoteSlideover } from "~/components/forms/create-note";
-import { methodNotAllowed } from "~/util/responses";
-import { createNoteAction } from "~/queries/server/create-note.server";
-import { validateUser } from "~/lib/auth.server";
 import { createApi } from "~/lib/api.server";
+import { validateUser } from "~/lib/auth.server";
+import { createNoteAction } from "~/queries/server/create-note.server";
+import { methodNotAllowed } from "~/util/responses";
+import { NoteTable } from "./components/note-table";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);

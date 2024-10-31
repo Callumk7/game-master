@@ -1,9 +1,9 @@
 import { cn } from "callum-util";
 import {
   Tooltip as AriaTooltip,
+  type TooltipProps as AriaTooltipProps,
   TooltipTrigger as AriaTooltipTrigger,
   composeRenderProps,
-  type TooltipProps as AriaTooltipProps,
 } from "react-aria-components";
 
 const TooltipTrigger = AriaTooltipTrigger;
