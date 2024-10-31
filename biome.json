@@ -44,6 +44,11 @@
 		"lineEnding": "lf",
 		"ignore": []
 	},
+	"css": {
+		"formatter": {
+			"enabled": true
+		}
+	},
 	"overrides": [
 		{
 			"include": ["*.jsx", "*.tsx"],
