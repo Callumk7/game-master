@@ -14,6 +14,7 @@ import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { methodNotAllowed, unsuccessfulResponse } from "~/util/responses";
 import { CharacterNavigation } from "./components/navigation";
+import { characterHref } from "~/util/generate-hrefs";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
@@ -54,7 +55,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return unsuccessfulResponse(dupeResult.message);
     }
 
-    return redirect(`/games/${dupeResult.data.gameId}/characters/${dupeResult.data.id}`);
+    const {gameId, id} = dupeResult.data;
+    return redirect(characterHref(gameId, id));
   }
 
   if (request.method === "PATCH") {
@@ -75,7 +77,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function CharacterRoute() {
   const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
   return (
-    <div className="space-y-4">
+    <div className="p-4 space-y-4">
       <div className="flex items-center w-full justify-between">
         <CharacterNavigation
           charId={characterDetails.id}

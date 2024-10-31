@@ -18,7 +18,7 @@ export interface BasicEntityWithDates extends BasicEntity {
 	updatedAt: Date;
 }
 
-export type EntityType = "notes" | "characters" | "factions";
+export type EntityType = "notes" | "characters" | "factions" | "folders";
 
 export const visibilitySchema = z.enum(["public", "private", "viewable"]);
 export type Visibility = z.infer<typeof visibilitySchema>;

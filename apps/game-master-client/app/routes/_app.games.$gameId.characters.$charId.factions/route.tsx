@@ -4,10 +4,9 @@ import { parseForm, parseParams } from "zodix";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { FactionTable } from "~/components/tables/faction-table";
 import { LinkFactionDialog } from "./components/link-faction-dialog";
-import { Text } from "~/components/ui/typeography";
 import { PrimaryFaction } from "./components/primary-faction";
+import { LinkedFactionList } from "./components/faction-list";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = await validateUser(request);
@@ -20,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const charFactions = await api.characters.getFactions(charId);
   const allFactions = await api.factions.getAllGameFactions(gameId);
 
-  return typedjson({ charFactions, allFactions, primaryFaction });
+  return typedjson({ charId, charFactions, allFactions, primaryFaction });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -43,16 +42,27 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     const result = await api.characters.linkFactions(charId, [factionId]);
     return typedjson(result);
   }
+
+  if (request.method === "DELETE") {
+    const { factionId, characterId } = await parseForm(request, {
+      factionId: z.string(),
+      characterId: z.string(),
+    });
+    await api.characters.unlinkFaction(characterId, factionId);
+    return null;
+  }
 };
 
 export default function CharacterFactionsRoute() {
-  const { allFactions, charFactions, primaryFaction } =
+  const { charId, allFactions, charFactions, primaryFaction } =
     useTypedLoaderData<typeof loader>();
   return (
     <div className="space-y-4">
-      {primaryFaction ? <PrimaryFaction faction={primaryFaction} members={primaryFaction.members} /> : null}
+      {primaryFaction ? (
+        <PrimaryFaction faction={primaryFaction} members={primaryFaction.members} />
+      ) : null}
       <LinkFactionDialog allFactions={allFactions} />
-      <FactionTable factions={charFactions} />
+      <LinkedFactionList characterId={charId} factions={charFactions} />
     </div>
   );
 }

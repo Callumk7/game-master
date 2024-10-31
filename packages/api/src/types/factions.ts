@@ -6,8 +6,11 @@ import type { Entity } from "./entity.js";
 
 export interface Faction extends Entity { }
 
+export interface FactionMember extends Character {
+	role: string | null;
+}
 export interface FactionWithMembers extends Faction {
-	members: Character[];
+	members: FactionMember[];
 }
 
 export interface FactionWithNotes extends Faction {

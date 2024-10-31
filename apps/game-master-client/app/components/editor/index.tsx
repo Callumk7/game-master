@@ -19,7 +19,6 @@ import { suggestion } from "./util/suggestion";
 import Fuse from "fuse.js";
 import { CustomMention } from "./extensions/mention-extension";
 import type { MentionItem } from "~/types/mentions";
-import { useEffect, useState } from "react";
 import { useIsClient } from "~/hooks/is-client";
 
 // Core editor hook. A wrapper around the tiptap useEditor
@@ -128,7 +127,7 @@ export function EditorWithControls({
       {label && <Label id="editor-label">{label}</Label>}
       <EditorContent
         className={cn(
-          "flex-auto max-w-2xl",
+          "flex-auto",
           bordered ? "border rounded-md" : "",
           className,
         )}

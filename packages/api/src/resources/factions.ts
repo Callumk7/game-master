@@ -1,8 +1,10 @@
 import type { Client } from "../client.js";
+import type { Character } from "../types/characters.js";
 import type {
 	CreateFactionRequestBody,
 	DuplicateFactionRequestBody,
 	Faction,
+	FactionMember,
 	FactionWithMembers,
 	FactionWithNotes,
 	FactionWithPermissions,
@@ -78,8 +80,8 @@ export class Factions {
 		return this.client.get<FactionWithNotes>(`factions/${factionId}/notes`);
 	}
 
-	async getFactionWithMembers(factionId: Id): Promise<FactionWithMembers> {
-		return this.client.get<FactionWithMembers>(`factions/${factionId}/members`);
+	async getFactionMembers(factionId: Id): Promise<FactionMember[]> {
+		return this.client.get<FactionMember[]>(`factions/${factionId}/members`);
 	}
 
 	async moveToFolder(factionId: Id, folderId: Id): Promise<BasicServerResponse> {

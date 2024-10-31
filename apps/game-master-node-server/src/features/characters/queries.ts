@@ -6,7 +6,7 @@ import type {
 	Permission,
 	UpdateCharacterRequestBody,
 } from "@repo/api";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "~/db";
 import {
 	characters,
@@ -121,6 +121,20 @@ export const linkCharacterToFactions = async (charId: string, factionIds: string
 		.onConflictDoNothing();
 };
 
+export const unlinkCharacterFromFaction = async (
+	charId: string,
+	factionId: string,
+) => {
+	await db
+		.delete(charactersInFactions)
+		.where(
+			and(
+				eq(charactersInFactions.characterId, charId),
+				eq(charactersInFactions.factionId, factionId),
+			),
+		);
+};
+
 export const getCharacterNotes = async (charId: string) => {
 	return await db.query.notesOnCharacters
 		.findMany({
@@ -162,7 +176,10 @@ export const getCharactersPrimaryFaction = async (
 			if (result?.primaryFaction) {
 				return {
 					...result.primaryFaction,
-					members: result.primaryFaction.members.map((m) => m.character),
+					members: result.primaryFaction.members.map((m) => ({
+						...m.character,
+						role: m.role,
+					})),
 				};
 			}
 		});
