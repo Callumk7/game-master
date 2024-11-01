@@ -14,6 +14,9 @@ importers:
       turbo:
         specifier: 2.2.3
         version: 2.2.3
+      vitest:
+        specifier: 2.0.4
+        version: 2.0.4(@types/node@22.5.4)(lightningcss@1.25.1)
 
   apps/game-master-client:
     dependencies:
