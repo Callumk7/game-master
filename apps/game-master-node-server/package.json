@@ -8,6 +8,7 @@
 		"dev": "run-p dev:*",
 		"typescriptDev": "tsx --env-file=.env src/index.ts",
 		"test": "vitest",
+		"test:run": "vitest run",
 		"build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm --packages=external",
 		"start": "node dist/index.js",
 		"lint": "biome check --write",
