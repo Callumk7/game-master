@@ -7,13 +7,19 @@ export default defineConfig({
 		exclude: ["@node-rs/argon2"],
 	},
 	plugins: [
-		remix({
-			future: {
-				v3_fetcherPersist: true,
-				v3_relativeSplatPath: true,
-				v3_throwAbortReason: true,
-			},
-		}),
+		!process.env.VITEST &&
+			remix({
+				future: {
+					v3_fetcherPersist: true,
+					v3_relativeSplatPath: true,
+					v3_throwAbortReason: true,
+				},
+			}),
 		tsconfigPaths(),
 	],
+	test: {
+		globals: true,
+		environment: "jsdom",
+		setupFiles: ["./test/setup.ts"],
+	},
 });
