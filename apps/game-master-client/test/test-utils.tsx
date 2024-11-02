@@ -1,6 +1,6 @@
+import { type RenderOptions, render } from "@testing-library/react";
 import type React from "react";
 import type { ReactElement } from "react";
-import { render, type RenderOptions } from "@testing-library/react";
 import { GlobalStateProvider } from "~/store/global";
 
 function AllProviders({ children }: { children: React.ReactNode }) {

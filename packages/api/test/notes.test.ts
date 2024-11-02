@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { DatabaseError, SDK } from "../src/index";
 
-import { server } from "./setup";
 import { http, HttpResponse } from "msw";
+import { server } from "./setup";
 
 describe("Notes resources", () => {
 	const options = {

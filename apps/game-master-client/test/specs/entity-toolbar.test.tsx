@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render, screen, waitFor } from "../test-utils";
-import { EntityToolbar } from "~/components/entity-toolbar";
 import type { Permission, Visibility } from "@repo/api";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { EntityToolbar } from "~/components/entity-toolbar";
 import { useAppData } from "~/routes/_app/route";
+import { render, screen, waitFor } from "../test-utils";
 
 const mockSubmit = vi.fn();
 const mockNavigate = vi.fn();

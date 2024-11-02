@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { Client, DatabaseError, SDK } from "../src/index";
 
-import { server } from "./setup";
 import { http, HttpResponse } from "msw";
+import { server } from "./setup";
 
 describe("SDK", () => {
 	it("should initialize with correct options", () => {
@@ -126,7 +126,6 @@ describe("HTTP Client", () => {
 			http.delete(`${options.baseUrl}/test`, async ({ request }) => {
 				const authHeader = request.headers.get("authorization");
 				const contentType = request.headers.get("content-type");
-
 
 				expect(authHeader).toBe(`Bearer ${options.apiKey}`);
 				expect(contentType).toBe("application/json");
