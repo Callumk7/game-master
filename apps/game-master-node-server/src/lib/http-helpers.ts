@@ -8,7 +8,6 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 	try {
 		const result = schema.safeParse(await c.req.json());
 		if (!result.success) {
-			console.error(result.error.message);
 			throw new HTTPException(StatusCodes.BAD_REQUEST, {
 				message: result.error.message,
 			});
