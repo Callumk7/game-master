@@ -9,7 +9,8 @@
 		"start": "remix-serve ./build/server/index.js",
 		"typecheck": "tsc",
 		"lint": "biome check --write",
-		"test": "vitest"
+		"test": "vitest",
+		"test:run": "vitest run"
 	},
 	"dependencies": {
 		"@node-rs/argon2": "^1.8.3",

@@ -8,6 +8,7 @@
 	"scripts": {
 		"build": "tsc",
 		"test": "vitest",
+		"test:run": "vitest run",
 		"lint": "biome check --write"
 	},
 	"dependencies": {
