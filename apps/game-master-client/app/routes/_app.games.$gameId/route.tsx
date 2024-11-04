@@ -13,7 +13,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
   const { api } = await createApiFromReq(request);
   const data = await getData(() => api.games.getAllGameEntities(gameId));
-  return typedjson(data);
+  const sidebarData = await getData(() => api.games.getGame.withData(gameId));
+  return typedjson({...data, sidebarData});
 };
 
 export { GameLayout as default };

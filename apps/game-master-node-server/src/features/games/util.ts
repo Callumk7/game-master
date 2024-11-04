@@ -13,6 +13,20 @@ export const createGameInsert = (input: CreateGameRequestBody): InsertDatabaseGa
 	};
 };
 
+export const evaluateDataLevelFromParams = (params: Record<string, string>) => {
+	const dataLevel = params.dataLevel;
+	switch (dataLevel) {
+		case "withMembers":
+			return "withMembers";
+
+		case "withData":
+			return "withData";
+
+		default:
+			return "base";
+	}
+}
+
 export const findMembersToAddAndRemove = (
 	currentMembers: Id[],
 	newMembers: Id[],

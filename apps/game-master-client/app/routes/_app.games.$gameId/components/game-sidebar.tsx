@@ -1,0 +1,135 @@
+import { FilePlusIcon } from "@radix-ui/react-icons";
+import { Form } from "@remix-run/react";
+import type { BasicEntityWithDates, EntityType, GameWithDatedEntities } from "@repo/api";
+import { useState } from "react";
+import { SignoutButton } from "~/components/signout";
+import { Button } from "~/components/ui/button";
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import { JollyMenu, MenuItem } from "~/components/ui/menu";
+import { JollyTextField } from "~/components/ui/textfield";
+import { ThemeToggle } from "~/lib/theme/dark-mode-context";
+import { FolderTree } from "./folder-tree";
+import { Text } from "~/components/ui/typeography";
+import { Link } from "~/components/ui/link";
+import { hrefFor } from "~/util/generate-hrefs";
+
+interface GameSidebarProps {
+  gameWithSidebarData: GameWithDatedEntities;
+}
+
+export function GameSidebar({ gameWithSidebarData }: GameSidebarProps) {
+  const gameNotes = gameWithSidebarData.notes;
+  const gameChars = gameWithSidebarData.characters;
+  const gameFactions = gameWithSidebarData.factions;
+  const gameFolders = gameWithSidebarData.folders;
+
+  return (
+    <aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
+      <div className="flex justify-between items-end">
+        <SignoutButton />
+        <ThemeToggle />
+      </div>
+      <NewEntityMenu gameId={gameWithSidebarData.id} />
+      <div className="flex flex-col items-start gap-y-4">
+        <FolderTree gameId={gameWithSidebarData.id} folders={gameFolders ?? []} />
+        <SidebarSection items={gameNotes} type="notes" label="Notes" />
+        <SidebarSection items={gameChars} type="characters" label="Characters" />
+        <SidebarSection items={gameFactions} type="factions" label="Factions" />
+      </div>
+    </aside>
+  );
+}
+
+interface SidebarSectionProps {
+  type: EntityType;
+  items: BasicEntityWithDates[];
+  label: string;
+}
+export function SidebarSection({ type, items, label }: SidebarSectionProps) {
+  if (items.length === 0) return null;
+  return (
+    <div className="pl-4 w-full">
+      <Text variant={"label"} id="label">
+        {label}
+      </Text>
+      <hr />
+      <nav aria-labelledby="label" className="flex flex-col items-start mt-1">
+        {items.map((item) => (
+          <Link
+            key={item.id}
+            href={hrefFor(type, item.gameId, item.id)}
+            variant={"link"}
+            className={"pl-0"}
+          >
+            {item.name}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+interface NewEntityMenuProps {
+  gameId: string;
+}
+function NewEntityMenu({ gameId }: NewEntityMenuProps) {
+  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
+  return (
+    <>
+      <JollyMenu
+        label={<FilePlusIcon />}
+        size={"icon"}
+        variant={"outline"}
+        aria-label="New item menu"
+      >
+        <MenuItem href={"/games/new"}>Game</MenuItem>
+        <MenuItem href={`/games/${gameId}/notes/new`}>Note</MenuItem>
+        <MenuItem href={`/games/${gameId}/characters/new`}>Character</MenuItem>
+        <MenuItem href={`/games/${gameId}/factions/new`}>Faction</MenuItem>
+        <MenuItem onAction={() => setIsNewFolderDialogOpen(true)}>Folder</MenuItem>
+      </JollyMenu>
+      <NewFolderDialog
+        isOpen={isNewFolderDialogOpen}
+        setIsOpen={setIsNewFolderDialogOpen}
+        selectedGame={gameId}
+      />
+    </>
+  );
+}
+
+interface NewFolderDialogProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  selectedGame: string;
+}
+
+export function NewFolderDialog({
+  isOpen,
+  setIsOpen,
+  selectedGame,
+}: NewFolderDialogProps) {
+  return (
+    <DialogOverlay isOpen={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        {({ close }) => (
+          <Form onSubmit={close} method="post" action={`/games/${selectedGame}/folders`}>
+            <DialogHeader>
+              <DialogTitle>Create a folder</DialogTitle>
+            </DialogHeader>
+            <JollyTextField label="Name" name="name" />
+            <DialogFooter>
+              <Button type="submit">Create</Button>
+            </DialogFooter>
+            <input type="hidden" name="gameId" value={selectedGame} />
+          </Form>
+        )}
+      </DialogContent>
+    </DialogOverlay>
+  );
+}

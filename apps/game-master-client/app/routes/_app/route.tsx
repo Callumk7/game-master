@@ -18,9 +18,9 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId, api } = await createApiFromReq(request);
-  const sidebarData = await getData(() => api.users.getUserSidebarData(userId));
+  const userGames = await getData(() => api.users.games(userId));
 
-  return typedjson({ sidebarData, userId });
+  return typedjson({ userGames, userId });
 };
 
 export function useAppData() {
@@ -36,7 +36,7 @@ export function ErrorBoundary() {
   console.error(error);
   return (
     <div className="w-4/5 mx-auto">
-      <Text variant={"h3"}>Something went wrong</Text>
+      <Text variant={"h3"} className="w-full text-center pt-20">Something went wrong</Text>
     </div>
   );
 }

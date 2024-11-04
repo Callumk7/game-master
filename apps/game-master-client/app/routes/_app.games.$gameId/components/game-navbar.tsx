@@ -4,10 +4,14 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
 import { GameSettingsMenu } from "./game-settings-menu";
+import { JollyMenu, MenuItem } from "~/components/ui/menu";
+import { useAppData } from "~/routes/_app/route";
 
 export function GameNavbar() {
   const params = useParams();
   const { pathname } = useLocation();
+
+  const { userGames } = useAppData();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const links = createLinks(params.gameId!);
   return (
@@ -26,6 +30,7 @@ export function GameNavbar() {
           {isMenuOpen ? "X" : <HamburgerMenuIcon />}
         </Button>
         <div className="hidden lg:flex lg:gap-1">
+          <GameSelectMenu games={userGames} />
           {links.map((link) => (
             <Link
               key={link.label}
@@ -62,10 +67,6 @@ export function GameNavbar() {
 const createLinks = (gameId: string) => {
   return [
     {
-      label: "Game",
-      href: `/games/${gameId}`,
-    },
-    {
       label: "Notes",
       href: `/games/${gameId}/notes`,
     },
@@ -83,3 +84,14 @@ const createLinks = (gameId: string) => {
     },
   ];
 };
+
+interface GameSelectMenuProps {
+  games: { name: string; id: string }[];
+}
+export function GameSelectMenu({ games }: GameSelectMenuProps) {
+  return (
+    <JollyMenu label="Games" items={games} variant={"ghost"}>
+      {(item) => <MenuItem href={`/games/${item.id}`}>{item.name}</MenuItem>}
+    </JollyMenu>
+  );
+}

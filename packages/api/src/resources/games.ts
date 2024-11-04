@@ -1,5 +1,6 @@
 import type { Client } from "../client.js";
 import type {
+	GameWithDatedEntities,
 	CreateGameRequestBody,
 	Game,
 	GameEntities,
@@ -14,15 +15,33 @@ import type { Note } from "../types/notes.js";
 import type { GameMember, User } from "../types/users.js";
 
 export class Games {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
-	async getGame(gameId: Id): Promise<Game> {
-		return this.client.get<Game>(`games/${gameId}`);
+	getGame = Object.assign(
+		async (gameId: Id) => {
+			return this.client.get<Game>(`games/${gameId}`);
+		},
+		{
+			withMembers: async (gameId: Id) => {
+				return this.getGameWithMembers(gameId);
+			},
+		},
+		{
+			withData: async (gameId: Id) => {
+				return this.getGameWithData(gameId);
+			},
+		},
+	);
+
+	async getGameWithMembers(gameId: Id) {
+		return this.client.get<GameWithMembers>(`games/${gameId}`, {
+			searchParams: { dataLevel: "withMembers" },
+		});
 	}
 
-	async getGameWithMembers(gameId: Id): Promise<GameWithMembers> {
-		return this.client.get<GameWithMembers>(`games/${gameId}`, {
-			searchParams: { withMembers: "true" },
+	async getGameWithData(gameId: Id) {
+		return this.client.get<GameWithDatedEntities>(`games/${gameId}`, {
+			searchParams: { dataLevel: "withData" },
 		});
 	}
 
