@@ -9,7 +9,7 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
-import { getSidebarData, getUser } from "./queries";
+import { getSidebarData, getUser, getUserGames } from "./queries";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
 
@@ -65,10 +65,22 @@ usersRoute.get("/:userId", async (c) => {
 	}
 });
 
+usersRoute.get("/:userId/games", async (c) => {
+	const userId = c.req.param("userId");
+
+	try {
+		const gamesResult = await getUserGames(userId);
+		return c.json(gamesResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 // TODO: Delete users
 
 // TODO: Edit users
 
+// WARN: This is likely not required anymore, so get ready to remove
 usersRoute.get("/:userId/sidebar", async (c) => {
 	const userId = c.req.param("userId");
 

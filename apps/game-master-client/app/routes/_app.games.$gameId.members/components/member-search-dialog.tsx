@@ -13,7 +13,6 @@ import {
 } from "~/components/ui/dialog";
 import { GridList, GridListItem } from "~/components/ui/grid-list";
 import { useGetAllUsers } from "~/queries/get-all-users";
-import { useAppData } from "~/routes/_app/route";
 
 interface MemberSearchDialogProps {
   memberIds: string[];

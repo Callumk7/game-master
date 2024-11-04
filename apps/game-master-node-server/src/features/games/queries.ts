@@ -1,10 +1,18 @@
-import type { Character, Faction, GameWithMembers, Id, Note } from "@repo/api";
+import type {
+	Character,
+	Faction,
+	GameWithDatedEntities,
+	GameWithMembers,
+	Id,
+	Note,
+} from "@repo/api";
 import { and, eq, inArray, ne } from "drizzle-orm";
 import { db } from "~/db";
 import { characters, charactersPermissions } from "~/db/schema/characters";
 import { factions, factionsPermissions } from "~/db/schema/factions";
 import { type InsertDatabaseGame, games, usersToGames } from "~/db/schema/games";
 import { notes, notesPermissions } from "~/db/schema/notes";
+import { filterItems } from "~/lib/permissions-filter";
 import { resolve } from "~/utils";
 
 export const createGame = async (insert: InsertDatabaseGame) => {
@@ -58,6 +66,88 @@ export const getGameWithMembers = async (gameId: Id): Promise<GameWithMembers> =
 	};
 
 	return transformedResult;
+};
+
+export const getGameWithData = async (
+	userId: Id,
+	gameId: Id,
+): Promise<GameWithDatedEntities> => {
+	const gameResult = await db.query.games.findFirst({
+		where: eq(games.id, gameId),
+		with: {
+			characters: {
+				with: {
+					permissions: true,
+				},
+			},
+			factions: {
+				with: {
+					permissions: true,
+				},
+			},
+			notes: {
+				with: {
+					permissions: true,
+				},
+			},
+			folders: true,
+		},
+	});
+
+	if (!gameResult) {
+		throw new Error("Unable to find game");
+	}
+
+	const characterData = gameResult.characters.filter((char) =>
+		filterItems(userId, {
+			ownerId: char.ownerId,
+			visibility: char.visibility,
+			permissions: char.permissions,
+		}),
+	);
+	const noteData = gameResult.notes.filter((note) =>
+		filterItems(userId, {
+			ownerId: note.ownerId,
+			visibility: note.visibility,
+			permissions: note.permissions,
+		}),
+	);
+	const factionData = gameResult.factions.filter((faction) =>
+		filterItems(userId, {
+			ownerId: faction.ownerId,
+			visibility: faction.visibility,
+			permissions: faction.permissions,
+		}),
+	);
+
+	const folderData = gameResult.folders;
+
+	const createNestedFolders = (
+		gameFolders: typeof folderData,
+		parentId: Id | null = null,
+		// biome-ignore lint/suspicious/noExplicitAny: This complex nested structure needs to be figured out..
+	): any[] => {
+		return gameFolders
+			.filter((f) => f.parentFolderId === parentId)
+			.map((folder) => ({
+				...folder,
+				notes: noteData.filter((n) => n.folderId === folder.id),
+				characters: characterData.filter((c) => c.folderId === folder.id),
+				factions: factionData.filter((f) => f.folderId === folder.id),
+				children: createNestedFolders(gameFolders, folder.id),
+			}));
+	};
+
+	// Assemble the final structure
+	const gameData = {
+		...gameResult,
+		notes: noteData.filter((n) => n.gameId === gameId && !n.folderId),
+		characters: characterData.filter((c) => c.gameId === gameId && !c.folderId),
+		factions: factionData.filter((f) => f.gameId === gameId && !f.folderId),
+		folders: createNestedFolders(folderData),
+	};
+
+	return gameData;
 };
 
 export const deleteMembers = async (gameId: Id) => {

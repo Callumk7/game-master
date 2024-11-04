@@ -1,6 +1,5 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
-import type { Faction } from "./factions.js";
 import type { FolderWithDatedEntities } from "./folders.js";
 import {
 	type BasicEntity,

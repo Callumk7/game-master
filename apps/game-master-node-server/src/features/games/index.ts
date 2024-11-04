@@ -22,6 +22,7 @@ import { itemOrArrayToArray } from "~/utils";
 import {
 	createGame,
 	deleteMembers,
+	getGameWithData,
 	getGameWithMembers,
 	getMemberIdArray,
 	getUserCharactersForGame,
@@ -30,7 +31,11 @@ import {
 	handleAddMembers,
 	handleRemoveMembers,
 } from "./queries";
-import { createGameInsert, findMembersToAddAndRemove } from "./util";
+import {
+	createGameInsert,
+	evaluateDataLevelFromParams,
+	findMembersToAddAndRemove,
+} from "./util";
 
 export const gamesRoute = new Hono();
 
@@ -48,9 +53,10 @@ gamesRoute.post("/", async (c) => {
 
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
+	const { userId } = getPayload(c);
 
-	const withMembers = c.req.query().withMembers;
-	if (withMembers) {
+	const dataLevel = evaluateDataLevelFromParams(c.req.query());
+	if (dataLevel === "withMembers") {
 		try {
 			const gameWithMembers = await getGameWithMembers(gameId);
 			return c.json(gameWithMembers);
@@ -59,18 +65,29 @@ gamesRoute.get("/:gameId", async (c) => {
 		}
 	}
 
-	try {
-		const gameData = await db.query.games.findFirst({
-			where: eq(games.id, gameId),
-		});
+	if (dataLevel === "base") {
+		try {
+			const gameData = await db.query.games.findFirst({
+				where: eq(games.id, gameId),
+			});
 
-		if (!gameData) {
-			return handleNotFound(c);
+			if (!gameData) {
+				return handleNotFound(c);
+			}
+
+			return c.json(gameData);
+		} catch (error) {
+			return handleDatabaseError(c, error);
 		}
+	}
 
-		return c.json(gameData);
-	} catch (error) {
-		return handleDatabaseError(c, error);
+	if (dataLevel === "withData") {
+		try {
+			const gameData = await getGameWithData(userId, gameId);
+			return c.json(gameData);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
 	}
 });
 
