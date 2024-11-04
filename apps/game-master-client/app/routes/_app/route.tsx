@@ -36,7 +36,9 @@ export function ErrorBoundary() {
   console.error(error);
   return (
     <div className="w-4/5 mx-auto">
-      <Text variant={"h3"} className="w-full text-center pt-20">Something went wrong</Text>
+      <Text variant={"h3"} className="w-full text-center pt-20">
+        Something went wrong
+      </Text>
     </div>
   );
 }

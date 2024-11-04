@@ -1,11 +1,11 @@
 import type { Client } from "../client.js";
-import type { GameWithEntities, Game } from "../types/games.js";
+import type { Game, GameWithEntities } from "../types/games.js";
 import type { Id, QueryOptions } from "../types/index.js";
 import type { Note } from "../types/notes.js";
 import type { User, UserWithSidebarData } from "../types/users.js";
 
 export class Users {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getUser = Object.assign(async (userId: Id) => {
 		return this.client.get<User>(`users/${userId}`);
@@ -17,9 +17,12 @@ export class Users {
 		},
 		{
 			items: async (userId: Id) => {
-				return this.client.get<GameWithEntities[]>(`users/${userId}/games/items`, {
-					searchParams: { with: "entities" },
-				});
+				return this.client.get<GameWithEntities[]>(
+					`users/${userId}/games/items`,
+					{
+						searchParams: { with: "entities" },
+					},
+				);
 			},
 		},
 	);

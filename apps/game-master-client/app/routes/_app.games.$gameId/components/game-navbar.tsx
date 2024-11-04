@@ -3,9 +3,9 @@ import { useLocation, useParams } from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";
-import { GameSettingsMenu } from "./game-settings-menu";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import { useAppData } from "~/routes/_app/route";
+import { GameSettingsMenu } from "./game-settings-menu";
 
 export function GameNavbar() {
   const params = useParams();

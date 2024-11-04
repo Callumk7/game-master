@@ -11,13 +11,13 @@ import {
   DialogOverlay,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
 import { JollyTextField } from "~/components/ui/textfield";
-import { ThemeToggle } from "~/lib/theme/dark-mode-context";
-import { FolderTree } from "./folder-tree";
 import { Text } from "~/components/ui/typeography";
-import { Link } from "~/components/ui/link";
+import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 import { hrefFor } from "~/util/generate-hrefs";
+import { FolderTree } from "./folder-tree";
 
 interface GameSidebarProps {
   gameWithSidebarData: GameWithDatedEntities;

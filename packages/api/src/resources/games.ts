@@ -1,10 +1,10 @@
 import type { Client } from "../client.js";
 import type {
-	GameWithDatedEntities,
 	CreateGameRequestBody,
 	Game,
 	GameEntities,
 	GameWithCharacters,
+	GameWithDatedEntities,
 	GameWithMembers,
 	GameWithNotes,
 	UpdateGameRequestBody,
@@ -15,7 +15,7 @@ import type { Note } from "../types/notes.js";
 import type { GameMember, User } from "../types/users.js";
 
 export class Games {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getGame = Object.assign(
 		async (gameId: Id) => {

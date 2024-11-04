@@ -53,7 +53,7 @@ gamesRoute.post("/", async (c) => {
 
 gamesRoute.get("/:gameId", async (c) => {
 	const gameId = c.req.param("gameId");
-	const {userId} = getPayload(c);
+	const { userId } = getPayload(c);
 
 	const dataLevel = evaluateDataLevelFromParams(c.req.query());
 	if (dataLevel === "withMembers") {

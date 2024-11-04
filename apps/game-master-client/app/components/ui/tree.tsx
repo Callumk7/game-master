@@ -1,16 +1,16 @@
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "callum-util";
 import {
   UNSTABLE_Tree as AriaTree,
   UNSTABLE_TreeItem as AriaTreeItem,
   UNSTABLE_TreeItemContent as AriaTreeItemContent,
+  type TreeItemContentProps as AriaTreeItemContentProps,
   type TreeItemProps as AriaTreeItemProps,
   type TreeProps as AriaTreeProps,
-  type TreeItemContentProps as AriaTreeItemContentProps,
-  composeRenderProps,
   Button,
   Collection,
+  composeRenderProps,
 } from "react-aria-components";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 function Tree<T extends object>({ className, children, ...props }: AriaTreeProps<T>) {
   return (

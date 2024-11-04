@@ -25,7 +25,7 @@ export const evaluateDataLevelFromParams = (params: Record<string, string>) => {
 		default:
 			return "base";
 	}
-}
+};
 
 export const findMembersToAddAndRemove = (
 	currentMembers: Id[],

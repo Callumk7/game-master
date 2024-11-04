@@ -74,7 +74,7 @@ usersRoute.get("/:userId/games", async (c) => {
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
-})
+});
 
 // TODO: Delete users
 

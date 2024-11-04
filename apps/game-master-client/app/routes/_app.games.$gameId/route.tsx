@@ -14,7 +14,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const data = await getData(() => api.games.getAllGameEntities(gameId));
   const sidebarData = await getData(() => api.games.getGame.withData(gameId));
-  return typedjson({...data, sidebarData});
+  return typedjson({ ...data, sidebarData });
 };
 
 export { GameLayout as default };
