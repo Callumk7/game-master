@@ -5,48 +5,83 @@ import {
   UNSTABLE_TreeItemContent as AriaTreeItemContent,
   type TreeItemProps as AriaTreeItemProps,
   type TreeProps as AriaTreeProps,
-  Collection,
+  type TreeItemContentProps as AriaTreeItemContentProps,
   composeRenderProps,
+  Button,
+  Collection,
 } from "react-aria-components";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 
-function Tree<T extends object>({ className, ...props }: AriaTreeProps<T>) {
+function Tree<T extends object>({ className, children, ...props }: AriaTreeProps<T>) {
   return (
     <AriaTree
       className={composeRenderProps(className, (className) =>
-        cn(
-          className,
-          "group overflow-auto w-full p-1 text-popover-foreground outline-none",
-        ),
+        cn(className, "group overflow-auto w-full p-1 outline-none flex flex-col gap-1"),
       )}
       {...props}
-    />
+    >
+      {children}
+    </AriaTree>
   );
 }
 
-interface TreeItemProps<T> extends AriaTreeItemProps<T> {
-  itemChildren: T[] | undefined;
-  renderFunction: (item: T) => JSX.Element;
+interface TreeItemProps<T extends object> extends AriaTreeItemProps<T> {
+  renderItem: (item: T) => JSX.Element;
+  itemChildren?: T[];
 }
 const TreeItem = <T extends object>({
   className,
   children,
+  renderItem,
   itemChildren,
-  renderFunction,
   ...props
 }: TreeItemProps<T>) => {
   return (
     <AriaTreeItem
       className={composeRenderProps(className, (className) =>
-        cn("pl-[calc((var(--tree-item-level)-1)*10px)]", className),
+        cn(
+          "[--padding:20px] pl-[calc((var(--tree-item-level)-1)*20px+var(--padding))] data-[has-child-rows]:[--padding:0px] flex items-center gap-2 min-h-7 rounded-md outline-none cursor-default text-popover-foreground relative",
+          className,
+        ),
       )}
       {...props}
     >
-      <AriaTreeItemContent>{children}</AriaTreeItemContent>
-      <Collection items={itemChildren}>{renderFunction}</Collection>
+      {children}
+      <Collection items={itemChildren}>{renderItem}</Collection>
     </AriaTreeItem>
   );
 };
 
-const TreeItemContent = AriaTreeItemContent;
+interface TreeItemContentProps extends AriaTreeItemContentProps {
+  itemLength?: number;
+}
+const TreeItemContent = ({ children, itemLength, ...props }: TreeItemContentProps) => {
+  return (
+    <AriaTreeItemContent {...props}>
+      {composeRenderProps(children, (children, renderProps) => (
+        <div className="flex w-full gap-2 items-center">
+          {itemLength && itemLength > 0 ? (
+            <Button
+              slot="chevron"
+              className={cn(
+                "inline-flex items-center h-7 w-7 justify-center rounded-md",
+                {
+                  "outline-none ring-1 ring-ring": renderProps.isFocused,
+                },
+              )}
+            >
+              <ChevronDownIcon
+                className={cn("-rotate-90 transition-transform duration-200", {
+                  "rotate-0": renderProps.isExpanded,
+                })}
+              />
+            </Button>
+          ) : null}
+          <div>{children}</div>
+        </div>
+      ))}
+    </AriaTreeItemContent>
+  );
+};
 
 export { Tree, TreeItem, TreeItemContent };
