@@ -57,7 +57,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export default function CharacterRoute() {
   const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
   return (
-    <div className="p-4 space-y-4">
+    <>
       <div className="flex items-center w-full justify-between">
         <CharacterNavigation
           charId={characterDetails.id}
@@ -73,7 +73,7 @@ export default function CharacterRoute() {
         />
       </div>
       <Outlet />
-    </div>
+    </>
   );
 }
 

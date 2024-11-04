@@ -7,7 +7,7 @@ import type { loader } from "./route";
 export function FactionLayout() {
   const { factionDetails, folders } = useTypedLoaderData<typeof loader>();
   return (
-    <div className="p-4 space-y-4">
+    <>
       <div className="flex items-center w-full justify-between">
         <FactionNavigation gameId={factionDetails.gameId} factionId={factionDetails.id} />
         <EntityToolbar
@@ -20,6 +20,6 @@ export function FactionLayout() {
         />
       </div>
       <Outlet />
-    </div>
+    </>
   );
 }
