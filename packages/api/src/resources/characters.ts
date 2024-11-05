@@ -19,7 +19,7 @@ import type {
 import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getCharacter = Object.assign(
 		async (charId: Id) => {

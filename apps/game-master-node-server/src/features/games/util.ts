@@ -36,7 +36,7 @@ export const evaluateParams = (params: Record<string, string>) => {
 		default:
 			return "base";
 	}
-}
+};
 
 export const findMembersToAddAndRemove = (
 	currentMembers: Id[],
