@@ -26,6 +26,7 @@ import {
 	getGameWithMembers,
 	getMemberIdArray,
 	getUserCharactersForGame,
+	getUserCharactersForGameWithFaction,
 	getUserFactionsForGame,
 	getUserNotesForGame,
 	handleAddMembers,
@@ -34,6 +35,7 @@ import {
 import {
 	createGameInsert,
 	evaluateDataLevelFromParams,
+	evaluateParams,
 	findMembersToAddAndRemove,
 } from "./util";
 
@@ -192,11 +194,22 @@ gamesRoute.get("/:gameId/users/:userId/notes", async (c) => {
 gamesRoute.get("/:gameId/characters", async (c) => {
 	const gameId = c.req.param("gameId");
 	const { userId } = getPayload(c);
-	try {
-		const gameChars = await getUserCharactersForGame(gameId, userId);
-		return c.json(gameChars);
-	} catch (error) {
-		return handleDatabaseError(c, error);
+	const charWith = evaluateParams(c.req.query());
+	if (charWith === "base") {
+		try {
+			const gameChars = await getUserCharactersForGame(gameId, userId);
+			return c.json(gameChars);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+	if (charWith === "primaryFaction") {
+		try {
+			const gameChars = await getUserCharactersForGameWithFaction(gameId, userId);
+			return c.json(gameChars);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
 	}
 });
 

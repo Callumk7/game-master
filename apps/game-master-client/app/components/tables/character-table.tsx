@@ -1,4 +1,4 @@
-import type { Character } from "@repo/api";
+import type { Character, CharacterWithFaction } from "@repo/api";
 import {
   type SortingState,
   createColumnHelper,
@@ -18,21 +18,43 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { characterHref, factionHref } from "~/util/generate-hrefs";
 
-const helper = createColumnHelper<Character>();
+const helper = createColumnHelper<CharacterWithFaction>();
 
 const columns = [
   helper.accessor("name", {
+    header: "Name",
     cell: ({ cell, row }) => (
-      <Link
-        href={`/games/${row.original.gameId}/characters/${row.original.id}`}
-        variant={"link"}
-      >
+      <Link href={characterHref(row.original.gameId, row.original.id)} variant={"link"}>
         {cell.getValue()}
       </Link>
     ),
   }),
+  helper.accessor("primaryFaction.name", {
+    header: "Primary Faction",
+    cell: ({ cell, row }) => {
+      if (row.original.primaryFaction) {
+        return (
+          <Link
+            variant={"link"}
+            href={factionHref(row.original.gameId, row.original.primaryFaction?.id)}
+          >
+            {cell.getValue()}
+          </Link>
+        );
+      }
+    },
+  }),
   helper.accessor("createdAt", {
+    header: "Created",
+    cell: ({ cell }) => {
+      const date = new Date(cell.getValue());
+      return <p>{date.toLocaleDateString("gmt")}</p>;
+    },
+  }),
+  helper.accessor("updatedAt", {
+    header: "Updated",
     cell: ({ cell }) => {
       const date = new Date(cell.getValue());
       return <p>{date.toLocaleDateString("gmt")}</p>;
@@ -41,7 +63,7 @@ const columns = [
 ];
 
 interface CharacterTableProps {
-  characters: Character[];
+  characters: CharacterWithFaction[];
 }
 export function CharacterTable({ characters }: CharacterTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);

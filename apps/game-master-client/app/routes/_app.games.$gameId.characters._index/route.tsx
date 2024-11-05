@@ -12,7 +12,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = parseParams(params, { gameId: z.string() });
   const { api } = await createApiFromReq(request);
 
-  const gameChars = await getData(() => api.characters.getAllGameCharacters(gameId));
+  const gameChars = await getData(() =>
+    api.characters.getForGame.withPrimaryFactions(gameId),
+  );
 
   return typedjson({ gameId, gameChars });
 };

@@ -1,6 +1,7 @@
 import type { Client } from "../client.js";
 import type {
 	Character,
+	CharacterWithFaction,
 	CharacterWithPermissions,
 	CreateCharacterRequestBody,
 	DuplicateCharacterRequestBody,
@@ -18,46 +19,60 @@ import type {
 import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
-	// DONE
-	async getCharacter(charId: Id): Promise<Character> {
-		return this.client.get<Character>(`characters/${charId}`);
-	}
+	getCharacter = Object.assign(
+		async (charId: Id) => {
+			return this.client.get<Character>(`characters/${charId}`);
+		},
+		{
+			withPermissions: async (charId: Id) => {
+				return this.getCharacterWithPermissions(charId);
+			},
+		},
+	);
 
-	async getCharacterWithPermissions(charId: Id): Promise<CharacterWithPermissions> {
+	getForGame = Object.assign(
+		async (gameId: Id) => {
+			return this.client.get<Character[]>(`games/${gameId}/characters`);
+		},
+		{
+			withPrimaryFactions: async (gameId: Id) => {
+				return this.client.get<CharacterWithFaction[]>(
+					`games/${gameId}/characters`,
+					{
+						searchParams: { with: "primaryFaction" },
+					},
+				);
+			},
+		},
+	);
+
+	async getCharacterWithPermissions(charId: Id) {
 		return this.client.get<CharacterWithPermissions>(
 			`characters/${charId}/permissions`,
 		);
 	}
 
 	// DONE
-	async createCharacter(
-		body: CreateCharacterRequestBody,
-	): Promise<ServerResponse<Character>> {
+	async createCharacter(body: CreateCharacterRequestBody) {
 		return this.client.post<ServerResponse<Character>>("characters", body);
 	}
 
 	// DONE
-	async deleteCharacter(charId: Id): Promise<BasicServerResponse> {
+	async deleteCharacter(charId: Id) {
 		return this.client.delete(`characters/${charId}`);
 	}
 
 	// DONE
-	async duplicateCharacter(
-		charId: Id,
-		duplicateData: DuplicateCharacterRequestBody,
-	): Promise<ServerResponse<Character>> {
+	async duplicateCharacter(charId: Id, duplicateData: DuplicateCharacterRequestBody) {
 		return this.client.post<ServerResponse<Character>>(
 			`characters/${charId}/duplicate`,
 			duplicateData,
 		);
 	}
 
-	async createCharacterPermission(
-		charId: Id,
-		body: CreatePermissionRequestBody,
-	): Promise<ServerResponse<Permission>> {
+	async createCharacterPermission(charId: Id, body: CreatePermissionRequestBody) {
 		return this.client.post<ServerResponse<Permission>>(
 			`characters/${charId}/permissions`,
 			body,
@@ -65,19 +80,11 @@ export class Characters {
 	}
 
 	// DONE
-	async updateCharacterDetails(
-		charId: Id,
-		charDetails: UpdateCharacterRequestBody,
-	): Promise<ServerResponse<Character>> {
+	async updateCharacterDetails(charId: Id, charDetails: UpdateCharacterRequestBody) {
 		return this.client.patch<ServerResponse<Character>>(
 			`characters/${charId}`,
 			charDetails,
 		);
-	}
-
-	// DONE
-	async getAllGameCharacters(gameId: Id): Promise<Character[]> {
-		return this.client.get<Character[]>(`games/${gameId}/characters`);
 	}
 
 	async moveToFolder(charId: Id, folderId: Id): Promise<BasicServerResponse> {

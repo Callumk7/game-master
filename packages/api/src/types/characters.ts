@@ -7,9 +7,14 @@ import {
 	visibilitySchema,
 } from "./index.js";
 import type { Note } from "./notes.js";
+import type { Faction } from "./factions.js";
 
 export interface Character extends Entity {
 	isPlayer: boolean;
+}
+
+export interface CharacterWithFaction extends Character {
+	primaryFaction: Faction | null;
 }
 
 export interface CharacterWithNotes extends Character {

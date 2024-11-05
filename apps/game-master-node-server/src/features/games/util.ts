@@ -27,6 +27,17 @@ export const evaluateDataLevelFromParams = (params: Record<string, string>) => {
 	}
 };
 
+export const evaluateParams = (params: Record<string, string>) => {
+	const charWith = params.with;
+	switch (charWith) {
+		case "primaryFaction":
+			return "primaryFaction";
+
+		default:
+			return "base";
+	}
+}
+
 export const findMembersToAddAndRemove = (
 	currentMembers: Id[],
 	newMembers: Id[],
