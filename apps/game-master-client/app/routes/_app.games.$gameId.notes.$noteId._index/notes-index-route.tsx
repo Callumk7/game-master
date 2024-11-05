@@ -29,7 +29,7 @@ export function NoteIndexRoute() {
           method="patch"
           fieldName={"name"}
           value={note.name}
-          variant={"h2"}
+          variant={"h1"}
           weight={"semi"}
           inputLabel={"Game name input"}
           buttonLabel={"Edit game name"}
