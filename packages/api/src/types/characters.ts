@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Entity } from "./entity.js";
+import type { Faction } from "./factions.js";
 import {
 	type Id,
 	type UserPermission,
@@ -10,6 +11,10 @@ import type { Note } from "./notes.js";
 
 export interface Character extends Entity {
 	isPlayer: boolean;
+}
+
+export interface CharacterWithFaction extends Character {
+	primaryFaction: Faction | null;
 }
 
 export interface CharacterWithNotes extends Character {

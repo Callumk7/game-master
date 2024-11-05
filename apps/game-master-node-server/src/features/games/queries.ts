@@ -1,5 +1,6 @@
 import type {
 	Character,
+	CharacterWithFaction,
 	Faction,
 	GameWithDatedEntities,
 	GameWithMembers,
@@ -230,6 +231,22 @@ export const getUserCharactersForGame = async (
 	);
 };
 
+export const getUserCharactersForGameWithFaction = async (
+	gameId: Id,
+	userId: Id,
+): Promise<CharacterWithFaction[]> => {
+	const [ownedChars, visibleChars] = await resolve(
+		getOwnedCharactersWithFaction(gameId, userId),
+		getVisibleCharactersWithFaction(gameId, userId),
+	);
+
+	return ownedChars.concat(
+		visibleChars.filter(
+			(char) => !ownedChars.some((ownedChar) => ownedChar.id === char.id),
+		),
+	);
+};
+
 const getOwnedNotes = async (gameId: Id, userId: Id) => {
 	const notesResult = await db.query.notes.findMany({
 		where: and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)),
@@ -299,6 +316,36 @@ const getVisibleCharacters = async (gameId: Id, userId: Id) => {
 				permissions: {
 					where: eq(charactersPermissions.userId, userId),
 				},
+			},
+		})
+		.then((result) =>
+			result.filter((char) => char.permissions[0]?.permission !== "none"),
+		);
+
+	return charResult;
+};
+
+const getOwnedCharactersWithFaction = async (gameId: Id, userId: Id) => {
+	const charResult = await db.query.characters.findMany({
+		where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
+		with: { primaryFaction: true },
+	});
+
+	return charResult;
+};
+
+const getVisibleCharactersWithFaction = async (gameId: Id, userId: Id) => {
+	const charResult = await db.query.characters
+		.findMany({
+			where: and(
+				eq(characters.gameId, gameId),
+				ne(characters.visibility, "private"),
+			),
+			with: {
+				permissions: {
+					where: eq(charactersPermissions.userId, userId),
+				},
+				primaryFaction: true,
 			},
 		})
 		.then((result) =>

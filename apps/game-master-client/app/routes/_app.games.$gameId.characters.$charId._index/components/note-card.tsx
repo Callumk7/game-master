@@ -1,6 +1,6 @@
 import { Link1Icon } from "@radix-ui/react-icons";
 import { Form, Link } from "@remix-run/react";
-import type { Note } from "@repo/api";
+import type { BasicEntity, Note } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { DialogContent, DialogOverlay, DialogTrigger } from "~/components/ui/dialog";
@@ -8,10 +8,11 @@ import { JollySelect, SelectItem } from "~/components/ui/select";
 import { Text } from "~/components/ui/typeography";
 
 interface NoteCardProps {
-  notes: Note[];
+  notes: BasicEntity[];
+  charNotes: Note[];
 }
 
-export function NoteCard({ notes }: NoteCardProps) {
+export function NoteCard({ notes, charNotes }: NoteCardProps) {
   return (
     <div className="p-4 border rounded-md space-y-3 h-fit">
       <div className="flex w-full items-center justify-between">
@@ -33,7 +34,7 @@ export function NoteCard({ notes }: NoteCardProps) {
         </DialogTrigger>
       </div>
       <div className="space-y-2">
-        {notes.map((note) => (
+        {charNotes.map((note) => (
           <Card key={note.id} className="p-3">
             <Link
               to={`/games/${note.gameId}/notes/${note.id}`}

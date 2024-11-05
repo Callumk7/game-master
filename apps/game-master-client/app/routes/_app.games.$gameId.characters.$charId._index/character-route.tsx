@@ -37,7 +37,7 @@ export default function CharacterRoute() {
           />
         )}
       </div>
-      <NoteCard notes={charNotes} />
+      <NoteCard notes={notes} charNotes={charNotes} />
     </div>
   );
 }

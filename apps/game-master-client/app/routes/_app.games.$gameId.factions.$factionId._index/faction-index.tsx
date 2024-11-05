@@ -17,7 +17,7 @@ export function FactionIndex() {
           method="patch"
           fieldName={"name"}
           value={factionDetails.name}
-          variant={"h2"}
+          variant={"h1"}
           weight={"semi"}
           inputLabel={"Game name input"}
           buttonLabel={"Edit game name"}
