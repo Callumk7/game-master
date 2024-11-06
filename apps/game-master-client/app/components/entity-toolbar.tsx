@@ -1,6 +1,7 @@
 import {
   FileIcon,
   GearIcon,
+  Pencil2Icon,
   Share1Icon,
   StarIcon,
   TrashIcon,
@@ -41,6 +42,7 @@ interface EntityToolbarProps {
   permissions: UserPermission[];
   userPermissionLevel: Permission;
   folders: Folder[] | undefined;
+  setIsEditDialogOpen: (isDialogOpen: boolean) => void;
 }
 export function EntityToolbar({
   entityOwnerId,
@@ -49,6 +51,7 @@ export function EntityToolbar({
   permissions,
   userPermissionLevel,
   folders,
+  setIsEditDialogOpen,
 }: EntityToolbarProps) {
   const submit = useSubmit();
   const navigate = useNavigate();
@@ -74,6 +77,9 @@ export function EntityToolbar({
         <JollyMenu label="Menu" variant="outline" className="min-w-36">
           <MenuSection>
             <MenuHeader>Controls</MenuHeader>
+            <MenuItem onAction={() => setIsEditDialogOpen(true)}>
+              <Pencil2Icon className="mr-2" /> <span>Edit</span>
+            </MenuItem>
             <MenuItem>
               <StarIcon className="mr-2" /> <span>Favourite</span>
             </MenuItem>

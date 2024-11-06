@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const [primaryFaction, charFactions, allFactions] = await resolve(
     getData(() => api.characters.getPrimaryFaction(charId)),
     getData(() => api.characters.getFactions(charId)),
-    getData(() => api.factions.getAllGameFactions(gameId)),
+    getData(() => api.factions.getGameFactions(gameId)),
   );
 
   return typedjson({ charId, charFactions, allFactions, primaryFaction });

@@ -15,6 +15,9 @@ import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { deleteCharacter, duplicateCharacter } from "./actions.server";
 import { CharacterNavigation } from "./components/navigation";
+import { useState } from "react";
+import { EditCharacterDialog } from "./components/edit-character-dialog";
+import { updateCharacter } from "~/queries/server/update-character.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -51,11 +54,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return deleteCharacter(api, charId);
   }
 
+  if (request.method === "PATCH") {
+    return updateCharacter(request, api, charId);
+  }
+
   return methodNotAllowed();
 };
 
 export default function CharacterRoute() {
   const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
       <div className="flex items-center w-full justify-between">
@@ -70,9 +78,15 @@ export default function CharacterRoute() {
           permissions={characterDetails.permissions}
           userPermissionLevel={characterDetails.userPermissionLevel!}
           folders={folders}
+          setIsEditDialogOpen={setIsEditDialogOpen}
         />
       </div>
       <Outlet />
+      <EditCharacterDialog
+        isOpen={isEditDialogOpen}
+        setIsOpen={setIsEditDialogOpen}
+        character={characterDetails}
+      />
     </>
   );
 }

@@ -23,6 +23,10 @@ export default function CharacterRoute() {
           inputLabel={"Game name input"}
           buttonLabel={"Edit game name"}
         />
+        <div>
+          <p><strong>Class: </strong>{characterDetails.class}</p>
+          <p><strong>Level: </strong>{characterDetails.level}</p>
+        </div>
         {characterDetails.userPermissionLevel === "view" ? (
           <>
             <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px] ">

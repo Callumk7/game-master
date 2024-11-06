@@ -1,4 +1,7 @@
-import { type SDK, duplicateCharacterSchema } from "@repo/api";
+import {
+	type SDK,
+	duplicateCharacterSchema,
+} from "@repo/api";
 import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { characterHref } from "~/util/generate-hrefs";
