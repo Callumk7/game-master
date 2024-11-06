@@ -41,7 +41,7 @@ export class Characters {
 				return this.client.get<CharacterWithFaction[]>(
 					`games/${gameId}/characters`,
 					{
-						searchParams: { with: "primaryFaction" },
+						searchParams: { withData: "primaryFaction" },
 					},
 				);
 			},

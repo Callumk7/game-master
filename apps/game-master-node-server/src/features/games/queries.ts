@@ -2,6 +2,7 @@ import type {
 	Character,
 	CharacterWithFaction,
 	Faction,
+	FactionWithMembers,
 	GameWithDatedEntities,
 	GameWithMembers,
 	Id,
@@ -13,6 +14,7 @@ import { characters, charactersPermissions } from "~/db/schema/characters";
 import { factions, factionsPermissions } from "~/db/schema/factions";
 import { type InsertDatabaseGame, games, usersToGames } from "~/db/schema/games";
 import { notes, notesPermissions } from "~/db/schema/notes";
+import { mapMembersOfFaction } from "~/lib/mapping-joins";
 import { filterItems } from "~/lib/permissions-filter";
 import { resolve } from "~/utils";
 
@@ -215,6 +217,23 @@ export const getUserFactionsForGame = async (
 	);
 };
 
+export const getUserFactionsForGameWithMembers = async (
+	gameId: Id,
+	userId: Id,
+): Promise<FactionWithMembers[]> => {
+	const [ownedFactions, visibleFactions] = await resolve(
+		getOwnedFactionsWithMembers(gameId, userId),
+		getVisibleFactionsWithMembers(gameId, userId),
+	);
+
+	return ownedFactions.concat(
+		visibleFactions.filter(
+			(faction) =>
+				!ownedFactions.some((ownedFaction) => ownedFaction.id === faction.id),
+		),
+	);
+};
+
 export const getUserCharactersForGame = async (
 	gameId: Id,
 	userId: Id,
@@ -292,6 +311,37 @@ const getVisibleFactions = async (gameId: Id, userId: Id) => {
 		})
 		.then((result) =>
 			result.filter((faction) => faction.permissions[0]?.permission !== "none"),
+		);
+
+	return factionResult;
+};
+
+const getOwnedFactionsWithMembers = async (gameId: Id, userId: Id) => {
+	const factionResult = await db.query.factions.findMany({
+		where: and(eq(factions.gameId, gameId), eq(factions.ownerId, userId)),
+		with: {
+			members: { with: { character: true } },
+		},
+	});
+
+	return factionResult.map((faction) => mapMembersOfFaction(faction));
+};
+
+const getVisibleFactionsWithMembers = async (gameId: Id, userId: Id) => {
+	const factionResult = await db.query.factions
+		.findMany({
+			where: and(eq(factions.gameId, gameId), ne(factions.visibility, "private")),
+			with: {
+				permissions: {
+					where: eq(factionsPermissions.userId, userId),
+				},
+				members: { with: { character: true } },
+			},
+		})
+		.then((result) =>
+			result
+				.filter((faction) => faction.permissions[0]?.permission !== "none")
+				.map((faction) => mapMembersOfFaction(faction)),
 		);
 
 	return factionResult;

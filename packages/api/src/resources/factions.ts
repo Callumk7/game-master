@@ -1,5 +1,4 @@
 import type { Client } from "../client.js";
-import type { Character } from "../types/characters.js";
 import type {
 	CreateFactionRequestBody,
 	DuplicateFactionRequestBody,
@@ -20,11 +19,31 @@ import type {
 } from "../types/index.js";
 
 export class Factions {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
-	async getFaction(factionId: Id): Promise<Faction> {
-		return this.client.get<Faction>(`factions/${factionId}`);
-	}
+	getFaction = Object.assign(
+		async (factionId: Id) => {
+			return this.client.get<Faction>(`factions/${factionId}`);
+		},
+		{
+			withPermissions: (factionId: Id) => {
+				return this.getFactionWithPermissions(factionId);
+			},
+		},
+	);
+
+	getGameFactions = Object.assign(
+		async (gameId: Id) => {
+			return this.client.get<Faction[]>(`games/${gameId}/factions`);
+		},
+		{
+			withMembers: async (gameId: Id) => {
+				return this.client.get<FactionWithMembers[]>(`games/${gameId}/factions`, {
+					searchParams: { withData: "members" },
+				});
+			},
+		},
+	);
 
 	async getFactionWithPermissions(factionId: Id): Promise<FactionWithPermissions> {
 		return this.client.get<FactionWithPermissions>(
@@ -70,10 +89,6 @@ export class Factions {
 			`factions/${factionId}/duplicate`,
 			duplicateData,
 		);
-	}
-
-	async getAllGameFactions(gameId: Id): Promise<Faction[]> {
-		return this.client.get<Faction[]>(`games/${gameId}/factions`);
 	}
 
 	async getFactionWithNotes(factionId: Id): Promise<FactionWithNotes> {

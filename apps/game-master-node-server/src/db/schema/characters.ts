@@ -109,6 +109,12 @@ export const charactersInFactions = pgTable(
 	}),
 );
 
+export const databaseSelectCharactersInFactionsSchema =
+	createSelectSchema(charactersInFactions);
+export type DatabaseCharacterInFaction = z.infer<
+	typeof databaseSelectCharactersInFactionsSchema
+>;
+
 export const charactersInFactionsRelations = relations(
 	charactersInFactions,
 	({ one }) => ({
