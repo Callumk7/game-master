@@ -61,7 +61,7 @@ export class Characters {
 
 	// DONE
 	async deleteCharacter(charId: Id) {
-		return this.client.delete(`characters/${charId}`);
+		return this.client.delete<BasicServerResponse>(`characters/${charId}`);
 	}
 
 	// DONE
