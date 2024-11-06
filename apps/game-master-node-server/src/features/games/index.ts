@@ -226,12 +226,12 @@ gamesRoute.get("/:gameId/factions", async (c) => {
 		const gameFactions = await getUserFactionsForGameWithMembers(gameId, userId);
 		return c.json(gameFactions);
 	}
-		try {
-			const gameFactions = await getUserFactionsForGame(gameId, userId);
-			return c.json(gameFactions);
-		} catch (error) {
-			return handleDatabaseError(c, error);
-		}
+	try {
+		const gameFactions = await getUserFactionsForGame(gameId, userId);
+		return c.json(gameFactions);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
 });
 
 ////////////////////////////////////////////////////////////////////////////////

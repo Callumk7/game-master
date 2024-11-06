@@ -19,7 +19,7 @@ import type {
 } from "../types/index.js";
 
 export class Factions {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getFaction = Object.assign(
 		async (factionId: Id) => {
