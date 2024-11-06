@@ -43,6 +43,13 @@
       "when": 1730114175105,
       "tag": "0005_fresh_pyro",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1730895795396,
+      "tag": "0006_fair_meteorite",
+      "breakpoints": true
     }
   ]
 }
