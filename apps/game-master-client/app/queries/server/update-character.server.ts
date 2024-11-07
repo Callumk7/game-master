@@ -1,7 +1,7 @@
 import { type SDK, updateCharacterSchema } from "@repo/api";
-import { typedjson } from "remix-typedjson";
-import { z } from "zod";
-import { parseForm, zx } from "zodix";
+import { redirect, typedjson } from "remix-typedjson";
+import { parseForm } from "zodix";
+import { numberToStrings } from "./create-character.server";
 
 export const updateCharacter = async (request: Request, api: SDK, charId: string) => {
 	const data = await parseForm(request, updateCharacterSchema.merge(numberToStrings));
@@ -9,12 +9,10 @@ export const updateCharacter = async (request: Request, api: SDK, charId: string
 	return typedjson(result);
 };
 
-export const numberToStrings = z.object({
-	level: zx.NumAsString.optional(),
-	strength: zx.NumAsString.optional(),
-	dexterity: zx.NumAsString.optional(),
-	constitution: zx.NumAsString.optional(),
-	wisdom: zx.NumAsString.optional(),
-	intelligence: zx.NumAsString.optional(),
-	charisma: zx.NumAsString.optional(),
-});
+export const deleteCharacter = async (api: SDK, charId: string, gameId: string) => {
+	const result = await api.characters.deleteCharacter(charId);
+	if (result.success) {
+		return redirect(`/games/${gameId}`);
+	}
+	return typedjson(result);
+};
