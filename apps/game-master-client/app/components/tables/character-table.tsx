@@ -19,11 +19,8 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { characterHref, factionHref } from "~/util/generate-hrefs";
-import { Toolbar } from "../ui/toolbar";
-import { Button } from "../ui/button";
-import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { useSubmit } from "@remix-run/react";
-import { EditCharacterDialog } from "~/routes/_app.games.$gameId.characters.$charId/components/edit-character-dialog";
+import { EntityRowControls } from "./shared";
+import { EditCharacterDialog } from "../forms/edit-character-dialog";
 
 interface CharacterTableProps {
   characters: CharacterWithFaction[];
@@ -93,7 +90,6 @@ const useCharacterTable = ({
   setIsEditCharacterDialogOpen: (isOpen: boolean) => void;
   setSelectedCharId: (charId: string) => void;
 }) => {
-  const submit = useSubmit();
   const handleEdit = (charId: string) => {
     setSelectedCharId(charId);
     setIsEditCharacterDialogOpen(true);
@@ -116,7 +112,7 @@ const useCharacterTable = ({
         header: "Race",
         cell: ({ cell }) => cell.getValue(),
       }),
-      h.accessor("class", {
+      h.accessor("characterClass", {
         header: "Class",
         cell: ({ cell }) => cell.getValue(),
       }),
@@ -139,26 +135,15 @@ const useCharacterTable = ({
           }
         },
       }),
+      h.accessor("userPermissionLevel", {
+        header: "Permission Level",
+        cell: ({ cell }) => cell.getValue(),
+      }),
       h.display({
         id: "controls",
         header: "Controls",
         cell: ({ row }) => (
-          <Toolbar>
-            <Button
-              variant={"outline"}
-              size={"icon"}
-              onPress={() => handleEdit(row.original.id)}
-            >
-              <Pencil2Icon />
-            </Button>
-            <Button
-              variant={"outline"}
-              size={"icon"}
-              onPress={() => submit({ charId: row.original.id }, { method: "DELETE" })}
-            >
-              <TrashIcon />
-            </Button>
-          </Toolbar>
+          <EntityRowControls entityId={row.original.id} handleEdit={handleEdit} />
         ),
       }),
     ];

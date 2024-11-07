@@ -21,68 +21,20 @@ import {
 } from "~/components/ui/table";
 import { characterHref } from "~/util/generate-hrefs";
 import { Card } from "../ui/card";
-
-const helper = createColumnHelper<FactionWithMembers>();
-const columns = [
-  helper.display({
-    id: "expander",
-    header: () => null,
-    cell: ({ row }) => {
-      return row.getCanExpand() ? (
-        <div className="w-[1px]">
-          <button
-            {...{
-              onClick: row.getToggleExpandedHandler(),
-              style: { cursor: "pointer" },
-              type: "button",
-            }}
-          >
-            {row.getIsExpanded() ? <ArrowDownIcon /> : <ArrowRightIcon />}
-          </button>
-        </div>
-      ) : null;
-    },
-  }),
-  helper.accessor("name", {
-    size: 1000,
-    cell: ({ cell, row }) => (
-      <Link
-        href={`/games/${row.original.gameId}/factions/${row.original.id}`}
-        variant={"link"}
-      >
-        {cell.getValue()}
-      </Link>
-    ),
-  }),
-  helper.accessor("createdAt", {
-    size: 50,
-    cell: ({ cell }) => {
-      const date = new Date(cell.getValue());
-      return <p>{date.toLocaleDateString("gmt")}</p>;
-    },
-  }),
-];
+import { EntityRowControls } from "./shared";
 
 interface FactionTableProps {
   factions: FactionWithMembers[];
 }
 
 export function FactionTable({ factions }: FactionTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const table = useReactTable({
+  const [isEditFactionDialogOpen, setIsEditFactionDialogOpen] = useState(false);
+  const [selectedFactionId, setSelectedFactionId] = useState<string | null>(null);
+  const table = useFactionTable({
     data: factions,
-    columns,
-    getRowCanExpand: (row) => row.original.members.length > 0,
-    getExpandedRowModel: getExpandedRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting,
-    },
+    setIsEditFactionDialogOpen,
+    setSelectedFactionId,
   });
-
   return (
     <Card>
       <Table>
@@ -167,34 +119,111 @@ function MemberTable({ members }: { members: FactionMember[] }) {
   });
 
   return (
-    <table className="w-full border-b">
-      <thead>
-        {table.getHeaderGroups().map((group) => (
-          <tr key={group.id}>
-            {group.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                style={{ width: header.getSize() ? header.getSize() : "auto" }}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="w-full border-b">
+      <table className="m-2">
+        <p className="pl-4">Members</p>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+              ))}
+              </tr>
+          ))}
+        </tbody>
+      </table>
+      </div>
   );
 }
+
+const h = createColumnHelper<FactionWithMembers>();
+
+interface UseFactionTableArgs {
+  data: FactionWithMembers[];
+  setIsEditFactionDialogOpen: (isOpen: boolean) => void;
+  setSelectedFactionId: (factionId: string) => void;
+}
+const useFactionTable = ({
+  data,
+  setIsEditFactionDialogOpen,
+  setSelectedFactionId,
+}: UseFactionTableArgs) => {
+  const handleEdit = (factionId: string) => {
+    setSelectedFactionId(factionId);
+    setIsEditFactionDialogOpen(true);
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Stable reference
+  const columns = useMemo(() => {
+    return [
+      h.display({
+        id: "expander",
+        header: () => null,
+        cell: ({ row }) => {
+          return row.getCanExpand() ? (
+            <div className="w-[1px]">
+              <button
+                {...{
+                  onClick: row.getToggleExpandedHandler(),
+                  style: { cursor: "pointer" },
+                  type: "button",
+                }}
+              >
+                {row.getIsExpanded() ? <ArrowDownIcon /> : <ArrowRightIcon />}
+              </button>
+            </div>
+          ) : null;
+        },
+      }),
+      h.accessor("name", {
+        size: 500,
+        cell: ({ cell, row }) => (
+          <Link
+            href={`/games/${row.original.gameId}/factions/${row.original.id}`}
+            variant={"link"}
+          >
+            {cell.getValue()}
+          </Link>
+        ),
+      }),
+      h.accessor("members", {
+        header: "Members",
+        cell: ({ row }) => row.original.members.length,
+      }),
+      h.accessor("userPermissionLevel", {
+        header: "Permission Level",
+        cell: ({ cell }) => cell.getValue(),
+      }),
+      h.accessor("createdAt", {
+        size: 50,
+        cell: ({ cell }) => {
+          const date = new Date(cell.getValue());
+          return <p>{date.toLocaleDateString("gmt")}</p>;
+        },
+      }),
+      h.display({
+        header: "Controls",
+        cell: ({ row }) => (
+          <EntityRowControls entityId={row.original.id} handleEdit={handleEdit} />
+        ),
+      }),
+    ];
+  }, []);
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  return useReactTable({
+    data,
+    columns,
+    getRowCanExpand: (row) => row.original.members.length > 0,
+    getExpandedRowModel: getExpandedRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+    },
+  });
+};
