@@ -1,10 +1,9 @@
 import type {
-	Note,
-	NoteWithPermissions,
 	Permission,
 	UserPermission,
 	Visibility,
 } from "@repo/api";
+import type { Entity } from "@repo/api/dist/types/entity";
 
 type CanAccessArgs = {
 	userId: string;
@@ -37,15 +36,19 @@ export const PermissionService = {
 		}
 	},
 
-	appendPermissionLevel(note: NoteWithPermissions, userId: string) {
-		const noteUpdate = note;
-		noteUpdate.userPermissionLevel = this.calculateUserPermissionLevel({
+	appendPermissionLevel<T extends EntityWithPermissions>(entity: T, userId: string) {
+		const update = entity;
+		update.userPermissionLevel = this.calculateUserPermissionLevel({
 			userId,
-			ownerId: note.ownerId,
-			globalVisibility: note.visibility,
-			userPermissions: note.permissions,
+			ownerId: entity.ownerId,
+			globalVisibility: entity.visibility,
+			userPermissions: entity.permissions,
 		});
 
-		return noteUpdate;
+		return update;
 	},
 };
+
+interface EntityWithPermissions extends Entity {
+	permissions: UserPermission[]
+}
