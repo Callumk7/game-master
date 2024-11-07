@@ -1,3 +1,5 @@
+import { cn } from "callum-util";
+import { useState } from "react";
 import { EditorClient, EditorPreview } from "~/components/editor";
 import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
@@ -8,8 +10,9 @@ import { NoteCard } from "./components/note-card";
 export default function CharacterRoute() {
   const { characterDetails, charNotes } = useCharacterData();
   const { suggestionItems, notes } = useGameData();
+  const [isNoteSidebarOpen, setIsNoteSidebarOpen] = useState(false);
   return (
-    <div className="grid grid-cols-4 gap-1">
+    <div className={cn({ "grid grid-cols-4 gap-1": isNoteSidebarOpen })}>
       <div className="col-span-3">
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${characterDetails.userPermissionLevel}`}
@@ -37,7 +40,9 @@ export default function CharacterRoute() {
           />
         )}
       </div>
-      <NoteCard notes={notes} charNotes={charNotes} />
+      <div className={isNoteSidebarOpen ? "" : "hidden"}>
+        <NoteCard notes={notes} charNotes={charNotes} />
+      </div>
     </div>
   );
 }

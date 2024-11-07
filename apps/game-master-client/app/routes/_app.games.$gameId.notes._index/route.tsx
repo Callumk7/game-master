@@ -28,8 +28,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   if (request.method === "DELETE") {
     const { api } = await createApiFromReq(request);
-    const { noteId } = await parseForm(request, { noteId: z.string() });
-    const result = await api.notes.deleteNote(noteId);
+    const { entityId } = await parseForm(request, { entityId: z.string() });
+    const result = await api.notes.deleteNote(entityId);
     return typedjson(result);
   }
 

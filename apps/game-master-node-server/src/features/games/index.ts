@@ -18,6 +18,7 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 import { itemOrArrayToArray } from "~/utils";
 import {
 	createGame,
@@ -28,6 +29,7 @@ import {
 	getUserCharactersForGame,
 	getUserCharactersForGameWithFaction,
 	getUserFactionsForGame,
+	getUserFactionsForGameWithMembers,
 	getUserNotesForGame,
 	handleAddMembers,
 	handleRemoveMembers,
@@ -220,6 +222,11 @@ gamesRoute.get("/:gameId/characters", async (c) => {
 gamesRoute.get("/:gameId/factions", async (c) => {
 	const gameId = c.req.param("gameId");
 	const { userId } = getPayload(c);
+	const factionWith = evaluateParams(c.req.query());
+	if (factionWith === "members") {
+		const gameFactions = await getUserFactionsForGameWithMembers(gameId, userId);
+		return c.json(gameFactions);
+	}
 	try {
 		const gameFactions = await getUserFactionsForGame(gameId, userId);
 		return c.json(gameFactions);

@@ -28,10 +28,13 @@ export const evaluateDataLevelFromParams = (params: Record<string, string>) => {
 };
 
 export const evaluateParams = (params: Record<string, string>) => {
-	const charWith = params.with;
-	switch (charWith) {
+	const withData = params.withData;
+	switch (withData) {
 		case "primaryFaction":
 			return "primaryFaction";
+
+		case "members":
+			return "members";
 
 		default:
 			return "base";

@@ -1,12 +1,10 @@
 import type {
-	CharacterWithNotes,
 	CharacterWithPermissions,
 	FactionWithMembers,
-	NoteType,
 	Permission,
 	UpdateCharacterRequestBody,
 } from "@repo/api";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "~/db";
 import {
 	type InsertDatabaseCharacter,

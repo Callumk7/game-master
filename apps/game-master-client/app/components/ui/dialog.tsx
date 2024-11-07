@@ -18,9 +18,9 @@ const Dialog = AriaDialog;
 
 const sheetVariants = cva(
   [
-    "fixed z-50 gap-4 bg-background shadow-lg transition ease-in-out",
+    "fixed z-50 gap-4 bg-background shadow-lg transition",
     /* Entering */
-    "data-[entering]:duration-500 data-[entering]:animate-in",
+    "data-[entering]:duration-200 data-[entering]:animate-in",
     /* Exiting */
     "data-[exiting]:duration-300  data-[exiting]:animate-out",
   ],
@@ -49,11 +49,9 @@ const DialogOverlay = ({
     isDismissable={isDismissable}
     className={composeRenderProps(className, (className) =>
       cn(
-        "fixed inset-0 z-50 bg-black/80",
+        "fixed inset-0 z-50 bg-black/50",
         /* Exiting */
         "data-[exiting]:duration-300 data-[exiting]:animate-out data-[exiting]:fade-out-0",
-        /* Entering */
-        "data-[entering]:animate-in data-[entering]:fade-in-0 duration-0",
         className,
       ),
     )}

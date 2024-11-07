@@ -7,15 +7,9 @@ export const createCharacterInsert = (
 ): InsertDatabaseCharacter => {
 	const currentDate = new Date();
 	return {
+		...input,
 		id: generateCharacterId(),
-		name: input.name,
-		ownerId: input.ownerId,
-		gameId: input.gameId,
 		createdAt: currentDate,
 		updatedAt: currentDate,
-		content: input.content,
-		htmlContent: input.htmlContent,
-		primaryFactionId: input.primaryFactionId,
-		isPlayer: input.isPlayer,
 	};
 };

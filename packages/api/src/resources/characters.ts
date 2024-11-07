@@ -41,7 +41,7 @@ export class Characters {
 				return this.client.get<CharacterWithFaction[]>(
 					`games/${gameId}/characters`,
 					{
-						searchParams: { with: "primaryFaction" },
+						searchParams: { withData: "primaryFaction" },
 					},
 				);
 			},
@@ -61,7 +61,7 @@ export class Characters {
 
 	// DONE
 	async deleteCharacter(charId: Id) {
-		return this.client.delete(`characters/${charId}`);
+		return this.client.delete<BasicServerResponse>(`characters/${charId}`);
 	}
 
 	// DONE

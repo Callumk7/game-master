@@ -1,6 +1,6 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import { CreateCharacterSlideover } from "~/components/forms/create-character";
 import { CharacterTable } from "~/components/tables/character-table";
+import { CreateCharacterSlideover } from "./components/create-character-dialog";
 import type { loader } from "./route";
 
 export function CharacterIndex() {

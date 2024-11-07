@@ -1,20 +1,15 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, type Params } from "@remix-run/react";
-import {
-  redirect,
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
-} from "remix-typedjson";
+import type { Params } from "@remix-run/react";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { EntityToolbar } from "~/components/entity-toolbar";
 import { createApiFromReq } from "~/lib/api.server";
+import { updateCharacter } from "~/queries/server/update-character.server";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { deleteCharacter, duplicateCharacter } from "./actions.server";
-import { CharacterNavigation } from "./components/navigation";
+import { CharacterLayout } from "./character-layout";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -51,31 +46,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return deleteCharacter(api, charId);
   }
 
+  if (request.method === "PATCH") {
+    return updateCharacter(request, api, charId);
+  }
+
   return methodNotAllowed();
 };
 
-export default function CharacterRoute() {
-  const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
-  return (
-    <>
-      <div className="flex items-center w-full justify-between">
-        <CharacterNavigation
-          charId={characterDetails.id}
-          gameId={characterDetails.gameId}
-        />
-        <EntityToolbar
-          entityOwnerId={characterDetails.ownerId}
-          gameId={characterDetails.gameId}
-          entityVisibility={characterDetails.visibility}
-          permissions={characterDetails.permissions}
-          userPermissionLevel={characterDetails.userPermissionLevel!}
-          folders={folders}
-        />
-      </div>
-      <Outlet />
-    </>
-  );
-}
+export { CharacterLayout as default };
 
 export const useCharacterData = () => {
   const data = useTypedRouteLoaderData<typeof loader>(

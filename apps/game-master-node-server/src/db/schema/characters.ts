@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
 	boolean,
+	integer,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -20,6 +21,18 @@ export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewab
 export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
+	level: integer("level").notNull().default(1),
+	characterClass: text("class"),
+	race: text("race"),
+	strength: integer("strength"),
+	dexterity: integer("dexterity"),
+	constitution: integer("constitution"),
+	intelligence: integer("intelligence"),
+	wisdom: integer("wisdom"),
+	charisma: integer("charisma"),
+	personality: text("personality"),
+	goal: text("goal"),
+	flaw: text("flaw"),
 	content: text("content"),
 	htmlContent: text("html_content"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).notNull(),
@@ -96,10 +109,10 @@ export const charactersInFactions = pgTable(
 	"characters_in_factions",
 	{
 		characterId: text("character_id")
-			.references(() => characters.id)
+			.references(() => characters.id, { onDelete: "cascade" })
 			.notNull(),
 		factionId: text("faction_id")
-			.references(() => factions.id)
+			.references(() => factions.id, { onDelete: "cascade" })
 			.notNull(),
 		role: text("role"),
 	},
@@ -108,6 +121,12 @@ export const charactersInFactions = pgTable(
 		pk: primaryKey({ columns: [t.factionId, t.characterId] }),
 	}),
 );
+
+export const databaseSelectCharactersInFactionsSchema =
+	createSelectSchema(charactersInFactions);
+export type DatabaseCharacterInFaction = z.infer<
+	typeof databaseSelectCharactersInFactionsSchema
+>;
 
 export const charactersInFactionsRelations = relations(
 	charactersInFactions,
@@ -130,10 +149,10 @@ export const charactersPermissions = pgTable(
 	{
 		characterId: text("character_id")
 			.notNull()
-			.references(() => characters.id),
+			.references(() => characters.id, { onDelete: "cascade" }),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => users.id, { onDelete: "cascade" }),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({

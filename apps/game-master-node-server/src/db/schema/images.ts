@@ -10,9 +10,11 @@ export const images = pgTable("images", {
 	ownerId: text("owner_id")
 		.notNull()
 		.references(() => users.id),
-	noteId: text("note_id").references(() => notes.id),
-	characterId: text("character_id").references(() => characters.id),
-	factionId: text("faction_id").references(() => factions.id),
+	noteId: text("note_id").references(() => notes.id, { onDelete: "set null" }),
+	characterId: text("character_id").references(() => characters.id, {
+		onDelete: "set null",
+	}),
+	factionId: text("faction_id").references(() => factions.id, { onDelete: "set null" }),
 	imageUrl: text("image_url").notNull(),
 });
 
