@@ -39,6 +39,7 @@ import {
 	evaluateParams,
 	findMembersToAddAndRemove,
 } from "./util";
+import { PermissionService } from "~/services/permissions";
 
 export const gamesRoute = new Hono();
 

@@ -1,3 +1,4 @@
+import { Permission } from "@aws-sdk/client-s3";
 import type {
 	Character,
 	CharacterWithFaction,
@@ -16,6 +17,7 @@ import { type InsertDatabaseGame, games, usersToGames } from "~/db/schema/games"
 import { notes, notesPermissions } from "~/db/schema/notes";
 import { mapMembersOfFaction } from "~/lib/mapping-joins";
 import { filterItems } from "~/lib/permissions-filter";
+import { PermissionService } from "~/services/permissions";
 import { resolve } from "~/utils";
 
 export const createGame = async (insert: InsertDatabaseGame) => {
@@ -187,88 +189,92 @@ export const handleRemoveMembers = async (gameId: Id, membersToRemove: Id[]) => 
 	}
 };
 
-export const getUserNotesForGame = async (gameId: Id, userId: Id): Promise<Note[]> => {
+export const getUserNotesForGame = async (gameId: Id, userId: Id) => {
 	const [ownedNotes, visibleNotes] = await resolve(
 		getOwnedNotes(gameId, userId),
 		getVisibleNotes(gameId, userId),
 	);
 
-	return ownedNotes.concat(
+	const allNotes = ownedNotes.concat(
 		visibleNotes.filter(
 			(note) => !ownedNotes.some((ownedNote) => ownedNote.id === note.id),
 		),
 	);
+	return allNotes.map((note) => PermissionService.appendPermissionLevel(note, userId));
 };
 
-export const getUserFactionsForGame = async (
-	gameId: Id,
-	userId: Id,
-): Promise<Faction[]> => {
+export const getUserFactionsForGame = async (gameId: Id, userId: Id) => {
 	const [ownedFactions, visibleFactions] = await resolve(
 		getOwnedFactions(gameId, userId),
 		getVisibleFactions(gameId, userId),
 	);
 
-	return ownedFactions.concat(
+	const allFactions = ownedFactions.concat(
 		visibleFactions.filter(
 			(faction) =>
 				!ownedFactions.some((ownedFaction) => ownedFaction.id === faction.id),
 		),
 	);
+	return allFactions.map((faction) =>
+		PermissionService.appendPermissionLevel(faction, userId),
+	);
 };
 
-export const getUserFactionsForGameWithMembers = async (
-	gameId: Id,
-	userId: Id,
-): Promise<FactionWithMembers[]> => {
+export const getUserFactionsForGameWithMembers = async (gameId: Id, userId: Id) => {
 	const [ownedFactions, visibleFactions] = await resolve(
 		getOwnedFactionsWithMembers(gameId, userId),
 		getVisibleFactionsWithMembers(gameId, userId),
 	);
 
-	return ownedFactions.concat(
+	const allFactions = ownedFactions.concat(
 		visibleFactions.filter(
 			(faction) =>
 				!ownedFactions.some((ownedFaction) => ownedFaction.id === faction.id),
 		),
 	);
+
+	return allFactions.map((faction) =>
+		PermissionService.appendPermissionLevel(faction, userId),
+	);
 };
 
-export const getUserCharactersForGame = async (
-	gameId: Id,
-	userId: Id,
-): Promise<Character[]> => {
+export const getUserCharactersForGame = async (gameId: Id, userId: Id) => {
 	const [ownedChars, visibleChars] = await resolve(
 		getOwnedCharacters(gameId, userId),
 		getVisibleCharacters(gameId, userId),
 	);
 
-	return ownedChars.concat(
+	const allChars = ownedChars.concat(
 		visibleChars.filter(
 			(char) => !ownedChars.some((ownedChar) => ownedChar.id === char.id),
 		),
 	);
+
+	return allChars.map((char) => PermissionService.appendPermissionLevel(char, userId));
 };
 
 export const getUserCharactersForGameWithFaction = async (
 	gameId: Id,
 	userId: Id,
-): Promise<CharacterWithFaction[]> => {
+) => {
 	const [ownedChars, visibleChars] = await resolve(
 		getOwnedCharactersWithFaction(gameId, userId),
 		getVisibleCharactersWithFaction(gameId, userId),
 	);
 
-	return ownedChars.concat(
+	const allChars = ownedChars.concat(
 		visibleChars.filter(
 			(char) => !ownedChars.some((ownedChar) => ownedChar.id === char.id),
 		),
 	);
+
+	return allChars.map((char) => PermissionService.appendPermissionLevel(char, userId));
 };
 
 const getOwnedNotes = async (gameId: Id, userId: Id) => {
 	const notesResult = await db.query.notes.findMany({
 		where: and(eq(notes.gameId, gameId), eq(notes.ownerId, userId)),
+		with: { permissions: true },
 	});
 
 	return notesResult;
@@ -294,6 +300,7 @@ const getVisibleNotes = async (gameId: Id, userId: Id) => {
 const getOwnedFactions = async (gameId: Id, userId: Id) => {
 	const factionResult = await db.query.factions.findMany({
 		where: and(eq(factions.gameId, gameId), eq(factions.ownerId, userId)),
+		with: { permissions: true },
 	});
 
 	return factionResult;
@@ -321,6 +328,7 @@ const getOwnedFactionsWithMembers = async (gameId: Id, userId: Id) => {
 		where: and(eq(factions.gameId, gameId), eq(factions.ownerId, userId)),
 		with: {
 			members: { with: { character: true } },
+			permissions: true,
 		},
 	});
 
@@ -350,6 +358,7 @@ const getVisibleFactionsWithMembers = async (gameId: Id, userId: Id) => {
 const getOwnedCharacters = async (gameId: Id, userId: Id) => {
 	const charResult = await db.query.characters.findMany({
 		where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
+		with: { permissions: true },
 	});
 
 	return charResult;
@@ -378,7 +387,7 @@ const getVisibleCharacters = async (gameId: Id, userId: Id) => {
 const getOwnedCharactersWithFaction = async (gameId: Id, userId: Id) => {
 	const charResult = await db.query.characters.findMany({
 		where: and(eq(characters.gameId, gameId), eq(characters.ownerId, userId)),
-		with: { primaryFaction: true },
+		with: { primaryFaction: true, permissions: true },
 	});
 
 	return charResult;
