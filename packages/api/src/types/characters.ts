@@ -1,25 +1,22 @@
 import { z } from "zod";
 import type { Entity } from "./entity.js";
 import type { Faction } from "./factions.js";
-import {
-	type UserPermission,
-	visibilitySchema,
-} from "./index.js";
+import { type UserPermission, visibilitySchema } from "./index.js";
 import type { Note } from "./notes.js";
 
 export interface Character extends Entity {
 	level: number;
-	class?: string;
-	race?: string;
-	strength?: number;
-	dexterity?: number;
-	constitution?: number;
-	intelligence?: number;
-	wisdom?: number;
-	charisma?: number;
-	personality?: string;
-	goal?: string;
-	flaw?: string;
+	characterClass?: string | null;
+	race?: string | null;
+	strength?: number | null;
+	dexterity?: number | null;
+	constitution?: number | null;
+	intelligence?: number | null;
+	wisdom?: number | null;
+	charisma?: number | null;
+	personality?: string | null;
+	goal?: string | null;
+	flaw?: string | null;
 	isPlayer: boolean;
 }
 
@@ -43,9 +40,9 @@ export const createCharacterSchema = z.object({
 	isPlayer: z.boolean().optional(),
 	ownerId: z.string(),
 	gameId: z.string(),
-	race: z.number().optional(),
+	race: z.string().optional(),
 	level: z.number().optional(),
-	class: z.string().optional(),
+	characterClass: z.string().optional(),
 	strength: z.number().optional(),
 	dexterity: z.number().optional(),
 	constitution: z.number().optional(),
@@ -68,7 +65,7 @@ export const updateCharacterSchema = z.object({
 	primaryFactionId: z.string().optional(),
 	race: z.string().optional(),
 	level: z.number().optional(),
-	class: z.string().optional(),
+	characterClass: z.string().optional(),
 	strength: z.number().optional(),
 	dexterity: z.number().optional(),
 	constitution: z.number().optional(),
