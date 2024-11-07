@@ -1,8 +1,4 @@
-import type {
-	Permission,
-	UserPermission,
-	Visibility,
-} from "@repo/api";
+import type { Permission, UserPermission, Visibility } from "@repo/api";
 import type { Entity } from "@repo/api/dist/types/entity";
 
 type CanAccessArgs = {
@@ -50,5 +46,5 @@ export const PermissionService = {
 };
 
 interface EntityWithPermissions extends Entity {
-	permissions: UserPermission[]
+	permissions: UserPermission[];
 }

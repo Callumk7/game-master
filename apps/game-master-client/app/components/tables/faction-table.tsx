@@ -128,13 +128,13 @@ function MemberTable({ members }: { members: FactionMember[] }) {
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                </td>
               ))}
-              </tr>
+            </tr>
           ))}
         </tbody>
       </table>
-      </div>
+    </div>
   );
 }
 

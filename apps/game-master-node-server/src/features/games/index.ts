@@ -18,6 +18,7 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { getPayload } from "~/lib/jwt";
+import { PermissionService } from "~/services/permissions";
 import { itemOrArrayToArray } from "~/utils";
 import {
 	createGame,
@@ -39,7 +40,6 @@ import {
 	evaluateParams,
 	findMembersToAddAndRemove,
 } from "./util";
-import { PermissionService } from "~/services/permissions";
 
 export const gamesRoute = new Hono();
 

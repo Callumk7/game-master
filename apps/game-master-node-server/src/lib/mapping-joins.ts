@@ -7,9 +7,7 @@ type FactionWithMembersResult = FactionWithPermissions & {
 	})[];
 };
 
-export function mapMembersOfFaction(
-	faction: FactionWithMembersResult,
-) {
+export function mapMembersOfFaction(faction: FactionWithMembersResult) {
 	return {
 		...faction,
 		members: faction.members.map((m) => ({

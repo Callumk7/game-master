@@ -19,8 +19,8 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { characterHref, factionHref } from "~/util/generate-hrefs";
-import { EntityRowControls } from "./shared";
 import { EditCharacterDialog } from "../forms/edit-character-dialog";
+import { EntityRowControls } from "./shared";
 
 interface CharacterTableProps {
   characters: CharacterWithFaction[];

@@ -253,10 +253,7 @@ export const getUserCharactersForGame = async (gameId: Id, userId: Id) => {
 	return allChars.map((char) => PermissionService.appendPermissionLevel(char, userId));
 };
 
-export const getUserCharactersForGameWithFaction = async (
-	gameId: Id,
-	userId: Id,
-) => {
+export const getUserCharactersForGameWithFaction = async (gameId: Id, userId: Id) => {
 	const [ownedChars, visibleChars] = await resolve(
 		getOwnedCharactersWithFaction(gameId, userId),
 		getVisibleCharactersWithFaction(gameId, userId),

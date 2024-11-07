@@ -1,22 +1,22 @@
 import type { Note } from "@repo/api";
 import {
-    type SortingState,
-    createColumnHelper,
-    flexRender,
-    getCoreRowModel,
-    getSortedRowModel,
-    useReactTable,
+  type SortingState,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "~/components/ui/table";
 import { EntityRowControls } from "./shared";
 
@@ -33,7 +33,7 @@ export function NoteTable({ notes }: NoteTableProps) {
   const handleEdit = (noteId: string) => {
     setSelectedNoteId(noteId);
     setIsEditNoteDialogOpen(true);
-  }
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Stable reference
   const columns = useMemo(() => {
