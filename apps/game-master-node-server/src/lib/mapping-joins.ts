@@ -1,7 +1,7 @@
-import type { Character, Faction, FactionWithMembers } from "@repo/api";
+import type { Character, FactionWithPermissions } from "@repo/api";
 import type { DatabaseCharacterInFaction } from "~/db/schema/characters";
 
-type FactionWithMembersResult = Faction & {
+type FactionWithMembersResult = FactionWithPermissions & {
 	members: (DatabaseCharacterInFaction & {
 		character: Character;
 	})[];
@@ -9,7 +9,7 @@ type FactionWithMembersResult = Faction & {
 
 export function mapMembersOfFaction(
 	faction: FactionWithMembersResult,
-): FactionWithMembers {
+) {
 	return {
 		...faction,
 		members: faction.members.map((m) => ({
