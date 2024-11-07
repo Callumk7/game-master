@@ -120,8 +120,8 @@ function MemberTable({ members }: { members: FactionMember[] }) {
 
   return (
     <div className="w-full border-b">
+      <p className="pl-4 ml-2 mt-2">Members</p>
       <table className="m-2">
-        <p className="pl-4">Members</p>
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
