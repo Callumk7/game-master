@@ -50,6 +50,20 @@
       "when": 1730895795396,
       "tag": "0006_fair_meteorite",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1730995183359,
+      "tag": "0007_jittery_mephistopheles",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1730995281067,
+      "tag": "0008_free_sentinels",
+      "breakpoints": true
     }
   ]
 }

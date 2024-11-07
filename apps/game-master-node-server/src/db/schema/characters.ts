@@ -22,7 +22,7 @@ export const characters = pgTable("characters", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	level: integer("level").notNull().default(1),
-	class: text("class"),
+	characterClass: text("class"),
 	race: text("race"),
 	strength: integer("strength"),
 	dexterity: integer("dexterity"),
@@ -109,10 +109,10 @@ export const charactersInFactions = pgTable(
 	"characters_in_factions",
 	{
 		characterId: text("character_id")
-			.references(() => characters.id)
+			.references(() => characters.id, { onDelete: "cascade" })
 			.notNull(),
 		factionId: text("faction_id")
-			.references(() => factions.id)
+			.references(() => factions.id, { onDelete: "cascade" })
 			.notNull(),
 		role: text("role"),
 	},
@@ -149,10 +149,10 @@ export const charactersPermissions = pgTable(
 	{
 		characterId: text("character_id")
 			.notNull()
-			.references(() => characters.id),
+			.references(() => characters.id, { onDelete: "cascade" }),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => users.id, { onDelete: "cascade" }),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
