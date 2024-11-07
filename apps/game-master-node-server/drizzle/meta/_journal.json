@@ -64,6 +64,13 @@
       "when": 1730995281067,
       "tag": "0008_free_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1730998766335,
+      "tag": "0009_luxuriant_leo",
+      "breakpoints": true
     }
   ]
 }

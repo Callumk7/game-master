@@ -137,10 +137,10 @@ export const notesPermissions = pgTable(
 	{
 		noteId: text("note_id")
 			.notNull()
-			.references(() => notes.id),
+			.references(() => notes.id, { onDelete: "cascade" }),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => users.id, { onDelete: "cascade" }),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
