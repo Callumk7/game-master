@@ -1,4 +1,4 @@
-import { CreateCharacterForm } from "~/components/forms/character-forms";
+import { CreateFactionForm } from "~/components/forms/faction-forms";
 import { Button } from "~/components/ui/button";
 import {
   DialogContent,
@@ -8,23 +8,23 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 
-interface CreateCharacterProps {
+interface CreateFactionSlideoverProps {
   gameId: string;
 }
 
-export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
+export function CreateFactionSlideover({ gameId }: CreateFactionSlideoverProps) {
   return (
     <DialogTrigger>
-      <Button variant="outline">Create Character</Button>
+      <Button variant="outline">Create Faction</Button>
       <DialogOverlay>
         <DialogContent side="right" className="sm:max-w-[425px]">
           {({ close }) => (
             <div className="max-h-[95vh] overflow-y-auto">
               <div className="p-[1px] space-y-6">
                 <DialogHeader>
-                  <DialogTitle>Create Character</DialogTitle>
+                  <DialogTitle>Create Faction</DialogTitle>
                 </DialogHeader>
-                <CreateCharacterForm gameId={gameId} close={close} />
+                <CreateFactionForm gameId={gameId} close={close} />
               </div>
             </div>
           )}

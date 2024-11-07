@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { useActionData, useParams } from "@remix-run/react";
 import { useState } from "react";
-import { CreateFactionForm } from "~/components/forms/create-faction";
+import { CreateFactionForm } from "~/components/forms/faction-forms";
 import { Text } from "~/components/ui/typeography";
 import { createFactionAction } from "~/queries/server/create-faction.server";
 

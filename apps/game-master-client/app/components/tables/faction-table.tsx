@@ -36,54 +36,52 @@ export function FactionTable({ factions }: FactionTableProps) {
     setSelectedFactionId,
   });
   return (
-    <Card>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((group) => (
-            <tr key={group.id} className="first:max-w-4">
-              {group.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                  style={{
-                    width:
-                      header.index === 0
-                        ? 24
-                        : header.getSize()
-                          ? header.getSize()
-                          : "auto",
-                  }}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
+    <Table>
+      <TableHeader>
+        {table.getHeaderGroups().map((group) => (
+          <tr key={group.id} className="first:max-w-4">
+            {group.headers.map((header) => (
+              <TableHead
+                key={header.id}
+                onClick={header.column.getToggleSortingHandler()}
+                style={{
+                  width:
+                    header.index === 0
+                      ? 24
+                      : header.getSize()
+                        ? header.getSize()
+                        : "auto",
+                }}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(header.column.columnDef.header, header.getContext())}
+              </TableHead>
+            ))}
+          </tr>
+        ))}
+      </TableHeader>
+      <TableBody>
+        {table.getRowModel().rows.map((row) => (
+          <Fragment key={row.id}>
+            <TableRow>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
               ))}
-            </tr>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <Fragment key={row.id}>
-              <TableRow>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-              {row.getIsExpanded() && (
-                <tr>
-                  <td colSpan={row.getAllCells().length}>
-                    <MemberTable members={row.original.members} />
-                  </td>
-                </tr>
-              )}
-            </Fragment>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+            </TableRow>
+            {row.getIsExpanded() && (
+              <tr>
+                <td colSpan={row.getAllCells().length}>
+                  <MemberTable members={row.original.members} />
+                </td>
+              </tr>
+            )}
+          </Fragment>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 
