@@ -1,39 +1,44 @@
-import { TrashIcon } from "@radix-ui/react-icons";
-import { useSubmit } from "@remix-run/react";
 import type { Note } from "@repo/api";
 import {
-  type SortingState,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+    type SortingState,
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "~/components/ui/table";
+import { EntityRowControls } from "./shared";
 
-const helper = createColumnHelper<Note>();
+const h = createColumnHelper<Note>();
 
 interface NoteTableProps {
   notes: Note[];
 }
 
 export function NoteTable({ notes }: NoteTableProps) {
-  const submit = useSubmit();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Run once - tanstack Table requires stable reference
+  const [isEditNoteDialogOpen, setIsEditNoteDialogOpen] = useState(false);
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+
+  const handleEdit = (noteId: string) => {
+    setSelectedNoteId(noteId);
+    setIsEditNoteDialogOpen(true);
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Stable reference
   const columns = useMemo(() => {
     const columns = [
-      helper.accessor("name", {
+      h.accessor("name", {
         cell: ({ cell, row }) => (
           <Link
             variant={"link"}
@@ -44,32 +49,26 @@ export function NoteTable({ notes }: NoteTableProps) {
         ),
         header: () => "Name",
       }),
-      helper.accessor("type", {
+      h.accessor("type", {
         cell: ({ cell }) => cell.getValue(),
         header: () => "Type",
       }),
-      helper.accessor("createdAt", {
+      h.accessor("createdAt", {
         cell: ({ cell }) => {
           const date = new Date(cell.getValue());
           return <p>{date.toLocaleString("gmt")}</p>;
         },
         header: () => "Created At",
       }),
-      helper.accessor("userPermissionLevel", {
+      h.accessor("userPermissionLevel", {
         cell: ({ cell }) => <p>{cell.getValue()}</p>,
         header: "Permission Level",
       }),
-      helper.display({
+      h.display({
         id: "controls",
         header: () => "Controls",
         cell: ({ row }) => (
-          <Button
-            size={"icon"}
-            variant={"secondary"}
-            onPress={() => submit({ noteId: row.original.id }, { method: "DELETE" })}
-          >
-            <TrashIcon />
-          </Button>
+          <EntityRowControls handleEdit={handleEdit} entityId={row.original.id} />
         ),
       }),
     ];
