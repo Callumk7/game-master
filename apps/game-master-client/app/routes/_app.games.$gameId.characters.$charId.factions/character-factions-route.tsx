@@ -13,7 +13,9 @@ export function CharacterFactionsRoute() {
         <PrimaryFaction faction={primaryFaction} members={primaryFaction.members} />
       ) : null}
       <LinkFactionDialog allFactions={allFactions} />
-      <LinkedFactionList characterId={charId} factions={charFactions} />
+      {charFactions.length > 0 ? (
+        <LinkedFactionList characterId={charId} factions={charFactions} />
+      ) : null}
     </div>
   );
 }

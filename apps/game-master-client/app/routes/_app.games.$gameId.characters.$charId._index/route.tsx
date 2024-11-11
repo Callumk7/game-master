@@ -5,7 +5,7 @@ import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { linkNoteToCharacter, updateCharacter } from "./actions.server";
-import CharacterRoute from "./character-route";
+import { CharacterOverview } from "./character-overview";
 
 const getParams = (params: Params) => {
   return parseParams(params, { charId: z.string() });
@@ -26,4 +26,4 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return methodNotAllowed();
 };
 
-export { CharacterRoute as default };
+export { CharacterOverview as default };

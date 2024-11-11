@@ -3,12 +3,13 @@ import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
+import { Layout } from "~/components/layout";
 
-export function FactionIndex() {
+export function FactionOverview() {
   const { factionDetails } = useFactionData();
   const { suggestionItems } = useGameData();
   return (
-    <div className="max-w-4xl mx-auto pt-20">
+    <Layout>
       <div>
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${factionDetails.userPermissionLevel}`}
@@ -31,6 +32,6 @@ export function FactionIndex() {
           suggestionItems={suggestionItems}
         />
       )}
-    </div>
+    </Layout>
   );
 }
