@@ -6,8 +6,16 @@ if (!process.env.SERVER_SECRET) {
 if (!process.env.DB_URL) {
 	throw new Error("DB_URL not set in the environment");
 }
+if (!process.env.S3_ACCESS_KEY) {
+	throw new Error("S3_ACCESS_KEY not set in the environment");
+}
+if (!process.env.S3_SECRET_KEY) {
+	throw new Error("S3_SECRET_KEY not set in the environment");
+}
 
 export const env = {
 	SERVER_SECRET: process.env.SERVER_SECRET,
 	DB_URL: process.env.DB_URL,
+	S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+	S3_SECRET_KEY: process.env.S3_SECRET_KEY,
 };

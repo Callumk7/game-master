@@ -1,29 +1,29 @@
 import { useLocation } from "@remix-run/react";
 import { Tab, TabList, Tabs } from "~/components/ui/tabs";
-import { factionHref } from "~/util/generate-hrefs";
+import { noteHref } from "~/util/generate-hrefs";
 
-interface FactionNavigationProps {
-  factionId: string;
+interface NoteNavigationProps {
+  noteId: string;
   gameId: string;
 }
 
-export function FactionNavigation({ factionId, gameId }: FactionNavigationProps) {
+// Using buttons instead of links so we can use Remix's navigate hook, to access
+// relative path navigation
+export function NoteNavigation({ noteId, gameId }: NoteNavigationProps) {
   const { pathname } = useLocation();
   let selectedKey = "/";
-  if (pathname.endsWith("/members")) selectedKey = "/members";
+  if (pathname.endsWith("/factions")) selectedKey = "/factions";
   if (pathname.endsWith("/relations")) selectedKey = "/relations";
-  const baseUrl = factionHref(gameId, factionId);
+
+  const baseUrl = noteHref(gameId, noteId);
   return (
     <Tabs selectedKey={selectedKey}>
       <TabList>
         <Tab id={"/"} href={baseUrl}>
           Overview
         </Tab>
-        <Tab id={"/members"} href={`${baseUrl}/members`}>
-          Members
-        </Tab>
-        <Tab id={"/relations"} href={`${baseUrl}/relations`}>
-          Relations
+        <Tab id={"/links"} href={`${baseUrl}/links`}>
+          Links
         </Tab>
         <Tab id={"/images"} href={`${baseUrl}/images`}>
           Images

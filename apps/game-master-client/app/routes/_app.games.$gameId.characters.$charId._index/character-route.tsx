@@ -12,7 +12,7 @@ export default function CharacterRoute() {
   const { suggestionItems, notes } = useGameData();
   const [isNoteSidebarOpen, setIsNoteSidebarOpen] = useState(false);
   return (
-    <div className={cn({ "grid grid-cols-4 gap-1": isNoteSidebarOpen })}>
+    <div className={cn({ "grid grid-cols-4 gap-1": isNoteSidebarOpen }, "mx-auto max-w-4xl pt-20")}>
       <div className="col-span-3">
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${characterDetails.userPermissionLevel}`}

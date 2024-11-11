@@ -8,7 +8,7 @@ export function FactionIndex() {
   const { factionDetails } = useFactionData();
   const { suggestionItems } = useGameData();
   return (
-    <>
+    <div className="max-w-4xl mx-auto pt-20">
       <div>
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${factionDetails.userPermissionLevel}`}
@@ -31,6 +31,6 @@ export function FactionIndex() {
           suggestionItems={suggestionItems}
         />
       )}
-    </>
+    </div>
   );
 }

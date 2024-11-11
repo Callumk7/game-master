@@ -1,6 +1,5 @@
-import { useNavigate } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { Toolbar } from "~/components/ui/toolbar";
+import { useLocation } from "@remix-run/react";
+import { Tab, TabList, Tabs } from "~/components/ui/tabs";
 import { characterHref } from "~/util/generate-hrefs";
 
 interface CharacterNavigationProps {
@@ -11,26 +10,28 @@ interface CharacterNavigationProps {
 // Using buttons instead of links so we can use Remix's navigate hook, to access
 // relative path navigation
 export function CharacterNavigation({ charId, gameId }: CharacterNavigationProps) {
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  let selectedKey = "/";
+  if (pathname.endsWith("/factions")) selectedKey = "/factions";
+  if (pathname.endsWith("/relations")) selectedKey = "/relations";
+
+  const baseUrl = characterHref(gameId, charId);
   return (
-    <nav>
-      <Toolbar>
-        <Button onPress={() => navigate(characterHref(gameId, charId))} variant={"link"}>
+    <Tabs selectedKey={selectedKey}>
+      <TabList>
+        <Tab id={"/"} href={baseUrl}>
           Overview
-        </Button>
-        <Button
-          onPress={() => navigate("factions", { relative: "path" })}
-          variant={"link"}
-        >
+        </Tab>
+        <Tab id={"/factions"} href={`${baseUrl}/factions`}>
           Factions
-        </Button>
-        <Button
-          onPress={() => navigate("relations", { relative: "path" })}
-          variant={"link"}
-        >
+        </Tab>
+        <Tab id={"/relations"} href={`${baseUrl}/relations`}>
           Relations
-        </Button>
-      </Toolbar>
-    </nav>
+        </Tab>
+        <Tab id={"/images"} href={`${baseUrl}/images`}>
+          Images
+        </Tab>
+      </TabList>
+    </Tabs>
   );
 }

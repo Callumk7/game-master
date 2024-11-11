@@ -5,6 +5,7 @@ import {
 } from "@aws-sdk/client-s3";
 import "dotenv/config";
 import { generateImageId } from "./ids";
+import { env } from "./env";
 
 const REGION = "eu-west-2";
 const BUCKET_NAME = "game-master-images";
@@ -17,8 +18,8 @@ type UploadOptions = {
 
 const S3 = new S3Client({
 	credentials: {
-		accessKeyId: process.env.S3_ACCESS_KEY!,
-		secretAccessKey: process.env.S3_SECRET_KEY!,
+		accessKeyId: env.S3_ACCESS_KEY,
+		secretAccessKey: env.S3_SECRET_KEY,
 	},
 	region: REGION,
 });

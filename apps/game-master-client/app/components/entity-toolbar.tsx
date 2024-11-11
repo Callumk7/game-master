@@ -1,6 +1,7 @@
 import {
   FileIcon,
   GearIcon,
+  ImageIcon,
   Pencil2Icon,
   Share1Icon,
   StarIcon,
@@ -8,7 +9,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Form, useFetcher, useNavigate, useSubmit } from "@remix-run/react";
 import type { Folder, Permission, User, UserPermission, Visibility } from "@repo/api";
-import { type Key, useState } from "react";
+import { type ChangeEvent, type Key, useRef, useState } from "react";
 import { SubmenuTrigger } from "react-aria-components";
 import { Button } from "~/components/ui/button";
 import { JollyTextField } from "~/components/ui/textfield";
@@ -53,8 +54,6 @@ export function EntityToolbar({
   folders,
   setIsEditDialogOpen,
 }: EntityToolbarProps) {
-  const submit = useSubmit();
-  const navigate = useNavigate();
   const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
   const { userId } = useAppData();
@@ -74,56 +73,13 @@ export function EntityToolbar({
   return (
     <>
       <Toolbar>
-        <JollyMenu label="Menu" variant="outline" className="min-w-36">
-          <MenuSection>
-            <MenuHeader>Controls</MenuHeader>
-            <MenuItem onAction={() => setIsEditDialogOpen(true)}>
-              <Pencil2Icon className="mr-2" /> <span>Edit</span>
-            </MenuItem>
-            <MenuItem>
-              <StarIcon className="mr-2" /> <span>Favourite</span>
-            </MenuItem>
-            <MenuItem
-              isDisabled={!hasEditPermission}
-              onAction={() => navigate("settings", { relative: "path" })}
-            >
-              <GearIcon className="mr-2" /> <span>Settings</span>
-            </MenuItem>
-            <MenuItem onAction={() => setIsDuplicateDialogOpen(true)}>
-              <Share1Icon className="mr-2" /> <span>Duplicate</span>
-            </MenuItem>
-            {hasEditPermission && folders ? (
-              <SubmenuTrigger>
-                <MenuItem>
-                  <FileIcon className="mr-2" />
-                  <span>Move..</span>
-                </MenuItem>
-                <MenuPopover>
-                  <Menu items={folders}>
-                    {(item) => (
-                      <MenuItem
-                        onAction={() =>
-                          submit({ folderId: item.id }, { method: "patch" })
-                        }
-                      >
-                        {item.name}
-                      </MenuItem>
-                    )}
-                  </Menu>
-                </MenuPopover>
-              </SubmenuTrigger>
-            ) : null}
-          </MenuSection>
-          <MenuSection>
-            <MenuHeader>Danger Zone</MenuHeader>
-            <MenuItem
-              isDisabled={!hasEditPermission}
-              onAction={() => submit({}, { method: "delete" })}
-            >
-              <TrashIcon className="mr-2" /> <span>Delete</span>
-            </MenuItem>
-          </MenuSection>
-        </JollyMenu>
+        <EntityMenu
+          ownerId={userId}
+          hasEditPermission={hasEditPermission}
+          setIsEditDialogOpen={setIsEditDialogOpen}
+          setIsDuplicateDialogOpen={setIsDuplicateDialogOpen}
+          folders={folders}
+        />
         {isOwner ? (
           gameWithMembersQuery.status === "success" ? (
             <SharingPopover
@@ -137,7 +93,6 @@ export function EntityToolbar({
             </Button>
           )
         ) : null}
-        <ImageUploader action="images" ownerId={entityOwnerId} />
       </Toolbar>
       <DuplicateEntityDialog
         isOpen={isDuplicateDialogOpen}
@@ -146,6 +101,141 @@ export function EntityToolbar({
     </>
   );
 }
+
+interface EntityMenuProps {
+  ownerId: string;
+  hasEditPermission: boolean;
+  setIsEditDialogOpen: (isOpen: boolean) => void;
+  setIsDuplicateDialogOpen: (isOpen: boolean) => void;
+  folders: Folder[] | undefined;
+}
+
+export function EntityMenu({
+  ownerId,
+  hasEditPermission,
+  setIsEditDialogOpen,
+  setIsDuplicateDialogOpen,
+  folders,
+}: EntityMenuProps) {
+  const navigate = useNavigate();
+  const submit = useSubmit();
+  const fetcher = useFetcher();
+  const {
+    fileName,
+    fileInputRef,
+    simulateInputClick,
+    handleFileChange,
+    handleSubmitCleanup,
+  } = useCustomUploadButton();
+  return (
+    <>
+      <fetcher.Form
+        method="POST"
+        encType="multipart/form-data"
+        onSubmit={handleSubmitCleanup}
+        action="images"
+      >
+        <input
+          type="file"
+          name="image"
+          className="hidden"
+          onChange={handleFileChange}
+          ref={fileInputRef}
+        />
+        <input type="hidden" value={ownerId} name="ownerId" />
+        {fileName ? (
+          <div className="flex items-center gap-2">
+            <Button type="submit" variant={"secondary"}>
+              Upload
+            </Button>
+          </div>
+        ) : null}
+      </fetcher.Form>
+      <JollyMenu label="Menu" variant="outline" className="min-w-36">
+        <MenuSection>
+          <MenuHeader>Controls</MenuHeader>
+          <MenuItem onAction={() => setIsEditDialogOpen(true)}>
+            <Pencil2Icon className="mr-2" /> <span>Edit</span>
+          </MenuItem>
+          <MenuItem onAction={simulateInputClick}>
+            <ImageIcon className="mr-2" /> <span>Upload Cover Image</span>
+          </MenuItem>
+          <MenuItem>
+            <StarIcon className="mr-2" /> <span>Favourite</span>
+          </MenuItem>
+          <MenuItem
+            isDisabled={!hasEditPermission}
+            onAction={() => navigate("settings", { relative: "path" })}
+          >
+            <GearIcon className="mr-2" /> <span>Settings</span>
+          </MenuItem>
+          <MenuItem onAction={() => setIsDuplicateDialogOpen(true)}>
+            <Share1Icon className="mr-2" /> <span>Duplicate</span>
+          </MenuItem>
+          {hasEditPermission && folders ? (
+            <SubmenuTrigger>
+              <MenuItem>
+                <FileIcon className="mr-2" />
+                <span>Move..</span>
+              </MenuItem>
+              <MenuPopover>
+                <Menu items={folders}>
+                  {(item) => (
+                    <MenuItem
+                      onAction={() => submit({ folderId: item.id }, { method: "patch" })}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  )}
+                </Menu>
+              </MenuPopover>
+            </SubmenuTrigger>
+          ) : null}
+        </MenuSection>
+        <MenuSection>
+          <MenuHeader>Danger Zone</MenuHeader>
+          <MenuItem
+            isDisabled={!hasEditPermission}
+            onAction={() => submit({}, { method: "delete" })}
+          >
+            <TrashIcon className="mr-2" /> <span>Delete</span>
+          </MenuItem>
+        </MenuSection>
+      </JollyMenu>
+    </>
+  );
+}
+
+const useCustomUploadButton = () => {
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const simulateInputClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files;
+    if (files?.[0]) {
+      const { name } = files[0];
+      setFileName(name);
+    } else {
+      handleSubmitCleanup();
+    }
+  };
+
+  const handleSubmitCleanup = () => {
+    setFileName("");
+  };
+
+  return {
+    fileName,
+    fileInputRef,
+    simulateInputClick,
+    handleFileChange,
+    handleSubmitCleanup,
+  };
+};
 
 interface DuplicateEntityDialogProps {
   isOpen: boolean;
@@ -197,7 +287,7 @@ function SharingPopover({ members, visibility, permissions }: SharingPopoverProp
   return (
     <PopoverTrigger>
       <Button variant={"outline"}>Sharing</Button>
-      <Popover>
+      <Popover crossOffset={-150}>
         <PopoverDialog className="w-[40vw]">
           <div className="space-y-4">
             <DialogHeader>

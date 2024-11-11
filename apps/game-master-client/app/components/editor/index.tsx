@@ -82,6 +82,7 @@ export function EditorBody({
 
   return (
     <div className="editor">
+      <EditorWithControls editor={editor} />
       <Toolbar className={"flex p-2"}>
         <Button
           size={"sm"}
@@ -92,7 +93,6 @@ export function EditorBody({
           {isEdited ? "Save" : "Content Saved"}
         </Button>
       </Toolbar>
-      <EditorWithControls editor={editor} />
     </div>
   );
 }
