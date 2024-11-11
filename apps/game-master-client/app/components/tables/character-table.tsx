@@ -8,7 +8,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import {
   Table,

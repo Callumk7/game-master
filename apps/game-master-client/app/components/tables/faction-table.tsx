@@ -118,7 +118,7 @@ function MemberTable({ members }: { members: FactionMember[] }) {
 
   return (
     <div className="w-full border-b">
-      <p className="pl-4 ml-2 mt-2">Members</p>
+      <p className="pl-4 ml-2 mt-2 font-medium">Members</p>
       <table className="m-2">
         <tbody>
           {table.getRowModel().rows.map((row) => (
@@ -177,6 +177,7 @@ const useFactionTable = ({
       }),
       h.accessor("name", {
         size: 500,
+        header: "Name",
         cell: ({ cell, row }) => (
           <Link
             href={`/games/${row.original.gameId}/factions/${row.original.id}`}

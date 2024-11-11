@@ -8,7 +8,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import {
   Table,
@@ -87,8 +86,6 @@ export function NoteTable({ notes }: NoteTableProps) {
       sorting,
     },
   });
-
-  console.log(table.getState().sorting);
 
   return (
     <Table>
