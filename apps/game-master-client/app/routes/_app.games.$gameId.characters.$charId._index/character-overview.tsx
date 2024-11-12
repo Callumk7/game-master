@@ -6,6 +6,7 @@ import { useGameData } from "../_app.games.$gameId/route";
 import { Layout, MainGrid, SideGrid } from "~/components/layout";
 import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
 import { LinkNotesPopover } from "~/components/linking/link-notes";
+import { CoverImage } from "~/components/cover-image";
 
 export function CharacterOverview() {
   const { characterDetails, charNotes } = useCharacterData();
@@ -18,6 +19,9 @@ export function CharacterOverview() {
           <LinkedNotesAside linkedNotes={charNotes} />
         </LinksAside>
         <div className="col-span-4">
+          {characterDetails.coverImageUrl && (
+            <CoverImage src={characterDetails.coverImageUrl} ratio="4/3" />
+          )}
           <Pill size={"xs"} variant={"secondary"}>
             {`permission level: ${characterDetails.userPermissionLevel}`}
           </Pill>
@@ -38,11 +42,11 @@ export function CharacterOverview() {
               <EditorPreview htmlContent={characterDetails.htmlContent ?? ""} />
             </>
           ) : (
-              <EditorClient
-                htmlContent={characterDetails.htmlContent ?? ""}
-                suggestionItems={suggestionItems}
-              />
-            )}
+            <EditorClient
+              htmlContent={characterDetails.htmlContent ?? ""}
+              suggestionItems={suggestionItems}
+            />
+          )}
         </div>
       </div>
     </Layout>

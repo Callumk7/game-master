@@ -25,10 +25,10 @@ export function CharacterNavigation({ charId, gameId }: CharacterNavigationProps
         <Tab id={"/factions"} href={`${baseUrl}/factions`}>
           Factions
         </Tab>
-        <Tab id={"/relations"} href={`${baseUrl}/relations`}>
+        <Tab id={"/relations"} href={`${baseUrl}/relations`} isDisabled>
           Relations
         </Tab>
-        <Tab id={"/images"} href={`${baseUrl}/images`}>
+        <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>
           Images
         </Tab>
       </TabList>

@@ -35,6 +35,9 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
+import { validateUploadIsImageOrThrow } from "~/utils";
+import { s3 } from "~/lib/s3";
+import { images } from "~/db/schema/images";
 
 export const characterRoute = new Hono();
 
@@ -230,13 +233,73 @@ characterRoute.put("/:charId/notes", async (c) => {
 	}
 });
 
-
 // Primary Faction
 characterRoute.get("/:charId/factions/primary", async (c) => {
 	const charId = c.req.param("charId");
 	try {
 		const factionResult = await getCharactersPrimaryFaction(charId);
 		return c.json(factionResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                IMAGES
+////////////////////////////////////////////////////////////////////////////////
+
+characterRoute.post("/:charId/cover", async (c) => {
+	const charId = c.req.param("charId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: charId });
+		imageUrl = result.imageUrl;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		// could be a function shared with the service above
+		const update = await db
+			.update(characters)
+			.set({ coverImageUrl: imageUrl })
+			.where(eq(characters.id, charId))
+			.returning();
+
+		return successResponse(c, update);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.post("/:charId/images", async (c) => {
+	const charId = c.req.param("charId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	let imageId: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: charId });
+		imageUrl = result.imageUrl;
+		imageId = result.imageId;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		const imageResult = await db
+			.insert(images)
+			.values({ id: imageId, ownerId, characterId: charId, imageUrl })
+			.returning()
+			.then((result) => result[0]);
+
+		if (!imageResult) {
+			return handleDatabaseError(c, "image result not returned from database");
+		}
+
+		return successResponse(c, imageResult);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

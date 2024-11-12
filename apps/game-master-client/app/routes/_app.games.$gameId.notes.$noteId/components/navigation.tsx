@@ -22,10 +22,10 @@ export function NoteNavigation({ noteId, gameId }: NoteNavigationProps) {
         <Tab id={"/"} href={baseUrl}>
           Overview
         </Tab>
-        <Tab id={"/links"} href={`${baseUrl}/links`}>
+        <Tab id={"/links"} href={`${baseUrl}/links`} isDisabled>
           Links
         </Tab>
-        <Tab id={"/images"} href={`${baseUrl}/images`}>
+        <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>
           Images
         </Tab>
       </TabList>
