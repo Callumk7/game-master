@@ -9,6 +9,7 @@ import type {
 } from "../types/characters.js";
 import type { Faction, FactionWithMembers } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
+import type { Image } from "../types/images.js";
 import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
@@ -167,6 +168,38 @@ export class Characters {
 		return this.client.put<ServerResponse<{ noteIds: Id[] }>>(
 			`characters/${charId}/notes`,
 			{ noteIds },
+		);
+	}
+
+	async updateCoverImage(
+		charId: Id,
+		uploadStream: ReadableStream<Uint8Array>,
+		contentType: string,
+	) {
+		return this.client.postImage<ServerResponse<Character>>(
+			`characters/${charId}/cover`,
+			uploadStream,
+			{
+				headers: {
+					"Content-Type": contentType,
+				},
+			},
+		);
+	}
+
+	async uploadImage(
+		charId: Id,
+		uploadStream: ReadableStream<Uint8Array>,
+		contentType: string,
+	) {
+		return this.client.postImage<ServerResponse<Image>>(
+			`characters/${charId}/images`,
+			uploadStream,
+			{
+				headers: {
+					"Content-Type": contentType,
+				},
+			},
 		);
 	}
 }
