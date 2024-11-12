@@ -126,7 +126,7 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
         editor={editor}
         bordered
         label="Description"
-        className="min-h-64"
+        className="h-64"
       />
     </BaseCharacterForm>
   );

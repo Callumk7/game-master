@@ -63,7 +63,7 @@ export function CreateFactionForm({ gameId, close }: CreateFactionFormProps) {
         editor={editor}
         bordered
         label="Faction Description"
-        className="min-h-64"
+        className="h-64"
       />
     </BaseFactionForm>
   );
