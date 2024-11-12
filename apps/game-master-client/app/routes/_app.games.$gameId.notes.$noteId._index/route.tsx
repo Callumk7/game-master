@@ -4,7 +4,7 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { updateNote } from "./actions.server";
+import { updateLinks, updateNote } from "./actions.server";
 import { NoteIndexRoute } from "./notes-index-route";
 
 const getParams = (params: Params) => {
@@ -20,6 +20,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (request.method === "PATCH") {
     return await updateNote(request, api, noteId);
+  }
+
+  if (request.method === "PUT") {
+    return await updateLinks(request, api, noteId);
   }
 
   return methodNotAllowed();

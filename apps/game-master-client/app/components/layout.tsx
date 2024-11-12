@@ -5,7 +5,7 @@ import type { HTMLAttributes } from "react";
 const layoutVariants = cva("mx-auto", {
   variants: {
     padding: {
-      default: "p-2 pt-20",
+      default: "p-2 pt-4",
       none: "p-0",
     },
     grid: {

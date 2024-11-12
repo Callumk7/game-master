@@ -14,6 +14,7 @@ import {
 } from "remix-typedjson";
 import { getNoteData } from "./queries.server";
 import { NoteNavigation } from "./components/navigation";
+import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -36,6 +37,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const { api, userId } = await createApiFromReq(request);
   const { noteId } = getParams(params);
+  if (request.method === "PATCH") {
+    return await updateNote(request, api, noteId);
+  }
 
   if (request.method === "POST") {
     return await duplicateNote(request, api, noteId, userId);

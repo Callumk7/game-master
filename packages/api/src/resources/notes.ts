@@ -19,7 +19,7 @@ import type {
 } from "../types/notes.js";
 
 export class Notes {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	// DONE
 	async getNote(noteId: Id): Promise<Note> {
@@ -83,16 +83,44 @@ export class Notes {
 		);
 	}
 
-	// DONE
-	async linkNotes(
-		fromId: Id,
-		toIds: Id[],
-	): Promise<ServerResponse<{ fromId: Id; toIds: Id[] }>> {
+	link = Object.assign(
+		async (fromId: Id, toIds: Id[]) => {
+			return this.linkNotes(fromId, toIds);
+		},
+		{
+			characters: async (noteId: Id, charIds: Id[]) => {
+				return this.linkCharacters(noteId, charIds);
+			},
+			factions: async (noteId: Id, factionIds: Id[]) => {
+				return this.linkFactions(noteId, factionIds);
+			},
+			update: {
+				characters: async (noteId: Id, charIds: Id[]) => {
+					return this.updateLinkedCharacters(noteId, charIds);
+				},
+				factions: async (noteId: Id, factionIds: Id[]) => {
+					return this.updateLinkedFactions(noteId, factionIds);
+				},
+				notes: async (fromId: Id, toIds: Id[]) => {
+					return this.updateLinkedNotes(fromId, toIds);
+				},
+			},
+		},
+	);
+
+	async linkNotes(fromId: Id, noteIds: Id[]) {
 		return this.client.post<ServerResponse<{ fromId: Id; toIds: Id[] }>>(
 			`notes/${fromId}/links/notes`,
 			{
-				toIds,
+				noteIds,
 			},
+		);
+	}
+
+	async updateLinkedNotes(fromId: Id, noteIds: Id[]) {
+		return this.client.put<ServerResponse<{ fromId: Id; toIds: Id[] }>>(
+			`notes/${fromId}/links/notes`,
+			{ noteIds },
 		);
 	}
 

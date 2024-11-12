@@ -19,7 +19,7 @@ import type {
 import type { Note } from "../types/notes.js";
 
 export class Characters {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	getCharacter = Object.assign(
 		async (charId: Id) => {
@@ -47,6 +47,25 @@ export class Characters {
 			},
 		},
 	);
+
+	links = {
+		add: {
+			notes: async (charId: Id, noteIds: Id[]) => {
+				return this.linkNotes(charId, noteIds);
+			},
+			factions: async (charId: Id, factionIds: Id[]) => {
+				return this.linkFactions(charId, factionIds);
+			},
+		},
+		set: {
+			notes: async (charId: Id, noteIds: Id[]) => {
+				return this.updateLinkedNotes(charId, noteIds);
+			},
+			factions: async (charId: Id, factionIds: Id[]) => {
+				return this.updateLinkedFactions(charId, factionIds);
+			},
+		},
+	};
 
 	async getCharacterWithPermissions(charId: Id) {
 		return this.client.get<CharacterWithPermissions>(
@@ -112,6 +131,16 @@ export class Characters {
 		);
 	}
 
+	async updateLinkedFactions(
+		charId: Id,
+		factionIds: Id[],
+	): Promise<ServerResponse<{ factionIds: Id[] }>> {
+		return this.client.put<ServerResponse<{ factionIds: Id[] }>>(
+			`characters/${charId}/factions`,
+			{ factionIds },
+		);
+	}
+
 	async unlinkFaction(charId: Id, factionId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(
 			`characters/${charId}/factions/${factionId}`,
@@ -127,6 +156,15 @@ export class Characters {
 		noteIds: Id[],
 	): Promise<ServerResponse<{ noteIds: Id[] }>> {
 		return this.client.post<ServerResponse<{ noteIds: Id[] }>>(
+			`characters/${charId}/notes`,
+			{ noteIds },
+		);
+	}
+	async updateLinkedNotes(
+		charId: Id,
+		noteIds: Id[],
+	): Promise<ServerResponse<{ noteIds: Id[] }>> {
+		return this.client.put<ServerResponse<{ noteIds: Id[] }>>(
 			`characters/${charId}/notes`,
 			{ noteIds },
 		);

@@ -130,6 +130,24 @@ export const unlinkCharacterFromFaction = async (charId: string, factionId: stri
 		);
 };
 
+export const updateCharacterToFactionLinks = async (
+	charId: string,
+	factionIds: string[],
+) => {
+	const linkInsert = factionIds.map((id) => ({
+		characterId: charId,
+		factionId: id,
+	}));
+	await db
+		.delete(charactersInFactions)
+		.where(eq(charactersInFactions.characterId, charactersInFactions));
+	return await db
+		.insert(charactersInFactions)
+		.values(linkInsert)
+		.returning()
+		.onConflictDoNothing();
+};
+
 export const getCharacterNotes = async (charId: string) => {
 	return await db.query.notesOnCharacters
 		.findMany({
@@ -146,6 +164,19 @@ export const linkCharacterToNotes = async (charId: string, noteIds: string[]) =>
 		characterId: charId,
 		noteId: id,
 	}));
+	return await db
+		.insert(notesOnCharacters)
+		.values(linkInsert)
+		.returning()
+		.onConflictDoNothing();
+};
+
+export const updateCharacterNotes = async (charId: string, noteIds: string[]) => {
+	const linkInsert = noteIds.map((id) => ({
+		characterId: charId,
+		noteId: id,
+	}));
+	await db.delete(notesOnCharacters).where(eq(notesOnCharacters.characterId, charId));
 	return await db
 		.insert(notesOnCharacters)
 		.values(linkInsert)

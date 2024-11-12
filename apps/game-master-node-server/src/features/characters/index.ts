@@ -31,6 +31,8 @@ import {
 	linkCharacterToNotes,
 	unlinkCharacterFromFaction,
 	updateCharacter,
+	updateCharacterNotes,
+	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
 
@@ -174,6 +176,17 @@ characterRoute.post("/:charId/factions", async (c) => {
 	}
 });
 
+characterRoute.put("/:charId/factions", async (c) => {
+	const charId = c.req.param("charId");
+	const { factionIds } = await validateOrThrowError(linkFactionsSchema, c);
+	try {
+		const links = await updateCharacterToFactionLinks(charId, factionIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 characterRoute.delete("/:charId/factions/:factionId", async (c) => {
 	const { charId, factionId } = c.req.param();
 	try {
@@ -205,6 +218,18 @@ characterRoute.post("/:charId/notes", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
+
+characterRoute.put("/:charId/notes", async (c) => {
+	const charId = c.req.param("charId");
+	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
+	try {
+		const links = await updateCharacterNotes(charId, noteIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 
 // Primary Faction
 characterRoute.get("/:charId/factions/primary", async (c) => {

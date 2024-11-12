@@ -4,7 +4,7 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { linkNoteToCharacter, updateCharacter } from "./actions.server";
+import { updateCharacter, updateLinkedNotes } from "./actions.server";
 import { CharacterOverview } from "./character-overview";
 
 const getParams = (params: Params) => {
@@ -19,8 +19,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return await updateCharacter(request, api, charId);
   }
 
-  if (request.method === "POST") {
-    return await linkNoteToCharacter(request, api, charId);
+  if (request.method === "PUT") {
+    return await updateLinkedNotes(request, api, charId);
   }
 
   return methodNotAllowed();
