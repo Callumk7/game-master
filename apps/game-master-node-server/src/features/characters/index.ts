@@ -10,6 +10,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
+import { images } from "~/db/schema/images";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -19,11 +20,14 @@ import {
 } from "~/lib/http-helpers";
 import { generateCharacterId } from "~/lib/ids";
 import { getPayload } from "~/lib/jwt";
+import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
+import { validateUploadIsImageOrThrow } from "~/utils";
 import {
 	createCharacter,
 	createCharacterPermission,
 	getCharacterFactions,
+	getCharacterImages,
 	getCharacterNotes,
 	getCharacterWithPermissions,
 	getCharactersPrimaryFaction,
@@ -31,6 +35,8 @@ import {
 	linkCharacterToNotes,
 	unlinkCharacterFromFaction,
 	updateCharacter,
+	updateCharacterNotes,
+	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
 
@@ -174,6 +180,17 @@ characterRoute.post("/:charId/factions", async (c) => {
 	}
 });
 
+characterRoute.put("/:charId/factions", async (c) => {
+	const charId = c.req.param("charId");
+	const { factionIds } = await validateOrThrowError(linkFactionsSchema, c);
+	try {
+		const links = await updateCharacterToFactionLinks(charId, factionIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 characterRoute.delete("/:charId/factions/:factionId", async (c) => {
 	const { charId, factionId } = c.req.param();
 	try {
@@ -206,12 +223,94 @@ characterRoute.post("/:charId/notes", async (c) => {
 	}
 });
 
+characterRoute.put("/:charId/notes", async (c) => {
+	const charId = c.req.param("charId");
+	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
+	try {
+		const links = await updateCharacterNotes(charId, noteIds);
+		return successResponse(c, links);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 // Primary Faction
 characterRoute.get("/:charId/factions/primary", async (c) => {
 	const charId = c.req.param("charId");
 	try {
 		const factionResult = await getCharactersPrimaryFaction(charId);
 		return c.json(factionResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                IMAGES
+////////////////////////////////////////////////////////////////////////////////
+
+characterRoute.post("/:charId/cover", async (c) => {
+	const charId = c.req.param("charId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: charId });
+		imageUrl = result.imageUrl;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		// could be a function shared with the service above
+		const update = await db
+			.update(characters)
+			.set({ coverImageUrl: imageUrl })
+			.where(eq(characters.id, charId))
+			.returning();
+
+		return successResponse(c, update);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.post("/:charId/images", async (c) => {
+	const charId = c.req.param("charId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	let imageId: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: charId });
+		imageUrl = result.imageUrl;
+		imageId = result.imageId;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		const imageResult = await db
+			.insert(images)
+			.values({ id: imageId, ownerId, characterId: charId, imageUrl })
+			.returning()
+			.then((result) => result[0]);
+
+		if (!imageResult) {
+			return handleDatabaseError(c, "image result not returned from database");
+		}
+
+		return successResponse(c, imageResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.get("/:charId/images", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const charImages = await getCharacterImages(charId);
+		return c.json(charImages);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

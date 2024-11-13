@@ -62,6 +62,7 @@ export const notesOnFactions = pgTable(
 		factionId: text("faction_id")
 			.references(() => factions.id)
 			.notNull(),
+		label: text("label"),
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.noteId, t.factionId] }),

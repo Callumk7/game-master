@@ -16,7 +16,7 @@ export function GameNavbar() {
   const links = createLinks(params.gameId!);
   return (
     <nav
-      className="sticky z-40 flex top-0 w-full right-0 bg-background/80 backdrop-blur p-4 justify-between items-center"
+      className="sticky z-40 flex top-0 w-full border-b right-0 bg-background/80 backdrop-blur p-4 justify-between items-center"
       aria-label="Game navigation bar"
     >
       <div className="relative flex justify-between w-full items-center">
@@ -35,7 +35,7 @@ export function GameNavbar() {
             <Link
               key={link.label}
               href={link.href}
-              variant={pathname.endsWith(link.href) ? "secondary" : "ghost"}
+              variant={pathname.includes(link.href) ? "secondary" : "ghost"}
             >
               {link.label}
             </Link>

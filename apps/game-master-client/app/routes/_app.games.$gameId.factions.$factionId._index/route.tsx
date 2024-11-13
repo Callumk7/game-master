@@ -3,7 +3,7 @@ import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { updateFactionDetails } from "./actions.server";
-import { FactionIndex } from "./faction-index";
+import { FactionOverview } from "./faction-overview";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const { factionId } = parseParams(params, { factionId: z.string() });
@@ -11,4 +11,4 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return typedjson(result);
 };
 
-export { FactionIndex as default };
+export { FactionOverview as default };

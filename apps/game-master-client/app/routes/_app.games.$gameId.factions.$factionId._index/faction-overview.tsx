@@ -1,15 +1,28 @@
+import { CoverImage } from "~/components/cover-image";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Layout } from "~/components/layout";
 import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
+import { useImageUpload } from "~/hooks/image-uploader";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 
-export function FactionIndex() {
+export function FactionOverview() {
   const { factionDetails } = useFactionData();
   const { suggestionItems } = useGameData();
+
+  const fetcher = useImageUpload({
+    ownerId: factionDetails.ownerId,
+    entityId: factionDetails.id,
+    entityType: "factions",
+  });
+
   return (
-    <>
+    <Layout>
       <div>
+        {factionDetails.coverImageUrl && (
+          <CoverImage src={factionDetails.coverImageUrl} ratio="16/9" />
+        )}
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${factionDetails.userPermissionLevel}`}
         </Pill>
@@ -29,8 +42,9 @@ export function FactionIndex() {
         <EditorClient
           htmlContent={factionDetails.htmlContent ?? ""}
           suggestionItems={suggestionItems}
+          fetcher={fetcher}
         />
       )}
-    </>
+    </Layout>
   );
 }

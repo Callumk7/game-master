@@ -1,6 +1,7 @@
 import * as charactersSchema from "./schema/characters";
 import * as factionsSchema from "./schema/factions";
 import * as gamesSchema from "./schema/games";
+import * as imagesSchema from "./schema/images";
 import * as notesSchema from "./schema/notes";
 import * as usersSchema from "./schema/users";
 
@@ -16,5 +17,6 @@ export const db = drizzle(queryClient, {
 		...notesSchema,
 		...charactersSchema,
 		...factionsSchema,
+		...imagesSchema,
 	},
 });

@@ -97,7 +97,6 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (!editor) {
-      alert("No editor!"); // TODO: ????
       return null;
     }
 
@@ -123,7 +122,7 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
       setLevel={setLevel}
       onSubmit={handleSubmit}
     >
-      <EditorWithControls editor={editor} bordered label="Description" />
+      <EditorWithControls editor={editor} bordered label="Description" className="h-64" />
     </BaseCharacterForm>
   );
 }

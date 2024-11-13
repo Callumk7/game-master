@@ -20,10 +20,12 @@ export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
         <DialogContent side="right" className="sm:max-w-[425px]">
           {({ close }) => (
             <div className="max-h-[95vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Create Character</DialogTitle>
-              </DialogHeader>
-              <CreateCharacterForm gameId={gameId} close={close} />
+              <div className="p-[1px] space-y-6">
+                <DialogHeader>
+                  <DialogTitle>Create Character</DialogTitle>
+                </DialogHeader>
+                <CreateCharacterForm gameId={gameId} close={close} />
+              </div>
             </div>
           )}
         </DialogContent>

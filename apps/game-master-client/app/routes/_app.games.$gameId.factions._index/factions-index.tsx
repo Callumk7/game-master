@@ -1,6 +1,6 @@
 import { useTypedLoaderData } from "remix-typedjson";
-import { CreateFactionSlideover } from "~/components/forms/create-faction";
 import { FactionTable } from "~/components/tables/faction-table";
+import { CreateFactionSlideover } from "./components/create-faction-slideover";
 import type { loader } from "./route";
 
 export function FactionsIndex() {

@@ -36,6 +36,7 @@ export const notes = pgTable("notes", {
 		.notNull()
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
+	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
 		.notNull(),
@@ -65,7 +66,7 @@ export const notesRelations = relations(notes, ({ one, many }) => ({
 export const links = pgTable("links", {
 	fromId: text("from_id").notNull(),
 	toId: text("to_id").notNull(),
-	description: text("description"),
+	label: text("label"),
 });
 
 export const linksRelations = relations(links, ({ one }) => ({

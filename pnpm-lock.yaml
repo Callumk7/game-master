@@ -50,6 +50,12 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap-pro/extension-file-handler':
+        specifier: ^2.14.0
+        version: 2.14.0(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))(@tiptap/pm@2.5.6)
+      '@tiptap/extension-image':
+        specifier: ^2.9.1
+        version: 2.9.1(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))
       '@tiptap/extension-mention':
         specifier: 2.5.6
         version: 2.5.6(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))(@tiptap/pm@2.5.6)(@tiptap/suggestion@2.5.6(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))(@tiptap/pm@2.5.6))
@@ -3223,6 +3229,12 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
+  '@tiptap-pro/extension-file-handler@2.14.0':
+    resolution: {integrity: sha512-EaVyhHayEdGNLL5oAovNfS3p1sKp3DBsAu9PY3Fq3P9ozesZANKsA4erOQRcZOlnyCgCb4H+VxafwUedbFmxpw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+
   '@tiptap/core@2.7.3':
     resolution: {integrity: sha512-6b62isitaWRX6cR6V5x4O9+1lgCpoTNRrSegWwBrE1OGDHcGwdTZuzdNIbjLZ9k3qs4tXl49WKXHIXK44RDOIw==}
     peerDependencies:
@@ -3304,6 +3316,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
       '@tiptap/pm': ^2.7.0
+
+  '@tiptap/extension-image@2.9.1':
+    resolution: {integrity: sha512-aGqJnsuS8oagIhsx7wetm8jw4NEDsOV0OSx4FQ4VPlUqWlnzK0N+erFKKJmXTdAxL8PGzoPSlITFH63MV3eV3Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
 
   '@tiptap/extension-italic@2.7.3':
     resolution: {integrity: sha512-qMX5LjMTdPpSDp4VIpSOY0d6bB6m4CJepGlMVrQEfUEj9uMPZZxD0cME+63r/J4yIrmMCR+GJyjOu5erdYp3JA==}
@@ -10484,6 +10501,11 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.0
 
+  '@tiptap-pro/extension-file-handler@2.14.0(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))(@tiptap/pm@2.5.6)':
+    dependencies:
+      '@tiptap/core': 2.7.3(@tiptap/pm@2.5.6)
+      '@tiptap/pm': 2.5.6
+
   '@tiptap/core@2.7.3(@tiptap/pm@2.5.6)':
     dependencies:
       '@tiptap/pm': 2.5.6
@@ -10552,6 +10574,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.7.3(@tiptap/pm@2.5.6)
       '@tiptap/pm': 2.5.6
+
+  '@tiptap/extension-image@2.9.1(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))':
+    dependencies:
+      '@tiptap/core': 2.7.3(@tiptap/pm@2.5.6)
 
   '@tiptap/extension-italic@2.7.3(@tiptap/core@2.7.3(@tiptap/pm@2.5.6))':
     dependencies:

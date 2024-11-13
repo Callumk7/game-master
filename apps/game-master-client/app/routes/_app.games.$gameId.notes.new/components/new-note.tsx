@@ -24,6 +24,7 @@ export function NewNoteEditor({ userId, gameId, action }: NewNoteEditorProps) {
       content: editor?.getText() ?? "",
       htmlContent: editor?.getHTML() ?? "",
       type: "note",
+      visibility: "private",
     };
     fetcher.submit(newNoteInsert, { method: "post", action });
   };

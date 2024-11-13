@@ -1,4 +1,5 @@
 import { Outlet } from "@remix-run/react";
+import { useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { FactionNavigation } from "./components/navigation";
@@ -6,9 +7,10 @@ import type { loader } from "./route";
 
 export function FactionLayout() {
   const { factionDetails, folders } = useTypedLoaderData<typeof loader>();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
-      <div className="flex items-center w-full justify-between">
+      <div className="sticky top-[86px] z-20 flex items-center w-full justify-between">
         <FactionNavigation gameId={factionDetails.gameId} factionId={factionDetails.id} />
         <EntityToolbar
           entityOwnerId={factionDetails.ownerId}
@@ -17,6 +19,7 @@ export function FactionLayout() {
           permissions={factionDetails.permissions}
           userPermissionLevel={factionDetails.userPermissionLevel!}
           folders={folders}
+          setIsEditDialogOpen={setIsEditDialogOpen}
         />
       </div>
       <Outlet />

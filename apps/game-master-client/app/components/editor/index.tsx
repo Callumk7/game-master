@@ -1,5 +1,6 @@
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
 import type { FormMethod } from "@remix-run/react";
+import Image from "@tiptap/extension-image";
 import Typography from "@tiptap/extension-typography";
 import {
   BubbleMenu,
@@ -18,6 +19,7 @@ import { useSyncEditorContent } from "./sync";
 import Fuse from "fuse.js";
 import { useIsClient } from "~/hooks/is-client";
 import type { MentionItem } from "~/types/mentions";
+import { CustomFileHandler } from "./extensions/file-upload";
 import { CustomMention } from "./extensions/mention-extension";
 import { suggestion } from "./util/suggestion";
 
@@ -28,8 +30,18 @@ export const useDefaultEditor = (
   content?: string | undefined,
   suggestionItems?: () => MentionItem[],
   editable = true,
+  fetcher?: (file: File) => Promise<string>,
 ) => {
-  const extensions: Extensions = [StarterKit, Typography];
+  const extensions: Extensions = [
+    StarterKit,
+    Image.configure({
+      HTMLAttributes: {
+        class: "rounded-md border overflow-hidden",
+      },
+    }),
+    Typography,
+    CustomFileHandler(fetcher),
+  ];
   if (suggestionItems) {
     extensions.push(
       CustomMention.configure({
@@ -66,22 +78,26 @@ interface EditorBodyProps {
   suggestionItems: () => MentionItem[];
   action?: string;
   method?: FormMethod;
+  fetcher?: (file: File) => Promise<string>;
 }
 export function EditorBody({
   htmlContent,
   action,
   method,
   suggestionItems,
+  fetcher,
 }: EditorBodyProps) {
   const { editor, isEdited, status, saveContent } = useSyncEditorContent({
     initContent: htmlContent,
     suggestionItems,
     action,
     method,
+    fetcher,
   });
 
   return (
     <div className="editor">
+      <EditorWithControls editor={editor} />
       <Toolbar className={"flex p-2"}>
         <Button
           size={"sm"}
@@ -92,7 +108,6 @@ export function EditorBody({
           {isEdited ? "Save" : "Content Saved"}
         </Button>
       </Toolbar>
-      <EditorWithControls editor={editor} />
     </div>
   );
 }

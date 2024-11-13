@@ -1,6 +1,5 @@
-import { useNavigate } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { Toolbar } from "~/components/ui/toolbar";
+import { useLocation } from "@remix-run/react";
+import { Tab, TabList, Tabs } from "~/components/ui/tabs";
 import { factionHref } from "~/util/generate-hrefs";
 
 interface FactionNavigationProps {
@@ -9,26 +8,27 @@ interface FactionNavigationProps {
 }
 
 export function FactionNavigation({ factionId, gameId }: FactionNavigationProps) {
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  let selectedKey = "/";
+  if (pathname.endsWith("/members")) selectedKey = "/members";
+  if (pathname.endsWith("/relations")) selectedKey = "/relations";
+  const baseUrl = factionHref(gameId, factionId);
   return (
-    <nav>
-      <Toolbar>
-        <Button variant={"link"} onPress={() => navigate(factionHref(gameId, factionId))}>
+    <Tabs selectedKey={selectedKey}>
+      <TabList>
+        <Tab id={"/"} href={baseUrl}>
           Overview
-        </Button>
-        <Button
-          variant={"link"}
-          onPress={() => navigate("members", { relative: "path" })}
-        >
+        </Tab>
+        <Tab id={"/members"} href={`${baseUrl}/members`}>
           Members
-        </Button>
-        <Button
-          variant={"link"}
-          onPress={() => navigate("relations", { relative: "path" })}
-        >
+        </Tab>
+        <Tab id={"/relations"} href={`${baseUrl}/relations`} isDisabled>
           Relations
-        </Button>
-      </Toolbar>
-    </nav>
+        </Tab>
+        <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>
+          Images
+        </Tab>
+      </TabList>
+    </Tabs>
   );
 }

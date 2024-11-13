@@ -1,16 +1,15 @@
 import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createApiFromReq } from "~/lib/api.server";
+import { getContentType } from "~/util/get-content-type";
 import { badRequest, unsuccessfulResponse } from "~/util/responses";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-	const userId = await validateUser(request);
-	const api = createApi(userId);
-	const { noteId } = parseParams(params, { noteId: z.string() });
+	const { api } = await createApiFromReq(request);
+	const { charId } = parseParams(params, { charId: z.string() });
 	if (request.method === "POST") {
-		const contentType = request.headers.get("Content-Type"); // TODO: should be a shared function
+		const contentType = getContentType(request);
 		const uploadStream = request.body;
 
 		if (!contentType) {
@@ -22,8 +21,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		}
 
 		// forward the request to the server
-		const serverResponse = await api.notes.uploadImage(
-			noteId,
+		const serverResponse = await api.characters.updateCoverImage(
+			charId,
 			uploadStream,
 			contentType,
 		);

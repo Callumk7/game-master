@@ -1,3 +1,4 @@
+import { PlusIcon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { type ChangeEvent, useRef, useState } from "react";
 import { Button } from "./ui/button";
@@ -33,12 +34,12 @@ export function ImageUploader({ action, ownerId }: ImageUploaderProps) {
       {fileName ? (
         <div className="flex items-center gap-2">
           <Button type="submit" variant={"outline"}>
-            Upload
+            Confirm
           </Button>
         </div>
       ) : (
         <Button onPress={simulateInputClick} variant={"secondary"}>
-          Upload cover image
+          <PlusIcon className="mr-2" /> <span>Upload</span>
         </Button>
       )}
     </fetcher.Form>

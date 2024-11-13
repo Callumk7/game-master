@@ -188,6 +188,25 @@ notesRoute.post("/:noteId/links/notes", async (c) => {
 	}
 });
 
+// Replace all links
+notesRoute.put("/:noteId/links/notes", async (c) => {
+	const fromId = c.req.param("noteId");
+	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
+
+	try {
+		const linkInsert = noteIds.map((id) => ({ fromId, toId: id }));
+		await db.delete(links).where(eq(links.fromId, fromId));
+		const result = await db
+			.insert(links)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
 notesRoute.get("/:noteId/links/characters", async (c) => {
 	const noteId = c.req.param("noteId");
 
@@ -212,6 +231,27 @@ notesRoute.post("/:noteId/links/characters", async (c) => {
 
 	try {
 		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
+		const result = await db
+			.insert(notesOnCharacters)
+			.values(linkInsert)
+			.returning()
+			.onConflictDoNothing();
+		return c.json(result);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+// Replace all links
+notesRoute.put("/:noteId/links/characters", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
+
+	console.log(characterIds);
+
+	try {
+		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
+		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
 		const result = await db
 			.insert(notesOnCharacters)
 			.values(linkInsert)
@@ -253,27 +293,6 @@ notesRoute.post("/:noteId/links/factions", async (c) => {
 			.returning()
 			.onConflictDoNothing();
 		return c.json(result); // TODO: should be success response
-	} catch (error) {
-		return handleDatabaseError(c, error);
-	}
-});
-
-// Replace all links
-notesRoute.put("/:noteId/links/characters", async (c) => {
-	const noteId = c.req.param("noteId");
-	const { characterIds } = await validateOrThrowError(linkCharactersSchema, c);
-
-	console.log(characterIds);
-
-	try {
-		const linkInsert = characterIds.map((id) => ({ noteId, characterId: id }));
-		await db.delete(notesOnCharacters).where(eq(notesOnCharacters.noteId, noteId));
-		const result = await db
-			.insert(notesOnCharacters)
-			.values(linkInsert)
-			.returning()
-			.onConflictDoNothing();
-		return c.json(result);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
@@ -329,6 +348,32 @@ notesRoute.post("/:noteId/images", async (c) => {
 		}
 
 		return successResponse(c, imageResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+notesRoute.post("/:noteId/cover", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: noteId });
+		imageUrl = result.imageUrl;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		// could be a function shared with the service above
+		const update = await db
+			.update(notes)
+			.set({ coverImageUrl: imageUrl })
+			.where(eq(notes.id, noteId))
+			.returning();
+
+		return successResponse(c, update);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

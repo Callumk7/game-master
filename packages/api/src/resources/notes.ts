@@ -83,16 +83,44 @@ export class Notes {
 		);
 	}
 
-	// DONE
-	async linkNotes(
-		fromId: Id,
-		toIds: Id[],
-	): Promise<ServerResponse<{ fromId: Id; toIds: Id[] }>> {
+	link = Object.assign(
+		async (fromId: Id, toIds: Id[]) => {
+			return this.linkNotes(fromId, toIds);
+		},
+		{
+			characters: async (noteId: Id, charIds: Id[]) => {
+				return this.linkCharacters(noteId, charIds);
+			},
+			factions: async (noteId: Id, factionIds: Id[]) => {
+				return this.linkFactions(noteId, factionIds);
+			},
+			update: {
+				characters: async (noteId: Id, charIds: Id[]) => {
+					return this.updateLinkedCharacters(noteId, charIds);
+				},
+				factions: async (noteId: Id, factionIds: Id[]) => {
+					return this.updateLinkedFactions(noteId, factionIds);
+				},
+				notes: async (fromId: Id, toIds: Id[]) => {
+					return this.updateLinkedNotes(fromId, toIds);
+				},
+			},
+		},
+	);
+
+	async linkNotes(fromId: Id, noteIds: Id[]) {
 		return this.client.post<ServerResponse<{ fromId: Id; toIds: Id[] }>>(
 			`notes/${fromId}/links/notes`,
 			{
-				toIds,
+				noteIds,
 			},
+		);
+	}
+
+	async updateLinkedNotes(fromId: Id, noteIds: Id[]) {
+		return this.client.put<ServerResponse<{ fromId: Id; toIds: Id[] }>>(
+			`notes/${fromId}/links/notes`,
+			{ noteIds },
 		);
 	}
 
@@ -156,6 +184,32 @@ export class Notes {
 		const body: FolderInteractionRequestBody = { entityId: noteId };
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
+
+	images = {
+		upload: async (
+			noteId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.uploadImage(noteId, uploadStream, contentType);
+		},
+
+		updateCover: async (
+			noteId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.client.postImage<ServerResponse<Note>>(
+				`notes/${noteId}/cover`,
+				uploadStream,
+				{
+					headers: {
+						"Content-Type": contentType,
+					},
+				},
+			);
+		},
+	};
 
 	async uploadImage(
 		noteId: Id,
