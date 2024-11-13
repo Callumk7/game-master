@@ -79,8 +79,8 @@ const createLinks = (gameId: string) => {
       href: `/games/${gameId}/factions`,
     },
     {
-      label: "Collections",
-      href: `/games/${gameId}/collections`,
+      label: "Folders",
+      href: `/games/${gameId}/folders`,
     },
   ];
 };
