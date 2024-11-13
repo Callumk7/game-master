@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       folderId: z.string(),
     });
 
-    const result = await api.folders.updateFolder(folderId, {name, parentFolderId})
+    const result = await api.folders.updateFolder(folderId, { name, parentFolderId });
     return typedjson(result);
   }
   if (request.method === "DELETE") {

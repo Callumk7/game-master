@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 import { EditFolderDialog } from "./edit-folder-dialog";
 
 interface FolderControlsProps {
-  folder: Folder
+  folder: Folder;
   allFolders: Folder[];
 }
 
