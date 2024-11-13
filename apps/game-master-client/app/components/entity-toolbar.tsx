@@ -132,7 +132,7 @@ export function EntityMenu({
         method="POST"
         encType="multipart/form-data"
         onSubmit={handleSubmitCleanup}
-        action="images"
+        action="cover"
       >
         <input
           type="file"

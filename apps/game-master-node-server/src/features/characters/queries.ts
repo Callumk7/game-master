@@ -13,6 +13,7 @@ import {
 	charactersPermissions,
 	notesOnCharacters,
 } from "~/db/schema/characters";
+import { images } from "~/db/schema/images";
 
 export const createCharacter = async (insert: InsertDatabaseCharacter) => {
 	const newCharResult = await db
@@ -215,4 +216,10 @@ export const getCharactersPrimaryFaction = async (
 	}
 
 	return charFactionResult;
+};
+
+export const getCharacterImages = async (charId: string) => {
+	return await db.query.images.findMany({
+		where: eq(images.characterId, charId),
+	});
 };

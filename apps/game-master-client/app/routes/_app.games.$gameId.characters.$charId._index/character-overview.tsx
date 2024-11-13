@@ -15,7 +15,6 @@ export function CharacterOverview() {
 
   const fetcher = useImageUpload({
     ownerId: characterDetails.ownerId,
-    gameId: characterDetails.gameId,
     entityId: characterDetails.id,
     entityType: "characters",
   });

@@ -7,7 +7,7 @@ import { badRequest, unsuccessfulResponse } from "~/util/responses";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
 	const { api } = await createApiFromReq(request);
-	const { noteId } = parseParams(params, { noteId: z.string() });
+	const { factionId } = parseParams(params, { factionId: z.string() });
 	if (request.method === "POST") {
 		const contentType = getContentType(request);
 		const uploadStream = request.body;
@@ -21,8 +21,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		}
 
 		// forward the request to the server
-		const serverResponse = await api.notes.uploadImage(
-			noteId,
+		const serverResponse = await api.factions.updateCoverImage(
+			factionId,
 			uploadStream,
 			contentType,
 		);

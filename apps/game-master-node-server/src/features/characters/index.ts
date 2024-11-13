@@ -24,6 +24,7 @@ import {
 	createCharacter,
 	createCharacterPermission,
 	getCharacterFactions,
+	getCharacterImages,
 	getCharacterNotes,
 	getCharacterWithPermissions,
 	getCharactersPrimaryFaction,
@@ -300,6 +301,16 @@ characterRoute.post("/:charId/images", async (c) => {
 		}
 
 		return successResponse(c, imageResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+characterRoute.get("/:charId/images", async (c) => {
+	const charId = c.req.param("charId");
+	try {
+		const charImages = await getCharacterImages(charId);
+		return c.json(charImages);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

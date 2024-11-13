@@ -12,6 +12,7 @@ import {
 	factions,
 	factionsPermissions,
 } from "~/db/schema/factions";
+import { images } from "~/db/schema/images";
 
 export const createFaction = async (factionInsert: InsertDatabaseFaction) => {
 	const newFaction = await db
@@ -104,4 +105,10 @@ export async function getFactionMembers(factionId: string): Promise<FactionMembe
 	});
 
 	return result.map((row) => ({ ...row.character, role: row.role }));
+}
+
+export async function getFactionImages(factionId: string) {
+	return await db.query.images.findMany({
+		where: eq(images.factionId, factionId),
+	});
 }

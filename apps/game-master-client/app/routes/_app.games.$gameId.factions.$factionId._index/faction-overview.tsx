@@ -4,13 +4,25 @@ import { EditableText } from "~/components/ui/typeography";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 import { Layout } from "~/components/layout";
+import { CoverImage } from "~/components/cover-image";
+import { useImageUpload } from "~/hooks/image-uploader";
 
 export function FactionOverview() {
   const { factionDetails } = useFactionData();
   const { suggestionItems } = useGameData();
+
+  const fetcher = useImageUpload({
+    ownerId: factionDetails.ownerId,
+    entityId: factionDetails.id,
+    entityType: "factions",
+  });
+
   return (
     <Layout>
       <div>
+        {factionDetails.coverImageUrl && (
+          <CoverImage src={factionDetails.coverImageUrl} ratio="16/9" />
+        )}
         <Pill size={"xs"} variant={"secondary"}>
           {`permission level: ${factionDetails.userPermissionLevel}`}
         </Pill>
@@ -30,6 +42,7 @@ export function FactionOverview() {
         <EditorClient
           htmlContent={factionDetails.htmlContent ?? ""}
           suggestionItems={suggestionItems}
+          fetcher={fetcher}
         />
       )}
     </Layout>

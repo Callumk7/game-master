@@ -21,11 +21,15 @@ import { PermissionService } from "~/services/permissions";
 import {
 	createFaction,
 	createFactionPermission,
+	getFactionImages,
 	getFactionMembers,
 	getFactionWithPermissions,
 	updateFaction,
 } from "./queries";
 import { createFactionInsert } from "./util";
+import { validateUploadIsImageOrThrow } from "~/utils";
+import { s3 } from "~/lib/s3";
+import { images } from "~/db/schema/images";
 
 export const factionRoute = new Hono();
 
@@ -146,6 +150,77 @@ factionRoute.get("/:factionId/members", async (c) => {
 	try {
 		const factionMembersResult = await getFactionMembers(factionId);
 		return c.json(factionMembersResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                IMAGES
+////////////////////////////////////////////////////////////////////////////////
+
+factionRoute.post("/:factionId/cover", async (c) => {
+	const factionId = c.req.param("factionId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: factionId });
+		imageUrl = result.imageUrl;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		// could be a function shared with the service above
+		const update = await db
+			.update(factions)
+			.set({ coverImageUrl: imageUrl })
+			.where(eq(factions.id, factionId))
+			.returning();
+
+		return successResponse(c, update);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.post("/:factionId/images", async (c) => {
+	const factionId = c.req.param("factionId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	let imageId: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: factionId });
+		imageUrl = result.imageUrl;
+		imageId = result.imageId;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		const imageResult = await db
+			.insert(images)
+			.values({ id: imageId, ownerId, factionId: factionId, imageUrl })
+			.returning()
+			.then((result) => result[0]);
+
+		if (!imageResult) {
+			return handleDatabaseError(c, "image result not returned from database");
+		}
+
+		return successResponse(c, imageResult);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+factionRoute.get("/:factionId/images", async (c) => {
+	const factionId = c.req.param("factionId");
+	try {
+		const factionImages = await getFactionImages(factionId);
+		return c.json(factionImages)
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

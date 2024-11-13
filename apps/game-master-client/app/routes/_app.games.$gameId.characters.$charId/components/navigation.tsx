@@ -28,7 +28,7 @@ export function CharacterNavigation({ charId, gameId }: CharacterNavigationProps
         <Tab id={"/relations"} href={`${baseUrl}/relations`} isDisabled>
           Relations
         </Tab>
-        <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>
+        <Tab id={"/images"} href={`${baseUrl}/images`}>
           Images
         </Tab>
       </TabList>

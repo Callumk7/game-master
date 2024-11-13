@@ -6,8 +6,7 @@ import { getContentType } from "~/util/get-content-type";
 import { badRequest, unsuccessfulResponse } from "~/util/responses";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-	const { charId } = parseParams(params, { charId: z.string() });
-
+	const {factionId} = parseParams(params, {factionId: z.string()});
 	const { api } = await createApiFromReq(request);
 	const contentType = getContentType(request);
 	const uploadStream = request.body;
@@ -19,7 +18,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	if (!uploadStream) {
 		return badRequest("request does not contain an upload stream");
 	}
-	const response = await api.characters.uploadImage(charId, uploadStream, contentType);
+	const response = await api.factions.uploadImage(factionId, uploadStream, contentType);
 
 	if (!response.success) {
 		return unsuccessfulResponse("Server failed to upload image");

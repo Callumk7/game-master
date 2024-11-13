@@ -17,9 +17,10 @@ import type {
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
+import type { Image } from "../types/images.js";
 
 export class Factions {
-	constructor(private client: Client) {}
+	constructor(private client: Client) { }
 
 	getFaction = Object.assign(
 		async (factionId: Id) => {
@@ -102,5 +103,59 @@ export class Factions {
 	async moveToFolder(factionId: Id, folderId: Id): Promise<BasicServerResponse> {
 		const body: FolderInteractionRequestBody = { entityId: factionId };
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
+	}
+
+	images = {
+		updateCoverImage: async (
+			factionId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.updateCoverImage(factionId, uploadStream, contentType);
+		},
+
+		upload: async (
+			factionId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.uploadImage(factionId, uploadStream, contentType);
+		},
+
+		getAll: async (factionId: Id) => {
+			return this.client.get<Image[]>(`factions/${factionId}/images`);
+		},
+	};
+
+	async updateCoverImage(
+		factionId: Id,
+		uploadStream: ReadableStream<Uint8Array>,
+		contentType: string,
+	) {
+		return this.client.postImage<ServerResponse<Faction>>(
+			`factions/${factionId}/cover`,
+			uploadStream,
+			{
+				headers: {
+					"Content-Type": contentType,
+				},
+			},
+		);
+	}
+
+	async uploadImage(
+		factionId: Id,
+		uploadStream: ReadableStream<Uint8Array>,
+		contentType: string,
+	) {
+		return this.client.postImage<ServerResponse<Image>>(
+			`factions/${factionId}/images`,
+			uploadStream,
+			{
+				headers: {
+					"Content-Type": contentType,
+				},
+			},
+		);
 	}
 }

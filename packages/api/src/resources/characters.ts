@@ -68,6 +68,28 @@ export class Characters {
 		},
 	};
 
+	images = {
+		updateCoverImage: async (
+			charId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.updateCoverImage(charId, uploadStream, contentType);
+		},
+
+		upload: async (
+			charId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.uploadImage(charId, uploadStream, contentType);
+		},
+
+		getAll: async (charId: Id) => {
+			return this.client.get<Image[]>(`characters/${charId}/images`);
+		},
+	};
+
 	async getCharacterWithPermissions(charId: Id) {
 		return this.client.get<CharacterWithPermissions>(
 			`characters/${charId}/permissions`,

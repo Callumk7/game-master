@@ -3,6 +3,7 @@ import * as factionsSchema from "./schema/factions";
 import * as gamesSchema from "./schema/games";
 import * as notesSchema from "./schema/notes";
 import * as usersSchema from "./schema/users";
+import * as imagesSchema from "./schema/images";
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -16,5 +17,6 @@ export const db = drizzle(queryClient, {
 		...notesSchema,
 		...charactersSchema,
 		...factionsSchema,
+		...imagesSchema,
 	},
 });
