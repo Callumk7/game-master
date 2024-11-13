@@ -16,7 +16,6 @@ import { JollyTextField } from "~/components/ui/textfield";
 import { Toolbar } from "~/components/ui/toolbar";
 import { useGetGameWithMembers } from "~/queries/get-game-with-members";
 import { useAppData } from "~/routes/_app/route";
-import { ImageUploader } from "./image-uploader";
 import {
   DialogContent,
   DialogDescription,
