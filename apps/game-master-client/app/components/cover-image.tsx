@@ -1,5 +1,5 @@
 import { cn } from "callum-util";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CoverImageProps {
   src: string;
@@ -23,12 +23,26 @@ export function CoverImage({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  // Map aspect ratios to percentage for padding trick
   const aspectRatios = {
     square: "100%",
     "4/3": "75%",
     "16/9": "56.25%",
   };
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = src;
+
+    if (image.complete) {
+      setIsLoading(false);
+      onLoad?.();
+    }
+
+    return () => {
+      image.onload = null;
+      image.onerror = null;
+    };
+  }, [src, onLoad]);
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -50,9 +64,7 @@ export function CoverImage({
     >
       {!hasError ? (
         <picture>
-          {/* Modern format support */}
           <source srcSet={src.replace(/\.(jpg|png)$/, ".webp")} type="image/webp" />
-
           <img
             src={src}
             alt={alt}
