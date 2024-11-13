@@ -3,14 +3,23 @@ import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
 import { useGameData } from "../_app.games.$gameId/route";
-import { Layout, MainGrid, SideGrid } from "~/components/layout";
+import { Layout } from "~/components/layout";
 import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
 import { LinkNotesPopover } from "~/components/linking/link-notes";
 import { CoverImage } from "~/components/cover-image";
+import { useImageUpload } from "~/hooks/image-uploader";
 
 export function CharacterOverview() {
   const { characterDetails, charNotes } = useCharacterData();
   const { suggestionItems, notes } = useGameData();
+
+  const fetcher = useImageUpload({
+    ownerId: characterDetails.ownerId,
+    gameId: characterDetails.gameId,
+    entityId: characterDetails.id,
+    entityType: "characters",
+  });
+
   return (
     <Layout width={"full"}>
       <div className="grid grid-cols-5 gap-4">
@@ -20,7 +29,7 @@ export function CharacterOverview() {
         </LinksAside>
         <div className="col-span-4">
           {characterDetails.coverImageUrl && (
-            <CoverImage src={characterDetails.coverImageUrl} ratio="4/3" />
+            <CoverImage src={characterDetails.coverImageUrl} ratio="16/9" />
           )}
           <Pill size={"xs"} variant={"secondary"}>
             {`permission level: ${characterDetails.userPermissionLevel}`}
@@ -45,6 +54,7 @@ export function CharacterOverview() {
             <EditorClient
               htmlContent={characterDetails.htmlContent ?? ""}
               suggestionItems={suggestionItems}
+              fetcher={fetcher}
             />
           )}
         </div>
