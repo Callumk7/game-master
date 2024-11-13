@@ -1,10 +1,10 @@
-import { Popover, PopoverDialog, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
+import { useSubmit } from "@remix-run/react";
 import type { BasicEntity } from "@repo/api";
-import { GridList, GridListItem } from "../ui/grid-list";
 import { useState } from "react";
 import type { Selection } from "react-aria-components";
-import { useSubmit } from "@remix-run/react";
+import { Button } from "../ui/button";
+import { GridList, GridListItem } from "../ui/grid-list";
+import { Popover, PopoverDialog, PopoverTrigger } from "../ui/popover";
 
 interface LinkNotesPopoverProps {
   allNotes: BasicEntity[];
@@ -26,7 +26,9 @@ export function LinkNotesPopover({ allNotes, entityNotes }: LinkNotesPopoverProp
 
   return (
     <PopoverTrigger>
-      <Button variant={"outline"} size={"sm"}>Edit</Button>
+      <Button variant={"outline"} size={"sm"}>
+        Edit
+      </Button>
       <Popover>
         <PopoverDialog className="space-y-2">
           {({ close }) => (

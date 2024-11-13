@@ -1,5 +1,5 @@
 import { cn } from "callum-util";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface CoverImageProps {
   src: string;

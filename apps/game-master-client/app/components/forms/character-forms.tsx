@@ -122,12 +122,7 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
       setLevel={setLevel}
       onSubmit={handleSubmit}
     >
-      <EditorWithControls
-        editor={editor}
-        bordered
-        label="Description"
-        className="h-64"
-      />
+      <EditorWithControls editor={editor} bordered label="Description" className="h-64" />
     </BaseCharacterForm>
   );
 }

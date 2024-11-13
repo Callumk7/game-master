@@ -1,12 +1,12 @@
+import { CoverImage } from "~/components/cover-image";
 import { EditorClient, EditorPreview } from "~/components/editor";
-import { Pill } from "~/components/pill";
-import { EditableText } from "~/components/ui/typeography";
-import { useGameData } from "../_app.games.$gameId/route";
-import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
 import { Layout } from "~/components/layout";
 import { LinkNotesPopover } from "~/components/linking/link-notes";
 import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
-import { CoverImage } from "~/components/cover-image";
+import { Pill } from "~/components/pill";
+import { EditableText } from "~/components/ui/typeography";
+import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
+import { useGameData } from "../_app.games.$gameId/route";
 
 export function NoteIndexRoute() {
   const { note, folders, linkedNotes } = useNoteData();

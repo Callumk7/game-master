@@ -1,7 +1,7 @@
+import { PlusIcon } from "@radix-ui/react-icons";
 import { useFetcher } from "@remix-run/react";
 import { type ChangeEvent, useRef, useState } from "react";
 import { Button } from "./ui/button";
-import { PlusIcon } from "@radix-ui/react-icons";
 
 interface ImageUploaderProps {
   action?: string;

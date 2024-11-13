@@ -30,4 +30,3 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export { NoteIndexRoute as default };
-

@@ -88,7 +88,7 @@ export const notesOnCharacters = pgTable(
 		characterId: text("character_id")
 			.references(() => characters.id)
 			.notNull(),
-		label: text("label")
+		label: text("label"),
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.noteId, t.characterId] }),

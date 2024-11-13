@@ -193,7 +193,6 @@ notesRoute.put("/:noteId/links/notes", async (c) => {
 	const fromId = c.req.param("noteId");
 	const { noteIds } = await validateOrThrowError(linkNotesSchema, c);
 
-
 	try {
 		const linkInsert = noteIds.map((id) => ({ fromId, toId: id }));
 		await db.delete(links).where(eq(links.fromId, fromId));
@@ -207,7 +206,6 @@ notesRoute.put("/:noteId/links/notes", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
-
 
 notesRoute.get("/:noteId/links/characters", async (c) => {
 	const noteId = c.req.param("noteId");

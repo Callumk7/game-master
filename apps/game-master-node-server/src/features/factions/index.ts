@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { factions } from "~/db/schema/factions";
+import { images } from "~/db/schema/images";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -17,7 +18,9 @@ import {
 } from "~/lib/http-helpers";
 import { generateFactionId } from "~/lib/ids";
 import { getPayload } from "~/lib/jwt";
+import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
+import { validateUploadIsImageOrThrow } from "~/utils";
 import {
 	createFaction,
 	createFactionPermission,
@@ -27,9 +30,6 @@ import {
 	updateFaction,
 } from "./queries";
 import { createFactionInsert } from "./util";
-import { validateUploadIsImageOrThrow } from "~/utils";
-import { s3 } from "~/lib/s3";
-import { images } from "~/db/schema/images";
 
 export const factionRoute = new Hono();
 
@@ -220,7 +220,7 @@ factionRoute.get("/:factionId/images", async (c) => {
 	const factionId = c.req.param("factionId");
 	try {
 		const factionImages = await getFactionImages(factionId);
-		return c.json(factionImages)
+		return c.json(factionImages);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

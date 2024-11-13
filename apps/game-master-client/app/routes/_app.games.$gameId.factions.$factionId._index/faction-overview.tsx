@@ -1,11 +1,11 @@
+import { CoverImage } from "~/components/cover-image";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Layout } from "~/components/layout";
 import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
+import { useImageUpload } from "~/hooks/image-uploader";
 import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { useGameData } from "../_app.games.$gameId/route";
-import { Layout } from "~/components/layout";
-import { CoverImage } from "~/components/cover-image";
-import { useImageUpload } from "~/hooks/image-uploader";
 
 export function FactionOverview() {
   const { factionDetails } = useFactionData();

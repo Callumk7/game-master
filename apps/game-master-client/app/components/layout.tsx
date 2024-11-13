@@ -1,5 +1,5 @@
 import { cn } from "callum-util";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 
 const layoutVariants = cva("mx-auto", {

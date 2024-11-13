@@ -19,7 +19,7 @@ import type {
 } from "../types/notes.js";
 
 export class Notes {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	// DONE
 	async getNote(noteId: Id): Promise<Note> {

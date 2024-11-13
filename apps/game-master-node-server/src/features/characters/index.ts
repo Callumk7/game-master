@@ -10,6 +10,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
+import { images } from "~/db/schema/images";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -19,7 +20,9 @@ import {
 } from "~/lib/http-helpers";
 import { generateCharacterId } from "~/lib/ids";
 import { getPayload } from "~/lib/jwt";
+import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
+import { validateUploadIsImageOrThrow } from "~/utils";
 import {
 	createCharacter,
 	createCharacterPermission,
@@ -36,9 +39,6 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
-import { validateUploadIsImageOrThrow } from "~/utils";
-import { s3 } from "~/lib/s3";
-import { images } from "~/db/schema/images";
 
 export const characterRoute = new Hono();
 

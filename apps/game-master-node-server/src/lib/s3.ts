@@ -4,8 +4,8 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import "dotenv/config";
-import { generateImageId } from "./ids";
 import { env } from "./env";
+import { generateImageId } from "./ids";
 
 const REGION = "eu-west-2";
 const BUCKET_NAME = "game-master-images";

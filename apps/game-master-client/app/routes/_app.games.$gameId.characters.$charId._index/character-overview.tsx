@@ -1,13 +1,13 @@
+import { CoverImage } from "~/components/cover-image";
 import { EditorClient, EditorPreview } from "~/components/editor";
+import { Layout } from "~/components/layout";
+import { LinkNotesPopover } from "~/components/linking/link-notes";
+import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
 import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
+import { useImageUpload } from "~/hooks/image-uploader";
 import { useCharacterData } from "../_app.games.$gameId.characters.$charId/route";
 import { useGameData } from "../_app.games.$gameId/route";
-import { Layout } from "~/components/layout";
-import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
-import { LinkNotesPopover } from "~/components/linking/link-notes";
-import { CoverImage } from "~/components/cover-image";
-import { useImageUpload } from "~/hooks/image-uploader";
 
 export function CharacterOverview() {
   const { characterDetails, charNotes } = useCharacterData();

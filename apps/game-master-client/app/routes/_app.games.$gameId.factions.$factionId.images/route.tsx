@@ -22,24 +22,24 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const factionId = getParams(params);
-	const { api } = await createApiFromReq(request);
-	const contentType = getContentType(request);
-	const uploadStream = request.body;
+  const { api } = await createApiFromReq(request);
+  const contentType = getContentType(request);
+  const uploadStream = request.body;
 
-	if (!contentType) {
-		return badRequest("request does not contain content type");
-	}
+  if (!contentType) {
+    return badRequest("request does not contain content type");
+  }
 
-	if (!uploadStream) {
-		return badRequest("request does not contain an upload stream");
-	}
-	const response = await api.factions.uploadImage(factionId, uploadStream, contentType);
+  if (!uploadStream) {
+    return badRequest("request does not contain an upload stream");
+  }
+  const response = await api.factions.uploadImage(factionId, uploadStream, contentType);
 
-	if (!response.success) {
-		return unsuccessfulResponse("Server failed to upload image");
-	}
+  if (!response.success) {
+    return unsuccessfulResponse("Server failed to upload image");
+  }
 
-	return json({ url: response.data.imageUrl });
+  return json({ url: response.data.imageUrl });
 };
 
 export default function FactionImagesRoute() {

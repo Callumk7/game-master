@@ -1,7 +1,7 @@
 import type { Note } from "@repo/api";
-import { Link } from "../ui/link";
-import { noteHref } from "~/util/generate-hrefs";
 import type { ReactNode } from "react";
+import { noteHref } from "~/util/generate-hrefs";
+import { Link } from "../ui/link";
 
 interface LinkedNotesAsideProps {
   linkedNotes: Note[];

@@ -1,21 +1,21 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet, type Params } from "@remix-run/react";
-import { EntityToolbar } from "~/components/entity-toolbar";
-import { createApiFromReq } from "~/lib/api.server";
-import { deleteNote, duplicateNote } from "./actions.server";
-import { methodNotAllowed } from "~/util/responses";
-import { z } from "zod";
-import { parseParams } from "zodix";
+import { useState } from "react";
 import {
   redirect,
   typedjson,
   useTypedLoaderData,
   useTypedRouteLoaderData,
 } from "remix-typedjson";
-import { getNoteData } from "./queries.server";
-import { NoteNavigation } from "./components/navigation";
+import { z } from "zod";
+import { parseParams } from "zodix";
+import { EntityToolbar } from "~/components/entity-toolbar";
+import { createApiFromReq } from "~/lib/api.server";
+import { methodNotAllowed } from "~/util/responses";
 import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
-import { useState } from "react";
+import { deleteNote, duplicateNote } from "./actions.server";
+import { NoteNavigation } from "./components/navigation";
+import { getNoteData } from "./queries.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {

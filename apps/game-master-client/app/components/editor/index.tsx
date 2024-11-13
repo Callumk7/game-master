@@ -1,5 +1,6 @@
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
 import type { FormMethod } from "@remix-run/react";
+import Image from "@tiptap/extension-image";
 import Typography from "@tiptap/extension-typography";
 import {
   BubbleMenu,
@@ -9,7 +10,6 @@ import {
   useEditor,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
 import { cn } from "callum-util";
 import { Button } from "~/ui/button";
 import { Toolbar } from "~/ui/toolbar";
@@ -19,9 +19,9 @@ import { useSyncEditorContent } from "./sync";
 import Fuse from "fuse.js";
 import { useIsClient } from "~/hooks/is-client";
 import type { MentionItem } from "~/types/mentions";
+import { CustomFileHandler } from "./extensions/file-upload";
 import { CustomMention } from "./extensions/mention-extension";
 import { suggestion } from "./util/suggestion";
-import { CustomFileHandler } from "./extensions/file-upload";
 
 // Core editor hook. A wrapper around the tiptap useEditor
 // hook, which ensures consistent settings when spawning a
@@ -36,11 +36,11 @@ export const useDefaultEditor = (
     StarterKit,
     Image.configure({
       HTMLAttributes: {
-        class: "rounded-md border overflow-hidden"
-      }
+        class: "rounded-md border overflow-hidden",
+      },
     }),
     Typography,
-    CustomFileHandler(fetcher)
+    CustomFileHandler(fetcher),
   ];
   if (suggestionItems) {
     extensions.push(

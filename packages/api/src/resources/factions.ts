@@ -10,6 +10,7 @@ import type {
 	UpdateFactionRequestBody,
 } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
+import type { Image } from "../types/images.js";
 import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
@@ -17,10 +18,9 @@ import type {
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
-import type { Image } from "../types/images.js";
 
 export class Factions {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getFaction = Object.assign(
 		async (factionId: Id) => {
