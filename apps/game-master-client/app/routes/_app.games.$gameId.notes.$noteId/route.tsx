@@ -15,6 +15,7 @@ import {
 import { getNoteData } from "./queries.server";
 import { NoteNavigation } from "./components/navigation";
 import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
+import { useState } from "react";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -53,9 +54,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 export default function NotesRoute() {
   const { note, folders } = useTypedLoaderData<typeof loader>();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
-      <div className="flex items-center w-full justify-between">
+      <div className="sticky top-[86px] z-20 flex items-center w-full justify-between">
         <NoteNavigation noteId={note.id} gameId={note.gameId} />
         <EntityToolbar
           gameId={note.gameId}
@@ -64,6 +66,7 @@ export default function NotesRoute() {
           permissions={note.permissions}
           userPermissionLevel={note.userPermissionLevel!}
           folders={folders}
+          setIsEditDialogOpen={setIsEditDialogOpen}
         />
       </div>
       <Outlet />

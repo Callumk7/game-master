@@ -36,6 +36,7 @@ export const notes = pgTable("notes", {
 		.notNull()
 		.references(() => users.id),
 	folderId: text("folder_id").references(() => folders.id),
+	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
 		.notNull(),

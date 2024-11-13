@@ -354,3 +354,29 @@ notesRoute.post("/:noteId/images", async (c) => {
 		return handleDatabaseError(c, error);
 	}
 });
+
+notesRoute.post("/:noteId/cover", async (c) => {
+	const noteId = c.req.param("noteId");
+	const { ownerId, image } = await validateUploadIsImageOrThrow(c.req);
+	let imageUrl: string;
+	try {
+		const result = await s3.upload(image, { ownerId, entityId: noteId });
+		imageUrl = result.imageUrl;
+	} catch (error) {
+		console.error(error);
+		return handleDatabaseError(c, "The error was caught in the images route");
+	}
+
+	try {
+		// could be a function shared with the service above
+		const update = await db
+			.update(notes)
+			.set({ coverImageUrl: imageUrl })
+			.where(eq(notes.id, noteId))
+			.returning();
+
+		return successResponse(c, update);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});

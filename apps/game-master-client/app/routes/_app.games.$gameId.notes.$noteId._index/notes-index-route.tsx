@@ -5,9 +5,8 @@ import { useGameData } from "../_app.games.$gameId/route";
 import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
 import { Layout } from "~/components/layout";
 import { LinkNotesPopover } from "~/components/linking/link-notes";
-import { Link } from "~/components/ui/link";
-import { noteHref } from "~/util/generate-hrefs";
 import { LinkedNotesAside, LinksAside } from "~/components/linking/linked-notes-sidebar";
+import { CoverImage } from "~/components/cover-image";
 
 export function NoteIndexRoute() {
   const { note, folders, linkedNotes } = useNoteData();
@@ -22,6 +21,7 @@ export function NoteIndexRoute() {
           <LinkedNotesAside linkedNotes={linkedNotes.outgoingLinks} />
         </LinksAside>
         <div className="col-span-4">
+          {note.coverImageUrl && <CoverImage src={note.coverImageUrl} ratio="16/9" />}
           <div>
             <Pill
               size={"xs"}
