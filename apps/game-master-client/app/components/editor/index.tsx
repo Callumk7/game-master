@@ -9,6 +9,7 @@ import {
   useEditor,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
 import { cn } from "callum-util";
 import { Button } from "~/ui/button";
 import { Toolbar } from "~/ui/toolbar";
@@ -20,6 +21,7 @@ import { useIsClient } from "~/hooks/is-client";
 import type { MentionItem } from "~/types/mentions";
 import { CustomMention } from "./extensions/mention-extension";
 import { suggestion } from "./util/suggestion";
+import { CustomFileHandler } from "./extensions/file-upload";
 
 // Core editor hook. A wrapper around the tiptap useEditor
 // hook, which ensures consistent settings when spawning a
@@ -28,8 +30,18 @@ export const useDefaultEditor = (
   content?: string | undefined,
   suggestionItems?: () => MentionItem[],
   editable = true,
+  fetcher?: (file: File) => Promise<string>,
 ) => {
-  const extensions: Extensions = [StarterKit, Typography];
+  const extensions: Extensions = [
+    StarterKit,
+    Image.configure({
+      HTMLAttributes: {
+        class: "rounded-md border overflow-hidden"
+      }
+    }),
+    Typography,
+    CustomFileHandler(fetcher)
+  ];
   if (suggestionItems) {
     extensions.push(
       CustomMention.configure({
@@ -66,18 +78,21 @@ interface EditorBodyProps {
   suggestionItems: () => MentionItem[];
   action?: string;
   method?: FormMethod;
+  fetcher?: (file: File) => Promise<string>;
 }
 export function EditorBody({
   htmlContent,
   action,
   method,
   suggestionItems,
+  fetcher,
 }: EditorBodyProps) {
   const { editor, isEdited, status, saveContent } = useSyncEditorContent({
     initContent: htmlContent,
     suggestionItems,
     action,
     method,
+    fetcher,
   });
 
   return (

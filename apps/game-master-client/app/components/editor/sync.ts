@@ -8,6 +8,7 @@ type SyncEditorOptions = {
 	method?: FormMethod;
 	initContent: string;
 	suggestionItems?: () => MentionItem[];
+	fetcher?: (file: File) => Promise<string>;
 };
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
@@ -19,7 +20,12 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		optimisticContent = String(fetcher.formData.get("htmlContent"));
 	}
 
-	const editor = useDefaultEditor(optimisticContent, options.suggestionItems, true);
+	const editor = useDefaultEditor(
+		optimisticContent,
+		options.suggestionItems,
+		true,
+		options.fetcher,
+	);
 
 	const [isEdited, setIsEdited] = useState(false);
 
