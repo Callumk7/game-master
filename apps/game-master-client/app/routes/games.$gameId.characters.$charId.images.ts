@@ -1,14 +1,12 @@
 import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createApiFromReq } from "~/lib/api.server";
 import { getContentType } from "~/util/get-content-type";
 import { badRequest, unsuccessfulResponse } from "~/util/responses";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-	const userId = await validateUser(request);
-	const api = createApi(userId);
+	const { api } = await createApiFromReq(request);
 	const { charId } = parseParams(params, { charId: z.string() });
 	if (request.method === "POST") {
 		const contentType = getContentType(request);
