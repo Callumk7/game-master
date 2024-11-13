@@ -185,6 +185,32 @@ export class Notes {
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
 
+	images = {
+		upload: async (
+			noteId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.uploadImage(noteId, uploadStream, contentType);
+		},
+
+		updateCover: async (
+			noteId: Id,
+			uploadStream: ReadableStream<Uint8Array>,
+			contentType: string,
+		) => {
+			return this.client.postImage<ServerResponse<Note>>(
+				`notes/${noteId}/cover`,
+				uploadStream,
+				{
+					headers: {
+						"Content-Type": contentType,
+					},
+				},
+			);
+		},
+	};
+
 	async uploadImage(
 		noteId: Id,
 		uploadStream: ReadableStream<Uint8Array>,
