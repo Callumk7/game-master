@@ -3,6 +3,7 @@ import type { Params } from "@remix-run/react";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
+import { updateFactionDetails } from "~/actions/factions.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
@@ -39,6 +40,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (request.method === "POST") {
     return duplicateFaction(request, api, factionId, userId);
+  }
+
+  if (request.method === "PATCH") {
+    const result = await updateFactionDetails(request, factionId);
+    return typedjson(result);
   }
 
   if (request.method === "DELETE") {

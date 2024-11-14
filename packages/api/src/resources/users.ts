@@ -7,9 +7,14 @@ import type { User, UserWithSidebarData } from "../types/users.js";
 export class Users {
 	constructor(private client: Client) {}
 
-	getUser = Object.assign(async (userId: Id) => {
-		return this.client.get<User>(`users/${userId}`);
-	});
+	getUser = Object.assign(
+		async (userId: Id) => {
+			return this.client.get<User>(`users/${userId}`);
+		},
+		{
+			misc: (userId: string) => null,
+		},
+	);
 
 	games = Object.assign(
 		async (userId: Id) => {

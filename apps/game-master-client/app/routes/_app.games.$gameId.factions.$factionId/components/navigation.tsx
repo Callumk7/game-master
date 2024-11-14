@@ -12,6 +12,7 @@ export function FactionNavigation({ factionId, gameId }: FactionNavigationProps)
   let selectedKey = "/";
   if (pathname.endsWith("/members")) selectedKey = "/members";
   if (pathname.endsWith("/relations")) selectedKey = "/relations";
+  if (pathname.endsWith("/images")) selectedKey = "/images";
   const baseUrl = factionHref(gameId, factionId);
   return (
     <Tabs selectedKey={selectedKey}>

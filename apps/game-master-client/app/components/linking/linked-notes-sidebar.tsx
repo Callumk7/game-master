@@ -12,13 +12,16 @@ export function LinkedNotesAside({ linkedNotes }: LinkedNotesAsideProps) {
     <div className="space-y-2 divide-y">
       {linkedNotes.map((note) => (
         <div key={note.id}>
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-600 font-medium italic">{note.type}</p>
-            <Link variant={"link"} href={noteHref(note.gameId, note.id)}>
+          <div className="flex flex-col items-start">
+            <Link
+              variant={"link"}
+              href={noteHref(note.gameId, note.id)}
+              className={"pl-0 text-wrap h-fit"}
+            >
               {note.name}
             </Link>
+            <p className="text-xs text-slate-500 font-medium italic">{note.type}</p>
           </div>
-          <p className="text-xs whitespace-pre-wrap">{note.content?.slice(0, 100)}</p>
         </div>
       ))}
     </div>
@@ -30,5 +33,5 @@ interface LinksAsideProps {
 }
 
 export function LinksAside({ children }: LinksAsideProps) {
-  return <aside className="w-full border-r space-y-2 relative">{children}</aside>;
+  return <aside className="space-y-2">{children}</aside>;
 }

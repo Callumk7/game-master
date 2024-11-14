@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { updateFactionDetails } from "./actions.server";
+import { updateFactionDetails } from "~/actions/factions.server";
 import { FactionOverview } from "./faction-overview";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

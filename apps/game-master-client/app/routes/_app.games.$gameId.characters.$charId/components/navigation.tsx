@@ -14,6 +14,7 @@ export function CharacterNavigation({ charId, gameId }: CharacterNavigationProps
   let selectedKey = "/";
   if (pathname.endsWith("/factions")) selectedKey = "/factions";
   if (pathname.endsWith("/relations")) selectedKey = "/relations";
+  if (pathname.endsWith("/images")) selectedKey = "/images";
 
   const baseUrl = characterHref(gameId, charId);
   return (

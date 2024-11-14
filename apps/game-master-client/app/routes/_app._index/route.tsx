@@ -5,6 +5,7 @@ export default function Index() {
   const { userGames } = useAppData();
   return (
     <div className="font-sans p-4">
+      <Link href="/games/new">Create Game</Link>
       <div className="flex flex-col gap-1">
         {userGames.map((game) => (
           <Link key={game.id} href={`/games/${game.id}`}>

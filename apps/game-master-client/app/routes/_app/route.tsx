@@ -19,8 +19,9 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId, api } = await createApiFromReq(request);
   const userGames = await getData(() => api.users.games(userId));
+  const userData = await getData(() => api.users.getUser(userId));
 
-  return typedjson({ userGames, userId });
+  return typedjson({ userGames, userData });
 };
 
 export function useAppData() {
