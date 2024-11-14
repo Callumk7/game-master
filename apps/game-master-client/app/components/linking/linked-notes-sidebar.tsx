@@ -13,7 +13,11 @@ export function LinkedNotesAside({ linkedNotes }: LinkedNotesAsideProps) {
       {linkedNotes.map((note) => (
         <div key={note.id}>
           <div className="flex flex-col items-start">
-            <Link variant={"link"} href={noteHref(note.gameId, note.id)} className={"pl-0 text-wrap h-fit"}>
+            <Link
+              variant={"link"}
+              href={noteHref(note.gameId, note.id)}
+              className={"pl-0 text-wrap h-fit"}
+            >
               {note.name}
             </Link>
             <p className="text-xs text-slate-500 font-medium italic">{note.type}</p>

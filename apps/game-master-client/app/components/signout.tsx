@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useAppData } from "~/routes/_app/route";
 import { Button } from "./ui/button";
-import { useState } from "react";
 
 export function SignoutButton() {
   const { userData } = useAppData();

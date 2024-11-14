@@ -3,13 +3,13 @@ import type { Params } from "@remix-run/react";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
+import { updateFactionDetails } from "~/actions/factions.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { deleteFaction, duplicateFaction } from "./actions.server";
 import { FactionLayout } from "./faction-layout";
-import { updateFactionDetails } from "~/actions/factions.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {

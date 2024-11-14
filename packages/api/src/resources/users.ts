@@ -5,7 +5,7 @@ import type { Note } from "../types/notes.js";
 import type { User, UserWithSidebarData } from "../types/users.js";
 
 export class Users {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getUser = Object.assign(
 		async (userId: Id) => {

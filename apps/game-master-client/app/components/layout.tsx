@@ -29,7 +29,7 @@ const layoutVariants = cva("mx-auto", {
 
 interface LayoutProps
   extends HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof layoutVariants> { }
+    VariantProps<typeof layoutVariants> {}
 
 export function Layout({
   padding,
@@ -46,7 +46,7 @@ export function Layout({
   );
 }
 
-interface MainGridProps extends HTMLAttributes<HTMLDivElement> { }
+interface MainGridProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function MainGrid({ children, className, ...props }: MainGridProps) {
   return (
@@ -56,7 +56,7 @@ export function MainGrid({ children, className, ...props }: MainGridProps) {
   );
 }
 
-interface SideGridProps extends HTMLAttributes<HTMLDivElement> { }
+interface SideGridProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function SideGrid({ children, className, ...props }: SideGridProps) {
   return (
@@ -72,11 +72,7 @@ interface EntityLayoutProps {
   asideWidth?: number;
 }
 
-export function EntityLayout({
-  children,
-  aside,
-  asideWidth = 40,
-}: EntityLayoutProps) {
+export function EntityLayout({ children, aside, asideWidth = 40 }: EntityLayoutProps) {
   const asideMarginClass = `ml-${asideWidth + 4}`;
   const asideWidthClass = `w-${asideWidth}`;
   return (
