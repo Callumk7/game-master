@@ -9,6 +9,7 @@ import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { deleteFaction, duplicateFaction } from "./actions.server";
 import { FactionLayout } from "./faction-layout";
+import { updateFactionDetails } from "~/actions/factions.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -39,6 +40,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (request.method === "POST") {
     return duplicateFaction(request, api, factionId, userId);
+  }
+
+  if (request.method === "PATCH") {
+    const result = await updateFactionDetails(request, factionId);
+    return typedjson(result);
   }
 
   if (request.method === "DELETE") {
