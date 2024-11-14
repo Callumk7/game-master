@@ -1,6 +1,6 @@
 import { cn } from "callum-util";
 import { type VariantProps, cva } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 const layoutVariants = cva("mx-auto", {
   variants: {
@@ -29,7 +29,7 @@ const layoutVariants = cva("mx-auto", {
 
 interface LayoutProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof layoutVariants> {}
+  VariantProps<typeof layoutVariants> { }
 
 export function Layout({
   padding,
@@ -46,7 +46,7 @@ export function Layout({
   );
 }
 
-interface MainGridProps extends HTMLAttributes<HTMLDivElement> {}
+interface MainGridProps extends HTMLAttributes<HTMLDivElement> { }
 
 export function MainGrid({ children, className, ...props }: MainGridProps) {
   return (
@@ -56,12 +56,33 @@ export function MainGrid({ children, className, ...props }: MainGridProps) {
   );
 }
 
-interface SideGridProps extends HTMLAttributes<HTMLDivElement> {}
+interface SideGridProps extends HTMLAttributes<HTMLDivElement> { }
 
 export function SideGrid({ children, className, ...props }: SideGridProps) {
   return (
     <div className={cn(className, "col-span-1")} {...props}>
       {children}
+    </div>
+  );
+}
+
+interface EntityLayoutProps {
+  children: ReactNode;
+  aside: ReactNode;
+  asideWidth?: number;
+}
+
+export function EntityLayout({
+  children,
+  aside,
+  asideWidth = 40,
+}: EntityLayoutProps) {
+  const asideMarginClass = `ml-${asideWidth + 4}`;
+  const asideWidthClass = `w-${asideWidth}`;
+  return (
+    <div className="flex">
+      <div className={`${asideWidthClass} fixed border-r`}>{aside}</div>
+      <div className={`flex-1 ${asideMarginClass}`}>{children}</div>
     </div>
   );
 }
