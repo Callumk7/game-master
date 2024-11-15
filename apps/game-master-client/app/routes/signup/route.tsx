@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { JollyTextField } from "~/components/ui/textfield";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
-import { hashPassword } from "./queries.server";
+import { hashPassword } from "~/services/password-hash.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(request, {

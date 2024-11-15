@@ -14,6 +14,11 @@ export const users = pgTable("users", {
 	username: text("username").notNull(),
 	email: text("email").unique().notNull(),
 	passwordHash: text("password_hash").notNull(),
+	resetToken: text("reset_token"),
+	resetTokenExpiry: timestamp("reset_token_expiry", {
+		withTimezone: true,
+		mode: "date",
+	}),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
