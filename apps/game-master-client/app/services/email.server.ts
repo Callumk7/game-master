@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
-import { SESClient } from "@aws-sdk/client-ses";
+import aws from "@aws-sdk/client-ses";
 import { env } from "~/lib/env.server";
+import { emailConfig } from "~/config";
 
 interface EmailOptions {
 	to: string;
@@ -15,7 +16,7 @@ class EmailService {
 
 	constructor() {
 		this.isDevelopment = env.isDevelopment;
-		this.useSesInDev = env.USE_SES_IN_DEV;
+		this.useSesInDev = env.USE_SES_IN_DEV === "true";
 
 		if (this.isDevelopment && !this.useSesInDev) {
 			this.transporter = nodemailer.createTransport({
@@ -30,21 +31,25 @@ class EmailService {
 						},
 			});
 		} else {
-			const sesClient = new SESClient({
-				region: env.AWS_REGION,
+			const sesClient = new aws.SESClient({
+				region: emailConfig.ses.region,
+				credentials: {
+					accessKeyId: emailConfig.ses.credentials.accessKeyId,
+					secretAccessKey: emailConfig.ses.credentials.secretAccessKey,
+				},
 			});
 
 			this.transporter = nodemailer.createTransport({
 				SES: {
 					sesClient,
-				},
+				}
 			});
 		}
 	}
 	async sendEmail({ to, subject, html }: EmailOptions) {
 		try {
 			const info = await this.transporter.sendMail({
-				from: '"Game Master" <hello@callumkloos.dev>',
+				from: emailConfig.ses.fromAddress,
 				to,
 				subject,
 				html,
@@ -72,6 +77,17 @@ Reset Password
 </a>
 `,
 		});
+	}
+
+	async verifyConnection() {
+		try {
+			await this.transporter.verify();
+			console.log("Email service connection verified");
+			return true;
+		} catch (error) {
+			console.error("Email service connection failed:", error);
+			return false;
+		}
 	}
 }
 

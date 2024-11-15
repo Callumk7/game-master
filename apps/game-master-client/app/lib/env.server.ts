@@ -20,6 +20,12 @@ if (!isDevelopment) {
 	if (!process.env.SMTP_PASS) {
 		throw new Error("SMTP_PASS is not set in the environment");
 	}
+	if (!process.env.AWS_ACCESS_KEY_ID) {
+		throw new Error("AWS_ACCESS_KEY_ID is not set in the environment");
+	}
+	if (!process.env.AWS_SECRET_ACCESS_KEY) {
+		throw new Error("AWS_SECRET_ACCESS_KEY is not set in the environment");
+	}
 }
 
 export const env = {
@@ -32,6 +38,9 @@ export const env = {
 	SMTP_PORT: isDevelopment ? 1025 : Number(process.env.SMTP_PORT!),
 	SMTP_USER: process.env.SMTP_USER!,
 	SMTP_PASS: process.env.SMTP_PASS!,
-	USE_SES_IN_DEV: process.env.USE_SES_IN_DEV === "true",
+	USE_SES_IN_DEV: process.env.USE_SES_IN_DEV || "false",
 	AWS_REGION: process.env.AWS_REGION || "eu-west-1",
+	AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+	AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+	EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || "hello@callumkloos.dev"
 };

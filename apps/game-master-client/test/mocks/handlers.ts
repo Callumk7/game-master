@@ -1,6 +1,6 @@
 // mocks/handlers.ts
 import { http, HttpResponse } from "msw";
-import { SERVER_URL } from "~/config";
+import { env } from "~/lib/env.server";
 
 // TODO: Mock all the endpoints to the database.
 // Interesting to think of how we actually test that we
@@ -8,7 +8,7 @@ import { SERVER_URL } from "~/config";
 // Maybe that is overkill though
 
 export const handlers = [
-	http.get(`${SERVER_URL}/users/:userId/games/owned`, ({ params }) => {
+	http.get(`${env.SERVER_URL}/users/:userId/games/owned`, ({ params }) => {
 		return HttpResponse.json([
 			{
 				id: "game1",
