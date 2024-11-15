@@ -1,4 +1,4 @@
-import { pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
@@ -9,6 +9,11 @@ export const users = pgTable("users", {
 	username: text("username").notNull(),
 	email: text("email").unique().notNull(),
 	passwordHash: text("password_hash").notNull(),
+	resetToken: text("reset_token"),
+	resetTokenExpiry: timestamp("reset_token_expiry", {
+		withTimezone: true,
+		mode: "date",
+	}),
 });
 
 export const databaseSelectUserSchema = createSelectSchema(users);
