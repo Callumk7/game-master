@@ -39,7 +39,7 @@ export const env = {
 	SMTP_USER: process.env.SMTP_USER!,
 	SMTP_PASS: process.env.SMTP_PASS!,
 	USE_SES_IN_DEV: process.env.USE_SES_IN_DEV || "false",
-	AWS_REGION: process.env.AWS_REGION || "eu-west-1",
+	AWS_REGION: process.env.AWS_REGION || "eu-west-2",
 	AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
 	AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 	EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || "hello@callumkloos.dev"

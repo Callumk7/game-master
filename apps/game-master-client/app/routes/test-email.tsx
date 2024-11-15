@@ -1,5 +1,4 @@
-// app/routes/test-email.tsx
-import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { env } from "~/lib/env.server";

@@ -41,8 +41,9 @@ class EmailService {
 
 			this.transporter = nodemailer.createTransport({
 				SES: {
-					sesClient,
-				}
+					ses: sesClient,
+					aws,
+				},
 			});
 		}
 	}
