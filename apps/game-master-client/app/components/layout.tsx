@@ -75,8 +75,12 @@ interface EntityLayoutProps {
 export function EntityLayout({ children, aside, asideWidth = 160 }: EntityLayoutProps) {
   return (
     <div className="flex">
-      <div style={{width: `${asideWidth}px`}} className="fixed border-r">{aside}</div>
-      <div style={{marginLeft: `${asideWidth + 16}px`}} className="flex-1">{children}</div>
+      <div style={{ width: `${asideWidth}px` }} className="fixed border-r">
+        {aside}
+      </div>
+      <div style={{ marginLeft: `${asideWidth + 16}px` }} className="flex-1">
+        {children}
+      </div>
     </div>
   );
 }

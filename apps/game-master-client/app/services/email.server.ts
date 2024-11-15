@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer";
 import aws from "@aws-sdk/client-ses";
-import { env } from "~/lib/env.server";
+import nodemailer from "nodemailer";
 import { emailConfig } from "~/config";
+import { env } from "~/lib/env.server";
 
 interface EmailOptions {
 	to: string;

@@ -94,7 +94,9 @@ export default function LoginRoute() {
             <Link variant={"secondary"} href={"/signup"}>
               Need an account? Sign up
             </Link>
-            <Link variant={"secondary"} href={"/reset-password"}>Forgotten Password?</Link>
+            <Link variant={"secondary"} href={"/reset-password"}>
+              Forgotten Password?
+            </Link>
           </div>
         </Form>
       </Card>

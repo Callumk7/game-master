@@ -1,4 +1,4 @@
-import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { type ActionFunctionArgs, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { db } from "db";
 import { users } from "db/schema/users";
