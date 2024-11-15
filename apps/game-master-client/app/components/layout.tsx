@@ -72,13 +72,11 @@ interface EntityLayoutProps {
   asideWidth?: number;
 }
 
-export function EntityLayout({ children, aside, asideWidth = 40 }: EntityLayoutProps) {
-  const asideMarginClass = `ml-${asideWidth + 4}`;
-  const asideWidthClass = `w-${asideWidth}`;
+export function EntityLayout({ children, aside, asideWidth = 160 }: EntityLayoutProps) {
   return (
     <div className="flex">
-      <div className={`${asideWidthClass} fixed border-r`}>{aside}</div>
-      <div className={`flex-1 ${asideMarginClass}`}>{children}</div>
+      <div style={{width: `${asideWidth}px`}} className="fixed border-r">{aside}</div>
+      <div style={{marginLeft: `${asideWidth + 16}px`}} className="flex-1">{children}</div>
     </div>
   );
 }
