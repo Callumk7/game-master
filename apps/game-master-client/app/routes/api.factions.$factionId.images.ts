@@ -18,7 +18,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 	if (!uploadStream) {
 		return badRequest("request does not contain an upload stream");
 	}
-	const response = await api.factions.images.upload(factionId, uploadStream, contentType);
+	const response = await api.factions.images.upload(
+		factionId,
+		uploadStream,
+		contentType,
+	);
 
 	if (!response.success) {
 		return unsuccessfulResponse("Server failed to upload image");

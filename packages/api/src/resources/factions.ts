@@ -24,7 +24,7 @@ export class Factions {
 	constructor(
 		private client: Client,
 		private methods: Methods,
-	) { }
+	) {}
 
 	create = Object.assign(
 		async (body: CreateFactionRequestBody) => {
