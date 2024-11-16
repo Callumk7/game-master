@@ -17,7 +17,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const gameId = getParams(params);
 
-  const allGameNotes = await getData(() => api.notes.getAllGameNotes(gameId));
+  const allGameNotes = await getData(() => api.games.notes(gameId));
 
   return typedjson({ allGameNotes, gameId });
 };
@@ -29,7 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (request.method === "DELETE") {
     const { api } = await createApiFromReq(request);
     const { entityId } = await parseForm(request, { entityId: z.string() });
-    const result = await api.notes.deleteNote(entityId);
+    const result = await api.notes.delete(entityId);
     return typedjson(result);
   }
 

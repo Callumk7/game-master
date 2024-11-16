@@ -13,7 +13,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 	if (request.method === "PATCH") {
 		const { visibility } = await parseForm(request, { visibility: visibilitySchema });
 
-		const result = await api.notes.updateNote(noteId, { visibility });
+		const result = await api.notes.update(noteId, { visibility });
 
 		if (!result.success) {
 			return { error: result.message };

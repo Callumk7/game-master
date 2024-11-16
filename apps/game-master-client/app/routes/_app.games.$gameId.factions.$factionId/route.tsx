@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { factionId, gameId } = getParams(params);
 
   const [factionDetails, folders] = await resolve(
-    getData(() => api.factions.getFactionWithPermissions(factionId)),
+    getData(() => api.factions.getFaction.withPermissions(factionId)),
     getData(() => api.folders.getGameFolders(gameId)),
   );
 

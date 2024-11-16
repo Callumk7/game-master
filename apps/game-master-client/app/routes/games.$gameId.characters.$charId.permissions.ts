@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 			permission: permissionSchema,
 		});
 
-		const result = await api.characters.createCharacterPermission(charId, {
+		const result = await api.characters.create.permission(charId, {
 			userId,
 			permission,
 		});

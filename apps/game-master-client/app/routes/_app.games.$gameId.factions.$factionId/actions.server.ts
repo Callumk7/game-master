@@ -12,7 +12,7 @@ export const duplicateFaction = async (
 ) => {
 	const data = await parseForm(request, duplicateFactionSchema.omit({ ownerId: true }));
 
-	const dupeResult = await api.factions.duplicateFaction(factionId, {
+	const dupeResult = await api.factions.duplicate(factionId, {
 		...data,
 		ownerId: userId,
 	});
@@ -26,7 +26,7 @@ export const duplicateFaction = async (
 };
 
 export const deleteFaction = async (api: SDK, factionId: string) => {
-	const result = await api.factions.deleteFaction(factionId);
+	const result = await api.factions.delete(factionId);
 	if (result.success) {
 		return redirect("/games");
 	}

@@ -11,7 +11,7 @@ export const duplicateNote = async (
 ) => {
 	const data = await parseForm(request, duplicateNoteSchema.omit({ ownerId: true }));
 
-	const duplicatedNote = await api.notes.duplicateNote(noteId, {
+	const duplicatedNote = await api.notes.duplicate(noteId, {
 		...data,
 		ownerId: userId,
 	});
@@ -26,7 +26,7 @@ export const duplicateNote = async (
 };
 
 export const deleteNote = async (api: SDK, noteId: string) => {
-	const result = await api.notes.deleteNote(noteId);
+	const result = await api.notes.delete(noteId);
 	if (result.success) {
 		return redirect("/games");
 	}

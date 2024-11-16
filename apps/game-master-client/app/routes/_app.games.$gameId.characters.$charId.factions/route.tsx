@@ -20,10 +20,10 @@ export const getParams = (params: Params) => {
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { charId, gameId } = getParams(params);
-  const [primaryFaction, charFactions, allFactions] = await resolve(
-    getData(() => api.characters.getPrimaryFaction(charId)),
-    getData(() => api.characters.getFactions(charId)),
-    getData(() => api.factions.getGameFactions(gameId)),
+  const [charFactions, primaryFaction, allFactions] = await resolve(
+    getData(() => api.characters.factions(charId)),
+    getData(() => api.characters.factions.primary(charId)),
+    getData(() => api.factions.forGame(gameId)),
   );
 
   return typedjson({ charId, charFactions, allFactions, primaryFaction });

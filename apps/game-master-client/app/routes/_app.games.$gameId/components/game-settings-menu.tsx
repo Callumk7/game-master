@@ -1,4 +1,5 @@
 import { FileTextIcon, PersonIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useSubmit } from "@remix-run/react";
 import type { Id } from "@repo/api";
 import type { ReactNode } from "react";
 import type { MenuItemProps } from "react-aria-components";
@@ -10,6 +11,7 @@ interface GameSettingsMenuProps {
 }
 
 export function GameSettingsMenu({ gameId }: GameSettingsMenuProps) {
+  const submit = useSubmit();
   return (
     <MenuTrigger>
       <Button variant={"outline"}>Game Settings</Button>
@@ -21,7 +23,12 @@ export function GameSettingsMenu({ gameId }: GameSettingsMenuProps) {
           <SettingsMenuItem href={`/games/${gameId}/manage`} icon={<FileTextIcon />}>
             Manage Game
           </SettingsMenuItem>
-          <SettingsMenuItem icon={<TrashIcon />}>Delete Game</SettingsMenuItem>
+          <SettingsMenuItem
+            onAction={() => submit({ gameId }, { method: "DELETE" })}
+            icon={<TrashIcon />}
+          >
+            Delete Game
+          </SettingsMenuItem>
         </Menu>
       </MenuPopover>
     </MenuTrigger>

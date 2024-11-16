@@ -22,7 +22,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
 
   const gameChars = await getData(() =>
-    api.characters.getForGame.withPrimaryFactions(gameId),
+    api.characters.forGame.withPrimaryFactions(gameId),
   );
 
   return typedjson({ gameId, gameChars });

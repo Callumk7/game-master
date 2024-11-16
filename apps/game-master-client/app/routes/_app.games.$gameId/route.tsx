@@ -1,16 +1,21 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useRouteError } from "@remix-run/react";
-import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { type Params, useRouteError } from "@remix-run/react";
+import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
 import type { MentionItem } from "~/types/mentions";
 import { getData } from "~/util/handle-error";
+import { methodNotAllowed } from "~/util/responses";
 import GameLayout from "./game-layout";
 
+const getParams = (params: Params) => {
+  return parseParams(params, { gameId: z.string() }).gameId;
+};
+
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { gameId } = parseParams(params, { gameId: z.string() });
+  const gameId = getParams(params);
   const { api } = await createApiFromReq(request);
   const data = await getData(() => api.games.getAllGameEntities(gameId));
   const sidebarData = await getData(() => api.games.getGame.withData(gameId));
@@ -59,12 +64,24 @@ export function useGameData() {
   return { ...data, suggestionItems };
 }
 
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const gameId = getParams(params);
+  const { api } = await createApiFromReq(request);
+  if (request.method === "DELETE") {
+    const result = await api.games.delete(gameId);
+    if (result.success) return redirect("/");
+    return typedjson(result);
+  }
+  return methodNotAllowed();
+};
+
 export function ErrorBoundary() {
   const error = useRouteError();
   console.error(error);
   return (
     <div className="w-4/5 mx-auto">
       <Text variant={"h3"}>Something went wrong</Text>
+      <Text variant={"p"}>{String(error)}</Text>
     </div>
   );
 }

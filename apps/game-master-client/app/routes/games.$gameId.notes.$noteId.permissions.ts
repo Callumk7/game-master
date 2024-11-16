@@ -16,7 +16,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 			permission: permissionSchema,
 		});
 
-		const result = await api.notes.createNotePermission(noteId, {
+		const result = await api.notes.create.permission(noteId, {
 			userId,
 			permission,
 		});

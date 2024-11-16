@@ -13,11 +13,11 @@ export const updateCharacterFaction = async (
 		isPrimary: z.string().optional(),
 	});
 	if (isPrimary) {
-		await api.characters.updateCharacterDetails(charId, {
+		await api.characters.update(charId, {
 			primaryFactionId: factionId,
 		});
 	}
-	const result = await api.characters.linkFactions(charId, [factionId]);
+	const result = await api.characters.factions.link(charId, [factionId]);
 	return typedjson(result);
 };
 
@@ -25,6 +25,6 @@ export const unlinkFaction = async (request: Request, api: SDK, charId: string) 
 	const { factionId } = await parseForm(request, {
 		factionId: z.string(),
 	});
-	const result = await api.characters.unlinkFaction(charId, factionId);
+	const result = await api.characters.factions.unlink(charId, factionId);
 	return typedjson(result);
 };

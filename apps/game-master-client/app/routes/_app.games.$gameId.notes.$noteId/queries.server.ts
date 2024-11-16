@@ -3,7 +3,7 @@ import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
 
 export const getNoteData = async (api: SDK, noteId: string, gameId: string) => {
-	const noteCall = getData(() => api.notes.getNoteWithPermissions(noteId));
+	const noteCall = getData(() => api.notes.getNote.withPermissions(noteId));
 	const linkedCharsCall = getData(() => api.notes.getLinkedCharacters(noteId));
 	const linkedFactionsCall = getData(() => api.notes.getLinkedFactions(noteId));
 	const linkedNotesCall = getData(() => api.notes.getLinkedNotes(noteId));

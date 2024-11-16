@@ -55,7 +55,8 @@ export function EntityToolbar({
 }: EntityToolbarProps) {
   const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
 
-  const { userId } = useAppData();
+  const { userData } = useAppData();
+  const userId = userData.id;
   // fetch game members here, there is no reason that this won't work with each entity
   const gameWithMembersQuery = useGetGameWithMembers(gameId);
   let members: User[] = [];
