@@ -12,7 +12,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 	if (request.method === "PATCH") {
 		const { visibility } = await parseForm(request, { visibility: visibilitySchema });
 
-		const result = await api.characters.updateCharacterDetails(charId, {
+		const result = await api.characters.update(charId, {
 			visibility,
 		});
 

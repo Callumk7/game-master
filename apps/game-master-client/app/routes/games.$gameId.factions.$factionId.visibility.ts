@@ -12,7 +12,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 	if (request.method === "PATCH") {
 		const { visibility } = await parseForm(request, { visibility: visibilitySchema });
 
-		const result = await api.factions.updateFactionDetails(factionId, { visibility });
+		const result = await api.factions.update(factionId, { visibility });
 
 		if (!result.success) {
 			return { error: result.message };

@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, json, redirect } from "@remix-run/react";
+import { Form, redirect } from "@remix-run/react";
 import type { CreateGameRequestBody } from "@repo/api";
 import { z } from "zod";
 import { parseForm } from "zodix";
@@ -19,7 +19,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ownerId: userId,
   };
 
-  const result = await api.games.createGame(input);
+  const result = await api.games.create(input);
   const newGame = extractDataFromResponseOrThrow(result);
 
   return redirect(`/games/${newGame.id}`);

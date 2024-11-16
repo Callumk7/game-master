@@ -15,7 +15,7 @@ export const duplicateCharacter = async (
 		duplicateCharacterSchema.omit({ ownerId: true }),
 	);
 
-	const dupeResult = await api.characters.duplicateCharacter(charId, {
+	const dupeResult = await api.characters.duplicate(charId, {
 		...data,
 		ownerId: userId,
 	});
@@ -29,7 +29,7 @@ export const duplicateCharacter = async (
 };
 
 export const deleteCharacter = async (api: SDK, charId: string) => {
-	const result = await api.characters.deleteCharacter(charId);
+	const result = await api.characters.delete(charId);
 	if (result.success) {
 		return redirect("/games");
 	}

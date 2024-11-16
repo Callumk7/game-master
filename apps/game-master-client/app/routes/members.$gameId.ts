@@ -8,6 +8,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
 	const api = createApi(userId);
 	const { gameId } = parseParams(params, { gameId: z.string() });
-	const result = await api.games.getGameWithMembers(gameId);
+	const result = await api.games.getGame.withMembers(gameId);
 	return json(result);
 };

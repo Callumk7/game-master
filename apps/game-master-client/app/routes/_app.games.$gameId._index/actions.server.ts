@@ -9,6 +9,6 @@ export const updateGameDetails = async (request: Request, gameId: string, api: S
 		name: z.string(),
 	});
 
-	const result = await getData(() => api.games.updateGameDetails(gameId, { name }));
+	const result = await getData(() => api.games.update(gameId, { name }));
 	return typedjson(result);
 };

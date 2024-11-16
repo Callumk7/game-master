@@ -16,7 +16,7 @@ const getParams = (params: Params) => {
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const factionId = getParams(params);
   const { api } = await createApiFromReq(request);
-  const members = await getData(() => api.factions.getFactionMembers(factionId));
+  const members = await getData(() => api.factions.members(factionId));
   return typedjson({ members });
 };
 

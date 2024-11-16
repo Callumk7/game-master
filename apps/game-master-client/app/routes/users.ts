@@ -5,6 +5,6 @@ import { validateUser } from "~/lib/auth.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const userId = await validateUser(request);
 	const api = createApi(userId);
-	const allUsers = await api.users.getAllUsers();
+	const allUsers = await api.users.all();
 	return json(allUsers);
 };

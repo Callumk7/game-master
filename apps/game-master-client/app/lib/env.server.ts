@@ -8,6 +8,9 @@ if (!process.env.DB_URL) {
 const isDevelopment = process.env.NODE_ENV === "development";
 
 if (!isDevelopment) {
+	if (!process.env.SERVER_URL) {
+		throw new Error("SERVER_URL is not set in the environment");
+	}
 	if (!process.env.SMTP_HOST) {
 		throw new Error("SMTP_HOST is not set in the environment");
 	}
@@ -32,7 +35,7 @@ export const env = {
 	isDevelopment: isDevelopment,
 	SERVER_SECRET: process.env.SERVER_SECRET,
 	DB_URL: process.env.DB_URL,
-	SERVER_URL: isDevelopment ? "http://localhost:3000" : process.env.SERVER_URL,
+	SERVER_URL: isDevelopment ? "http://localhost:3000" : process.env.SERVER_URL!,
 	APP_URL: isDevelopment ? "http://localhost:5173" : process.env.APP_URL,
 	SMTP_HOST: isDevelopment ? "localhost" : process.env.SMTP_HOST!,
 	SMTP_PORT: isDevelopment ? 1025 : Number(process.env.SMTP_PORT!),

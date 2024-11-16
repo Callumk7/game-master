@@ -21,7 +21,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 		}
 
 		// forward the request to the server
-		const serverResponse = await api.factions.updateCoverImage(
+		const serverResponse = await api.factions.images.updateCoverImage(
 			factionId,
 			uploadStream,
 			contentType,

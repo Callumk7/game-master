@@ -9,7 +9,7 @@ export async function createFactionAction(request: Request) {
 	const userId = await validateUser(request);
 	const api = createApi(userId);
 	const data = await parseForm(request, createFactionSchema.omit({ ownerId: true }));
-	const result = await api.factions.createFaction({ ...data, ownerId: userId });
+	const result = await api.factions.create({ ...data, ownerId: userId });
 
 	if (result.success) {
 		const { gameId, id } = result.data;

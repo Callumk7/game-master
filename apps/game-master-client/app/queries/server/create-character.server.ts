@@ -14,7 +14,7 @@ export async function createCharacterAction(request: Request) {
 		createCharacterSchema.omit({ ownerId: true }).merge(numberToStrings),
 	);
 	try {
-		const result = await api.characters.createCharacter({ ...data, ownerId: userId });
+		const result = await api.characters.create({ ...data, ownerId: userId });
 		if (result.success) {
 			const { gameId, id } = result.data;
 			return redirect(`/games/${gameId}/characters/${id}`);

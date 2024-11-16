@@ -22,8 +22,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { charId, gameId } = getParams(params);
   const [characterDetails, charNotes, folders] = await resolve(
-    getData(() => api.characters.getCharacterWithPermissions(charId)),
-    getData(() => api.characters.getNotes(charId)),
+    getData(() => api.characters.getCharacter.withPermissions(charId)),
+    getData(() => api.characters.notes(charId)),
     getData(() => api.folders.getGameFolders(gameId)),
   );
 

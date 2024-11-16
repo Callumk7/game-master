@@ -8,6 +8,6 @@ export const updateFactionDetails = async (request: Request, factionId: string) 
 		const userId = await validateUser(request);
 		const api = createApi(userId);
 		const data = await parseForm(request, updateFactionSchema);
-		return await api.factions.updateFactionDetails(factionId, data);
+		return await api.factions.update(factionId, data);
 	}
 };

@@ -29,6 +29,9 @@ describe("Entity Toolbar", () => {
       permissions: [],
       userPermissionLevel: "edit" as Permission,
       folders: [],
+      setIsEditDialogOpen() {
+        return undefined;
+      },
     };
 
     test("Menu should open on click", async () => {

@@ -16,7 +16,7 @@ const getParams = (params: Params) => {
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const gameId = getParams(params);
-  const game = await getData(() => api.games.getGameWithMembers(gameId));
+  const game = await getData(() => api.games.getGame.withMembers(gameId));
 
   return typedjson({ game });
 };

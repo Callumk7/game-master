@@ -4,7 +4,7 @@ import { parseForm } from "zodix";
 
 export const updateCharacter = async (request: Request, api: SDK, charId: string) => {
 	const data = await parseForm(request, updateCharacterSchema);
-	const result = await api.characters.updateCharacterDetails(charId, data);
+	const result = await api.characters.update(charId, data);
 	return typedjson(result);
 };
 

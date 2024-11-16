@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 			permission: permissionSchema,
 		});
 
-		const result = await api.factions.createFactionPermission(factionId, {
+		const result = await api.factions.create.permission(factionId, {
 			userId,
 			permission,
 		});
