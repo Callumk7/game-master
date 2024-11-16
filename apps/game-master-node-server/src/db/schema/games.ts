@@ -50,10 +50,10 @@ export const usersToGames = pgTable(
 	{
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => users.id, { onDelete: "cascade" }),
 		gameId: text("game_id")
 			.notNull()
-			.references(() => games.id),
+			.references(() => games.id, { onDelete: "cascade" }),
 		isOwner: boolean("is_owner").notNull().default(false),
 		role: roleEnum("role").notNull().default("player"),
 	},
