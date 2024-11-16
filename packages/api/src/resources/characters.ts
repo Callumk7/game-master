@@ -1,13 +1,12 @@
 import type { Client } from "../client.js";
 import type {
 	Character,
-	CharacterWithFaction,
 	CharacterWithPermissions,
 	CreateCharacterRequestBody,
 	DuplicateCharacterRequestBody,
 	UpdateCharacterRequestBody,
 } from "../types/characters.js";
-import type { Faction, FactionWithMembers } from "../types/factions.js";
+import type { FactionWithMembers } from "../types/factions.js";
 import type { FolderInteractionRequestBody } from "../types/folders.js";
 import type { Image } from "../types/images.js";
 import type {
@@ -17,10 +16,42 @@ import type {
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
-import type { Note } from "../types/notes.js";
+import type { Methods } from "./methods.js";
 
 export class Characters {
-	constructor(private client: Client) {}
+	constructor(
+		private client: Client,
+		private methods: Methods,
+	) {}
+
+	create = Object.assign(
+		async (body: CreateCharacterRequestBody) => {
+			return this.client.post<ServerResponse<Character>>("characters", body);
+		},
+		{
+			permission: (charId: Id, body: CreatePermissionRequestBody) => {
+				return this.createCharacterPermission(charId, body);
+			},
+		},
+	);
+
+	async update(charId: Id, charDetails: UpdateCharacterRequestBody) {
+		return this.client.patch<ServerResponse<Character>>(
+			`characters/${charId}`,
+			charDetails,
+		);
+	}
+
+	async delete(charId: Id) {
+		return this.client.delete<BasicServerResponse>(`characters/${charId}`);
+	}
+
+	async duplicate(charId: Id, duplicateData: DuplicateCharacterRequestBody) {
+		return this.client.post<ServerResponse<Character>>(
+			`characters/${charId}/duplicate`,
+			duplicateData,
+		);
+	}
 
 	getCharacter = Object.assign(
 		async (charId: Id) => {
@@ -33,18 +64,13 @@ export class Characters {
 		},
 	);
 
-	getForGame = Object.assign(
+	forGame = Object.assign(
 		async (gameId: Id) => {
-			return this.client.get<Character[]>(`games/${gameId}/characters`);
+			return this.methods.getGameCharacters(gameId);
 		},
 		{
 			withPrimaryFactions: async (gameId: Id) => {
-				return this.client.get<CharacterWithFaction[]>(
-					`games/${gameId}/characters`,
-					{
-						searchParams: { withData: "primaryFaction" },
-					},
-				);
+				return this.methods.getGameCharactersWithPrimaryFaction(gameId);
 			},
 		},
 	);
@@ -64,6 +90,14 @@ export class Characters {
 			},
 			factions: async (charId: Id, factionIds: Id[]) => {
 				return this.updateLinkedFactions(charId, factionIds);
+			},
+		},
+		remove: {
+			note: async (charId: Id, noteId: Id) => {
+				return this.unlinkNote(charId, noteId);
+			},
+			faction: async (charId: Id, noteId: Id) => {
+				return this.unlinkFaction(charId, noteId);
 			},
 		},
 	};
@@ -90,42 +124,13 @@ export class Characters {
 		},
 	};
 
-	async getCharacterWithPermissions(charId: Id) {
-		return this.client.get<CharacterWithPermissions>(
-			`characters/${charId}/permissions`,
-		);
-	}
-
-	// DONE
-	async createCharacter(body: CreateCharacterRequestBody) {
-		return this.client.post<ServerResponse<Character>>("characters", body);
-	}
-
-	// DONE
-	async deleteCharacter(charId: Id) {
-		return this.client.delete<BasicServerResponse>(`characters/${charId}`);
-	}
-
-	// DONE
-	async duplicateCharacter(charId: Id, duplicateData: DuplicateCharacterRequestBody) {
-		return this.client.post<ServerResponse<Character>>(
-			`characters/${charId}/duplicate`,
-			duplicateData,
-		);
-	}
-
-	async createCharacterPermission(charId: Id, body: CreatePermissionRequestBody) {
+	private async createCharacterPermission(
+		charId: Id,
+		body: CreatePermissionRequestBody,
+	) {
 		return this.client.post<ServerResponse<Permission>>(
 			`characters/${charId}/permissions`,
 			body,
-		);
-	}
-
-	// DONE
-	async updateCharacterDetails(charId: Id, charDetails: UpdateCharacterRequestBody) {
-		return this.client.patch<ServerResponse<Character>>(
-			`characters/${charId}`,
-			charDetails,
 		);
 	}
 
@@ -134,17 +139,33 @@ export class Characters {
 		return this.client.post<BasicServerResponse>(`folders/${folderId}/notes`, body);
 	}
 
-	async getPrimaryFaction(charId: Id): Promise<FactionWithMembers | null> {
+	factions = Object.assign(
+		async (charId: Id) => {
+			return this.methods.getCharacterFactions(charId);
+		},
+		{
+			link: (charId: Id, factionIds: Id[]) => {
+				return this.linkFactions(charId, factionIds);
+			},
+			unlink: (charId: Id, factionId: Id) => {
+				return this.unlinkFaction(charId, factionId);
+			},
+			replaceLinks: (charId: Id, factionIds: Id[]) => {
+				return this.updateLinkedFactions(charId, factionIds);
+			},
+			primary: async (charId: Id) => {
+				return this.getPrimaryFaction(charId);
+			},
+		},
+	);
+
+	private async getPrimaryFaction(charId: Id): Promise<FactionWithMembers | null> {
 		return this.client.get<FactionWithMembers | null>(
 			`characters/${charId}/factions/primary`,
 		);
 	}
 
-	async getFactions(charId: Id): Promise<Faction[]> {
-		return this.client.get<Faction[]>(`characters/${charId}/factions`);
-	}
-
-	async linkFactions(
+	private async linkFactions(
 		charId: Id,
 		factionIds: Id[],
 	): Promise<ServerResponse<{ factionIds: Id[] }>> {
@@ -154,7 +175,7 @@ export class Characters {
 		);
 	}
 
-	async updateLinkedFactions(
+	private async updateLinkedFactions(
 		charId: Id,
 		factionIds: Id[],
 	): Promise<ServerResponse<{ factionIds: Id[] }>> {
@@ -164,17 +185,30 @@ export class Characters {
 		);
 	}
 
-	async unlinkFaction(charId: Id, factionId: Id): Promise<BasicServerResponse> {
+	private async unlinkFaction(charId: Id, factionId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(
 			`characters/${charId}/factions/${factionId}`,
 		);
 	}
 
-	async getNotes(charId: Id): Promise<Note[]> {
-		return this.client.get<Note[]>(`characters/${charId}/notes`);
-	}
+	notes = Object.assign(
+		async (charId: Id) => {
+			return this.methods.getCharacterNotes(charId);
+		},
+		{
+			link: async (charId: Id, noteIds: Id[]) => {
+				return this.linkNotes(charId, noteIds);
+			},
+			unlink: async (charId: Id, noteId: Id) => {
+				return this.unlinkNote(charId, noteId);
+			},
+			replaceLinks: async (charId: Id, noteIds: Id[]) => {
+				return this.updateLinkedNotes(charId, noteIds);
+			},
+		},
+	);
 
-	async linkNotes(
+	private async linkNotes(
 		charId: Id,
 		noteIds: Id[],
 	): Promise<ServerResponse<{ noteIds: Id[] }>> {
@@ -183,7 +217,12 @@ export class Characters {
 			{ noteIds },
 		);
 	}
-	async updateLinkedNotes(
+	private async unlinkNote(charId: Id, noteId: Id) {
+		return this.client.delete<BasicServerResponse>(
+			`characters/${charId}/notes/${noteId}`,
+		);
+	}
+	private async updateLinkedNotes(
 		charId: Id,
 		noteIds: Id[],
 	): Promise<ServerResponse<{ noteIds: Id[] }>> {
@@ -193,7 +232,7 @@ export class Characters {
 		);
 	}
 
-	async updateCoverImage(
+	private async updateCoverImage(
 		charId: Id,
 		uploadStream: ReadableStream<Uint8Array>,
 		contentType: string,
@@ -209,7 +248,7 @@ export class Characters {
 		);
 	}
 
-	async uploadImage(
+	private async uploadImage(
 		charId: Id,
 		uploadStream: ReadableStream<Uint8Array>,
 		contentType: string,
@@ -222,6 +261,12 @@ export class Characters {
 					"Content-Type": contentType,
 				},
 			},
+		);
+	}
+
+	private async getCharacterWithPermissions(charId: Id) {
+		return this.client.get<CharacterWithPermissions>(
+			`characters/${charId}/permissions`,
 		);
 	}
 }

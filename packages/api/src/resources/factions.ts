@@ -18,9 +18,48 @@ import type {
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
+import type { Methods } from "./methods.js";
 
 export class Factions {
-	constructor(private client: Client) {}
+	constructor(
+		private client: Client,
+		private methods: Methods,
+	) { }
+
+	create = Object.assign(
+		async (body: CreateFactionRequestBody) => {
+			return this.client.post<ServerResponse<Faction>>("factions", body);
+		},
+		{
+			permission: (factionId: Id, body: CreatePermissionRequestBody) => {
+				return this.createFactionPermission(factionId, body);
+			},
+		},
+	);
+
+	async delete(factionId: Id): Promise<BasicServerResponse> {
+		return this.client.delete(`factions/${factionId}`);
+	}
+
+	async update(
+		factionId: Id,
+		factionDetails: UpdateFactionRequestBody,
+	): Promise<ServerResponse<Faction>> {
+		return this.client.patch<ServerResponse<Faction>>(
+			`factions/${factionId}`,
+			factionDetails,
+		);
+	}
+
+	async duplicate(
+		factionId: Id,
+		duplicateData: DuplicateFactionRequestBody,
+	): Promise<ServerResponse<Faction>> {
+		return this.client.post<ServerResponse<Faction>>(
+			`factions/${factionId}/duplicate`,
+			duplicateData,
+		);
+	}
 
 	getFaction = Object.assign(
 		async (factionId: Id) => {
@@ -33,26 +72,26 @@ export class Factions {
 		},
 	);
 
-	getGameFactions = Object.assign(
+	forGame = Object.assign(
 		async (gameId: Id) => {
-			return this.client.get<Faction[]>(`games/${gameId}/factions`);
+			return this.methods.getGameFactions(gameId);
 		},
 		{
 			withMembers: async (gameId: Id) => {
-				return this.client.get<FactionWithMembers[]>(`games/${gameId}/factions`, {
-					searchParams: { withData: "members" },
-				});
+				return this.methods.getGameFactionsWithMembers(gameId);
 			},
 		},
 	);
 
-	async getFactionWithPermissions(factionId: Id): Promise<FactionWithPermissions> {
+	private async getFactionWithPermissions(
+		factionId: Id,
+	): Promise<FactionWithPermissions> {
 		return this.client.get<FactionWithPermissions>(
 			`factions/${factionId}/permissions`,
 		);
 	}
 
-	async createFactionPermission(
+	private async createFactionPermission(
 		factionId: Id,
 		body: CreatePermissionRequestBody,
 	): Promise<ServerResponse<Permission>> {
@@ -62,41 +101,7 @@ export class Factions {
 		);
 	}
 
-	async createFaction(
-		body: CreateFactionRequestBody,
-	): Promise<ServerResponse<Faction>> {
-		return this.client.post<ServerResponse<Faction>>("factions", body);
-	}
-
-	async deleteFaction(factionId: Id): Promise<BasicServerResponse> {
-		return this.client.delete(`factions/${factionId}`);
-	}
-
-	async updateFactionDetails(
-		factionId: Id,
-		factionDetails: UpdateFactionRequestBody,
-	): Promise<ServerResponse<Faction>> {
-		return this.client.patch<ServerResponse<Faction>>(
-			`factions/${factionId}`,
-			factionDetails,
-		);
-	}
-
-	async duplicateFaction(
-		factionId: Id,
-		duplicateData: DuplicateFactionRequestBody,
-	): Promise<ServerResponse<Faction>> {
-		return this.client.post<ServerResponse<Faction>>(
-			`factions/${factionId}/duplicate`,
-			duplicateData,
-		);
-	}
-
-	async getFactionWithNotes(factionId: Id): Promise<FactionWithNotes> {
-		return this.client.get<FactionWithNotes>(`factions/${factionId}/notes`);
-	}
-
-	async getFactionMembers(factionId: Id): Promise<FactionMember[]> {
+	async members(factionId: Id): Promise<FactionMember[]> {
 		return this.client.get<FactionMember[]>(`factions/${factionId}/members`);
 	}
 
@@ -127,7 +132,7 @@ export class Factions {
 		},
 	};
 
-	async updateCoverImage(
+	private async updateCoverImage(
 		factionId: Id,
 		uploadStream: ReadableStream<Uint8Array>,
 		contentType: string,
@@ -143,7 +148,7 @@ export class Factions {
 		);
 	}
 
-	async uploadImage(
+	private async uploadImage(
 		factionId: Id,
 		uploadStream: ReadableStream<Uint8Array>,
 		contentType: string,

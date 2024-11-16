@@ -1,7 +1,6 @@
 import type { Client } from "../client.js";
 import type { Game, GameWithEntities } from "../types/games.js";
 import type { Id, QueryOptions } from "../types/index.js";
-import type { Note } from "../types/notes.js";
 import type { User, UserWithSidebarData } from "../types/users.js";
 
 export class Users {
@@ -12,7 +11,9 @@ export class Users {
 			return this.client.get<User>(`users/${userId}`);
 		},
 		{
-			misc: (userId: string) => null,
+			withSidebar: (userId: string) => {
+				return this.getUserWithSidebarData(userId);
+			},
 		},
 	);
 
@@ -21,7 +22,7 @@ export class Users {
 			return this.client.get<Game[]>(`users/${userId}/games`);
 		},
 		{
-			items: async (userId: Id) => {
+			withItems: async (userId: Id) => {
 				return this.client.get<GameWithEntities[]>(
 					`users/${userId}/games/items`,
 					{
@@ -32,7 +33,7 @@ export class Users {
 		},
 	);
 
-	async getAllUsers(options?: QueryOptions): Promise<User[]> {
+	async all(options?: QueryOptions): Promise<User[]> {
 		const searchParams: Record<string, number> = {};
 
 		if (options?.limit) searchParams.limit = options.limit;
@@ -43,11 +44,7 @@ export class Users {
 		});
 	}
 
-	async getUserSidebarData(userId: Id): Promise<UserWithSidebarData> {
+	async getUserWithSidebarData(userId: Id): Promise<UserWithSidebarData> {
 		return this.client.get<UserWithSidebarData>(`users/${userId}/sidebar`);
-	}
-
-	async getAllUsersNotes(userId: Id): Promise<Note[]> {
-		return this.client.get<Note[]>(`users/${userId}/notes`);
 	}
 }

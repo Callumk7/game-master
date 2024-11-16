@@ -17,49 +17,53 @@ import type {
 	NoteWithPermissions,
 	UpdateNoteContentRequestBody,
 } from "../types/notes.js";
+import type { Methods } from "./methods.js";
 
 export class Notes {
-	constructor(private client: Client) {}
+	constructor(
+		private client: Client,
+		private methods: Methods,
+	) {}
 
-	// DONE
-	async getNote(noteId: Id): Promise<Note> {
-		return this.client.get<Note>(`notes/${noteId}`);
-	}
+	getNote = Object.assign(
+		async (noteId: Id) => {
+			return this.client.get<Note>(`notes/${noteId}`);
+		},
+		{
+			withPermissions: async (noteId: Id) => {
+				return this.client.get<NoteWithPermissions>(
+					`notes/${noteId}/permissions`,
+				);
+			},
+		},
+	);
 
-	async getNoteWithPermissions(noteId: Id): Promise<NoteWithPermissions> {
-		return this.client.get<NoteWithPermissions>(`notes/${noteId}/permissions`);
-	}
+	create = Object.assign(
+		async (body: CreateNoteRequestBody) => {
+			return this.client.post<ServerResponse<Note>>("notes", body);
+		},
+		{
+			permission: async (noteId: Id, body: CreatePermissionRequestBody) => {
+				return this.client.post<ServerResponse<Permission>>(
+					`notes/${noteId}/permissions`,
+					body,
+				);
+			},
+		},
+	);
 
-	// DONE
-	async createNote(body: CreateNoteRequestBody): Promise<ServerResponse<Note>> {
-		return this.client.post<ServerResponse<Note>>("notes", body);
-	}
-
-	async createNotePermission(
-		noteId: Id,
-		body: CreatePermissionRequestBody,
-	): Promise<ServerResponse<Permission>> {
-		return this.client.post<ServerResponse<Permission>>(
-			`notes/${noteId}/permissions`,
-			body,
-		);
-	}
-
-	// DONE
-	async deleteNote(noteId: Id): Promise<BasicServerResponse> {
+	async delete(noteId: Id): Promise<BasicServerResponse> {
 		return this.client.delete<BasicServerResponse>(`notes/${noteId}`);
 	}
 
-	// DONE
-	async updateNote(
+	async update(
 		noteId: Id,
 		noteDetails: UpdateNoteContentRequestBody,
 	): Promise<ServerResponse<Note>> {
 		return this.client.patch<ServerResponse<Note>>(`notes/${noteId}`, noteDetails);
 	}
 
-	// PARTIALLY DONE
-	async duplicateNote(
+	async duplicate(
 		noteId: Id,
 		newNoteDetails: DuplicateNoteRequestBody,
 	): Promise<ServerResponse<Note>> {
@@ -69,9 +73,8 @@ export class Notes {
 		);
 	}
 
-	// DONE
-	async getAllGameNotes(gameId: Id): Promise<Note[]> {
-		return this.client.get<Note[]>(`games/${gameId}/notes`);
+	async forGame(gameId: Id) {
+		return this.methods.getGameNotes(gameId);
 	}
 
 	// DONE

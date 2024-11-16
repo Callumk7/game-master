@@ -4,6 +4,7 @@ import { Characters } from "./resources/characters.js";
 import { Factions } from "./resources/factions.js";
 import { Folders } from "./resources/folders.js";
 import { Games } from "./resources/games.js";
+import { Methods } from "./resources/methods.js";
 import { Notes } from "./resources/notes.js";
 import { Users } from "./resources/users.js";
 
@@ -114,6 +115,7 @@ export class Client {
 
 export class SDK {
 	private client: Client;
+	private methods: Methods;
 	users: Users;
 	games: Games;
 	notes: Notes;
@@ -123,11 +125,12 @@ export class SDK {
 
 	constructor(options: ClientOptions) {
 		this.client = new Client(options);
-		this.games = new Games(this.client);
+		this.methods = new Methods(this.client);
 		this.users = new Users(this.client);
-		this.notes = new Notes(this.client);
-		this.characters = new Characters(this.client);
-		this.factions = new Factions(this.client);
+		this.games = new Games(this.client, this.methods);
+		this.notes = new Notes(this.client, this.methods);
+		this.characters = new Characters(this.client, this.methods);
+		this.factions = new Factions(this.client, this.methods);
 		this.folders = new Folders(this.client);
 	}
 }
