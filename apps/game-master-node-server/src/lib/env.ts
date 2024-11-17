@@ -14,6 +14,7 @@ if (!process.env.S3_SECRET_KEY) {
 }
 
 export const env = {
+	isDevelopment: process.env.NODE_ENV === "development",
 	SERVER_SECRET: process.env.SERVER_SECRET,
 	DB_URL: process.env.DB_URL,
 	S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,

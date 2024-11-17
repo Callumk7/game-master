@@ -1,18 +1,15 @@
 import type { Client } from "../client.js";
-import type { Character, CharacterWithFaction } from "../types/characters.js";
+import type { CharacterWithFaction } from "../types/characters.js";
 import type {
 	CreateGameRequestBody,
 	Game,
 	GameEntities,
-	GameWithCharacters,
 	GameWithDatedEntities,
 	GameWithMembers,
-	GameWithNotes,
 	UpdateGameRequestBody,
 	UpdateMemberRequestBody,
 } from "../types/games.js";
 import type { BasicServerResponse, Id, ServerResponse } from "../types/index.js";
-import type { Note } from "../types/notes.js";
 import type { GameMember, User } from "../types/users.js";
 import type { Methods } from "./methods.js";
 
