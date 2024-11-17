@@ -1,5 +1,5 @@
-import { createExpressApp } from "remix-create-express-app";
 import compression from "compression";
+import { createExpressApp } from "remix-create-express-app";
 
 import pinoHttp from "pino-http";
 import { getHttpLogger } from "~/services/logging";

@@ -1,5 +1,5 @@
-import pino from "pino";
 import fs from "node:fs";
+import pino from "pino";
 import { env } from "~/lib/env";
 
 interface LoggerOptions {

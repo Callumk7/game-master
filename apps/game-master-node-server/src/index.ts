@@ -1,5 +1,6 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { pinoLogger } from "hono-pino";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { characterRoute } from "./features/characters";
@@ -9,9 +10,8 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import type { Variables } from "./types";
-import { pinoLogger } from "hono-pino";
 import { getHttpLogger } from "./services/logging";
+import type { Variables } from "./types";
 
 const logger = getHttpLogger();
 const app = new Hono<{ Variables: Variables }>();
