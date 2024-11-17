@@ -2,7 +2,6 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
-import { logger } from "hono/logger";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
@@ -11,7 +10,10 @@ import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
 import type { Variables } from "./types";
+import { pinoLogger } from "hono-pino";
+import { getHttpLogger } from "./services/logging";
 
+const logger = getHttpLogger();
 const app = new Hono<{ Variables: Variables }>();
 
 // jwt server-to-server validation
@@ -22,7 +24,12 @@ app.use(
 	}),
 );
 
-app.use("*", logger());
+app.use(
+	"*",
+	pinoLogger({
+		pino: logger,
+	}),
+);
 app.use("*", cors());
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);

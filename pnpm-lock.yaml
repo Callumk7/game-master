@@ -352,9 +352,15 @@ importers:
       hono:
         specifier: ^4.5.9
         version: 4.5.9
+      hono-pino:
+        specifier: ^0.6.0
+        version: 0.6.0(hono@4.5.9)(pino@9.5.0)
       http-status-codes:
         specifier: ^2.3.0
         version: 2.3.0
+      pino:
+        specifier: ^9.5.0
+        version: 9.5.0
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
@@ -383,6 +389,12 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
+      pino-http-print:
+        specifier: ^3.1.0
+        version: 3.1.0
+      pino-pretty:
+        specifier: ^13.0.0
+        version: 13.0.0
       tsx:
         specifier: ^4.7.1
         version: 4.16.2
@@ -5338,6 +5350,13 @@ packages:
 
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
+
+  hono-pino@0.6.0:
+    resolution: {integrity: sha512-tcORp53zLEpKUnoU2bZgD1Kn+NKrIZk6w1q8HYognSfIaNyEc7oGx63wrJVaM+pINPlAkZOQtRy6hmGBWqdIag==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      hono: '>=4.0.0'
+      pino: '>=7.1.0'
 
   hono@4.5.9:
     resolution: {integrity: sha512-zz8ktqMDRrZETjxBrv8C5PQRFbrTRCLNVAjD1SNQyOzv4VjmX68Uxw83xQ6oxdAB60HiWnGEatiKA8V3SZLDkQ==}
@@ -13427,8 +13446,7 @@ snapshots:
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
 
-  defu@6.1.4:
-    optional: true
+  defu@6.1.4: {}
 
   delayed-stream@1.0.0: {}
 
@@ -14393,6 +14411,12 @@ snapshots:
   headers-polyfill@4.0.3: {}
 
   help-me@5.0.0: {}
+
+  hono-pino@0.6.0(hono@4.5.9)(pino@9.5.0):
+    dependencies:
+      defu: 6.1.4
+      hono: 4.5.9
+      pino: 9.5.0
 
   hono@4.5.9: {}
 
