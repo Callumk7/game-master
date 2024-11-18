@@ -12,7 +12,7 @@ export function SignoutButton() {
         type="submit"
         onHoverStart={() => setLabel("Logout?")}
         onHoverEnd={() => setLabel(userData.username)}
-        className={"w-20"}
+        className={"w-24"}
       >
         {label}
       </Button>

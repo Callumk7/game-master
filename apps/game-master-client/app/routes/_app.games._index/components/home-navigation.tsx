@@ -1,4 +1,5 @@
 import type { User } from "@repo/api";
+import { SignoutButton } from "~/components/signout";
 import { Link } from "~/components/ui/link";
 
 interface HomeNavigationProps {
@@ -8,6 +9,7 @@ interface HomeNavigationProps {
 export function HomeNavigation({ user }: HomeNavigationProps) {
   return (
     <nav className="flex items-center py-1">
+      <SignoutButton />
       <Link href="/games/new" variant={"link"}>
         Create Game
       </Link>
