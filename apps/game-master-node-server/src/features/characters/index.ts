@@ -39,6 +39,9 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
+import { getLogger } from "@logtape/logtape";
+
+const logger = getLogger(["hono", "db", "characters"]);
 
 export const characterRoute = new Hono();
 
@@ -203,6 +206,9 @@ characterRoute.delete("/:charId/factions/:factionId", async (c) => {
 
 // Notes
 characterRoute.get("/:charId/notes", async (c) => {
+	logger.warn`THIS IS A WARNING AND APPEARS EVERYWHERE`;
+	logger.debug`THIS SHOULD NOT BE JSON LOGGED`;
+
 	const charId = c.req.param("charId");
 	try {
 		const characterNotes = await getCharacterNotes(charId);

@@ -1,6 +1,5 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { pinoLogger } from "hono-pino";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { characterRoute } from "./features/characters";
@@ -10,10 +9,14 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import { getHttpLogger } from "./services/logging";
 import type { Variables } from "./types";
+import { getLogger } from "@logtape/logtape";
+import { getPayload } from "./lib/jwt";
+import { setupLogging } from "./services/logging";
 
-const logger = getHttpLogger();
+await setupLogging();
+const logger = getLogger(["hono", "http"]);
+
 const app = new Hono<{ Variables: Variables }>();
 
 // jwt server-to-server validation
@@ -24,12 +27,17 @@ app.use(
 	}),
 );
 
-app.use(
-	"*",
-	pinoLogger({
-		pino: logger,
-	}),
-);
+app.use("*", async (c, next) => {
+	const { userId } = getPayload(c);
+	logger.info("{method} Request to {location}", {
+		userId,
+		...c.req,
+		method: c.req.method,
+		location: c.req.url
+	});
+	await next();
+});
+
 app.use("*", cors());
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
