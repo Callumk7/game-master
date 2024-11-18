@@ -11,10 +11,13 @@ export async function setupLogging() {
 			console: getConsoleSink({
 				formatter: ansiColorFormatter,
 			}),
-			jsonl: getFileSink("log.jsonl", {
+			hono: getFileSink("./logs/hono.jsonl", {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
-			db: getFileSink("db-log.jsonl", {
+			http: getFileSink("./logs/http.jsonl", {
+				formatter: (record) => `${JSON.stringify(record)}\n`,
+			}),
+			db: getFileSink("./logs/db.jsonl", {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
 		},
@@ -22,7 +25,12 @@ export async function setupLogging() {
 			{
 				category: ["hono"],
 				level: "info",
-				sinks: ["jsonl"],
+				sinks: ["hono"],
+			},
+			{
+				category: ["hono", "http"],
+				level: "info",
+				sinks: ["console", "http"],
 			},
 			{
 				category: ["hono", "debug"],
