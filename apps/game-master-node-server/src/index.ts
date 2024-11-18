@@ -1,4 +1,5 @@
 import { serve } from "@hono/node-server";
+import { getLogger } from "@logtape/logtape";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
@@ -9,10 +10,9 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import type { Variables } from "./types";
-import { getLogger } from "@logtape/logtape";
 import { getPayload } from "./lib/jwt";
 import { setupLogging } from "./services/logging";
+import type { Variables } from "./types";
 
 await setupLogging();
 const logger = getLogger(["hono", "http"]);
@@ -33,7 +33,7 @@ app.use("*", async (c, next) => {
 		userId,
 		...c.req,
 		method: c.req.method,
-		location: c.req.url
+		location: c.req.url,
 	});
 	await next();
 });

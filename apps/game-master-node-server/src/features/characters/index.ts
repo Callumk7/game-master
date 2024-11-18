@@ -1,3 +1,4 @@
+import { getLogger } from "@logtape/logtape";
 import {
 	createCharacterSchema,
 	createPermissionSchema,
@@ -39,7 +40,6 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
-import { getLogger } from "@logtape/logtape";
 
 const logger = getLogger(["hono", "db", "characters"]);
 
