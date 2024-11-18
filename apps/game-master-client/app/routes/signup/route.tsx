@@ -15,6 +15,8 @@ import { hashPassword } from "~/services/password-hash.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(request, {
     username: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     email: z.string().email(),
     password: z.string(),
   });
@@ -23,13 +25,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { error: result.error };
   }
 
-  const { username, password, email } = result.data;
+  const { username, password, email, firstName, lastName } = result.data;
 
   const passwordHash = await hashPassword(password);
 
   const newUser = await db
     .insert(users)
-    .values({ id: `user_${uuidv4()}`, username, email, passwordHash })
+    .values({
+      id: `user_${uuidv4()}`,
+      username,
+      email,
+      passwordHash,
+      firstName,
+      lastName,
+    })
     .returning({ userId: users.id, username: users.username, email: users.email });
 
   const session = await getSession(await authCookie.serialize(newUser[0]));
@@ -50,6 +59,20 @@ export default function SignUpRoute() {
         </CardHeader>
         <Form className="p-6 space-y-4" method="POST">
           <JollyTextField name="email" label="Email" type="email" isRequired />
+          <div className="flex items-stretch gap-2 w-full">
+            <JollyTextField
+              name="firstName"
+              label="First Name"
+              type="text"
+              className={"flex-1"}
+            />
+            <JollyTextField
+              name="lastName"
+              label="Last Name"
+              type="text"
+              className={"flex-1"}
+            />
+          </div>
           <JollyTextField name="username" label="Username" type="text" isRequired />
           <JollyTextField name="password" label="Password" type="password" isRequired />
           <Button type="submit">Create Account</Button>
