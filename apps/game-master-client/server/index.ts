@@ -1,8 +1,7 @@
 import compression from "compression";
 import { createExpressApp } from "remix-create-express-app";
-
-import pinoHttp from "pino-http";
-import { getHttpLogger } from "~/services/logging";
+import { LoggerSetup } from "~/services/logging";
+import { logger } from "./logging";
 
 // Some example to show how you can add context for loaders, will be useful
 const sayHello = () => "Hello nerds";
@@ -14,17 +13,12 @@ declare module "@remix-run/node" {
 	}
 }
 
-const httpLogger = getHttpLogger();
+await LoggerSetup.getInstance().setup();
 
 export const app = createExpressApp({
-	configure: (app) => {
-		// setup additional express middleware here
+	configure: async (app) => {
 		app.use(compression());
-		app.use(
-			pinoHttp({
-				logger: httpLogger,
-			}),
-		);
+		app.use(logger);
 		app.disable("x-powered-by");
 	},
 	getLoadContext: async (req, res) => {

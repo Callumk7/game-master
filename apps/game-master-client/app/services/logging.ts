@@ -1,73 +1,74 @@
-import fs from "node:fs";
-import pino from "pino";
-import { env } from "~/lib/env.server";
+import {
+	ansiColorFormatter,
+	configure,
+	getConsoleSink,
+	getFileSink,
+} from "@logtape/logtape";
 
-interface LoggerOptions {
-	logPath?: string;
-	logLevel?: string;
-}
+export class LoggerSetup {
+	private static instance: LoggerSetup;
+	private initialized = false;
 
-class Logger {
-	private baseLogger: pino.Logger;
-	private httpLogger: pino.Logger;
+	private constructor() {}
 
-	constructor(options: LoggerOptions = {}) {
-		const { logPath = "./logs", logLevel = "info" } = options;
+	static getInstance(): LoggerSetup {
+		if (!LoggerSetup.instance) {
+			LoggerSetup.instance = new LoggerSetup();
+		}
+		return LoggerSetup.instance;
+	}
 
-		const appStream = fs.createWriteStream(`${logPath}/app.log`, { flags: "a" });
-		const httpStream = fs.createWriteStream(`${logPath}/http.log`, { flags: "a" });
+	async setup() {
+		if (this.initialized) {
+			console.log("Logging already initialized");
+			return;
+		}
 
-		if (env.isDevelopment) {
-			const prettyStream = pino.transport({
-				target: "pino-pretty",
+		try {
+			console.log("Setting up logging, should only run once");
+			await configure({
+				sinks: {
+					console: getConsoleSink({
+						formatter: ansiColorFormatter,
+					}),
+					app: getFileSink("./logs/app.jsonl", {
+						formatter: (record) => `${JSON.stringify(record)}\n`,
+					}),
+					http: getFileSink("./logs/http.jsonl", {
+						formatter: (record) => `${JSON.stringify(record)}\n`,
+					}),
+					db: getFileSink("./logs/db.jsonl", {
+						formatter: (record) => `${JSON.stringify(record)}\n`,
+					}),
+				},
+				loggers: [
+					{
+						category: ["client"],
+						level: "info",
+						sinks: ["app"],
+					},
+					{
+						category: ["client", "http"],
+						level: "info",
+						sinks: ["http", "console"],
+					},
+					{
+						category: ["client", "debug"],
+						level: "debug",
+						sinks: ["console"],
+					},
+					{
+						category: ["client", "db"],
+						level: "debug",
+						sinks: ["db"],
+					},
+				],
 			});
-			this.baseLogger = pino(
-				{
-					level: logLevel,
-					timestamp: pino.stdTimeFunctions.isoTime,
-				},
-				pino.multistream([{ stream: appStream }, { stream: prettyStream }]),
-			);
 
-			const httpPrettyStream = pino.transport({
-				target: "pino-http-print",
-			});
-
-			this.httpLogger = pino(
-				{
-					level: logLevel,
-					timestamp: pino.stdTimeFunctions.isoTime,
-				},
-				pino.multistream([{ stream: httpStream }, { stream: httpPrettyStream }]),
-			);
-		} else {
-			this.baseLogger = pino(
-				{
-					level: logLevel,
-					timestamp: pino.stdTimeFunctions.isoTime,
-				},
-				appStream,
-			);
-
-			this.httpLogger = pino(
-				{
-					level: logLevel,
-					timestamp: pino.stdTimeFunctions.isoTime,
-				},
-				httpStream,
-			);
+			this.initialized = true;
+			console.log("Logging has completed setup");
+		} catch (error) {
+			console.error("Failed to initialize logger:", error);
 		}
 	}
-
-	getHttpLogger() {
-		return this.httpLogger;
-	}
-
-	getLogger(module: string) {
-		return this.baseLogger.child({ module });
-	}
 }
-
-const logger = new Logger();
-export const getLogger = (module: string) => logger.getLogger(module);
-export const getHttpLogger = () => logger.getHttpLogger();
