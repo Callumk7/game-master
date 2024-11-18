@@ -14,8 +14,8 @@ interface NoteCardProps {
 
 export function NoteCard({ notes, charNotes }: NoteCardProps) {
   return (
-    <div className="p-4 border rounded-md space-y-3 h-fit">
-      <div className="flex w-full items-center justify-between">
+    <div className="p-4 space-y-3 rounded-md border h-fit">
+      <div className="flex justify-between items-center w-full">
         <Text variant={"h4"}>Linked Notes</Text>
         <DialogTrigger>
           <Button variant={"outline"} size={"icon"}>
@@ -38,11 +38,11 @@ export function NoteCard({ notes, charNotes }: NoteCardProps) {
           <Card key={note.id} className="p-3">
             <Link
               to={`/games/${note.gameId}/notes/${note.id}`}
-              className="text-primary hover:text-lime-50"
+              className="hover:text-lime-50 text-primary"
             >
               <Text variant={"h4"}>{note.name}</Text>
             </Link>
-            <p className="text-xs whitespace-pre-wrap max-h-20 overflow-clip">
+            <p className="max-h-20 text-xs whitespace-pre-wrap overflow-clip">
               {note.content}
             </p>
           </Card>

@@ -7,7 +7,7 @@ import { HomeNavigation } from "./components/home-navigation";
 export default function Index() {
   const { userGames, userData } = useAppData();
   return (
-    <div className="font-sans p-4">
+    <div className="p-4 font-sans">
       <HomeNavigation user={userData} />
       <div className="flex flex-col gap-1">
         {userGames.map((game) => (

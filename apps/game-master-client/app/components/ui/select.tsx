@@ -70,7 +70,7 @@ const SelectTrigger = ({ className, children, ...props }: AriaButtonProps) => (
     {composeRenderProps(children, (children) => (
       <>
         {children}
-        <CaretSortIcon aria-hidden="true" className="size-4 opacity-50" />
+        <CaretSortIcon aria-hidden="true" className="opacity-50 size-4" />
       </>
     ))}
   </AriaButton>

@@ -20,7 +20,7 @@ export function LinkedNotesAside({ linkedNotes }: LinkedNotesAsideProps) {
             >
               {note.name}
             </Link>
-            <p className="text-xs text-slate-500 font-medium italic">{note.type}</p>
+            <p className="text-xs italic font-medium text-slate-500">{note.type}</p>
           </div>
         </div>
       ))}

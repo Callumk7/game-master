@@ -118,7 +118,7 @@ function MemberTable({ members }: { members: FactionMember[] }) {
 
   return (
     <div className="w-full border-b">
-      <p className="pl-4 ml-2 mt-2 font-medium">Members</p>
+      <p className="pl-4 mt-2 ml-2 font-medium">Members</p>
       <table className="m-2">
         <tbody>
           {table.getRowModel().rows.map((row) => (

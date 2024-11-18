@@ -7,7 +7,7 @@ interface HomeNavigationProps {
 
 export function HomeNavigation({ user }: HomeNavigationProps) {
   return (
-    <nav className="py-1 flex items-center">
+    <nav className="flex items-center py-1">
       <Link href="/games/new" variant={"link"}>
         Create Game
       </Link>

@@ -11,7 +11,7 @@ export function CharacterLayout() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
-      <div className="sticky top-[86px] z-20 flex items-center w-full justify-between">
+      <div className="flex sticky z-20 justify-between items-center w-full top-[86px]">
         <CharacterNavigation
           charId={characterDetails.id}
           gameId={characterDetails.gameId}

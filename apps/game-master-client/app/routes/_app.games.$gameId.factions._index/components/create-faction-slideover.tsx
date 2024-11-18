@@ -19,8 +19,8 @@ export function CreateFactionSlideover({ gameId }: CreateFactionSlideoverProps) 
       <DialogOverlay>
         <DialogContent side="right" className="sm:max-w-[425px]">
           {({ close }) => (
-            <div className="max-h-[95vh] overflow-y-auto">
-              <div className="p-[1px] space-y-6">
+            <div className="overflow-y-auto max-h-[95vh]">
+              <div className="space-y-6 p-[1px]">
                 <DialogHeader>
                   <DialogTitle>Create Faction</DialogTitle>
                 </DialogHeader>

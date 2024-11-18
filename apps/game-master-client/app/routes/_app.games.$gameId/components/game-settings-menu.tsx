@@ -43,7 +43,7 @@ interface SettingsMenuItemProps extends MenuItemProps {
 export function SettingsMenuItem({ icon, children, ...props }: SettingsMenuItemProps) {
   return (
     <MenuItem {...props}>
-      <div className="flex items-center gap-x-2 w-full">
+      <div className="flex gap-x-2 items-center w-full">
         {icon}
         {children}
       </div>

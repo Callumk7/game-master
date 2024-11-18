@@ -25,7 +25,7 @@ interface PrimaryFactionProps {
 
 export function PrimaryFaction({ faction, members }: PrimaryFactionProps) {
   return (
-    <div className="p-7 grid grid-cols-3 gap-7">
+    <div className="grid grid-cols-3 gap-7 p-7">
       <div className="col-span-2">
         <Text variant={"h3"} weight={"bold"}>
           {faction.name}

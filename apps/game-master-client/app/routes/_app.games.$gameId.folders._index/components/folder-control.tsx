@@ -12,7 +12,7 @@ interface FolderControlsProps {
 export function FolderControls({ folder, allFolders }: FolderControlsProps) {
   const submit = useSubmit();
   return (
-    <div className="w-full text-sm py-1 flex justify-between items-center">
+    <div className="flex justify-between items-center py-1 w-full text-sm">
       <span>{folder.name}</span>
       <div className="flex gap-1">
         <Button

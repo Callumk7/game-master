@@ -10,7 +10,7 @@ export function FactionLayout() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
-      <div className="sticky top-[86px] z-20 flex items-center w-full justify-between">
+      <div className="flex sticky z-20 justify-between items-center w-full top-[86px]">
         <FactionNavigation gameId={factionDetails.gameId} factionId={factionDetails.id} />
         <EntityToolbar
           entityOwnerId={factionDetails.ownerId}

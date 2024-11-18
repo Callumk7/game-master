@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function SignUpRoute() {
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="flex justify-center items-center h-screen">
       <Card className="mx-auto md:w-1/2">
         <CardHeader>
           <CardTitle>Signup for Game Master</CardTitle>

@@ -23,7 +23,7 @@ export function MemberCard({
     submit({ characterId }, { method: "DELETE" });
   };
   return (
-    <Card className="p-6 relative">
+    <Card className="relative p-6">
       <Button
         className={"absolute top-2 right-2"}
         size={"icon"}

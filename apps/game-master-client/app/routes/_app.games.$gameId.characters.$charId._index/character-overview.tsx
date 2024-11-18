@@ -46,7 +46,7 @@ export function CharacterOverview() {
         />
         {characterDetails.userPermissionLevel === "view" ? (
           <>
-            <span className="text-xs font-semibold rounded-full bg-primary text-primary-foreground px-2 py-[4px]">
+            <span className="px-2 text-xs font-semibold rounded-full bg-primary text-primary-foreground py-[4px]">
               You have permission to view
             </span>
             <EditorPreview htmlContent={characterDetails.htmlContent ?? ""} />

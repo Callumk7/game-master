@@ -59,7 +59,7 @@ const TreeItemContent = ({ children, itemLength, ...props }: TreeItemContentProp
   return (
     <AriaTreeItemContent {...props}>
       {composeRenderProps(children, (children, renderProps) => (
-        <div className="flex w-full gap-2 items-center">
+        <div className="flex gap-2 items-center w-full">
           {itemLength && itemLength > 0 ? (
             <Button
               slot="chevron"

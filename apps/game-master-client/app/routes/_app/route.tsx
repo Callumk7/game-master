@@ -36,8 +36,8 @@ export function ErrorBoundary() {
   const error = useRouteError();
   console.error(error);
   return (
-    <div className="w-4/5 mx-auto">
-      <Text variant={"h3"} className="w-full text-center pt-20">
+    <div className="mx-auto w-4/5">
+      <Text variant={"h3"} className="pt-20 w-full text-center">
         Something went wrong
       </Text>
     </div>

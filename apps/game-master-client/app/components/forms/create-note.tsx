@@ -25,7 +25,7 @@ export function CreateNoteSlideover({ gameId }: CreateNoteProps) {
       <DialogOverlay>
         <DialogContent side="right" className="sm:max-w-[425px]">
           {({ close }) => (
-            <div className="max-h-[95vh] overflow-y-auto">
+            <div className="overflow-y-auto max-h-[95vh]">
               <DialogHeader>
                 <DialogTitle>New Note</DialogTitle>
               </DialogHeader>
@@ -82,7 +82,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
           label="Title"
           isRequired
         />
-        <div className="flex w-full justify-between gap-4">
+        <div className="flex gap-4 justify-between w-full">
           <JollySelect
             className={"flex-1"}
             label="Note Type"
@@ -111,7 +111,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
           editor={editor}
           bordered
           label="Body"
-          className="min-h-[50vh] h-full"
+          className="h-full min-h-[50vh]"
         />
       </div>
       <DialogFooter>

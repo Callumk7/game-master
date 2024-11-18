@@ -28,7 +28,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewGameRoute() {
   return (
     <div className="p-6">
-      <Form method="post" className="max-w-80 flex flex-col gap-4">
+      <Form method="post" className="flex flex-col gap-4 max-w-80">
         <JollyTextField type="text" label="Name" name="name" isRequired />
         <Button className="w-fit" type="submit">
           Submit
