@@ -2,6 +2,7 @@ import compression from "compression";
 import { createExpressApp } from "remix-create-express-app";
 import { LoggerSetup } from "~/services/logging";
 import { logger } from "./logging";
+import { env } from "~/lib/env.server";
 
 // Some example to show how you can add context for loaders, will be useful
 const sayHello = () => "Hello nerds";
@@ -20,6 +21,15 @@ export const app = createExpressApp({
 		app.use(compression());
 		app.use(logger);
 		app.disable("x-powered-by");
+		// Bug with react dev tools in firefox looking for a file that does not exist
+		if (env.isDevelopment) {
+			app.get("/installHook.js.map", (_, res) => {
+				res.send({});
+			});
+			app.get("*/**/installHook.js.map", (_, res) => {
+				res.send({});
+			});
+		}
 	},
 	getLoadContext: async (req, res) => {
 		// custom load context should match the AppLoadContext interface defined above
