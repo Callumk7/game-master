@@ -30,3 +30,12 @@ export const newUserSchema = z.object({
 	passwordHash: z.string(),
 });
 export type NewUserRequestBody = z.infer<typeof newUserSchema>;
+
+export const baseUserSchema = z.object({
+  username: z.string(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().email(),
+});
+export type UpdateUserRequestBody = z.infer<typeof baseUserSchema>;
+

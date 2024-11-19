@@ -19,10 +19,16 @@ const layoutVariants = cva("mx-auto", {
       mid: "w-4/5",
       full: "w-full",
     },
+    spacing: {
+      default: "",
+      normal: "space-y-2",
+      wide: "space-y-6",
+    },
   },
   defaultVariants: {
     padding: "default",
     width: "default",
+    spacing: "default",
     grid: "none",
   },
 });
@@ -37,10 +43,14 @@ export function Layout({
   children,
   grid,
   width,
+  spacing,
   ...props
 }: LayoutProps) {
   return (
-    <div className={cn(className, layoutVariants({ padding, grid, width }))} {...props}>
+    <div
+      className={cn(className, layoutVariants({ padding, grid, width, spacing }))}
+      {...props}
+    >
       {children}
     </div>
   );

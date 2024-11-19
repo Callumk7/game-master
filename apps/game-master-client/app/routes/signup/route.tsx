@@ -1,25 +1,24 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { baseUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { redirect } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
-import { Button } from "~/components/ui/button";
+import { BaseUserForm } from "~/components/forms/user-forms";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { JollyTextField } from "~/components/ui/textfield";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
 import { hashPassword } from "~/services/password-hash.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const result = await zx.parseFormSafe(request, {
-    username: z.string(),
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string().email(),
-    password: z.string(),
-  });
+  const result = await zx.parseFormSafe(
+    request,
+    baseUserSchema.extend({
+      password: z.string(),
+    }),
+  );
 
   if (!result.success) {
     return { error: result.error };
@@ -57,26 +56,9 @@ export default function SignUpRoute() {
         <CardHeader>
           <CardTitle>Signup for Game Master</CardTitle>
         </CardHeader>
-        <Form className="p-6 space-y-4" method="POST">
-          <JollyTextField name="email" label="Email" type="email" isRequired />
-          <div className="flex items-stretch gap-2 w-full">
-            <JollyTextField
-              name="firstName"
-              label="First Name"
-              type="text"
-              className={"flex-1"}
-            />
-            <JollyTextField
-              name="lastName"
-              label="Last Name"
-              type="text"
-              className={"flex-1"}
-            />
-          </div>
-          <JollyTextField name="username" label="Username" type="text" isRequired />
+        <BaseUserForm method="POST" buttonLabel="Create Account">
           <JollyTextField name="password" label="Password" type="password" isRequired />
-          <Button type="submit">Create Account</Button>
-        </Form>
+        </BaseUserForm>
       </Card>
     </div>
   );
