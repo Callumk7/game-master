@@ -8,21 +8,26 @@ import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { unlinkCharacter } from "./actions.server";
 import { MembersRoute } from "./members-route";
+import { createCharacterAction } from "~/queries/server/create-character.server";
 
 const getParams = (params: Params) => {
-  return parseParams(params, { factionId: z.string() }).factionId;
+  return parseParams(params, { factionId: z.string(), gameId: z.string() });
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const factionId = getParams(params);
+  const { gameId, factionId } = getParams(params);
   const { api } = await createApiFromReq(request);
   const members = await getData(() => api.factions.members(factionId));
-  return typedjson({ members });
+  return typedjson({ members, gameId, factionId });
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const factionId = getParams(params);
+  const { factionId } = getParams(params);
   const { api } = await createApiFromReq(request);
+
+  if (request.method === "POST") {
+    return createCharacterAction(request);
+  }
 
   if (request.method === "DELETE") {
     return await unlinkCharacter(request, api, factionId);

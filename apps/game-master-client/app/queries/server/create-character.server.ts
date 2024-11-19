@@ -24,7 +24,7 @@ export async function createCharacterAction(request: Request) {
 	}
 
 	return json(
-		{ errorMsg: "There was a problem creating this faction, please try again." },
+		{ errorMsg: "There was a problem creating this character, please try again." },
 		{
 			status: StatusCodes.INTERNAL_SERVER_ERROR,
 			statusText: ReasonPhrases.INTERNAL_SERVER_ERROR,

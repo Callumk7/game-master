@@ -10,7 +10,7 @@ import {
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
-import { characters } from "~/db/schema/characters";
+import { characters, charactersInFactions } from "~/db/schema/characters";
 import { images } from "~/db/schema/images";
 import {
 	basicSuccessResponse,
@@ -41,8 +41,6 @@ import {
 } from "./queries";
 import { createCharacterInsert } from "./util";
 
-const logger = getLogger(["hono", "db", "characters"]);
-
 export const characterRoute = new Hono();
 
 const getCharacter = async (charId: string) => {
@@ -58,6 +56,12 @@ characterRoute.post("/", async (c) => {
 
 	try {
 		const newChar = await createCharacter(newCharacterInsert);
+		const { factionId } = data;
+		if (factionId) {
+			await db
+				.insert(charactersInFactions)
+				.values({ characterId: newChar.id, factionId });
+		}
 		return successResponse(c, newChar);
 	} catch (error) {
 		return handleDatabaseError(c, error);
@@ -206,9 +210,6 @@ characterRoute.delete("/:charId/factions/:factionId", async (c) => {
 
 // Notes
 characterRoute.get("/:charId/notes", async (c) => {
-	logger.warn`THIS IS A WARNING AND APPEARS EVERYWHERE`;
-	logger.debug`THIS SHOULD NOT BE JSON LOGGED`;
-
 	const charId = c.req.param("charId");
 	try {
 		const characterNotes = await getCharacterNotes(charId);

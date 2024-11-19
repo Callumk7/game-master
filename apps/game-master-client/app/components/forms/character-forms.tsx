@@ -84,9 +84,14 @@ function BaseCharacterForm<T extends Character>({
 interface CreateCharacterFormProps {
   gameId: string;
   close?: () => void;
+  factionId?: string | null;
 }
 
-export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps) {
+export function CreateCharacterForm({
+  gameId,
+  close,
+  factionId,
+}: CreateCharacterFormProps) {
   const editor = useDefaultEditor();
   const [name, setName] = useState("");
   const [race, setRace] = useState("");
@@ -103,8 +108,10 @@ export function CreateCharacterForm({ gameId, close }: CreateCharacterFormProps)
     const content = editor.getText();
     const htmlContent = editor.getHTML();
 
+    if (!factionId) factionId = null;
+
     submit(
-      { content, htmlContent, name, gameId, race, characterClass, level },
+      { content, htmlContent, name, gameId, race, characterClass, level, factionId },
       { method: "post" },
     );
 

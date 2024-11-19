@@ -10,9 +10,10 @@ import {
 
 interface CreateCharacterProps {
   gameId: string;
+  factionId?: string;
 }
 
-export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
+export function CreateCharacterSlideover({ gameId, factionId }: CreateCharacterProps) {
   return (
     <DialogTrigger>
       <Button variant="outline">Create Character</Button>
@@ -24,7 +25,11 @@ export function CreateCharacterSlideover({ gameId }: CreateCharacterProps) {
                 <DialogHeader>
                   <DialogTitle>Create Character</DialogTitle>
                 </DialogHeader>
-                <CreateCharacterForm gameId={gameId} close={close} />
+                <CreateCharacterForm
+                  gameId={gameId}
+                  close={close}
+                  factionId={factionId}
+                />
               </div>
             </div>
           )}

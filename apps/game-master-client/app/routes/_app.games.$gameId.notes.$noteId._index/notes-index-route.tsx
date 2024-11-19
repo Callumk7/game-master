@@ -9,7 +9,7 @@ import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
 import { useGameData } from "../_app.games.$gameId/route";
 
 export function NoteIndexRoute() {
-  const { note, folders, linkedNotes } = useNoteData();
+  const { note, linkedNotes } = useNoteData();
   const { notes } = useGameData();
   const { suggestionItems } = useGameData();
 

@@ -4,9 +4,11 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/typeography";
 import { MemberCard } from "./components/member-card";
 import type { loader } from "./route";
+import { AddMemberDialog } from "./components/add-member-dialog";
+import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 
 export function MembersRoute() {
-  const { members } = useTypedLoaderData<typeof loader>();
+  const { members, gameId, factionId } = useTypedLoaderData<typeof loader>();
   const [isEditing, setIsEditing] = useState(false);
   return (
     <div className="space-y-4">
@@ -19,6 +21,8 @@ export function MembersRoute() {
       >
         {isEditing ? "Save" : "Edit"}
       </Button>
+      <AddMemberDialog allCharacters={[]} />
+      <CreateCharacterSlideover gameId={gameId} factionId={factionId} />
       <div className="grid grid-cols-4 gap-3">
         {members.map((member) => (
           <MemberCard
