@@ -5,7 +5,7 @@ import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { Container } from "~/components/container";
 import { createApiFromReq } from "~/lib/api.server";
-import { FolderControls } from "./components/folder-control";
+import { FolderTable } from "~/components/tables/folder-table";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() });
@@ -41,11 +41,7 @@ export default function FolderIndex() {
   const { folders } = useTypedLoaderData<typeof loader>();
   return (
     <Container>
-      <div className="divide-y">
-        {folders.map((folder) => (
-          <FolderControls key={folder.id} folder={folder} allFolders={folders} />
-        ))}
-      </div>
+      <FolderTable folders={folders} />
     </Container>
   );
 }

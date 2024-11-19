@@ -78,15 +78,16 @@ export function CharacterTable({ characters }: CharacterTableProps) {
 
 const h = createColumnHelper<CharacterWithFaction>();
 
+interface CharacterTableHookProps {
+  data: CharacterWithFaction[];
+  setIsEditCharacterDialogOpen: (isOpen: boolean) => void;
+  setSelectedCharId: (charId: string) => void;
+}
 const useCharacterTable = ({
   data,
   setIsEditCharacterDialogOpen,
   setSelectedCharId,
-}: {
-  data: CharacterWithFaction[];
-  setIsEditCharacterDialogOpen: (isOpen: boolean) => void;
-  setSelectedCharId: (charId: string) => void;
-}) => {
+}: CharacterTableHookProps) => {
   const handleEdit = (charId: string) => {
     setSelectedCharId(charId);
     setIsEditCharacterDialogOpen(true);
