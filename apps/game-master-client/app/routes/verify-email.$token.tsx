@@ -5,7 +5,7 @@ import { and, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { parseParams } from "zodix";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { token } = parseParams(params, { token: z.string() });
 
   try {
