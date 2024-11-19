@@ -17,6 +17,7 @@ export const noteTypeEnum = pgEnum("note_type", [
 	"location",
 	"item",
 	"quest",
+	"scene"
 ]);
 
 export const notes = pgTable("notes", {

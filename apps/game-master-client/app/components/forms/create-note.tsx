@@ -74,7 +74,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
   };
   return (
     <Form method="post" onSubmit={handleSubmit}>
-      <div className="grid gap-4 py-4 px-1 h-full">
+      <div className="space-y-4 py-4 px-1 h-full">
         <JollyTextField
           autoFocus
           value={name}
@@ -95,6 +95,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="location">Location</SelectItem>
             <SelectItem id="item">Item</SelectItem>
             <SelectItem id="quest">Quest</SelectItem>
+            <SelectItem id="scene">Scene</SelectItem>
           </JollySelect>
           <JollySelect
             className={"flex-1"}
@@ -111,14 +112,11 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
           editor={editor}
           bordered
           label="Body"
-          className="h-full min-h-[50vh]"
         />
       </div>
-      <DialogFooter>
-        <Button onPress={close} type="submit">
-          Save
-        </Button>
-      </DialogFooter>
+      <Button onPress={close} type="submit">
+        Save
+      </Button>
     </Form>
   );
 }

@@ -18,7 +18,7 @@ const Dialog = AriaDialog;
 
 const sheetVariants = cva(
   [
-    "fixed z-50 gap-4 bg-background shadow-lg transition",
+    "fixed z-50 gap-4 bg-background shadow-lg transition ease-in-out",
     /* Entering */
     "data-[entering]:duration-200 data-[entering]:animate-in",
     /* Exiting */
