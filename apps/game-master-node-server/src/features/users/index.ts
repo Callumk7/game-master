@@ -10,7 +10,7 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
-import { getSidebarData, getUser, getUserGames } from "./queries";
+import { getUser, getUserGames } from "./queries";
 import { eq } from "drizzle-orm";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
