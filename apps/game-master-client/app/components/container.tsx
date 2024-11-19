@@ -5,7 +5,7 @@ interface ContainerProps extends HTMLProps<HTMLDivElement> {}
 
 export function Container({ children, className, ...props }: ContainerProps) {
   return (
-    <div className={cn("space-y-2 p-4", className)} {...props}>
+    <div className={cn("space-y-2 p-2", className)} {...props}>
       {children}
     </div>
   );

@@ -16,7 +16,7 @@ function Tree<T extends object>({ className, children, ...props }: AriaTreeProps
   return (
     <AriaTree
       className={composeRenderProps(className, (className) =>
-        cn(className, "group overflow-auto w-full p-1 outline-none flex flex-col gap-1"),
+        cn(className, "group overflow-auto overflow-x-hidden w-full p-1 outline-none flex flex-col gap-1"),
       )}
       {...props}
     >

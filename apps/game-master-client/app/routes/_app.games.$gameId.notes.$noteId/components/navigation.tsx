@@ -12,8 +12,8 @@ interface NoteNavigationProps {
 export function NoteNavigation({ noteId, gameId }: NoteNavigationProps) {
   const { pathname } = useLocation();
   let selectedKey = "/";
-  if (pathname.endsWith("/factions")) selectedKey = "/factions";
-  if (pathname.endsWith("/relations")) selectedKey = "/relations";
+  if (pathname.endsWith("/links")) selectedKey = "/links";
+  if (pathname.endsWith("/images")) selectedKey = "/images";
 
   const baseUrl = noteHref(gameId, noteId);
   return (
@@ -22,10 +22,10 @@ export function NoteNavigation({ noteId, gameId }: NoteNavigationProps) {
         <Tab id={"/"} href={baseUrl}>
           Overview
         </Tab>
-        <Tab id={"/links"} href={`${baseUrl}/links`} isDisabled>
+        <Tab id={"/links"} href={`${baseUrl}/links`}>
           Links
         </Tab>
-        <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>
+        <Tab id={"/images"} href={`${baseUrl}/images`}>
           Images
         </Tab>
       </TabList>

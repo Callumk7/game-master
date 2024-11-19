@@ -34,6 +34,7 @@ export function LinkNotesPopover({ allNotes, entityNotes }: LinkNotesPopoverProp
           {({ close }) => (
             <>
               <GridList
+                aria-label="Select linked notes"
                 className={"border-0"}
                 selectionMode="multiple"
                 items={allNotes}

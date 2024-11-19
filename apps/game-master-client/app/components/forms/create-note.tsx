@@ -5,7 +5,6 @@ import { EditorWithControls, useDefaultEditor } from "~/components/editor";
 import { Button } from "~/components/ui/button";
 import {
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -67,9 +66,6 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
       type,
       visibility,
     };
-
-    console.log(validData);
-
     submit(validData, { method: "post" });
   };
   return (
