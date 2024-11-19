@@ -4,7 +4,7 @@ import type { Id, QueryOptions, ServerResponse } from "../types/index.js";
 import type { UpdateUserRequestBody, User, UserWithSidebarData } from "../types/users.js";
 
 export class Users {
-	constructor(private client: Client) { }
+	constructor(private client: Client) {}
 
 	getUser = Object.assign(
 		async (userId: Id) => {

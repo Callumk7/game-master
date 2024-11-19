@@ -63,7 +63,7 @@ export class LoggerSetup {
 						sinks: ["db"],
 					},
 				],
-				reset: true
+				reset: true,
 			});
 
 			this.initialized = true;

@@ -1,8 +1,8 @@
+import { GearIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useAppData } from "~/routes/_app/route";
 import { Button } from "./ui/button";
 import { Link } from "./ui/link";
-import { GearIcon } from "@radix-ui/react-icons";
 
 export function SignoutButton() {
   const { userData } = useAppData();

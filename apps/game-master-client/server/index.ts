@@ -1,9 +1,9 @@
 import compression from "compression";
 import cors from "cors";
 import { createExpressApp } from "remix-create-express-app";
+import { env } from "~/lib/env.server";
 import { LoggerSetup } from "~/services/logging";
 import { logger } from "./logging";
-import { env } from "~/lib/env.server";
 
 // Some example to show how you can add context for loaders, will be useful
 const sayHello = () => "Hello nerds";

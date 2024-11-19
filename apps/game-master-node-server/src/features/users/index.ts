@@ -1,5 +1,6 @@
 import { baseUserSchema, newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { users } from "~/db/schema/users";
@@ -11,7 +12,6 @@ import {
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
 import { getUser, getUserGames } from "./queries";
-import { eq } from "drizzle-orm";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
 
@@ -94,7 +94,7 @@ usersRoute.patch("/:userId", async (c) => {
 	}
 });
 
-// NOTE: There is currently not any delete user functionality in the 
-// http server. The whole process for data deletion and recovery should 
+// NOTE: There is currently not any delete user functionality in the
+// http server. The whole process for data deletion and recovery should
 // probably have a more robust process than it does right now - we could
 // do with a history and recovery db and feature set
