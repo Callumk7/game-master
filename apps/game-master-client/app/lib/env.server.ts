@@ -11,6 +11,15 @@ if (!isDevelopment) {
 	if (!process.env.SERVER_URL) {
 		throw new Error("SERVER_URL is not set in the environment");
 	}
+	if (!process.env.AWS_ACCESS_KEY_ID) {
+		throw new Error("AWS_ACCESS_KEY_ID is not set in the environment");
+	}
+	if (!process.env.AWS_SECRET_ACCESS_KEY) {
+		throw new Error("AWS_SECRET_ACCESS_KEY is not set in the environment");
+	}
+}
+
+if (isDevelopment) {
 	if (!process.env.SMTP_HOST) {
 		throw new Error("SMTP_HOST is not set in the environment");
 	}
@@ -22,12 +31,6 @@ if (!isDevelopment) {
 	}
 	if (!process.env.SMTP_PASS) {
 		throw new Error("SMTP_PASS is not set in the environment");
-	}
-	if (!process.env.AWS_ACCESS_KEY_ID) {
-		throw new Error("AWS_ACCESS_KEY_ID is not set in the environment");
-	}
-	if (!process.env.AWS_SECRET_ACCESS_KEY) {
-		throw new Error("AWS_SECRET_ACCESS_KEY is not set in the environment");
 	}
 }
 
