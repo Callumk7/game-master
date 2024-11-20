@@ -1,25 +1,16 @@
 import type { CharacterWithFaction } from "@repo/api";
 import {
   type SortingState,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
+  createColumnHelper, getCoreRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { Link } from "~/components/ui/link";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import { characterHref, factionHref } from "~/util/generate-hrefs";
 import { EditCharacterDialog } from "../forms/edit-character-dialog";
 import { EntityRowControls } from "./shared";
+import { BaseTable } from "./base-table";
 
 interface CharacterTableProps {
   characters: CharacterWithFaction[];
@@ -36,35 +27,7 @@ export function CharacterTable({ characters }: CharacterTableProps) {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((group) => (
-            <TableRow key={group.id}>
-              {group.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <BaseTable table={table} />
       {selectedChar && (
         <EditCharacterDialog
           character={selectedChar}

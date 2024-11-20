@@ -1,21 +1,13 @@
 import type { Folder } from "@repo/api";
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { folderHref } from "~/util/generate-hrefs";
 import { Link } from "../ui/link";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
+import { BaseTable } from "./base-table";
 
 interface FolderTableProps {
   folders: Folder[];
@@ -23,37 +15,7 @@ interface FolderTableProps {
 
 export function FolderTable({ folders }: FolderTableProps) {
   const table = useFolderTable({ data: folders });
-  return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((group) => (
-          <TableRow key={group.id}>
-            {group.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                onClick={header.column.getToggleSortingHandler()}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
+  return <BaseTable table={table} />;
 }
 
 const h = createColumnHelper<Folder>();
