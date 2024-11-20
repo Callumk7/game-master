@@ -9,7 +9,7 @@ const noteTypeSchema = z.enum([
 	"faction",
 	"item",
 	"quest",
-	"scene"
+	"scene",
 ]);
 export type NoteType = z.infer<typeof noteTypeSchema>;
 

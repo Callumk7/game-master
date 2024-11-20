@@ -4,11 +4,11 @@ import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
+import { createCharacterAction } from "~/queries/server/create-character.server";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { unlinkCharacter } from "./actions.server";
 import { MembersRoute } from "./members-route";
-import { createCharacterAction } from "~/queries/server/create-character.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, { factionId: z.string(), gameId: z.string() });

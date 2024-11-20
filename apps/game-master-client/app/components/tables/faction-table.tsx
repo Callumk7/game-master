@@ -20,7 +20,6 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { characterHref } from "~/util/generate-hrefs";
-import { Card } from "../ui/card";
 import { EntityRowControls } from "./shared";
 
 interface FactionTableProps {

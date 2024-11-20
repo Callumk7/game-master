@@ -1,16 +1,17 @@
 import type { CharacterWithFaction } from "@repo/api";
 import {
   type SortingState,
-  createColumnHelper, getCoreRowModel,
+  createColumnHelper,
+  getCoreRowModel,
   getSortedRowModel,
-  useReactTable
+  useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { Link } from "~/components/ui/link";
 import { characterHref, factionHref } from "~/util/generate-hrefs";
 import { EditCharacterDialog } from "../forms/edit-character-dialog";
-import { EntityRowControls } from "./shared";
 import { BaseTable } from "./base-table";
+import { EntityRowControls } from "./shared";
 
 interface CharacterTableProps {
   characters: CharacterWithFaction[];

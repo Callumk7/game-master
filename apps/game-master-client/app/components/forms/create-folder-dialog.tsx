@@ -1,3 +1,4 @@
+import type { BasicEntity } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import {
   DialogContent,
@@ -7,7 +8,6 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { CreateFolderForm } from "./create-folder-form";
-import type { BasicEntity } from "@repo/api";
 
 interface CreateFolderSlideoverProps {
   gameId: string;

@@ -4,7 +4,7 @@ import { createFolder } from "~/actions/folders.server";
 import { createApiFromReq } from "~/lib/api.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const {api, userId} = await createApiFromReq(request);
+  const { api, userId } = await createApiFromReq(request);
   return await createFolder(request, api, userId);
 };
 

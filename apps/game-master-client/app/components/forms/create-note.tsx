@@ -104,11 +104,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="public">Everyone can edit</SelectItem>
           </JollySelect>
         </div>
-        <EditorWithControls
-          editor={editor}
-          bordered
-          label="Body"
-        />
+        <EditorWithControls editor={editor} bordered label="Body" />
       </div>
       <Button onPress={close} type="submit">
         Save

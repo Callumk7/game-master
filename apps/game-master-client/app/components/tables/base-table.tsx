@@ -1,4 +1,4 @@
-import { flexRender, type Table as TanStackTable } from "@tanstack/react-table";
+import { type Table as TanStackTable, flexRender } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -43,5 +43,5 @@ export function BaseTable<T>({ table }: BaseTableProps<T>) {
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }

@@ -5,8 +5,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Link } from "../ui/link";
-import { characterHref, factionHref, noteHref } from "~/util/generate-hrefs";
 import {
   Table,
   TableBody,
@@ -15,6 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { characterHref, factionHref, noteHref } from "~/util/generate-hrefs";
+import { Link } from "../ui/link";
 
 interface AllEntityTableProps {
   notes: Note[];

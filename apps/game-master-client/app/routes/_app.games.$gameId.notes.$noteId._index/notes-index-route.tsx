@@ -32,11 +32,11 @@ export function NoteIndexRoute() {
       {note.userPermissionLevel === "view" ? (
         <EditorPreview htmlContent={note.htmlContent ?? ""} />
       ) : (
-          <EditorClient
-            htmlContent={note.htmlContent ?? ""}
-            suggestionItems={suggestionItems}
-          />
-        )}
+        <EditorClient
+          htmlContent={note.htmlContent ?? ""}
+          suggestionItems={suggestionItems}
+        />
+      )}
     </Layout>
   );
 }

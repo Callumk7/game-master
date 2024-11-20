@@ -1,3 +1,3 @@
 export default function NotesImagesRoute() {
-  return <div>images route</div>
+  return <div>images route</div>;
 }

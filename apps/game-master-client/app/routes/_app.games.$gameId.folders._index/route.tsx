@@ -3,9 +3,9 @@ import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { createFolder } from "~/actions/folders.server";
 import { createApiFromReq } from "~/lib/api.server";
 import FolderIndex from "./folders-index";
-import { createFolder } from "~/actions/folders.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() });

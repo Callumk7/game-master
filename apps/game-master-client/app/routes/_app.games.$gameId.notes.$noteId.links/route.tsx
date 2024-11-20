@@ -1,15 +1,15 @@
-import { Layout } from "~/components/layout";
-import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
-import { LinkNotesPopover } from "~/components/linking/link-notes";
-import { useGameData } from "../_app.games.$gameId/route";
-import { updateLinks } from "./actions.server";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { createApiFromReq } from "~/lib/api.server";
+import type { Params } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import type { Params } from "@remix-run/react";
-import { methodNotAllowed } from "~/util/responses";
+import { Layout } from "~/components/layout";
+import { LinkNotesPopover } from "~/components/linking/link-notes";
 import { AllEntityTable } from "~/components/tables/all-entities";
+import { createApiFromReq } from "~/lib/api.server";
+import { methodNotAllowed } from "~/util/responses";
+import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
+import { useGameData } from "../_app.games.$gameId/route";
+import { updateLinks } from "./actions.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
