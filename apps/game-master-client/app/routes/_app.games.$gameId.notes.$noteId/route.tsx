@@ -16,6 +16,7 @@ import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.s
 import { deleteNote, duplicateNote } from "./actions.server";
 import { NoteNavigation } from "./components/navigation";
 import { getNoteData } from "./queries.server";
+import { ScrollFade } from "~/components/scroll-visibility";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -58,7 +59,9 @@ export default function NotesRoute() {
   return (
     <>
       <div className="flex sticky z-20 justify-between items-center w-full top-[86px]">
-        <NoteNavigation noteId={note.id} gameId={note.gameId} />
+        <ScrollFade>
+          <NoteNavigation noteId={note.id} gameId={note.gameId} />
+        </ScrollFade>
         <EntityToolbar
           gameId={note.gameId}
           entityOwnerId={note.ownerId}
