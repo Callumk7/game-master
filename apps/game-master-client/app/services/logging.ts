@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import {
 	ansiColorFormatter,
 	configure,
@@ -5,7 +6,6 @@ import {
 	getFileSink,
 	withFilter,
 } from "@logtape/logtape";
-import fs from "node:fs";
 
 export class LoggerSetup {
 	private static instance: LoggerSetup;
