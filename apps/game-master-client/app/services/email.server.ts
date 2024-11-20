@@ -23,12 +23,6 @@ class EmailService {
 				host: env.SMTP_HOST,
 				port: env.SMTP_PORT,
 				secure: !env.isDevelopment,
-				auth: env.isDevelopment
-					? undefined
-					: {
-							user: env.SMTP_USER,
-							pass: env.SMTP_PASS,
-						},
 			});
 		} else {
 			const sesClient = new aws.SESClient({

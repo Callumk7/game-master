@@ -26,12 +26,6 @@ if (isDevelopment) {
 	if (!process.env.SMTP_PORT) {
 		throw new Error("SMTP_HOST is not set in the environment");
 	}
-	if (!process.env.SMTP_USER) {
-		throw new Error("SMTP_USER is not set in the environment");
-	}
-	if (!process.env.SMTP_PASS) {
-		throw new Error("SMTP_PASS is not set in the environment");
-	}
 }
 
 export const env = {
