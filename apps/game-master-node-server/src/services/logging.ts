@@ -4,20 +4,27 @@ import {
 	getConsoleSink,
 	getFileSink,
 } from "@logtape/logtape";
+import fs from "node:fs";
 
 export async function setupLogging() {
+	const logsDir = "./logs";
+	try {
+		await fs.promises.mkdir(logsDir, { recursive: true });
+	} catch (error) {
+		console.error("Failed to create logs directory:", error);
+	}
 	await configure({
 		sinks: {
 			console: getConsoleSink({
 				formatter: ansiColorFormatter,
 			}),
-			hono: getFileSink("./logs/hono.jsonl", {
+			hono: getFileSink(`${logsDir}/hono.jsonl`, {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
-			http: getFileSink("./logs/http.jsonl", {
+			http: getFileSink(`${logsDir}/http.jsonl`, {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
-			db: getFileSink("./logs/db.jsonl", {
+			db: getFileSink(`${logsDir}/db.jsonl`, {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
 		},
