@@ -1,10 +1,10 @@
+import fs from "node:fs";
 import {
 	ansiColorFormatter,
 	configure,
 	getConsoleSink,
 	getFileSink,
 } from "@logtape/logtape";
-import fs from "node:fs";
 
 export async function setupLogging() {
 	const logsDir = "./logs";
