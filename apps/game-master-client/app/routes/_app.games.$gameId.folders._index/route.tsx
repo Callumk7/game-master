@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { Container } from "~/components/container";
 import { createApiFromReq } from "~/lib/api.server";
-import { FolderTable } from "~/components/tables/folder-table";
+import FolderIndex from "./folders-index";
+import { createFolder } from "~/actions/folders.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() });
@@ -15,11 +15,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { gameId } = getParams(params);
   const folders = await api.folders.getGameFolders(gameId);
-  return typedjson({ folders });
+  return typedjson({ folders, gameId });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { api } = await createApiFromReq(request);
+  const { api, userId } = await createApiFromReq(request);
+  if (request.method === "POST") {
+    return await createFolder(request, api, userId);
+  }
   if (request.method === "PATCH") {
     const { name, parentFolderId, folderId } = await parseForm(request, {
       name: z.string(),
@@ -37,11 +40,4 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export default function FolderIndex() {
-  const { folders } = useTypedLoaderData<typeof loader>();
-  return (
-    <Container>
-      <FolderTable folders={folders} />
-    </Container>
-  );
-}
+export { FolderIndex as default };

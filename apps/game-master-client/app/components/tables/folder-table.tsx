@@ -1,4 +1,4 @@
-import type {  Folder } from "@repo/api";
+import type { Folder } from "@repo/api";
 import {
   createColumnHelper,
   flexRender,
@@ -53,7 +53,7 @@ export function FolderTable({ folders }: FolderTableProps) {
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }
 
 const h = createColumnHelper<Folder>();
@@ -61,23 +61,23 @@ const h = createColumnHelper<Folder>();
 interface FolderTableHookProps {
   data: Folder[];
 }
-const useFolderTable = ({
-  data
-}: FolderTableHookProps) => {
+const useFolderTable = ({ data }: FolderTableHookProps) => {
   const columns = useMemo(() => {
     return [
       h.accessor("name", {
         header: "Name",
         cell: ({ cell, row }) => (
-          <Link href={folderHref(row.original.gameId, row.original.id)}>{cell.getValue()}</Link>
-        )
-      })
-    ]
-  }, [])
+          <Link href={folderHref(row.original.gameId, row.original.id)} variant={"link"}>
+            {cell.getValue()}
+          </Link>
+        ),
+      }),
+    ];
+  }, []);
 
   return useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel()
-  })
-}
+    getCoreRowModel: getCoreRowModel(),
+  });
+};

@@ -13,7 +13,7 @@ export function noteHref(gameId: string, noteId: string) {
 }
 
 export function folderHref(gameId: string, folderId: string) {
-	return `/folders/${gameId}/folders/${folderId}`;
+	return `/games/${gameId}/folders/${folderId}`;
 }
 
 export function hrefFor(entityType: EntityType, gameId: string, entityId: string) {
