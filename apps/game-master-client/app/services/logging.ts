@@ -5,6 +5,7 @@ import {
 	getFileSink,
 	withFilter,
 } from "@logtape/logtape";
+import fs from "node:fs";
 
 export class LoggerSetup {
 	private static instance: LoggerSetup;
@@ -27,21 +28,27 @@ export class LoggerSetup {
 
 		try {
 			console.log("Setting up logging, should only run once");
+			const logsDir = "./logs";
+			try {
+				await fs.promises.mkdir(logsDir, { recursive: true });
+			} catch (error) {
+				console.error("Failed to create logs directory:", error);
+			}
 			await configure({
 				sinks: {
 					console: getConsoleSink({
 						formatter: ansiColorFormatter,
 					}),
 					app: withFilter(
-						getFileSink("./logs/app.jsonl", {
+						getFileSink(`${logsDir}/app.jsonl`, {
 							formatter: (record) => `${JSON.stringify(record)}\n`,
 						}),
 						(record) => record.level !== "debug",
 					),
-					http: getFileSink("./logs/http.jsonl", {
+					http: getFileSink(`${logsDir}/http.jsonl`, {
 						formatter: (record) => `${JSON.stringify(record)}\n`,
 					}),
-					db: getFileSink("./logs/db.jsonl", {
+					db: getFileSink(`${logsDir}/db.jsonl`, {
 						formatter: (record) => `${JSON.stringify(record)}\n`,
 					}),
 				},
