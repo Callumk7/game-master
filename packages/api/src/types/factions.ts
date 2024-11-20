@@ -1,10 +1,14 @@
 import { z } from "zod";
 import type { Character } from "./characters.js";
 import type { Entity } from "./entity.js";
-import { type Id, type UserPermission, visibilitySchema } from "./index.js";
+import { type UserPermission, visibilitySchema } from "./index.js";
 import type { Note } from "./notes.js";
 
-export interface Faction extends Entity {}
+export interface Faction extends Entity {
+	location?: string | null;
+	alignment?: string | null;
+	power?: number | null;
+}
 
 export interface FactionMember extends Character {
 	role: string | null;

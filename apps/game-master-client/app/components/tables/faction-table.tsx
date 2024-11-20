@@ -21,6 +21,7 @@ import {
 } from "~/components/ui/table";
 import { characterHref } from "~/util/generate-hrefs";
 import { EntityRowControls } from "./shared";
+import { EditFactionDialog } from "../forms/edit-faction-dialog";
 
 interface FactionTableProps {
   factions: FactionWithMembers[];
@@ -29,58 +30,68 @@ interface FactionTableProps {
 export function FactionTable({ factions }: FactionTableProps) {
   const [isEditFactionDialogOpen, setIsEditFactionDialogOpen] = useState(false);
   const [selectedFactionId, setSelectedFactionId] = useState<string | null>(null);
+  const selectedFaction = factions.find((faction) => faction.id === selectedFactionId);
   const table = useFactionTable({
     data: factions,
     setIsEditFactionDialogOpen,
     setSelectedFactionId,
   });
   return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((group) => (
-          <tr key={group.id} className="first:max-w-4">
-            {group.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                onClick={header.column.getToggleSortingHandler()}
-                style={{
-                  width:
-                    header.index === 0
-                      ? 24
-                      : header.getSize()
-                        ? header.getSize()
-                        : "auto",
-                }}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </tr>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <Fragment key={row.id}>
-            <TableRow>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+    <>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((group) => (
+            <tr key={group.id} className="first:max-w-4">
+              {group.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{
+                    width:
+                      header.index === 0
+                        ? 24
+                        : header.getSize()
+                          ? header.getSize()
+                          : "auto",
+                  }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
               ))}
-            </TableRow>
-            {row.getIsExpanded() && (
-              <tr>
-                <td colSpan={row.getAllCells().length}>
-                  <MemberTable members={row.original.members} />
-                </td>
-              </tr>
-            )}
-          </Fragment>
-        ))}
-      </TableBody>
-    </Table>
+            </tr>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <Fragment key={row.id}>
+              <TableRow>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+              {row.getIsExpanded() && (
+                <tr>
+                  <td colSpan={row.getAllCells().length}>
+                    <MemberTable members={row.original.members} />
+                  </td>
+                </tr>
+              )}
+            </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+      {selectedFaction && (
+        <EditFactionDialog
+          faction={selectedFaction}
+          isOpen={isEditFactionDialogOpen}
+          setIsOpen={setIsEditFactionDialogOpen}
+        />
+      )}
+    </>
   );
 }
 

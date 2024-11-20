@@ -68,3 +68,16 @@ export function CreateFactionForm({ gameId, close }: CreateFactionFormProps) {
     </BaseFactionForm>
   );
 }
+
+interface EditFactionFormProps {
+  faction: Faction;
+  close?: () => void;
+}
+
+export function EditFactionForm({ faction, close }: EditFactionFormProps) {
+  return (
+    <BaseFactionForm method="PATCH" faction={faction} onSubmit={close}>
+      hello
+    </BaseFactionForm>
+  );
+}

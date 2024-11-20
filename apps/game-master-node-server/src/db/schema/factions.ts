@@ -1,8 +1,15 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	integer,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { charactersInFactions } from "./characters";
+import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
 import { images } from "./images";
 import { folders, notes } from "./notes";
@@ -26,6 +33,11 @@ export const factions = pgTable("factions", {
 		.notNull(),
 	folderId: text("folder_id").references(() => folders.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
+	// add some nice to have stuff
+	location: text("location"), // could be a location note
+	alignment: text("alignment"),
+	leaderId: text("leader_id"),
+	power: integer("power"),
 });
 
 export const databaseSelectFactionSchema = createSelectSchema(factions);
@@ -51,6 +63,10 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 	members: many(charactersInFactions),
 	permissions: many(factionsPermissions),
 	images: many(images),
+	leader: one(characters, {
+		fields: [factions.leaderId],
+		references: [characters.id],
+	}),
 }));
 
 export const notesOnFactions = pgTable(

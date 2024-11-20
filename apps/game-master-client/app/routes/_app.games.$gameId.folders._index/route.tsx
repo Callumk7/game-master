@@ -33,9 +33,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const result = await api.folders.updateFolder(folderId, { name, parentFolderId });
     return typedjson(result);
   }
+
   if (request.method === "DELETE") {
-    const { folderId } = await parseForm(request, { folderId: z.string() });
-    const result = await api.folders.deleteFolder(folderId);
+    const { entityId } = await parseForm(request, { entityId: z.string() });
+    const result = await api.folders.deleteFolder(entityId);
     return typedjson(result);
   }
 };
