@@ -15,10 +15,9 @@ declare module "@remix-run/node" {
 	}
 }
 
-await LoggerSetup.getInstance().setup();
-
 export const app = createExpressApp({
 	configure: async (app) => {
+		await LoggerSetup.getInstance().setup();
 		app.use(cors());
 		app.use(compression());
 		app.use(logger);
