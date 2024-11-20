@@ -77,7 +77,9 @@ interface EditFactionFormProps {
 export function EditFactionForm({ faction, close }: EditFactionFormProps) {
   return (
     <BaseFactionForm method="PATCH" faction={faction} onSubmit={close}>
-      hello
+      <JollyTextField type="text" label="Current location" name="location" />
+      <JollyTextField type="text" label="Alignment" name="alignment" />
+      <input type="hidden" name="factionId" value={faction.id} />
     </BaseFactionForm>
   );
 }

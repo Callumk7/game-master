@@ -197,6 +197,10 @@ const useFactionTable = ({
           </Link>
         ),
       }),
+      h.accessor("location", {
+        header: "Current Location",
+        cell: ({ cell }) => cell.getValue()
+      }),
       h.accessor("members", {
         header: "Members",
         cell: ({ row }) => row.original.members.length,
@@ -204,13 +208,6 @@ const useFactionTable = ({
       h.accessor("userPermissionLevel", {
         header: "Permission Level",
         cell: ({ cell }) => cell.getValue(),
-      }),
-      h.accessor("createdAt", {
-        size: 50,
-        cell: ({ cell }) => {
-          const date = new Date(cell.getValue());
-          return <p>{date.toLocaleDateString("gmt")}</p>;
-        },
       }),
       h.display({
         header: "Controls",

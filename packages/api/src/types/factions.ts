@@ -45,6 +45,8 @@ export const updateFactionSchema = z.object({
 	leaderId: z.string().optional(),
 	folderId: z.string().optional(),
 	visibility: visibilitySchema.optional(),
+	location: z.string().optional(),
+	alignment: z.string().optional(),
 });
 export type UpdateFactionRequestBody = z.infer<typeof updateFactionSchema>;
 
