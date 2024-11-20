@@ -20,8 +20,8 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { characterHref } from "~/util/generate-hrefs";
-import { EntityRowControls } from "./shared";
 import { EditFactionDialog } from "../forms/edit-faction-dialog";
+import { EntityRowControls } from "./shared";
 
 interface FactionTableProps {
   factions: FactionWithMembers[];
@@ -199,7 +199,7 @@ const useFactionTable = ({
       }),
       h.accessor("location", {
         header: "Current Location",
-        cell: ({ cell }) => cell.getValue()
+        cell: ({ cell }) => cell.getValue(),
       }),
       h.accessor("members", {
         header: "Members",

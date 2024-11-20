@@ -1,9 +1,9 @@
 import type { Folder } from "@repo/api";
 import {
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getSortedRowModel,
-  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";

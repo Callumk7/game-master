@@ -2,12 +2,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { updateFactionDetails } from "~/actions/factions.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { createFactionAction } from "~/queries/server/create-faction.server";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { FactionsIndex } from "./factions-index";
-import { updateFactionDetails } from "~/actions/factions.server";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
