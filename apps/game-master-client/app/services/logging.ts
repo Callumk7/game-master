@@ -3,6 +3,7 @@ import {
 	configure,
 	getConsoleSink,
 	getFileSink,
+	withFilter,
 } from "@logtape/logtape";
 
 export class LoggerSetup {
@@ -31,9 +32,12 @@ export class LoggerSetup {
 					console: getConsoleSink({
 						formatter: ansiColorFormatter,
 					}),
-					app: getFileSink("./logs/app.jsonl", {
-						formatter: (record) => `${JSON.stringify(record)}\n`,
-					}),
+					app: withFilter(
+						getFileSink("./logs/app.jsonl", {
+							formatter: (record) => `${JSON.stringify(record)}\n`,
+						}),
+						(record) => record.level !== "debug",
+					),
 					http: getFileSink("./logs/http.jsonl", {
 						formatter: (record) => `${JSON.stringify(record)}\n`,
 					}),
@@ -63,6 +67,7 @@ export class LoggerSetup {
 						sinks: ["db"],
 					},
 				],
+				reset: true,
 			});
 
 			this.initialized = true;

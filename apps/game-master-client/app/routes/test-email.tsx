@@ -29,9 +29,9 @@ export default function TestEmail() {
   const { isConnected, service, isDevelopment } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   return (
-    <div className="p-6 w-10/12 mx-auto space-y-4">
+    <div className="p-6 mx-auto space-y-4 w-10/12">
       <h1 className="text-xl font-bold text-blue-400">Email testing</h1>
-      <div className="border border-sky-400 p-3 space-y-2">
+      <div className="p-3 space-y-2 border border-sky-400">
         <h2>Service Status</h2>
         <p>Environment: {isDevelopment ? "Development" : "Production"}</p>
         <p>Service: {service}</p>

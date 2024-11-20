@@ -79,7 +79,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
   console.error(error);
   return (
-    <div className="w-4/5 mx-auto">
+    <div className="mx-auto w-4/5">
       <Text variant={"h3"}>Something went wrong</Text>
       <Text variant={"p"}>{String(error)}</Text>
     </div>

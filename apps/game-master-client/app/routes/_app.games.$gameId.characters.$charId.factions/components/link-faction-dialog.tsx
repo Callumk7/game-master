@@ -27,7 +27,7 @@ export function LinkFactionDialog({ allFactions }: LinkFactionDialogProps) {
               <DialogHeader>
                 <DialogTitle>Link Faction to Character</DialogTitle>
               </DialogHeader>
-              <Form className="space-y-4 p-2" method="POST" onSubmit={close}>
+              <Form className="p-2 space-y-4" method="POST" onSubmit={close}>
                 <JollySelect label="Faction" items={allFactions} name="factionId">
                   {(item) => <SelectItem>{item.name}</SelectItem>}
                 </JollySelect>

@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { characterHref } from "~/util/generate-hrefs";
-import { Card } from "../ui/card";
+import { EditFactionDialog } from "../forms/edit-faction-dialog";
 import { EntityRowControls } from "./shared";
 
 interface FactionTableProps {
@@ -30,58 +30,68 @@ interface FactionTableProps {
 export function FactionTable({ factions }: FactionTableProps) {
   const [isEditFactionDialogOpen, setIsEditFactionDialogOpen] = useState(false);
   const [selectedFactionId, setSelectedFactionId] = useState<string | null>(null);
+  const selectedFaction = factions.find((faction) => faction.id === selectedFactionId);
   const table = useFactionTable({
     data: factions,
     setIsEditFactionDialogOpen,
     setSelectedFactionId,
   });
   return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((group) => (
-          <tr key={group.id} className="first:max-w-4">
-            {group.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                onClick={header.column.getToggleSortingHandler()}
-                style={{
-                  width:
-                    header.index === 0
-                      ? 24
-                      : header.getSize()
-                        ? header.getSize()
-                        : "auto",
-                }}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </tr>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <Fragment key={row.id}>
-            <TableRow>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+    <>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((group) => (
+            <tr key={group.id} className="first:max-w-4">
+              {group.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{
+                    width:
+                      header.index === 0
+                        ? 24
+                        : header.getSize()
+                          ? header.getSize()
+                          : "auto",
+                  }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
               ))}
-            </TableRow>
-            {row.getIsExpanded() && (
-              <tr>
-                <td colSpan={row.getAllCells().length}>
-                  <MemberTable members={row.original.members} />
-                </td>
-              </tr>
-            )}
-          </Fragment>
-        ))}
-      </TableBody>
-    </Table>
+            </tr>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <Fragment key={row.id}>
+              <TableRow>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+              {row.getIsExpanded() && (
+                <tr>
+                  <td colSpan={row.getAllCells().length}>
+                    <MemberTable members={row.original.members} />
+                  </td>
+                </tr>
+              )}
+            </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+      {selectedFaction && (
+        <EditFactionDialog
+          faction={selectedFaction}
+          isOpen={isEditFactionDialogOpen}
+          setIsOpen={setIsEditFactionDialogOpen}
+        />
+      )}
+    </>
   );
 }
 
@@ -118,7 +128,7 @@ function MemberTable({ members }: { members: FactionMember[] }) {
 
   return (
     <div className="w-full border-b">
-      <p className="pl-4 ml-2 mt-2 font-medium">Members</p>
+      <p className="pl-4 mt-2 ml-2 font-medium">Members</p>
       <table className="m-2">
         <tbody>
           {table.getRowModel().rows.map((row) => (
@@ -187,6 +197,10 @@ const useFactionTable = ({
           </Link>
         ),
       }),
+      h.accessor("location", {
+        header: "Current Location",
+        cell: ({ cell }) => cell.getValue(),
+      }),
       h.accessor("members", {
         header: "Members",
         cell: ({ row }) => row.original.members.length,
@@ -194,13 +208,6 @@ const useFactionTable = ({
       h.accessor("userPermissionLevel", {
         header: "Permission Level",
         cell: ({ cell }) => cell.getValue(),
-      }),
-      h.accessor("createdAt", {
-        size: 50,
-        cell: ({ cell }) => {
-          const date = new Date(cell.getValue());
-          return <p>{date.toLocaleDateString("gmt")}</p>;
-        },
       }),
       h.display({
         header: "Controls",

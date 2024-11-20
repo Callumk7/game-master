@@ -29,7 +29,7 @@ export function NewNoteEditor({ userId, gameId, action }: NewNoteEditorProps) {
     fetcher.submit(newNoteInsert, { method: "post", action });
   };
   return (
-    <div className="border rounded-md p-4 space-y-4">
+    <div className="p-4 space-y-4 rounded-md border">
       <Input
         type="text"
         value={name}

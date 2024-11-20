@@ -97,8 +97,8 @@ function JollyComboBox<T extends object>({
       <Label>{label}</Label>
       <FieldGroup className="p-0">
         <ComboboxInput />
-        <Button variant="ghost" size="icon" className="mr-1 size-6 p-1">
-          <CaretSortIcon aria-hidden="true" className="size-4 opacity-50" />
+        <Button variant="ghost" size="icon" className="p-1 mr-1 size-6">
+          <CaretSortIcon aria-hidden="true" className="opacity-50 size-4" />
         </Button>
       </FieldGroup>
       {description && (

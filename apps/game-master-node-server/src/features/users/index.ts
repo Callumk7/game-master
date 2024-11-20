@@ -1,15 +1,17 @@
-import { newUserSchema } from "@repo/api";
+import { baseUserSchema, newUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { db } from "~/db";
 import { users } from "~/db/schema/users";
 import {
 	handleDatabaseError,
 	handleNotFound,
+	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
-import { getSidebarData, getUser, getUserGames } from "./queries";
+import { getUser, getUserGames } from "./queries";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
 
@@ -76,19 +78,23 @@ usersRoute.get("/:userId/games", async (c) => {
 	}
 });
 
-// TODO: Delete users
-
-// TODO: Edit users
-
-// WARN: This is likely not required anymore, so get ready to remove
-usersRoute.get("/:userId/sidebar", async (c) => {
+usersRoute.patch("/:userId", async (c) => {
 	const userId = c.req.param("userId");
-
+	const data = await validateOrThrowError(baseUserSchema, c);
 	try {
-		const sidebarData = await getSidebarData(userId);
-		return c.json(sidebarData);
+		const result = await db
+			.update(users)
+			.set(data)
+			.where(eq(users.id, userId))
+			.returning()
+			.then((rows) => rows[0]);
+		return successResponse(c, result);
 	} catch (error) {
-		console.log(error);
 		return handleDatabaseError(c, error);
 	}
 });
+
+// NOTE: There is currently not any delete user functionality in the
+// http server. The whole process for data deletion and recovery should
+// probably have a more robust process than it does right now - we could
+// do with a history and recovery db and feature set

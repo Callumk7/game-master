@@ -58,7 +58,7 @@ const ListBoxItem = <T extends object>({
       {composeRenderProps(children, (children, renderProps) => (
         <>
           {renderProps.isSelected && (
-            <span className="absolute right-2 flex size-4 items-center justify-center">
+            <span className="flex absolute right-2 justify-center items-center size-4">
               <CheckIcon className="size-4" />
             </span>
           )}

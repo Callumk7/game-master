@@ -144,7 +144,7 @@ export function EntityMenu({
         />
         <input type="hidden" value={ownerId} name="ownerId" />
         {fileName ? (
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2 items-center">
             <Button type="submit" variant={"secondary"}>
               Upload
             </Button>
@@ -389,7 +389,7 @@ function MemberSharingItem({ member, permission, visibility }: MemberSharingItem
   };
 
   return (
-    <div className="w-full p-2 flex justify-between items-center">
+    <div className="flex justify-between items-center p-2 w-full">
       <span className="text-sm">{member.username}</span>
       <JollySelect
         selectedKey={selectedKey}

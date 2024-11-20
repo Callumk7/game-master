@@ -15,7 +15,6 @@ import { getTheme } from "./lib/theme/theme.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);
-  console.log(`Loader theme: ${theme}`);
   return json({ theme });
 };
 

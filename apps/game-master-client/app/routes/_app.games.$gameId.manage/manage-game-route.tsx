@@ -16,7 +16,7 @@ export function ManageGameRoute() {
   const { game } = useTypedLoaderData<typeof loader>();
   return (
     <div>
-      <Card className="w-4/5 mx-auto">
+      <Card className="mx-auto w-4/5">
         <Form method="post">
           <CardHeader>
             <CardTitle>Update Game Details</CardTitle>

@@ -1,25 +1,11 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
-import { z } from "zod";
-import { parseForm } from "zodix";
-import { createApi } from "~/lib/api.server";
-import { validateUser } from "~/lib/auth.server";
+import { createFolder } from "~/actions/folders.server";
+import { createApiFromReq } from "~/lib/api.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const userId = await validateUser(request);
-  const api = createApi(userId);
-  const { name, gameId } = await parseForm(request, {
-    name: z.string(),
-    gameId: z.string(),
-  });
-  const newFolder = await api.folders.createFolder({ name, gameId, ownerId: userId });
-
-  if (!newFolder.success) {
-    return { success: false };
-  }
-
-  return typedjson({ newFolder: newFolder.data });
+  const { api, userId } = await createApiFromReq(request);
+  return await createFolder(request, api, userId);
 };
 
 export default function FolderLayout() {

@@ -157,7 +157,7 @@ interface BubbleMenuItemsProps {
 }
 export function BubbleMenuItems({ editor }: BubbleMenuItemsProps) {
   return (
-    <div className="p-3 bg-popover border rounded-md">
+    <div className="p-3 rounded-md border bg-popover">
       <EditorControls editor={editor} />
     </div>
   );

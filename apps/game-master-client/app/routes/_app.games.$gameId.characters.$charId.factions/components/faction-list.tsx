@@ -13,7 +13,7 @@ interface LinkedFactionListProps {
 export function LinkedFactionList({ characterId, factions }: LinkedFactionListProps) {
   const submit = useSubmit();
   return (
-    <div className="flex flex-col gap-2 w-fit p-4 border rounded-md">
+    <div className="flex flex-col gap-2 p-4 rounded-md border w-fit">
       {factions.map((faction) => (
         <div key={faction.id} className="flex justify-between">
           <Link variant={"link"} href={factionHref(faction.gameId, faction.id)}>

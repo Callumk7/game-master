@@ -8,7 +8,7 @@ export default function GameLayout() {
   return (
     <div className="flex flex-col gap-y-4">
       <GameSidebar gameWithSidebarData={sidebarData} />
-      <div className="ml-64 flex-1">
+      <div className="flex-1 ml-64">
         <GameNavbar />
         <Outlet />
       </div>

@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { Container } from "~/components/container";
+import { createFolder } from "~/actions/folders.server";
 import { createApiFromReq } from "~/lib/api.server";
-import { FolderControls } from "./components/folder-control";
+import FolderIndex from "./folders-index";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() });
@@ -15,11 +15,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { gameId } = getParams(params);
   const folders = await api.folders.getGameFolders(gameId);
-  return typedjson({ folders });
+  return typedjson({ folders, gameId });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { api } = await createApiFromReq(request);
+  const { api, userId } = await createApiFromReq(request);
+  if (request.method === "POST") {
+    return await createFolder(request, api, userId);
+  }
   if (request.method === "PATCH") {
     const { name, parentFolderId, folderId } = await parseForm(request, {
       name: z.string(),
@@ -30,22 +33,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const result = await api.folders.updateFolder(folderId, { name, parentFolderId });
     return typedjson(result);
   }
+
   if (request.method === "DELETE") {
-    const { folderId } = await parseForm(request, { folderId: z.string() });
-    const result = await api.folders.deleteFolder(folderId);
+    const { entityId } = await parseForm(request, { entityId: z.string() });
+    const result = await api.folders.deleteFolder(entityId);
     return typedjson(result);
   }
 };
 
-export default function FolderIndex() {
-  const { folders } = useTypedLoaderData<typeof loader>();
-  return (
-    <Container>
-      <div className="divide-y">
-        {folders.map((folder) => (
-          <FolderControls key={folder.id} folder={folder} allFolders={folders} />
-        ))}
-      </div>
-    </Container>
-  );
-}
+export { FolderIndex as default };

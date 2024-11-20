@@ -30,13 +30,13 @@ export function GameSidebar({ gameWithSidebarData }: GameSidebarProps) {
   const gameFolders = gameWithSidebarData.folders;
 
   return (
-    <aside className="w-64 border-r fixed h-full overflow-y-auto p-4 space-y-4">
+    <aside className="overflow-y-auto fixed p-4 space-y-4 w-64 h-full border-r">
       <div className="flex justify-between items-end">
         <SignoutButton />
         <ThemeToggle />
       </div>
       <NewEntityMenu gameId={gameWithSidebarData.id} />
-      <div className="flex flex-col items-start gap-y-4">
+      <div className="flex flex-col gap-y-4 items-start">
         <FolderTree gameId={gameWithSidebarData.id} folders={gameFolders ?? []} />
         <SidebarSection items={gameNotes} type="notes" label="Notes" />
         <SidebarSection items={gameChars} type="characters" label="Characters" />

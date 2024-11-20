@@ -32,7 +32,7 @@ export function ImageUploader({ action, ownerId }: ImageUploaderProps) {
       />
       <input type="hidden" value={ownerId} name="ownerId" />
       {fileName ? (
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2 items-center">
           <Button type="submit" variant={"outline"}>
             Confirm
           </Button>

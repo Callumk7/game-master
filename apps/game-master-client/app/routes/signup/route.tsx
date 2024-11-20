@@ -1,59 +1,78 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { type ActionFunctionArgs, json } from "@remix-run/node";
+import { baseUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { redirect } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
-import { Button } from "~/components/ui/button";
+import { BaseUserForm } from "~/components/forms/user-forms";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { JollyTextField } from "~/components/ui/textfield";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
+import { env } from "~/lib/env.server";
+import { emailService } from "~/services/email.server";
 import { hashPassword } from "~/services/password-hash.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const result = await zx.parseFormSafe(request, {
-    username: z.string(),
-    email: z.string().email(),
-    password: z.string(),
-  });
+  const result = await zx.parseFormSafe(
+    request,
+    baseUserSchema.extend({
+      password: z.string(),
+    }),
+  );
 
   if (!result.success) {
     return { error: result.error };
   }
 
-  const { username, password, email } = result.data;
+  try {
+    const verificationToken = crypto.randomUUID();
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const { username, password, email, firstName, lastName } = result.data;
+    const passwordHash = await hashPassword(password);
 
-  const passwordHash = await hashPassword(password);
+    const newUser = await db
+      .insert(users)
+      .values({
+        id: `user_${uuidv4()}`,
+        username,
+        email,
+        passwordHash,
+        firstName,
+        lastName,
+        emailVerified: false,
+        emailVerificationToken: verificationToken,
+        emailVerificationTokenExpiry: tokenExpiry,
+      })
+      .returning({ userId: users.id, username: users.username, email: users.email });
 
-  const newUser = await db
-    .insert(users)
-    .values({ id: `user_${uuidv4()}`, username, email, passwordHash })
-    .returning({ userId: users.id, username: users.username, email: users.email });
+    const confirmationLink = `${env.APP_URL}/verify-email/${verificationToken}`;
 
-  const session = await getSession(await authCookie.serialize(newUser[0]));
+    await emailService.sendConfirmationEmail(email, confirmationLink);
 
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
+    const session = await getSession(await authCookie.serialize(newUser[0]));
+
+    return redirect("/check-email", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  } catch (error) {
+    return json({ error: "Failed to create account" }, { status: 400 });
+  }
 };
 
 export default function SignUpRoute() {
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="flex justify-center items-center h-screen">
       <Card className="mx-auto md:w-1/2">
         <CardHeader>
           <CardTitle>Signup for Game Master</CardTitle>
         </CardHeader>
-        <Form className="p-6 space-y-4" method="POST">
-          <JollyTextField name="email" label="Email" type="email" isRequired />
-          <JollyTextField name="username" label="Username" type="text" isRequired />
+        <BaseUserForm method="POST" buttonLabel="Create Account">
           <JollyTextField name="password" label="Password" type="password" isRequired />
-          <Button type="submit">Create Account</Button>
-        </Form>
+        </BaseUserForm>
       </Card>
     </div>
   );

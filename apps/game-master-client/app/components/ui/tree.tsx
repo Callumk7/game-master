@@ -16,7 +16,10 @@ function Tree<T extends object>({ className, children, ...props }: AriaTreeProps
   return (
     <AriaTree
       className={composeRenderProps(className, (className) =>
-        cn(className, "group overflow-auto w-full p-1 outline-none flex flex-col gap-1"),
+        cn(
+          className,
+          "group overflow-auto overflow-x-hidden w-full p-1 outline-none flex flex-col gap-1",
+        ),
       )}
       {...props}
     >
@@ -59,7 +62,7 @@ const TreeItemContent = ({ children, itemLength, ...props }: TreeItemContentProp
   return (
     <AriaTreeItemContent {...props}>
       {composeRenderProps(children, (children, renderProps) => (
-        <div className="flex w-full gap-2 items-center">
+        <div className="flex gap-2 items-center w-full">
           {itemLength && itemLength > 0 ? (
             <Button
               slot="chevron"

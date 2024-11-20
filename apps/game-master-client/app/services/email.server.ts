@@ -71,12 +71,15 @@ class EmailService {
 		await this.sendEmail({
 			to: email,
 			subject: "Password Reset Request",
-			html: `
-<p>Click the link below to reset your password</p>
-<a href="${env.APP_URL}/reset-password/${token}">
-Reset Password
-</a>
-`,
+			html: emailTemplates.passwordReset({ token }),
+		});
+	}
+
+	async sendConfirmationEmail(email: string, confirmationLink: string) {
+		await this.sendEmail({
+			to: email,
+			subject: "Game Master: Confirm your email address",
+			html: emailTemplates.confirmEmail({ email, confirmationLink }),
 		});
 	}
 
@@ -93,3 +96,26 @@ Reset Password
 }
 
 export const emailService = new EmailService();
+
+const emailTemplates = {
+	confirmEmail: ({
+		confirmationLink,
+		email,
+	}: {
+		confirmationLink: string;
+		email: string;
+	}) =>
+		`<h1>Confirm your email</h1>
+<p>Thanks for signing up! Please confirm your email address (${email}) by clicking the link below:</p>
+<a href="${confirmationLink}">Confirm Email</a>`,
+	passwordReset: ({
+		token,
+	}: {
+		token: string;
+	}) =>
+		`<p>Click the link below to reset your password</p>
+<a href="${env.APP_URL}/reset-password/${token}">
+Reset Password
+</a>
+`,
+};

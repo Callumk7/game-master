@@ -78,14 +78,14 @@ export function CoverImage({
           />
         </picture>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+        <div className="flex absolute inset-0 justify-center items-center bg-gray-200">
           <span className="text-sm text-gray-500">Failed to load image</span>
         </div>
       )}
 
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+        <div className="flex absolute inset-0 justify-center items-center">
+          <div className="w-8 h-8 rounded-full border-2 border-gray-300 animate-spin border-t-gray-600" />
         </div>
       )}
     </div>

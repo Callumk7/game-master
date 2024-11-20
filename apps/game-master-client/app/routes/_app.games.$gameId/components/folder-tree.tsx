@@ -38,12 +38,12 @@ export function FolderTree({ folders, gameId }: FolderTreeProps) {
                 <Link
                   href={hrefFor(item.type, gameId, item.id)}
                   variant={"link"}
-                  className="pl-0 py-0"
+                  className="py-0 pl-0 text-wrap"
                 >
                   {item.name}
                 </Link>
               ) : (
-                <span className="font-medium text-sm">{item.name}</span>
+                <span className="text-sm font-medium">{item.name}</span>
               )}
             </TreeItemContent>
           </TreeItem>

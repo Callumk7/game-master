@@ -1,7 +1,7 @@
 import type { Client } from "../client.js";
 import type { Game, GameWithEntities } from "../types/games.js";
-import type { Id, QueryOptions } from "../types/index.js";
-import type { User, UserWithSidebarData } from "../types/users.js";
+import type { Id, QueryOptions, ServerResponse } from "../types/index.js";
+import type { UpdateUserRequestBody, User, UserWithSidebarData } from "../types/users.js";
 
 export class Users {
 	constructor(private client: Client) {}
@@ -46,5 +46,9 @@ export class Users {
 
 	async getUserWithSidebarData(userId: Id): Promise<UserWithSidebarData> {
 		return this.client.get<UserWithSidebarData>(`users/${userId}/sidebar`);
+	}
+
+	async update(userId: Id, body: UpdateUserRequestBody) {
+		return this.client.patch<ServerResponse<User>>(`users/${userId}`, body);
 	}
 }

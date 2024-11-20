@@ -5,7 +5,6 @@ import { EditorWithControls, useDefaultEditor } from "~/components/editor";
 import { Button } from "~/components/ui/button";
 import {
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -25,7 +24,7 @@ export function CreateNoteSlideover({ gameId }: CreateNoteProps) {
       <DialogOverlay>
         <DialogContent side="right" className="sm:max-w-[425px]">
           {({ close }) => (
-            <div className="max-h-[95vh] overflow-y-auto">
+            <div className="overflow-y-auto max-h-[95vh]">
               <DialogHeader>
                 <DialogTitle>New Note</DialogTitle>
               </DialogHeader>
@@ -67,14 +66,11 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
       type,
       visibility,
     };
-
-    console.log(validData);
-
     submit(validData, { method: "post" });
   };
   return (
     <Form method="post" onSubmit={handleSubmit}>
-      <div className="grid gap-4 py-4 px-1 h-full">
+      <div className="space-y-4 py-4 px-1 h-full">
         <JollyTextField
           autoFocus
           value={name}
@@ -82,7 +78,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
           label="Title"
           isRequired
         />
-        <div className="flex w-full justify-between gap-4">
+        <div className="flex gap-4 justify-between w-full">
           <JollySelect
             className={"flex-1"}
             label="Note Type"
@@ -95,6 +91,7 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="location">Location</SelectItem>
             <SelectItem id="item">Item</SelectItem>
             <SelectItem id="quest">Quest</SelectItem>
+            <SelectItem id="scene">Scene</SelectItem>
           </JollySelect>
           <JollySelect
             className={"flex-1"}
@@ -107,18 +104,11 @@ export function CreateNoteForm({ gameId, close }: CreateNoteFormProps) {
             <SelectItem id="public">Everyone can edit</SelectItem>
           </JollySelect>
         </div>
-        <EditorWithControls
-          editor={editor}
-          bordered
-          label="Body"
-          className="min-h-[50vh] h-full"
-        />
+        <EditorWithControls editor={editor} bordered label="Body" />
       </div>
-      <DialogFooter>
-        <Button onPress={close} type="submit">
-          Save
-        </Button>
-      </DialogFooter>
+      <Button onPress={close} type="submit">
+        Save
+      </Button>
     </Form>
   );
 }
