@@ -10,14 +10,14 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import { getPayload } from "./lib/jwt";
+import { httpLogger } from "./middleware/logging";
 import { setupLogging } from "./services/logging";
 import type { Variables } from "./types";
 
 await setupLogging();
-const logger = getLogger(["hono", "http"]);
 
 const app = new Hono<{ Variables: Variables }>();
+app.use("*", cors());
 
 // jwt server-to-server validation
 app.use(
@@ -27,18 +27,7 @@ app.use(
 	}),
 );
 
-app.use("*", async (c, next) => {
-	const { userId } = getPayload(c);
-	logger.info("{method} Request to {location}", {
-		userId,
-		...c.req,
-		method: c.req.method,
-		location: c.req.url,
-	});
-	await next();
-});
-
-app.use("*", cors());
+app.use("*", httpLogger);
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);

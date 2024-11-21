@@ -11,14 +11,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function NewCharacterRoute() {
   const params = useParams();
-  const result = useActionData<typeof action>();
-  const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  if (result) {
-    setErrorMessage(result.errorMsg);
-  }
   return (
     <div>
-      <Text variant={"h3"}>{errorMessage}</Text>
       <CreateCharacterForm gameId={params.gameId!} />
     </div>
   );

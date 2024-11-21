@@ -108,12 +108,17 @@ export function CreateCharacterForm({
     const content = editor.getText();
     const htmlContent = editor.getHTML();
 
-    if (!factionId) factionId = null;
-
-    submit(
-      { content, htmlContent, name, gameId, race, characterClass, level, factionId },
-      { method: "post" },
-    );
+    if (!factionId) {
+      submit(
+        { content, htmlContent, name, gameId, race, characterClass, level },
+        { method: "post" },
+      );
+    } else {
+      submit(
+        { content, htmlContent, name, gameId, race, characterClass, level, factionId },
+        { method: "post" },
+      );
+    }
 
     if (close) close();
   };

@@ -5,6 +5,7 @@ import {
 	getConsoleSink,
 	getFileSink,
 } from "@logtape/logtape";
+import type { Context, Next } from "hono";
 
 export async function setupLogging() {
 	const logsDir = "./logs";
@@ -24,9 +25,6 @@ export async function setupLogging() {
 			http: getFileSink(`${logsDir}/http.jsonl`, {
 				formatter: (record) => `${JSON.stringify(record)}\n`,
 			}),
-			db: getFileSink(`${logsDir}/db.jsonl`, {
-				formatter: (record) => `${JSON.stringify(record)}\n`,
-			}),
 		},
 		loggers: [
 			{
@@ -43,11 +41,6 @@ export async function setupLogging() {
 				category: ["hono", "debug"],
 				level: "debug",
 				sinks: ["console"],
-			},
-			{
-				category: ["hono", "db"],
-				level: "debug",
-				sinks: ["db"],
 			},
 		],
 	});

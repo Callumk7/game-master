@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
+import { EditFolderDialog } from "~/routes/_app.games.$gameId.folders._index/components/edit-folder-dialog";
 import { folderHref } from "~/util/generate-hrefs";
 import { Link } from "../ui/link";
 import { BaseTable } from "./base-table";
@@ -17,22 +18,44 @@ interface FolderTableProps {
 }
 
 export function FolderTable({ folders }: FolderTableProps) {
-  const table = useFolderTable({ data: folders });
-  return <BaseTable table={table} />;
+  const [isEditFolderDialogOpen, setIsEditFolderDialogOpen] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const selectedFolder = folders.find((folder) => folder.id === selectedFolderId);
+  const table = useFolderTable({
+    data: folders,
+    setIsEditFolderDialogOpen,
+    setSelectedFolderId,
+  });
+  return (
+    <>
+      <BaseTable table={table} />
+      {selectedFolder ? (
+        <EditFolderDialog
+          folder={selectedFolder}
+          allFolders={folders}
+          isOpen={isEditFolderDialogOpen}
+          setIsOpen={setIsEditFolderDialogOpen}
+        />
+      ) : null}
+    </>
+  );
 }
 
 const h = createColumnHelper<Folder>();
 
 interface FolderTableHookProps {
   data: Folder[];
+  setIsEditFolderDialogOpen: (isOpen: boolean) => void;
+  setSelectedFolderId: (charId: string) => void;
 }
-const useFolderTable = ({ data }: FolderTableHookProps) => {
-  const [isEditNoteDialogOpen, setIsEditNoteDialogOpen] = useState(false);
-  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
-
-  const handleEdit = (noteId: string) => {
-    setSelectedNoteId(noteId);
-    setIsEditNoteDialogOpen(true);
+const useFolderTable = ({
+  data,
+  setSelectedFolderId,
+  setIsEditFolderDialogOpen,
+}: FolderTableHookProps) => {
+  const handleEdit = (folderId: string) => {
+    setSelectedFolderId(folderId);
+    setIsEditFolderDialogOpen(true);
   };
   // biome-ignore lint/correctness/useExhaustiveDependencies: Stable reference
   const columns = useMemo(() => {

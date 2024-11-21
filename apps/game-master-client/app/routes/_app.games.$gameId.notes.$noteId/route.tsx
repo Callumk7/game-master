@@ -10,6 +10,7 @@ import {
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
+import { ScrollFade } from "~/components/scroll-visibility";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
@@ -58,7 +59,9 @@ export default function NotesRoute() {
   return (
     <>
       <div className="flex sticky z-20 justify-between items-center w-full top-[86px]">
-        <NoteNavigation noteId={note.id} gameId={note.gameId} />
+        <ScrollFade>
+          <NoteNavigation noteId={note.id} gameId={note.gameId} />
+        </ScrollFade>
         <EntityToolbar
           gameId={note.gameId}
           entityOwnerId={note.ownerId}

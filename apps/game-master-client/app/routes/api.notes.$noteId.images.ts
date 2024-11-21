@@ -31,6 +31,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 			return unsuccessfulResponse("Server failed to upload image");
 		}
 
-		return json(serverResponse.data);
+		return json({ url: serverResponse.data.imageUrl });
 	}
 };
