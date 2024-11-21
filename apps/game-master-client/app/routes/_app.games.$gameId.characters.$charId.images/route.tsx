@@ -3,6 +3,7 @@ import type { Params } from "@remix-run/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
+import ImageGrid from "~/components/image-grid";
 import { ImageUploader } from "~/components/image-uploader";
 import { Layout } from "~/components/layout";
 import { createApiFromReq } from "~/lib/api.server";
@@ -55,11 +56,7 @@ export default function CharacterImagesRoute() {
   return (
     <Layout width={"wide"}>
       <ImageUploader ownerId={userId} />
-      <div className="grid grid-cols-4 gap-2">
-        {characterImages.map((image) => (
-          <img key={image.id} src={image.imageUrl} alt="Character" />
-        ))}
-      </div>
+      <ImageGrid images={characterImages} />
     </Layout>
   );
 }
