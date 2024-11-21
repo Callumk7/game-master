@@ -5,10 +5,17 @@ import { Pill } from "~/components/pill";
 import { EditableText } from "~/components/ui/typeography";
 import { useNoteData } from "../_app.games.$gameId.notes.$noteId/route";
 import { useGameData } from "../_app.games.$gameId/route";
+import { useImageUpload } from "~/hooks/image-uploader";
 
 export function NoteIndexRoute() {
   const { note } = useNoteData();
   const { suggestionItems } = useGameData();
+
+  const fetcher = useImageUpload({
+    ownerId: note.ownerId,
+    entityId: note.id,
+    entityType: "notes",
+  });
 
   return (
     <Layout>
@@ -35,6 +42,7 @@ export function NoteIndexRoute() {
         <EditorClient
           htmlContent={note.htmlContent ?? ""}
           suggestionItems={suggestionItems}
+          fetcher={fetcher}
         />
       )}
     </Layout>
