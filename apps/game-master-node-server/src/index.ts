@@ -10,9 +10,9 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
+import { httpLogger } from "./middleware/logging";
 import { setupLogging } from "./services/logging";
 import type { Variables } from "./types";
-import { httpLogger } from "./middleware/logging";
 
 await setupLogging();
 

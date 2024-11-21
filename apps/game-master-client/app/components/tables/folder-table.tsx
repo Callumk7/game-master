@@ -7,11 +7,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
+import { EditFolderDialog } from "~/routes/_app.games.$gameId.folders._index/components/edit-folder-dialog";
 import { folderHref } from "~/util/generate-hrefs";
 import { Link } from "../ui/link";
 import { BaseTable } from "./base-table";
 import { EntityRowControls } from "./shared";
-import { EditFolderDialog } from "~/routes/_app.games.$gameId.folders._index/components/edit-folder-dialog";
 
 interface FolderTableProps {
   folders: Folder[];

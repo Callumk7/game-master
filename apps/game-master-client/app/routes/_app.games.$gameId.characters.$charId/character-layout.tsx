@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditCharacterDialog } from "~/components/forms/edit-character-dialog";
+import { ScrollFade } from "~/components/scroll-visibility";
 import { CharacterNavigation } from "./components/navigation";
 import type { loader } from "./route";
-import { ScrollFade } from "~/components/scroll-visibility";
 
 export function CharacterLayout() {
   const { characterDetails, folders } = useTypedLoaderData<typeof loader>();

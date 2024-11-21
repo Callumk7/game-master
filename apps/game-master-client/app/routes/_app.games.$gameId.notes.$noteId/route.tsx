@@ -10,13 +10,13 @@ import {
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { EntityToolbar } from "~/components/entity-toolbar";
+import { ScrollFade } from "~/components/scroll-visibility";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
 import { deleteNote, duplicateNote } from "./actions.server";
 import { NoteNavigation } from "./components/navigation";
 import { getNoteData } from "./queries.server";
-import { ScrollFade } from "~/components/scroll-visibility";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
