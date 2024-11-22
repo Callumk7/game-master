@@ -1,7 +1,7 @@
-import { createContext, type ReactNode, useContext } from "react";
-import { JollySearchField } from "../ui/searchfield";
-import { useEntitySearch } from "~/hooks/search";
 import type { BasicEntity } from "@repo/api";
+import { type ReactNode, createContext, useContext } from "react";
+import { useEntitySearch } from "~/hooks/search";
+import { JollySearchField } from "../ui/searchfield";
 import { Toolbar } from "../ui/toolbar";
 
 interface TableAndControlsProps<T extends BasicEntity> {

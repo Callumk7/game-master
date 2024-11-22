@@ -2,9 +2,9 @@ import { useTypedLoaderData } from "remix-typedjson";
 import { Container } from "~/components/container";
 import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 import { CharacterTable } from "~/components/tables/character-table";
-import type { loader } from "./route";
 import { TableControlBar } from "~/components/tables/table-and-controls";
 import { useEntitySearch } from "~/hooks/search";
+import type { loader } from "./route";
 
 export function CharacterIndex() {
   const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
