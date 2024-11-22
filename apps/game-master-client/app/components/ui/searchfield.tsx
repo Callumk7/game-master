@@ -97,7 +97,7 @@ function JollySearchField({
       )}
       {...props}
     >
-      <Label>{label}</Label>
+      {label && <Label>{label}</Label>}
       <FieldGroup>
         <MagnifyingGlassIcon aria-hidden className="size-4 text-muted-foreground" />
         <SearchFieldInput placeholder="Search..." />

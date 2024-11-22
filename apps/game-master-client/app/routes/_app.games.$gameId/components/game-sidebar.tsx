@@ -18,6 +18,8 @@ import { Text } from "~/components/ui/typeography";
 import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 import { hrefFor } from "~/util/generate-hrefs";
 import { FolderTree } from "./folder-tree";
+import { JollySearchField } from "~/components/ui/searchfield";
+import { useEntitySearch } from "~/hooks/search";
 
 interface GameSidebarProps {
   gameWithSidebarData: GameWithDatedEntities;
@@ -35,7 +37,7 @@ export function GameSidebar({ gameWithSidebarData }: GameSidebarProps) {
         <SignoutButton />
         <ThemeToggle />
       </div>
-      <NewEntityMenu gameId={gameWithSidebarData.id} />
+      <NewEntityMenu gameId={gameWithSidebarData.id} className="flex-none my-auto" />
       <div className="flex flex-col gap-y-4 items-start">
         <FolderTree gameId={gameWithSidebarData.id} folders={gameFolders ?? []} />
         <SidebarSection items={gameNotes} type="notes" label="Notes" />
@@ -76,9 +78,10 @@ export function SidebarSection({ type, items, label }: SidebarSectionProps) {
 }
 
 interface NewEntityMenuProps {
+  className?: string;
   gameId: string;
 }
-function NewEntityMenu({ gameId }: NewEntityMenuProps) {
+function NewEntityMenu({ gameId, className }: NewEntityMenuProps) {
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   return (
     <>
@@ -87,6 +90,7 @@ function NewEntityMenu({ gameId }: NewEntityMenuProps) {
         size={"icon"}
         variant={"outline"}
         aria-label="New item menu"
+        className={className}
       >
         <MenuItem href={"/games/new"}>Game</MenuItem>
         <MenuItem href={`/games/${gameId}/notes/new`}>Note</MenuItem>
