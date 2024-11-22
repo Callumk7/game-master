@@ -1,39 +1,33 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { TargetIcon } from '@radix-ui/react-icons'
-import { Button } from '../ui/button'
+import { TargetIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface DiceButtonProps {
-  sides: number
-  onRoll: (result: number) => void
+  sides: number;
+  onRoll: (result: number) => void;
 }
 
 function DiceButton({ sides, onRoll }: DiceButtonProps) {
   const handleClick = () => {
-    const result = Math.floor(Math.random() * sides) + 1
-    onRoll(result)
-  }
+    const result = Math.floor(Math.random() * sides) + 1;
+    onRoll(result);
+  };
 
-  return (
-    <Button
-      onPress={handleClick}
-    >
-      d{sides}
-    </Button>
-  )
+  return <Button onPress={handleClick}>d{sides}</Button>;
 }
 
 export function DiceWidget() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [results, setResults] = useState<number[]>([])
+  const [isOpen, setIsOpen] = useState(false);
+  const [results, setResults] = useState<number[]>([]);
 
-  const toggleWidget = () => setIsOpen(!isOpen)
+  const toggleWidget = () => setIsOpen(!isOpen);
 
   const handleRoll = (result: number) => {
-    setResults(prev => [...prev, result])
-  }
+    setResults((prev) => [...prev, result]);
+  };
 
-  const clearResults = () => setResults([])
+  const clearResults = () => setResults([]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -46,17 +40,14 @@ export function DiceWidget() {
             className="absolute bottom-full right-0 mb-2 bg-popover border p-4 rounded-lg shadow-lg w-64"
           >
             <div className="grid grid-cols-3 gap-2 mb-4">
-              {[4, 6, 8, 10, 12, 20].map(sides => (
+              {[4, 6, 8, 10, 12, 20].map((sides) => (
                 <DiceButton key={sides} sides={sides} onRoll={handleRoll} />
               ))}
             </div>
             <div className="text-center">
-              <p className="font-bold">Results: {results.join(', ')}</p>
+              <p className="font-bold">Results: {results.join(", ")}</p>
               <p className="font-bold">Total: {results.reduce((a, b) => a + b, 0)}</p>
-              <Button
-                onPress={clearResults}
-                variant={"destructive"}
-              >
+              <Button onPress={clearResults} variant={"destructive"}>
                 Clear
               </Button>
             </div>
@@ -73,6 +64,5 @@ export function DiceWidget() {
         <span className="sr-only">Toggle dice roller</span>
       </Button>
     </div>
-  )
+  );
 }
-
