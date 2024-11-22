@@ -1,15 +1,26 @@
 import { useTypedLoaderData } from "remix-typedjson";
 import { Container } from "~/components/container";
 import { FactionTable } from "~/components/tables/faction-table";
+import { TableControlBar } from "~/components/tables/table-and-controls";
+import { useEntitySearch } from "~/hooks/search";
 import { CreateFactionSlideover } from "./components/create-faction-slideover";
 import type { loader } from "./route";
 
 export function FactionsIndex() {
   const { gameId, gameFactions } = useTypedLoaderData<typeof loader>();
+  const search = useEntitySearch(gameFactions, {
+    threshold: 0.3,
+    keys: ["name", "members.name"],
+  });
   return (
     <Container>
-      <CreateFactionSlideover gameId={gameId} />
-      <FactionTable factions={gameFactions} />
+      <TableControlBar
+        searchTerm={search.searchTerm}
+        setSearchTerm={search.setSearchTerm}
+      >
+        <CreateFactionSlideover gameId={gameId} />
+      </TableControlBar>
+      <FactionTable factions={search.result} />
     </Container>
   );
 }
