@@ -30,14 +30,14 @@ export function DiceWidget() {
   const clearResults = () => setResults([]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 left-[270px] z-50">
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 0 }}
             animate={{ opacity: 1, scale: 1, y: -10 }}
             exit={{ opacity: 0, scale: 0.8, y: 0 }}
-            className="absolute bottom-full right-0 mb-2 bg-popover border p-4 rounded-lg shadow-lg w-64"
+            className="absolute bottom-full left-0 mb-2 bg-popover border p-4 rounded-lg shadow-lg w-64"
           >
             <div className="grid grid-cols-3 gap-2 mb-4">
               {[4, 6, 8, 10, 12, 20].map((sides) => (

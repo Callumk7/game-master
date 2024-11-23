@@ -1,8 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { useActionData, useParams } from "@remix-run/react";
-import { useState } from "react";
+import { useParams } from "@remix-run/react";
 import { CreateCharacterForm } from "~/components/forms/character-forms";
-import { Text } from "~/components/ui/typeography";
 import { createCharacterAction } from "~/queries/server/create-character.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {

@@ -13,10 +13,8 @@ import {
 } from "~/components/ui/dialog";
 import { Link } from "~/components/ui/link";
 import { JollyMenu, MenuItem } from "~/components/ui/menu";
-import { JollySearchField } from "~/components/ui/searchfield";
 import { JollyTextField } from "~/components/ui/textfield";
 import { Text } from "~/components/ui/typeography";
-import { useEntitySearch } from "~/hooks/search";
 import { ThemeToggle } from "~/lib/theme/dark-mode-context";
 import { hrefFor } from "~/util/generate-hrefs";
 import { FolderTree } from "./folder-tree";

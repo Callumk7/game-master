@@ -3,12 +3,12 @@ import type { Params } from "@remix-run/react";
 import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { updateFactionDetails } from "~/actions/factions.server";
+import { deleteFaction, updateFactionDetails } from "~/actions/factions.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
-import { deleteFaction, duplicateFaction } from "./actions.server";
+import { duplicateFaction } from "./actions.server";
 import { FactionLayout } from "./faction-layout";
 
 const getParams = (params: Params) => {
@@ -35,7 +35,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const { factionId } = getParams(params);
+  const { factionId, gameId } = getParams(params);
   const { api, userId } = await createApiFromReq(request);
 
   if (request.method === "POST") {
@@ -48,7 +48,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   if (request.method === "DELETE") {
-    return deleteFaction(api, factionId);
+    return deleteFaction(api, factionId, gameId);
   }
 
   return methodNotAllowed();

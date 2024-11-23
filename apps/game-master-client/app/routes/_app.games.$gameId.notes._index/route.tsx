@@ -3,6 +3,7 @@ import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { deleteNote } from "~/actions/notes.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { createNoteAction } from "~/queries/server/create-note.server";
 import { getData } from "~/util/handle-error";
@@ -22,15 +23,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return typedjson({ allGameNotes, gameId });
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const gameId = getParams(params);
   if (request.method === "POST") {
     return await createNoteAction(request);
   }
   if (request.method === "DELETE") {
     const { api } = await createApiFromReq(request);
     const { entityId } = await parseForm(request, { entityId: z.string() });
-    const result = await api.notes.delete(entityId);
-    return typedjson(result);
+    return await deleteNote(api, entityId, gameId);
   }
 
   return methodNotAllowed();

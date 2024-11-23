@@ -1,5 +1,5 @@
 import { type SDK, duplicateFactionSchema } from "@repo/api";
-import { redirect, typedjson } from "remix-typedjson";
+import { redirect } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { factionHref } from "~/util/generate-hrefs";
 import { unsuccessfulResponse } from "~/util/responses";
@@ -23,12 +23,4 @@ export const duplicateFaction = async (
 
 	const { gameId, id } = dupeResult.data;
 	return redirect(factionHref(gameId, id));
-};
-
-export const deleteFaction = async (api: SDK, factionId: string) => {
-	const result = await api.factions.delete(factionId);
-	if (result.success) {
-		return redirect("/games");
-	}
-	return typedjson(result);
 };

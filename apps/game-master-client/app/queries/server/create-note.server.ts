@@ -1,9 +1,11 @@
 import { json, redirect } from "@remix-run/react";
 import { createNoteSchema } from "@repo/api";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
+import { successRedirect } from "~/lib/navigation";
 
 export async function createNoteAction(request: Request) {
 	const userId = await validateUser(request);
@@ -13,10 +15,13 @@ export async function createNoteAction(request: Request) {
 
 	if (result.success) {
 		const { gameId, id } = result.data;
-		return redirect(`/games/${gameId}/notes/${id}`);
+		return successRedirect({
+			path: `/games/${gameId}/notes/${id}`,
+			message: "Note successfully created",
+		});
 	}
 
-	return json(
+	return typedjson(
 		{ errorMsg: "There was a problem creating this note, please try again." },
 		{
 			status: StatusCodes.INTERNAL_SERVER_ERROR,

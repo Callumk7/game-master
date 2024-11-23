@@ -1,6 +1,7 @@
 import { type SDK, updateCharacterSchema } from "@repo/api";
 import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
+import { successRedirect } from "~/lib/navigation";
 import { numberToStrings } from "./create-character.server";
 
 export const updateCharacter = async (request: Request, api: SDK, charId: string) => {
@@ -12,7 +13,10 @@ export const updateCharacter = async (request: Request, api: SDK, charId: string
 export const deleteCharacter = async (api: SDK, charId: string, gameId: string) => {
 	const result = await api.characters.delete(charId);
 	if (result.success) {
-		return redirect(`/games/${gameId}`);
+		return successRedirect({
+			path: `/games/${gameId}`,
+			message: "Successfully deleted character",
+		});
 	}
 	return typedjson(result);
 };
