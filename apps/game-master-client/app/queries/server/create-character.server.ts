@@ -7,7 +7,7 @@ import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 import { successRedirect } from "~/lib/navigation";
 
-export async function createCharacterAction(request: Request) {
+export async function createCharacterAction(request: Request, redirect?: string) {
 	const userId = await validateUser(request);
 	const api = createApi(userId);
 	const data = await parseForm(
@@ -19,7 +19,7 @@ export async function createCharacterAction(request: Request) {
 		if (result.success) {
 			const { gameId, id } = result.data;
 			return successRedirect({
-				path: `/games/${gameId}/characters/${id}`,
+				path: redirect ? redirect : `/games/${gameId}/characters/${id}`,
 				message: "Character created successfully",
 			});
 		}

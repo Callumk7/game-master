@@ -25,10 +25,3 @@ export const duplicateNote = async (
 	);
 };
 
-export const deleteNote = async (api: SDK, noteId: string) => {
-	const result = await api.notes.delete(noteId);
-	if (result.success) {
-		return redirect("/games");
-	}
-	return typedjson(result);
-};

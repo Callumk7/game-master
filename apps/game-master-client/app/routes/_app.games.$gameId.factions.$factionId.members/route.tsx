@@ -22,11 +22,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const { factionId } = getParams(params);
+  const { factionId, gameId } = getParams(params);
   const { api } = await createApiFromReq(request);
 
   if (request.method === "POST") {
-    return createCharacterAction(request);
+    return createCharacterAction(
+      request,
+      `/games/${gameId}/factions/${factionId}/members`,
+    );
   }
 
   if (request.method === "DELETE") {

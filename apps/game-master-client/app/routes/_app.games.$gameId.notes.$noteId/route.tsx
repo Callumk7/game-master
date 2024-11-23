@@ -14,9 +14,10 @@ import { ScrollFade } from "~/components/scroll-visibility";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
 import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
-import { deleteNote, duplicateNote } from "./actions.server";
+import { duplicateNote } from "./actions.server";
 import { NoteNavigation } from "./components/navigation";
 import { getNoteData } from "./queries.server";
+import { deleteNote } from "~/actions/notes.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {
@@ -38,7 +39,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const { api, userId } = await createApiFromReq(request);
-  const { noteId } = getParams(params);
+  const { noteId, gameId } = getParams(params);
   if (request.method === "PATCH") {
     return await updateNote(request, api, noteId);
   }
@@ -48,7 +49,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   if (request.method === "DELETE") {
-    return await deleteNote(api, noteId);
+    return await deleteNote(api, noteId, gameId);
   }
 
   return methodNotAllowed();
