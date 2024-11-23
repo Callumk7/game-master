@@ -24,4 +24,3 @@ export const duplicateNote = async (
 		`/games/${duplicatedNote.data.gameId}/notes/${duplicatedNote.data.id}`,
 	);
 };
-

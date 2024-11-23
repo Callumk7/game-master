@@ -1,8 +1,8 @@
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useSubmit } from "@remix-run/react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Toolbar } from "../ui/toolbar";
-import { toast } from "sonner";
 
 interface EntityRowControlsProps {
   entityId: string;

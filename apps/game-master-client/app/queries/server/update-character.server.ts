@@ -1,8 +1,8 @@
 import { type SDK, updateCharacterSchema } from "@repo/api";
 import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
-import { numberToStrings } from "./create-character.server";
 import { successRedirect } from "~/lib/navigation";
+import { numberToStrings } from "./create-character.server";
 
 export const updateCharacter = async (request: Request, api: SDK, charId: string) => {
 	const data = await parseForm(request, updateCharacterSchema.merge(numberToStrings));

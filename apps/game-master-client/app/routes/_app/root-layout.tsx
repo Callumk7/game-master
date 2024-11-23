@@ -1,10 +1,10 @@
 import { Outlet, useHref, useNavigate } from "@remix-run/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-aria-components";
-import { DiceWidget } from "~/components/dice/dice-roller";
-import { GlobalStateProvider } from "~/store/global";
 import { Toaster } from "sonner";
+import { DiceWidget } from "~/components/dice/dice-roller";
 import { SuccessRedirectHandler } from "~/components/success-redirect-handler";
+import { GlobalStateProvider } from "~/store/global";
 
 export function AppLayout() {
   const navigate = useNavigate();

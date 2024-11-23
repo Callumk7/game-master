@@ -3,12 +3,12 @@ import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
+import { deleteNote } from "~/actions/notes.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { createNoteAction } from "~/queries/server/create-note.server";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { NotesIndex } from "./notes-index";
-import { deleteNote } from "~/actions/notes.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() }).gameId;
