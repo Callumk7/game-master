@@ -13,7 +13,7 @@ export function EntityRowControls({ entityId, handleEdit }: EntityRowControlsPro
   const submit = useSubmit();
   const handlePress = () => {
     submit({ entityId }, { method: "DELETE" });
-    toast("Deleting note");
+    toast("Deleting...");
   };
   return (
     <Toolbar aria-label="Row controls">
