@@ -4,11 +4,14 @@ import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
-import { updateCharacter } from "~/queries/server/update-character.server";
+import {
+  deleteCharacter,
+  updateCharacter,
+} from "~/queries/server/update-character.server";
 import { resolve } from "~/util/await-all";
 import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
-import { deleteCharacter, duplicateCharacter } from "./actions.server";
+import { duplicateCharacter } from "./actions.server";
 import { CharacterLayout } from "./character-layout";
 
 const getParams = (params: Params) => {
@@ -36,14 +39,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const { api, userId } = await createApiFromReq(request);
-  const { charId } = getParams(params);
+  const { charId, gameId } = getParams(params);
 
   if (request.method === "POST") {
     return duplicateCharacter(request, api, charId, userId);
   }
 
   if (request.method === "DELETE") {
-    return deleteCharacter(api, charId);
+    return deleteCharacter(api, charId, gameId);
   }
 
   if (request.method === "PATCH") {

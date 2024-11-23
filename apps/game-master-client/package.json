@@ -57,6 +57,7 @@
 		"remix-create-express-app": "^0.4.5",
 		"remix-typedjson": "^0.4.1",
 		"response-time": "^2.3.3",
+		"sonner": "^1.7.0",
 		"tailwindcss-animate": "^1.0.7",
 		"tippy.js": "^6.3.7",
 		"zod": "^3.23.8",
