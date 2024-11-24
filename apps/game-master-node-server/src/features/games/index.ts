@@ -19,7 +19,7 @@ import {
 } from "~/lib/http-helpers";
 import { getPayload } from "~/lib/jwt";
 import { PermissionService } from "~/services/permissions";
-import { itemOrArrayToArray } from "~/utils";
+import { itemOrArrayToArray, updatedNow } from "~/utils";
 import {
 	createGame,
 	deleteMembers,
@@ -101,7 +101,7 @@ gamesRoute.patch("/:gameId", async (c) => {
 	try {
 		const updatedGame = await db
 			.update(games)
-			.set(data)
+			.set(updatedNow(data))
 			.where(eq(games.id, gameId))
 			.returning();
 		return successResponse(c, updatedGame);
