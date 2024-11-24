@@ -5,10 +5,10 @@ import { useAppData } from "../_app/route";
 import { HomeNavigation } from "./components/home-navigation";
 
 export default function Index() {
-  const { userGames, userData } = useAppData();
+  const { userGames } = useAppData();
   return (
     <div className="p-4 font-sans">
-      <HomeNavigation user={userData} />
+      <HomeNavigation />
       <div className="flex flex-col gap-1">
         {userGames.map((game) => (
           <GameCard key={game.id} game={game} />

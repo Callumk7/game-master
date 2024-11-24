@@ -13,6 +13,7 @@ import {
 	factionsPermissions,
 } from "~/db/schema/factions";
 import { images } from "~/db/schema/images";
+import { updatedNow } from "~/utils";
 
 export const createFaction = async (factionInsert: InsertDatabaseFaction) => {
 	const newFaction = await db
@@ -34,7 +35,7 @@ export const updateFaction = async (
 ) => {
 	const factionUpdate = await db
 		.update(factions)
-		.set(factionData)
+		.set(updatedNow(factionData))
 		.where(eq(factions.id, factionId))
 		.returning()
 		.then((result) => result[0]);

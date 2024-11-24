@@ -14,6 +14,7 @@ import {
 	notesOnCharacters,
 } from "~/db/schema/characters";
 import { images } from "~/db/schema/images";
+import { updatedNow } from "~/utils";
 
 export const createCharacter = async (insert: InsertDatabaseCharacter) => {
 	const newCharResult = await db
@@ -35,7 +36,7 @@ export const updateCharacter = async (
 ) => {
 	const charUpdate = await db
 		.update(characters)
-		.set(updateData)
+		.set(updatedNow(updateData))
 		.where(eq(characters.id, characterId))
 		.returning()
 		.then((result) => result[0]);

@@ -57,7 +57,14 @@ export function NoteTable({ notes }: NoteTableProps) {
           const date = new Date(cell.getValue());
           return <p>{date.toLocaleString("gmt")}</p>;
         },
-        header: () => "Created At",
+        header: () => "Created",
+      }),
+      h.accessor("updatedAt", {
+        cell: ({ cell }) => {
+          const date = new Date(cell.getValue());
+          return <p>{date.toLocaleString("gmt")}</p>;
+        },
+        header: () => "Updated",
       }),
       h.accessor("userPermissionLevel", {
         cell: ({ cell }) => <p>{cell.getValue()}</p>,

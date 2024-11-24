@@ -17,6 +17,7 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
+import { updatedNow } from "~/utils";
 import { createFolderInsert } from "./utils";
 
 export const folderRoute = new Hono();
@@ -102,7 +103,7 @@ folderRoute.patch("/:folderId", async (c) => {
 	try {
 		const updatedFolder = await db
 			.update(folders)
-			.set(data)
+			.set(updatedNow(data))
 			.where(eq(folders.id, folderId))
 			.returning();
 		return successResponse(c, updatedFolder);

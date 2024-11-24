@@ -11,6 +11,7 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
+import { updatedNow } from "~/utils";
 import { getUser, getUserGames } from "./queries";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
@@ -84,7 +85,7 @@ usersRoute.patch("/:userId", async (c) => {
 	try {
 		const result = await db
 			.update(users)
-			.set(data)
+			.set(updatedNow(data))
 			.where(eq(users.id, userId))
 			.returning()
 			.then((rows) => rows[0]);

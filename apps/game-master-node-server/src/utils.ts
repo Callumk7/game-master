@@ -45,3 +45,11 @@ export async function validateUploadIsImageOrThrow(req: HonoRequest) {
 		image,
 	};
 }
+
+export const updatedNow = <T extends object>(input: T): T & { updatedAt: Date } => {
+	const now = new Date();
+	return {
+		...input,
+		updatedAt: now,
+	};
+};

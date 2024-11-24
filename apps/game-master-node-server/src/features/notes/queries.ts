@@ -6,6 +6,7 @@ import type {
 import { eq, sql } from "drizzle-orm";
 import { db } from "~/db";
 import { type InsertDatabaseNote, notes, notesPermissions } from "~/db/schema/notes";
+import { updatedNow } from "~/utils";
 
 export const createNote = async (insert: InsertDatabaseNote) => {
 	const result = await db
@@ -27,7 +28,7 @@ export const updateNote = async (
 ) => {
 	const noteUpdateResult = await db
 		.update(notes)
-		.set(noteUpdate)
+		.set(updatedNow(noteUpdate))
 		.where(eq(notes.id, noteId))
 		.returning()
 		.then((result) => result[0]);
