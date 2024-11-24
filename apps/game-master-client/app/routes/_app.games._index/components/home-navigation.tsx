@@ -1,20 +1,12 @@
-import type { User } from "@repo/api";
 import { SignoutButton } from "~/components/signout";
 import { Link } from "~/components/ui/link";
 
-interface HomeNavigationProps {
-  user: User;
-}
-
-export function HomeNavigation({ user }: HomeNavigationProps) {
+export function HomeNavigation() {
   return (
-    <nav className="flex items-center py-1">
+    <nav className="flex items-center py-1 gap-1">
       <SignoutButton />
-      <Link href="/games/new" variant={"link"}>
+      <Link href="/games/new" variant={"outline"}>
         Create Game
-      </Link>
-      <Link href="/user" variant={"link"}>
-        {user.username}'s Settings
       </Link>
     </nav>
   );
