@@ -11,8 +11,8 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import type { Variables } from "~/types";
-import { getUser, getUserGames } from "./queries";
 import { updatedNow } from "~/utils";
+import { getUser, getUserGames } from "./queries";
 
 export const usersRoute = new Hono<{ Variables: Variables }>();
 
