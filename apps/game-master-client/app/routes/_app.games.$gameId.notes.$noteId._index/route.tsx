@@ -2,9 +2,9 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
+import { updateNote } from "~/actions/notes.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { updateNote } from "./actions.server";
 import { NoteIndexRoute } from "./notes-index-route";
 
 const getParams = (params: Params) => {

@@ -3,6 +3,8 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import type { MentionItem } from "~/types/mentions";
 import { useDefaultEditor } from ".";
 
+type EditorSyncStatus = "saved" | "saving" | "just-saved";
+
 type SyncEditorOptions = {
 	action?: string;
 	method?: FormMethod;
@@ -13,6 +15,9 @@ type SyncEditorOptions = {
 
 export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	const fetcher = useFetcher();
+	const [lastSavedContent, setLastSavedContent] = useState(options.initContent);
+	const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
+	const [syncStatus, setSyncStatus] = useState<EditorSyncStatus>("saved");
 
 	let optimisticContent = options.initContent;
 
@@ -27,21 +32,52 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		options.fetcher,
 	);
 
-	const [isEdited, setIsEdited] = useState(false);
+	const debouncedSave = (html: string, text: string) => {
+		if (html === lastSavedContent) return;
 
+		setSyncStatus("saving");
+
+		if (debounceTimeout) {
+			clearTimeout(debounceTimeout);
+		}
+
+		const timeout = setTimeout(() => {
+			if (editor && editor.getHTML() === html) {
+				fetcher.submit(
+					{
+						htmlContent: html,
+						content: text,
+					},
+					{
+						method: options.method ?? "patch",
+						action: options.action,
+					},
+				);
+				setLastSavedContent(html);
+				setSyncStatus("just-saved");
+			}
+		}, 1000);
+
+		setDebounceTimeout(timeout);
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: debouncedSave would trigger infinite re-renders
 	useEffect(() => {
 		if (editor) {
 			const updateListener = () => {
-				if (!isEdited) setIsEdited(true);
+				debouncedSave(editor.getHTML(), editor.getText());
 			};
 
 			editor.on("update", updateListener);
 
 			return () => {
 				editor.off("update", updateListener);
+				if (debounceTimeout) {
+					clearTimeout(debounceTimeout);
+				}
 			};
 		}
-	}, [editor, isEdited]);
+	}, [editor]);
 
 	// Setting editor content inside a react lifecycle hook throws errors
 	// regarding tiptap's use of flushSync during render. It doesn't break
@@ -50,42 +86,14 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 	// on quick navigations, and breaks the component for edits.
 	// biome-ignore lint/correctness/useExhaustiveDependencies: We are only triggering the effect if content changes
 	useLayoutEffect(() => {
-		if (editor) {
+		if (editor && optimisticContent !== editor.getHTML() && !debounceTimeout) {
 			editor.commands.setContent(optimisticContent);
 		}
 	}, [optimisticContent]);
 
-	const saveContent = () => {
-		if (editor && isEdited) {
-			fetcher.submit(
-				{
-					htmlContent: editor.getHTML(),
-					content: editor.getText(),
-				},
-				{
-					method: options.method ?? "patch", // WARN: test this syntax
-					action: options.action,
-				},
-			);
-		}
-		setIsEdited(false);
-	};
-
 	return {
 		optimisticContent,
 		editor,
-		isEdited,
-		status: fetcher.state,
-		saveContent,
+		syncStatus,
 	};
-};
-
-type StateFunction = () => void;
-
-const useStateSync = <T>(data: T, stateFunction: StateFunction) => {
-	const [prevData, setPrevData] = useState(data);
-	if (data !== prevData) {
-		setPrevData(data);
-		stateFunction();
-	}
 };

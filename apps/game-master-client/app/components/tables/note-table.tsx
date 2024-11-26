@@ -2,21 +2,14 @@ import type { Note } from "@repo/api";
 import {
   type SortingState,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { Link } from "~/components/ui/link";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
+import { EditNoteDialog } from "../forms/edit-note-dialog";
+import { BaseTable } from "./base-table";
 import { EntityRowControls } from "./shared";
 
 const h = createColumnHelper<Note>();
@@ -28,7 +21,30 @@ interface NoteTableProps {
 export function NoteTable({ notes }: NoteTableProps) {
   const [isEditNoteDialogOpen, setIsEditNoteDialogOpen] = useState(false);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const selectedNote = notes.find((note) => note.id === selectedNoteId)!;
+  const table = useNoteTable({ data: notes, setSelectedNoteId, setIsEditNoteDialogOpen });
+  return (
+    <>
+      <BaseTable table={table} />
+      <EditNoteDialog
+        isOpen={isEditNoteDialogOpen}
+        setIsOpen={setIsEditNoteDialogOpen}
+        note={selectedNote}
+      />
+    </>
+  );
+}
 
+interface NoteTableHookProps {
+  data: Note[];
+  setIsEditNoteDialogOpen: (isOpen: boolean) => void;
+  setSelectedNoteId: (noteId: string) => void;
+}
+const useNoteTable = ({
+  data,
+  setIsEditNoteDialogOpen,
+  setSelectedNoteId,
+}: NoteTableHookProps) => {
   const handleEdit = (noteId: string) => {
     setSelectedNoteId(noteId);
     setIsEditNoteDialogOpen(true);
@@ -81,10 +97,10 @@ export function NoteTable({ notes }: NoteTableProps) {
     return columns;
   }, []);
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "updatedAt", desc: true }]);
 
-  const table = useReactTable({
-    data: notes,
+  return useReactTable({
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -93,36 +109,4 @@ export function NoteTable({ notes }: NoteTableProps) {
       sorting,
     },
   });
-
-  return (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((group) => (
-          <TableRow key={group.id}>
-            {group.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                onClick={header.column.getToggleSortingHandler()}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
+};

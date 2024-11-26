@@ -17,7 +17,7 @@ export function BaseUserForm<T extends User>({
 }: BaseUserFormProps<T>) {
   return (
     <Form {...props}>
-      <div className={cn(className, "p-6 space-y-2")}>
+      <div className={cn(className, "p-6 flex flex-col gap-2")}>
         <JollyTextField
           name="email"
           label="Email"

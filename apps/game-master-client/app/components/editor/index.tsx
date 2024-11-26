@@ -87,7 +87,7 @@ export function EditorBody({
   suggestionItems,
   fetcher,
 }: EditorBodyProps) {
-  const { editor, isEdited, status, saveContent } = useSyncEditorContent({
+  const { editor, syncStatus } = useSyncEditorContent({
     initContent: htmlContent,
     suggestionItems,
     action,
@@ -98,16 +98,7 @@ export function EditorBody({
   return (
     <div className="editor">
       <EditorWithControls editor={editor} />
-      <Toolbar className={"flex p-2"}>
-        <Button
-          size={"sm"}
-          onPress={saveContent}
-          isDisabled={!isEdited}
-          variant={isEdited ? "default" : "outline"}
-        >
-          {isEdited ? "Save" : "Content Saved"}
-        </Button>
-      </Toolbar>
+      <span className="text-xs text-secondary-foreground">{syncStatus}</span>
     </div>
   );
 }

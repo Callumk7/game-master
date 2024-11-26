@@ -3,7 +3,7 @@ import type { Params } from "@remix-run/react";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
-import { deleteNote } from "~/actions/notes.server";
+import { deleteNote, updateNote } from "~/actions/notes.server";
 import { createApiFromReq } from "~/lib/api.server";
 import { createNoteAction } from "~/queries/server/create-note.server";
 import { getData } from "~/util/handle-error";
@@ -27,6 +27,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const gameId = getParams(params);
   if (request.method === "POST") {
     return await createNoteAction(request);
+  }
+  if (request.method === "PATCH") {
+    const { api } = await createApiFromReq(request);
+    const { noteId } = await parseForm(request, { noteId: z.string() });
+    return await updateNote(request, api, noteId);
   }
   if (request.method === "DELETE") {
     const { api } = await createApiFromReq(request);

@@ -9,12 +9,11 @@ import {
 } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { deleteNote } from "~/actions/notes.server";
+import { deleteNote, updateNote } from "~/actions/notes.server";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { ScrollFade } from "~/components/scroll-visibility";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { updateNote } from "../_app.games.$gameId.notes.$noteId._index/actions.server";
 import { duplicateNote } from "./actions.server";
 import { NoteNavigation } from "./components/navigation";
 import { getNoteData } from "./queries.server";

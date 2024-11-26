@@ -2,7 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
-import { CreateNoteForm } from "~/components/forms/create-note";
+import { CreateNoteForm } from "~/components/forms/note-forms";
 import { validateUser } from "~/lib/auth.server";
 import { createNoteAction } from "~/queries/server/create-note.server";
 import { methodNotAllowed } from "~/util/responses";

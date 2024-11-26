@@ -1,6 +1,6 @@
 import { useTypedLoaderData } from "remix-typedjson";
 import { Container } from "~/components/container";
-import { CreateNoteSlideover } from "~/components/forms/create-note";
+import { CreateNoteSlideover } from "~/components/forms/create-note-dialog";
 import { NoteTable } from "~/components/tables/note-table";
 import { TableControlBar } from "~/components/tables/table-and-controls";
 import { useEntitySearch } from "~/hooks/search";
