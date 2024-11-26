@@ -24,7 +24,7 @@ export const logger = responseTime((req, res, time) => {
 		writableLength: res.writableLength,
 	};
 
-	logger.info("HTTP {method} {url} in {time}ms", {
+	logger.info("{statusCode} {method} {url} in {time}ms", {
 		method: req.method,
 		url: req.url,
 		statusCode: res.statusCode,
