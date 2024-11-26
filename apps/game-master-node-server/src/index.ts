@@ -1,5 +1,4 @@
 import { serve } from "@hono/node-server";
-import { getLogger } from "@logtape/logtape";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
@@ -18,8 +17,10 @@ await setupLogging();
 
 const app = new Hono<{ Variables: Variables }>();
 app.use("*", cors());
+// Healthcheck
+app.get("/", (c) => c.text("OK"));
 
-// jwt server-to-server validation
+// This will apply JWT middleware to all routes except "/"
 app.use(
 	"*",
 	jwt({
@@ -27,6 +28,8 @@ app.use(
 	}),
 );
 
+
+// Application routes
 app.use("*", httpLogger);
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
