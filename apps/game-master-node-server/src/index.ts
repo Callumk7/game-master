@@ -28,7 +28,6 @@ app.use(
 	}),
 );
 
-
 // Application routes
 app.use("*", httpLogger);
 app.route("/users", usersRoute);
