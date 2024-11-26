@@ -11,6 +11,9 @@ if (!isDevelopment) {
 	if (!process.env.SERVER_URL) {
 		throw new Error("SERVER_URL is not set in the environment");
 	}
+	if (!process.env.APP_URL) {
+		throw new Error("APP_URL is not set in the environment");
+	}
 	if (!process.env.AWS_ACCESS_KEY_ID) {
 		throw new Error("AWS_ACCESS_KEY_ID is not set in the environment");
 	}
