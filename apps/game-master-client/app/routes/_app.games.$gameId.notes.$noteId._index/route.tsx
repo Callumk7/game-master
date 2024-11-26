@@ -4,8 +4,8 @@ import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
 import { methodNotAllowed } from "~/util/responses";
-import { updateNote } from "./actions.server";
 import { NoteIndexRoute } from "./notes-index-route";
+import { updateNote } from "~/actions/notes.server";
 
 const getParams = (params: Params) => {
   return parseParams(params, {

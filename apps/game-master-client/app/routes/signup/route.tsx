@@ -8,6 +8,7 @@ import { z } from "zod";
 import { zx } from "zodix";
 import { BaseUserForm } from "~/components/forms/user-forms";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
 import { authCookie, commitSession, getSession } from "~/lib/auth.server";
 import { env } from "~/lib/env.server";
@@ -72,6 +73,7 @@ export default function SignUpRoute() {
         </CardHeader>
         <BaseUserForm method="POST" buttonLabel="Create Account">
           <JollyTextField name="password" label="Password" type="password" isRequired />
+          <Link variant={"secondary"} href="/login">Already have an account? Sign in</Link>
         </BaseUserForm>
       </Card>
     </div>
