@@ -1,11 +1,11 @@
-import { Form, useSubmit, type FormProps } from "@remix-run/react";
+import { Form, type FormProps, useSubmit } from "@remix-run/react";
 import type { CreateNoteRequestBody, Note, NoteType, Visibility } from "@repo/api";
 import { cn } from "callum-util";
-import { JollyTextField } from "../ui/textfield";
-import { Button } from "../ui/button";
-import { EditorWithControls, useDefaultEditor } from "../editor";
 import { type FormEvent, type FormEventHandler, useState } from "react";
+import { EditorWithControls, useDefaultEditor } from "../editor";
+import { Button } from "../ui/button";
 import { JollySelect, SelectItem } from "../ui/select";
+import { JollyTextField } from "../ui/textfield";
 
 interface BaseNoteFormProps<T extends Note> extends FormProps {
   note?: T;

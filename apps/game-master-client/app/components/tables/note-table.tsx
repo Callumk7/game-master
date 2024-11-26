@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { Link } from "~/components/ui/link";
-import { EntityRowControls } from "./shared";
-import { BaseTable } from "./base-table";
 import { EditNoteDialog } from "../forms/edit-note-dialog";
+import { BaseTable } from "./base-table";
+import { EntityRowControls } from "./shared";
 
 const h = createColumnHelper<Note>();
 

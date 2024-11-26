@@ -1,4 +1,4 @@
-import { updateNoteContentSchema, type SDK } from "@repo/api";
+import { type SDK, updateNoteContentSchema } from "@repo/api";
 import { typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { successRedirect } from "~/lib/navigation";

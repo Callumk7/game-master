@@ -73,7 +73,9 @@ export default function SignUpRoute() {
         </CardHeader>
         <BaseUserForm method="POST" buttonLabel="Create Account">
           <JollyTextField name="password" label="Password" type="password" isRequired />
-          <Link variant={"secondary"} href="/login">Already have an account? Sign in</Link>
+          <Link variant={"secondary"} href="/login">
+            Already have an account? Sign in
+          </Link>
         </BaseUserForm>
       </Card>
     </div>

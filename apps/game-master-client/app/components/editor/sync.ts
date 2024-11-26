@@ -61,6 +61,7 @@ export const useSyncEditorContent = (options: SyncEditorOptions) => {
 		setDebounceTimeout(timeout);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: debouncedSave would trigger infinite re-renders
 	useEffect(() => {
 		if (editor) {
 			const updateListener = () => {
