@@ -1,10 +1,10 @@
+import { useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/container";
 import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 import { CharacterTable } from "~/components/tables/character-table";
 import { TableControlBar } from "~/components/tables/table-and-controls";
 import { useEntitySearch } from "~/hooks/search";
 import type { loader } from "./route";
-import { useLoaderData } from "@remix-run/react";
 
 export function CharacterIndex() {
   const { gameId, gameChars } = useLoaderData<typeof loader>();

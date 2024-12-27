@@ -9,5 +9,5 @@ export const updateGameDetails = async (request: Request, gameId: string, api: S
 	});
 
 	const result = await getData(() => api.games.update(gameId, { name }));
-	return result
+	return result;
 };

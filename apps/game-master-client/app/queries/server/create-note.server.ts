@@ -1,5 +1,5 @@
+import { data } from "@remix-run/node";
 import { createNoteSchema } from "@repo/api";
-import {data} from "@remix-run/node";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { parseForm } from "zodix";
 import { createApi } from "~/lib/api.server";

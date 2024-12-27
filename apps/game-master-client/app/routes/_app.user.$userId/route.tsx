@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     if (data.intent === "updateUser") {
       const result = await api.users.update(userId, data);
-      return result
+      return result;
     }
 
     if (data.intent === "updatePassword") {

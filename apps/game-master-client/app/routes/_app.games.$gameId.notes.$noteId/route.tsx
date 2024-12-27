@@ -1,5 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, redirect, useLoaderData, useRouteLoaderData, type Params } from "@remix-run/react";
+import {
+  Outlet,
+  type Params,
+  redirect,
+  useLoaderData,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { useState } from "react";
 import { z } from "zod";
 import { parseParams } from "zodix";
@@ -27,7 +33,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(`/games/${gameId}/notes`);
   }
 
-  return noteData
+  return noteData;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

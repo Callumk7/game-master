@@ -1,6 +1,6 @@
+import { data } from "@remix-run/node";
 import { createFactionSchema } from "@repo/api";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { data } from "@remix-run/node";
 import { parseForm } from "zodix";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
@@ -9,7 +9,10 @@ import { successRedirect } from "~/lib/navigation";
 export async function createFactionAction(request: Request) {
 	const userId = await validateUser(request);
 	const api = createApi(userId);
-	const formData = await parseForm(request, createFactionSchema.omit({ ownerId: true }));
+	const formData = await parseForm(
+		request,
+		createFactionSchema.omit({ ownerId: true }),
+	);
 	const result = await api.factions.create({ ...formData, ownerId: userId });
 
 	if (result.success) {

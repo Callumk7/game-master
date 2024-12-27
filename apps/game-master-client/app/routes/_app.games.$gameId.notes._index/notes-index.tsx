@@ -1,10 +1,10 @@
+import { useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/container";
 import { CreateNoteSlideover } from "~/components/forms/create-note-dialog";
 import { NoteTable } from "~/components/tables/note-table";
 import { TableControlBar } from "~/components/tables/table-and-controls";
 import { useEntitySearch } from "~/hooks/search";
 import type { loader } from "./route";
-import { useLoaderData } from "@remix-run/react";
 
 export function NotesIndex() {
   const { allGameNotes, gameId } = useLoaderData<typeof loader>();

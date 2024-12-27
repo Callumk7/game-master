@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, type Params } from "@remix-run/react";
+import { type Params, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import ImageGrid from "~/components/image-grid";

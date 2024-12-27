@@ -1,6 +1,6 @@
+import { useLoaderData } from "@remix-run/react";
 import { EditableText, Text } from "~/components/ui/typeography";
 import type { loader } from "./route";
-import { useLoaderData } from "@remix-run/react";
 
 export function GameRoute() {
   const { game } = useLoaderData<typeof loader>();

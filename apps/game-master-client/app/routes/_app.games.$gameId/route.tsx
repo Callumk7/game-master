@@ -1,5 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { type Params, redirect, useRouteError, useRouteLoaderData } from "@remix-run/react";
+import {
+  type Params,
+  redirect,
+  useRouteError,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { Text } from "~/components/ui/typeography";
