@@ -7,7 +7,7 @@ import { render, screen, waitFor } from "../test-utils";
 const mockSubmit = vi.fn();
 const mockNavigate = vi.fn();
 
-vi.mock("@remix-run/react", () => ({
+vi.mock("react-router", () => ({
   useSubmit: () => mockSubmit,
   useNavigate: () => mockNavigate,
 }));

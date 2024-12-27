@@ -1,4 +1,4 @@
-import { type ActionFunction, json } from "@remix-run/node";
+import { type ActionFunction, json } from "react-router";
 import { themeCookie } from "~/lib/theme/theme.server";
 
 export const action: ActionFunction = async ({ request }) => {

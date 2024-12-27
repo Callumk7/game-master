@@ -4,5 +4,6 @@ node_modules
 /build
 .env
 .npmrc
+.react-router/
 
 logs/

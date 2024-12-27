@@ -1,15 +1,7 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  json,
-  useLoaderData,
-} from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, useLoaderData } from "react-router";
 import "./tailwind.css";
 import "./editor.css";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "react-router";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
 import { getTheme } from "./lib/theme/theme.server";
 

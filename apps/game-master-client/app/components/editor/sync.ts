@@ -1,4 +1,4 @@
-import { type FormMethod, useFetcher } from "@remix-run/react";
+import { type FormMethod, useFetcher } from "react-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import type { MentionItem } from "~/types/mentions";
 import { useDefaultEditor } from ".";

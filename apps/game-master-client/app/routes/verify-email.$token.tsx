@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { and, eq, gt } from "drizzle-orm";

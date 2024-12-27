@@ -1,5 +1,5 @@
 import { GearIcon, TrashIcon } from "@radix-ui/react-icons";
-import { useSubmit } from "@remix-run/react";
+import { useSubmit } from "react-router";
 import type { Folder } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { EditFolderDialog } from "./edit-folder-dialog";

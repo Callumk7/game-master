@@ -1,4 +1,4 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet } from "react-router";
 import { useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { EntityToolbar } from "~/components/entity-toolbar";

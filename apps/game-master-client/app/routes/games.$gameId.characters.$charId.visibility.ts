@@ -1,4 +1,4 @@
-import { type ActionFunction, json } from "@remix-run/node";
+import { type ActionFunction, json } from "react-router";
 import { visibilitySchema } from "@repo/api";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";

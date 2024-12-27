@@ -1,6 +1,6 @@
-import type { ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import type { ActionFunction } from "react-router";
+import { json } from "react-router";
+import { Form, useActionData, useLoaderData } from "react-router";
 import { env } from "~/lib/env.server";
 import { emailService } from "~/services/email.server";
 

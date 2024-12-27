@@ -1,4 +1,4 @@
-import { Outlet, useHref, useNavigate } from "@remix-run/react";
+import { Outlet, useHref, useNavigate } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-aria-components";
 import { Toaster } from "sonner";

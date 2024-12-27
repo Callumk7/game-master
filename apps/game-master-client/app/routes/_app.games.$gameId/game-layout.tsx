@@ -1,4 +1,4 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet } from "react-router";
 import { GameNavbar } from "./components/game-navbar";
 import { GameSidebar } from "./components/game-sidebar";
 import { useGameData } from "./route";

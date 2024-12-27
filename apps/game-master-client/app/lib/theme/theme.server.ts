@@ -1,4 +1,4 @@
-import { createCookie } from "@remix-run/node";
+import { createCookie } from "react-router";
 
 const oneYear = 365 * 24 * 60 * 60 * 1000;
 

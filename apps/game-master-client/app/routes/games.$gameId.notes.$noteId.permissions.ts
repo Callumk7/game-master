@@ -1,5 +1,5 @@
-import { type ActionFunction, json } from "@remix-run/node";
-import type { ClientActionFunctionArgs } from "@remix-run/react";
+import { type ActionFunction, json } from "react-router";
+import type { ClientActionFunctionArgs } from "react-router";
 import { permissionSchema } from "@repo/api";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";

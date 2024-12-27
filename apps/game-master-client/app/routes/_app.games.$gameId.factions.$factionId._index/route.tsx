@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
 import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";

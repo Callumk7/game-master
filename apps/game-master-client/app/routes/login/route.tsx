@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, json, redirect, useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { Form, json, redirect, useLoaderData } from "react-router";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { eq } from "drizzle-orm";

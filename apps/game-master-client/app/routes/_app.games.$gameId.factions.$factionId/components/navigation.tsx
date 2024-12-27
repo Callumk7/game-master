@@ -1,4 +1,4 @@
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { Tab, TabList, Tabs } from "~/components/ui/tabs";
 import { factionHref } from "~/util/generate-hrefs";
 

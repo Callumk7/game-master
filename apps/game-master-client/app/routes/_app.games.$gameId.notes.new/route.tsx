@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { json, useLoaderData } from "react-router";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { CreateNoteForm } from "~/components/forms/note-forms";

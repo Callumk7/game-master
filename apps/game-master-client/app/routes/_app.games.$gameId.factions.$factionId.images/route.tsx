@@ -1,5 +1,5 @@
-import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
+import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "react-router";
+import type { Params } from "react-router";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";

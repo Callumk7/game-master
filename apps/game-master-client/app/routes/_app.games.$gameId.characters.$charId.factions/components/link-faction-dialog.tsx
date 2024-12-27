@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form } from "react-router";
 import type { Faction } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";

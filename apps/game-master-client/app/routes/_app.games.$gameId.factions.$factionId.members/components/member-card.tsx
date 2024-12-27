@@ -1,5 +1,5 @@
 import { GearIcon, TrashIcon } from "@radix-ui/react-icons";
-import { useSubmit } from "@remix-run/react";
+import { useSubmit } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Text } from "~/components/ui/typeography";

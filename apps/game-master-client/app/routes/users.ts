@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, json } from "@remix-run/node";
+import { type LoaderFunctionArgs, json } from "react-router";
 import { createApi } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 

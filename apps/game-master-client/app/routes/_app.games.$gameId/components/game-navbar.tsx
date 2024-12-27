@@ -1,5 +1,5 @@
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { useLocation, useParams } from "@remix-run/react";
+import { useLocation, useParams } from "react-router";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";

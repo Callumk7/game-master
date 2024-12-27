@@ -1,5 +1,5 @@
 import { FontBoldIcon, FontItalicIcon, HeadingIcon } from "@radix-ui/react-icons";
-import type { FormMethod } from "@remix-run/react";
+import type { FormMethod } from "react-router";
 import Image from "@tiptap/extension-image";
 import Typography from "@tiptap/extension-typography";
 import {

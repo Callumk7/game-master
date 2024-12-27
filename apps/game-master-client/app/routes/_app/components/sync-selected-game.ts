@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useGameSelectionId, useSetGameSelection } from "~/store/global";
 

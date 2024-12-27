@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, redirect } from "@remix-run/react";
+import type { ActionFunctionArgs } from "react-router";
+import { Form, redirect } from "react-router";
 import type { CreateGameRequestBody } from "@repo/api";
 import { z } from "zod";
 import { parseForm } from "zodix";

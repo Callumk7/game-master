@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "react-router";
 
 export const getGameParam = () => {
 	const navigate = useNavigate();

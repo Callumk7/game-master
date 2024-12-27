@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form } from "react-router";
 import type { BasicEntity } from "@repo/api";
 import { Button } from "../ui/button";
 import { JollySelect, SelectItem } from "../ui/select";

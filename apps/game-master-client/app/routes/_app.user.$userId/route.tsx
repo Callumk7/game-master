@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import type { ActionFunctionArgs } from "react-router";
+import { Form } from "react-router";
 import { baseUserSchema } from "@repo/api";
 import { db } from "db";
 import { users } from "db/schema/users";

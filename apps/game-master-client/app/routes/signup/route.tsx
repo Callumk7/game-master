@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, json } from "@remix-run/node";
+import { type ActionFunctionArgs, json } from "react-router";
 import { baseUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { db } from "db";

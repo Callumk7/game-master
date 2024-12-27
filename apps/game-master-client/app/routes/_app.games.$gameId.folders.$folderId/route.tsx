@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect, useParams } from "@remix-run/react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { json, redirect, useParams } from "react-router";
 import { updateFolderSchema } from "@repo/api";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";

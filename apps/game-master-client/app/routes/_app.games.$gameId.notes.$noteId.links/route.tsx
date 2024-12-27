@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
+import type { ActionFunctionArgs } from "react-router";
+import type { Params } from "react-router";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { Layout } from "~/components/layout";

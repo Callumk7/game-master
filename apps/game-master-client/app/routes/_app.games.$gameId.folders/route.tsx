@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import type { ActionFunctionArgs } from "react-router";
+import { Outlet } from "react-router";
 import { createFolder } from "~/actions/folders.server";
 import { Container } from "~/components/container";
 import { createApiFromReq } from "~/lib/api.server";

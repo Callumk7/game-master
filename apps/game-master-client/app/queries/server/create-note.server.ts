@@ -1,4 +1,4 @@
-import { json, redirect } from "@remix-run/react";
+import { json, redirect } from "react-router";
 import { createNoteSchema } from "@repo/api";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { typedjson } from "remix-typedjson";

@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useRouteError } from "@remix-run/react";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import { useRouteError } from "react-router";
 import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";

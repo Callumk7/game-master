@@ -1,5 +1,5 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { useSubmit } from "@remix-run/react";
+import { useSubmit } from "react-router";
 import type { Faction } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { Link } from "~/components/ui/link";

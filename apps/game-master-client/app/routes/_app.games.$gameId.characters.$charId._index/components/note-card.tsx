@@ -1,5 +1,5 @@
 import { Link1Icon } from "@radix-ui/react-icons";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link } from "react-router";
 import type { BasicEntity, Note } from "@repo/api";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
