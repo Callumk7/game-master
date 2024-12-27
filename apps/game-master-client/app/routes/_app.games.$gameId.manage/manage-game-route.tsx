@@ -1,5 +1,4 @@
-import { Form } from "@remix-run/react";
-import { useTypedLoaderData } from "remix-typedjson";
+import { Form, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -13,7 +12,7 @@ import { JollyTextField } from "~/components/ui/textfield";
 import type { loader } from "./route";
 
 export function ManageGameRoute() {
-  const { game } = useTypedLoaderData<typeof loader>();
+  const { game } = useLoaderData<typeof loader>();
   return (
     <div>
       <Card className="mx-auto w-4/5">

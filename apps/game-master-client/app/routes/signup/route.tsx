@@ -1,9 +1,8 @@
-import { type ActionFunctionArgs, json } from "@remix-run/node";
+import { type ActionFunctionArgs, data, redirect } from "@remix-run/node";
 import { baseUserSchema } from "@repo/api";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
-import { redirect } from "remix-typedjson";
 import { z } from "zod";
 import { zx } from "zodix";
 import { BaseUserForm } from "~/components/forms/user-forms";
@@ -60,7 +59,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       },
     });
   } catch (error) {
-    return json({ error: "Failed to create account" }, { status: 400 });
+    return data({ error: "Failed to create account" }, { status: 400 });
   }
 };
 

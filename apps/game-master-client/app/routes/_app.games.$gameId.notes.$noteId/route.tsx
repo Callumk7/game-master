@@ -1,12 +1,12 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, type Params } from "@remix-run/react";
-import { useState } from "react";
 import {
+  Outlet,
+  type Params,
   redirect,
-  typedjson,
-  useTypedLoaderData,
-  useTypedRouteLoaderData,
-} from "remix-typedjson";
+  useLoaderData,
+  useRouteLoaderData,
+} from "@remix-run/react";
+import { useState } from "react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { deleteNote, updateNote } from "~/actions/notes.server";
@@ -33,7 +33,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(`/games/${gameId}/notes`);
   }
 
-  return typedjson(noteData);
+  return noteData;
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -54,7 +54,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   return methodNotAllowed();
 };
 export default function NotesRoute() {
-  const { note, folders } = useTypedLoaderData<typeof loader>();
+  const { note, folders } = useLoaderData<typeof loader>();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>
@@ -78,7 +78,7 @@ export default function NotesRoute() {
 }
 
 export function useNoteData() {
-  const data = useTypedRouteLoaderData<typeof loader>(
+  const data = useRouteLoaderData<typeof loader>(
     "routes/_app.games.$gameId.notes.$noteId",
   );
   if (data === undefined) {

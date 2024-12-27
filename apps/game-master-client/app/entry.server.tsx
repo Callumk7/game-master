@@ -13,7 +13,7 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { app } from "server";
 
-const ABORT_DELAY = 5_000;
+export const streamTimeout = 5000;
 
 export default function handleRequest(
   request: Request,
@@ -39,7 +39,7 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={remixContext} url={request.url} abortDelay={ABORT_DELAY} />,
+      <RemixServer context={remixContext} url={request.url} />,
       {
         onAllReady() {
           shellRendered = true;
@@ -72,7 +72,7 @@ function handleBotRequest(
       },
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
 
@@ -85,7 +85,7 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={remixContext} url={request.url} abortDelay={ABORT_DELAY} />,
+      <RemixServer context={remixContext} url={request.url}  />,
       {
         onShellReady() {
           shellRendered = true;
@@ -118,7 +118,7 @@ function handleBrowserRequest(
       },
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
 

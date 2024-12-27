@@ -4,7 +4,6 @@ import { baseUserSchema } from "@repo/api";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { eq } from "drizzle-orm";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
 import { BaseUserForm } from "~/components/forms/user-forms";
@@ -37,13 +36,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     if (data.intent === "updateUser") {
       const result = await api.users.update(userId, data);
-      return typedjson(result);
+      return result;
     }
 
     if (data.intent === "updatePassword") {
       const passwordHash = await hashPassword(data.newPass);
       await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
-      return typedjson({ success: true });
+      return { success: true };
     }
   }
 };

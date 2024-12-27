@@ -1,12 +1,12 @@
+import { data } from "@remix-run/node";
 import { type SDK, updateNoteContentSchema } from "@repo/api";
-import { typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { successRedirect } from "~/lib/navigation";
 
 export const updateNote = async (request: Request, api: SDK, noteId: string) => {
-	const data = await parseForm(request, updateNoteContentSchema);
-	const result = await api.notes.update(noteId, data);
-	return typedjson(result);
+	const formData = await parseForm(request, updateNoteContentSchema);
+	const result = await api.notes.update(noteId, formData);
+	return data(result);
 };
 
 export const deleteNote = async (api: SDK, noteId: string, gameId: string) => {
@@ -17,5 +17,5 @@ export const deleteNote = async (api: SDK, noteId: string, gameId: string) => {
 			message: "Successfully deleted note",
 		});
 	}
-	return typedjson(result);
+	return data(result);
 };

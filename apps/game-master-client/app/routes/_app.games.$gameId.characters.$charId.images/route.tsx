@@ -1,6 +1,5 @@
-import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { type Params, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import ImageGrid from "~/components/image-grid";
@@ -18,7 +17,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api, userId } = await createApiFromReq(request);
   const charId = getParams(params);
   const characterImages = await api.characters.images.getAll(charId);
-  return typedjson({ characterImages, userId });
+  return { characterImages, userId };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -47,12 +46,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return unsuccessfulResponse("Server failed to upload image");
     }
 
-    return json({ url: serverResponse.data.imageUrl });
+    return { url: serverResponse.data.imageUrl };
   }
 };
 
 export default function CharacterImagesRoute() {
-  const { characterImages, userId } = useTypedLoaderData<typeof loader>();
+  const { characterImages, userId } = useLoaderData<typeof loader>();
   return (
     <Layout width={"wide"}>
       <ImageUploader ownerId={userId} />

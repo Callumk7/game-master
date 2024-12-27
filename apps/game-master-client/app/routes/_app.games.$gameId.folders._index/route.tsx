@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { createFolder } from "~/actions/folders.server";
@@ -15,7 +14,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { gameId } = getParams(params);
   const folders = await api.folders.getGameFolders(gameId);
-  return typedjson({ folders, gameId });
+  return { folders, gameId };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -31,13 +30,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     const result = await api.folders.updateFolder(folderId, { name, parentFolderId });
-    return typedjson(result);
+    return result;
   }
 
   if (request.method === "DELETE") {
     const { entityId } = await parseForm(request, { entityId: z.string() });
     const result = await api.folders.deleteFolder(entityId);
-    return typedjson(result);
+    return result;
   }
 };
 

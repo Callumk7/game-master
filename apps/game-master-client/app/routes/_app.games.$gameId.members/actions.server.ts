@@ -1,5 +1,4 @@
 import { type SDK, roleSchema } from "@repo/api";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
 import { unsuccessfulResponse } from "~/util/responses";
@@ -10,7 +9,7 @@ export const updateMemberDetails = async (request: Request, api: SDK, gameId: st
 		role: roleSchema,
 	});
 	const result = await api.games.editMember(gameId, userId, { role });
-	return typedjson(result);
+	return result;
 };
 
 export const updateGameMembers = async (request: Request, api: SDK, gameId: string) => {
@@ -18,7 +17,7 @@ export const updateGameMembers = async (request: Request, api: SDK, gameId: stri
 		const { userIds } = (await request.json()) as { userIds: string[] };
 
 		const result = await api.games.updateMembers(gameId, userIds);
-		return typedjson(result);
+		return result;
 	} catch (error) {
 		console.error(error);
 		return unsuccessfulResponse(String(error)); // TODO: this whole flow is very flakey
@@ -28,5 +27,5 @@ export const updateGameMembers = async (request: Request, api: SDK, gameId: stri
 export const removeMember = async (request: Request, api: SDK, gameId: string) => {
 	const { userId } = await parseForm(request, { userId: z.string() });
 	const result = await api.games.removeMember(gameId, userId);
-	return typedjson(result);
+	return result;
 };

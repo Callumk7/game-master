@@ -1,4 +1,4 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/container";
 import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 import { CharacterTable } from "~/components/tables/character-table";
@@ -7,7 +7,7 @@ import { useEntitySearch } from "~/hooks/search";
 import type { loader } from "./route";
 
 export function CharacterIndex() {
-  const { gameId, gameChars } = useTypedLoaderData<typeof loader>();
+  const { gameId, gameChars } = useLoaderData<typeof loader>();
   const search = useEntitySearch(gameChars, {
     threshold: 0.3,
     keys: ["name", "race", "characterClass", "primaryFaction.name"],

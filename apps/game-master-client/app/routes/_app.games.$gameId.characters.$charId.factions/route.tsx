@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
@@ -26,7 +25,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     getData(() => api.factions.forGame(gameId)),
   );
 
-  return typedjson({ charId, charFactions, allFactions, primaryFaction });
+  return { charId, charFactions, allFactions, primaryFaction };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

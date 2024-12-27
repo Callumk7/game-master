@@ -1,4 +1,4 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/container";
 import { FactionTable } from "~/components/tables/faction-table";
 import { TableControlBar } from "~/components/tables/table-and-controls";
@@ -7,7 +7,7 @@ import { CreateFactionSlideover } from "./components/create-faction-slideover";
 import type { loader } from "./route";
 
 export function FactionsIndex() {
-  const { gameId, gameFactions } = useTypedLoaderData<typeof loader>();
+  const { gameId, gameFactions } = useLoaderData<typeof loader>();
   const search = useEntitySearch(gameFactions, {
     threshold: 0.3,
     keys: ["name", "members.name"],

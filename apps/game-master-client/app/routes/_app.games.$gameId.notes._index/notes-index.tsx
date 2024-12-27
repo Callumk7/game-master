@@ -1,4 +1,4 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/container";
 import { CreateNoteSlideover } from "~/components/forms/create-note-dialog";
 import { NoteTable } from "~/components/tables/note-table";
@@ -7,7 +7,7 @@ import { useEntitySearch } from "~/hooks/search";
 import type { loader } from "./route";
 
 export function NotesIndex() {
-  const { allGameNotes, gameId } = useTypedLoaderData<typeof loader>();
+  const { allGameNotes, gameId } = useLoaderData<typeof loader>();
   const search = useEntitySearch(allGameNotes, {
     threshold: 0.3,
     keys: ["name", "type"],

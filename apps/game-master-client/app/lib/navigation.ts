@@ -1,4 +1,4 @@
-import { redirect } from "remix-typedjson";
+import { redirect } from "@remix-run/node";
 
 type SuccessRedirectOptions = {
 	path: string;

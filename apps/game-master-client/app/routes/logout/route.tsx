@@ -1,5 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { redirect } from "remix-typedjson";
+import { type ActionFunctionArgs, redirect } from "@remix-run/node";
 import { destroySession, getUserSession } from "~/lib/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {

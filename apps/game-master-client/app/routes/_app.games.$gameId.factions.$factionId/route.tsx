@@ -1,6 +1,9 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
-import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
+import {
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  redirect,
+} from "@remix-run/node";
+import { type Params, useRouteLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { deleteFaction, updateFactionDetails } from "~/actions/factions.server";
@@ -31,7 +34,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(`/games/${gameId}/factions`);
   }
 
-  return typedjson({ factionDetails, folders });
+  return { factionDetails, folders };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -44,7 +47,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (request.method === "PATCH") {
     const result = await updateFactionDetails(request, factionId);
-    return typedjson(result);
+    return result;
   }
 
   if (request.method === "DELETE") {
@@ -55,7 +58,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 };
 
 export const useFactionData = () => {
-  const data = useTypedRouteLoaderData<typeof loader>(
+  const data = useRouteLoaderData<typeof loader>(
     "routes/_app.games.$gameId.factions.$factionId",
   );
 

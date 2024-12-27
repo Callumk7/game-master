@@ -1,5 +1,4 @@
 import type { SDK } from "@repo/api";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
 import { getData } from "~/util/handle-error";
@@ -10,5 +9,5 @@ export const updateGameDetails = async (request: Request, gameId: string, api: S
 	});
 
 	const result = await getData(() => api.games.update(gameId, { name }));
-	return typedjson(result);
+	return result;
 };

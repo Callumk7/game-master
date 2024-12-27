@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect, useParams } from "@remix-run/react";
+import { json, redirect, useLoaderData, useParams } from "@remix-run/react";
 import { updateFolderSchema } from "@repo/api";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { AllEntityTable } from "~/components/tables/all-entities";
@@ -9,7 +8,7 @@ import { Text } from "~/components/ui/typeography";
 import { createApi, createApiFromReq } from "~/lib/api.server";
 import { validateUser } from "~/lib/auth.server";
 
-export const loader = async ({ request, params, context }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   // Detailed view of the folder contents, and we need to have stuff
   // for moving other stuff around. Again, would be good to audit what we already
   // have got fetched, but for the most part remix should handle the situation to a
@@ -19,7 +18,7 @@ export const loader = async ({ request, params, context }: LoaderFunctionArgs) =
 
   const { api } = await createApiFromReq(request);
   const folderWithChildren = await api.folders.getFolderWithChildren(folderId);
-  return typedjson({ folderWithChildren });
+  return { folderWithChildren };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -30,10 +29,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     const { name } = await parseForm(request, updateFolderSchema);
     const result = await api.folders.updateFolder(folderId, { name });
     if (result.success) {
-      return json(result.data);
+      return result.data;
     }
 
-    return json(result);
+    return result;
   }
   if (request.method === "DELETE") {
     const result = await api.folders.deleteFolder(folderId);
@@ -42,12 +41,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return redirect("/");
     }
 
-    return json(result);
+    return result;
   }
 };
 
 export default function FolderRoute() {
-  const { folderWithChildren } = useTypedLoaderData<typeof loader>();
+  const { folderWithChildren } = useLoaderData<typeof loader>();
   const params = useParams();
   const folderId = params.folderId;
   if (!folderId) throw new Error("No folderId");
