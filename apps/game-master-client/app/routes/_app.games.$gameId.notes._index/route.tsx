@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { deleteNote, updateNote } from "~/actions/notes.server";
@@ -20,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const allGameNotes = await getData(() => api.games.notes(gameId));
 
-  return typedjson({ allGameNotes, gameId });
+  return { allGameNotes, gameId };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {

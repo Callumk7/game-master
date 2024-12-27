@@ -4,7 +4,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  json,
   useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
@@ -15,7 +14,7 @@ import { getTheme } from "./lib/theme/theme.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);
-  return json({ theme });
+  return { theme };
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {

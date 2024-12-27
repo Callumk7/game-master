@@ -1,5 +1,5 @@
+import { data } from "@remix-run/node";
 import type { SDK } from "@repo/api";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
 
@@ -14,5 +14,5 @@ export const createFolder = async (request: Request, api: SDK, userId: string) =
 		return { success: false };
 	}
 
-	return typedjson({ newFolder: newFolder.data });
+	return data({ newFolder: newFolder.data });
 };

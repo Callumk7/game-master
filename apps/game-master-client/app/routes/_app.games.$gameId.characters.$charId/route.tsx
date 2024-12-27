@@ -1,6 +1,9 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
-import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
+import { useRouteLoaderData, type Params } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";
@@ -34,7 +37,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(`/games/${gameId}/characters`);
   }
 
-  return typedjson({ characterDetails, charNotes, folders });
+  return { characterDetails, charNotes, folders };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -59,7 +62,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 export { CharacterLayout as default };
 
 export const useCharacterData = () => {
-  const data = useTypedRouteLoaderData<typeof loader>(
+  const data = useRouteLoaderData<typeof loader>(
     "routes/_app.games.$gameId.characters.$charId",
   );
 

@@ -1,9 +1,9 @@
-import { useTypedLoaderData } from "remix-typedjson";
 import { EditableText, Text } from "~/components/ui/typeography";
 import type { loader } from "./route";
+import { useLoaderData } from "@remix-run/react";
 
 export function GameRoute() {
-  const { game } = useTypedLoaderData<typeof loader>();
+  const { game } = useLoaderData<typeof loader>();
   return (
     <div className="p-4 space-y-10">
       <div>

@@ -1,6 +1,5 @@
-import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/node";
-import type { Params } from "@remix-run/react";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData, type Params } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { ImageUploader } from "~/components/image-uploader";
@@ -17,7 +16,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api, userId } = await createApiFromReq(request);
   const factionId = getParams(params);
   const factionImages = await api.factions.images.getAll(factionId);
-  return typedjson({ factionImages, userId });
+  return { factionImages, userId };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -39,11 +38,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return unsuccessfulResponse("Server failed to upload image");
   }
 
-  return json({ url: response.data.imageUrl });
+  return { url: response.data.imageUrl };
 };
 
 export default function FactionImagesRoute() {
-  const { factionImages, userId } = useTypedLoaderData<typeof loader>();
+  const { factionImages, userId } = useLoaderData<typeof loader>();
   return (
     <Layout width={"wide"}>
       <ImageUploader ownerId={userId} />

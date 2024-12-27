@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import type { Params } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm, parseParams } from "zodix";
 import { deleteFaction, updateFactionDetails } from "~/actions/factions.server";
@@ -20,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const gameFactions = await getData(() => api.factions.forGame.withMembers(gameId));
 
-  return typedjson({ gameId, gameFactions });
+  return { gameId, gameFactions };
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -31,7 +30,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (request.method === "PATCH") {
     const { factionId } = await parseForm(request, { factionId: z.string() });
     const result = await updateFactionDetails(request, factionId);
-    return typedjson(result);
+    return result;
   }
 
   if (request.method === "DELETE") {

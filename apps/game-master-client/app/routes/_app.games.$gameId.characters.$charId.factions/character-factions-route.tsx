@@ -1,4 +1,4 @@
-import { useTypedLoaderData } from "remix-typedjson";
+import { useLoaderData } from "@remix-run/react";
 import { LinkedFactionList } from "./components/faction-list";
 import { LinkFactionDialog } from "./components/link-faction-dialog";
 import { PrimaryFaction } from "./components/primary-faction";
@@ -6,7 +6,7 @@ import type { loader } from "./route";
 
 export function CharacterFactionsRoute() {
   const { charId, allFactions, charFactions, primaryFaction } =
-    useTypedLoaderData<typeof loader>();
+    useLoaderData<typeof loader>();
   return (
     <div className="space-y-4">
       {primaryFaction ? (

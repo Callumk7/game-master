@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useRouteError } from "@remix-run/react";
-import { typedjson, useTypedRouteLoaderData } from "remix-typedjson";
+import { useRouteError, useRouteLoaderData } from "@remix-run/react";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
 import { getData } from "~/util/handle-error";
@@ -21,11 +20,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userGames = await getData(() => api.users.games(userId));
   const userData = await getData(() => api.users.getUser(userId));
 
-  return typedjson({ userGames, userData });
+  return { userGames, userData };
 };
 
 export function useAppData() {
-  const data = useTypedRouteLoaderData<typeof loader>("routes/_app");
+  const data = useRouteLoaderData<typeof loader>("routes/_app");
   if (data === undefined) {
     throw new Error("useAppData must be used within the _app route or its children");
   }

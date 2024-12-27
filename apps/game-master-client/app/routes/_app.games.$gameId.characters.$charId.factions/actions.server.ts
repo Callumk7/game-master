@@ -1,5 +1,4 @@
 import type { SDK } from "@repo/api";
-import { typedjson } from "remix-typedjson";
 import { z } from "zod";
 import { parseForm } from "zodix";
 
@@ -18,7 +17,7 @@ export const updateCharacterFaction = async (
 		});
 	}
 	const result = await api.characters.factions.link(charId, [factionId]);
-	return typedjson(result);
+	return result;
 };
 
 export const unlinkFaction = async (request: Request, api: SDK, charId: string) => {
@@ -26,5 +25,5 @@ export const unlinkFaction = async (request: Request, api: SDK, charId: string) 
 		factionId: z.string(),
 	});
 	const result = await api.characters.factions.unlink(charId, factionId);
-	return typedjson(result);
+	return result;
 };

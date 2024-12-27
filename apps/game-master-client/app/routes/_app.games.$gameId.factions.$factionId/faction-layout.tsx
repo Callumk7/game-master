@@ -1,13 +1,12 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { useTypedLoaderData } from "remix-typedjson";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { ScrollFade } from "~/components/scroll-visibility";
 import { FactionNavigation } from "./components/navigation";
 import type { loader } from "./route";
 
 export function FactionLayout() {
-  const { factionDetails, folders } = useTypedLoaderData<typeof loader>();
+  const { factionDetails, folders } = useLoaderData<typeof loader>();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useTypedLoaderData } from "remix-typedjson";
 import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/typeography";
 import { AddMemberDialog } from "./components/add-member-dialog";
 import { MemberCard } from "./components/member-card";
 import type { loader } from "./route";
+import { useLoaderData } from "@remix-run/react";
 
 export function MembersRoute() {
-  const { members, gameId, factionId } = useTypedLoaderData<typeof loader>();
+  const { members, gameId, factionId } = useLoaderData<typeof loader>();
   const [isEditing, setIsEditing] = useState(false);
   return (
     <div className="space-y-4">

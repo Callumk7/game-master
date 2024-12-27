@@ -1,5 +1,5 @@
+import { redirect } from "@remix-run/node";
 import { type SDK, duplicateFactionSchema } from "@repo/api";
-import { redirect } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { factionHref } from "~/util/generate-hrefs";
 import { unsuccessfulResponse } from "~/util/responses";

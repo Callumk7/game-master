@@ -1,5 +1,5 @@
+import { redirect } from "@remix-run/node";
 import { type SDK, duplicateNoteSchema } from "@repo/api";
-import { redirect, typedjson } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { unsuccessfulResponse } from "~/util/responses";
 

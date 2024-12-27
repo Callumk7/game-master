@@ -1,6 +1,5 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { useTypedLoaderData } from "remix-typedjson";
 import { EntityToolbar } from "~/components/entity-toolbar";
 import { EditCharacterDialog } from "~/components/forms/edit-character-dialog";
 import { ScrollFade } from "~/components/scroll-visibility";
@@ -8,7 +7,7 @@ import { CharacterNavigation } from "./components/navigation";
 import type { loader } from "./route";
 
 export function CharacterLayout() {
-  const { characterDetails, folders } = useTypedLoaderData<typeof loader>();
+  const { characterDetails, folders } = useLoaderData<typeof loader>();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   return (
     <>

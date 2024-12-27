@@ -1,5 +1,5 @@
+import { redirect } from "@remix-run/node";
 import { type SDK, updateGameSchema } from "@repo/api";
-import { redirect } from "remix-typedjson";
 import { parseForm } from "zodix";
 import { unsuccessfulResponse } from "~/util/responses";
 

@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { type Params, useRouteError } from "@remix-run/react";
-import { redirect, typedjson, useTypedRouteLoaderData } from "remix-typedjson";
+import { type Params, redirect, useRouteError, useRouteLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { Text } from "~/components/ui/typeography";
@@ -19,13 +18,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const data = await getData(() => api.games.getAllGameEntities(gameId));
   const sidebarData = await getData(() => api.games.getGame.withData(gameId));
-  return typedjson({ ...data, sidebarData });
+  return { ...data, sidebarData };
 };
 
 export { GameLayout as default };
 
 export function useGameData() {
-  const data = useTypedRouteLoaderData<typeof loader>("routes/_app.games.$gameId");
+  const data = useRouteLoaderData<typeof loader>("routes/_app.games.$gameId");
 
   if (data === undefined) {
     throw new Error(
@@ -70,7 +69,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (request.method === "DELETE") {
     const result = await api.games.delete(gameId);
     if (result.success) return redirect("/");
-    return typedjson(result);
+    return result;
   }
   return methodNotAllowed();
 };
