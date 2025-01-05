@@ -255,9 +255,6 @@ importers:
       '@hono/node-server':
         specifier: ^1.12.1
         version: 1.12.1
-      '@logtape/logtape':
-        specifier: ^0.7.1
-        version: 0.7.1
       '@repo/api':
         specifier: workspace:*
         version: link:../../packages/api
