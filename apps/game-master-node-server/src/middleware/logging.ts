@@ -2,7 +2,7 @@ import { getLogger } from "@logtape/logtape";
 import type { Context, Next } from "hono";
 import { getPayload } from "~/lib/jwt";
 
-const logger = getLogger(["hono", "http"]);
+const logger = getLogger(["hono", "debug"]);
 
 // time in ms
 const time = (start: number) => {

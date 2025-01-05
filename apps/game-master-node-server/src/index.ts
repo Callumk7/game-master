@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
+import { logger } from "hono/logger";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
@@ -9,11 +10,7 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import { httpLogger } from "./middleware/logging";
-import { setupLogging } from "./services/logging";
 import type { Variables } from "./types";
-
-await setupLogging();
 
 const app = new Hono<{ Variables: Variables }>();
 app.use("*", cors());
@@ -29,7 +26,7 @@ app.use(
 );
 
 // Application routes
-app.use("*", httpLogger);
+app.use(logger());
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
