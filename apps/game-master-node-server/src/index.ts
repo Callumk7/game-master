@@ -11,22 +11,24 @@ import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
 import type { Variables } from "./types";
+import { authRoute } from "./features/auth";
 
 const app = new Hono<{ Variables: Variables }>();
 app.use("*", cors());
 // Healthcheck
 app.get("/", (c) => c.text("OK"));
 
-// This will apply JWT middleware to all routes except "/"
-app.use(
-	"*",
-	jwt({
-		secret: env.SERVER_SECRET,
-	}),
-);
-
 // Application routes
 app.use(logger());
+app.route("/auth", authRoute);
+// This will apply JWT middleware to all routes except "/"
+//app.use(
+//	"*",
+//	jwt({
+//		secret: env.SERVER_SECRET,
+//	}),
+//);
+
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
