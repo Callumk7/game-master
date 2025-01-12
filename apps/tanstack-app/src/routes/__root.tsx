@@ -1,8 +1,6 @@
-import * as React from "react";
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-
-const userId = "user_0426b71b-71cb-4044-aef6-6bba0f71bb36";
+import { ProtectedRoute } from "../components/protected-route";
 
 export const Route = createRootRoute({
   component: RootComponent,

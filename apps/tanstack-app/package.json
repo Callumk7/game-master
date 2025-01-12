@@ -12,6 +12,7 @@
 	},
 	"devDependencies": {
 		"@repo/api": "workspace:*",
+		"@repo/auth": "workspace:*",
 		"@tanstack/router-plugin": "^1.95.1",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
