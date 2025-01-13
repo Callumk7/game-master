@@ -18,10 +18,6 @@ if (!rootElement.innerHTML) {
   root.render(<App />);
 }
 
-function InnerApp() {
-  const auth = useAuth().client;
-  return <RouterProvider router={router} context={{ auth }} />;
-}
 
 function App() {
   return (
@@ -29,4 +25,8 @@ function App() {
       <InnerApp />
     </AuthProvider>
   );
+}
+
+function InnerApp() { const auth = useAuth().client;
+  return <RouterProvider router={router} context={{ auth }} />;
 }

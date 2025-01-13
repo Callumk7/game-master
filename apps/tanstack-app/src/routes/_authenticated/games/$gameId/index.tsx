@@ -7,7 +7,7 @@ const api = new SDK({
   apiKey: localStorage.getItem('jwt_token')!,
 })
 
-export const Route = createFileRoute('/games/$gameId/')({
+export const Route = createFileRoute('/_authenticated/games/$gameId/')({
   component: RouteComponent,
   loader: ({ params: { gameId } }) => api.games.getAllGameEntities(gameId),
 })
