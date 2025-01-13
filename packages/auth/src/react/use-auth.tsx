@@ -17,8 +17,9 @@ const AuthContext = createContext<{
 export function AuthProvider({
   children,
   baseUrl,
-}: { children: ReactNode; baseUrl: string }) {
-  const [client] = useState(() => new AuthClient(baseUrl));
+  tenantId
+}: { children: ReactNode; baseUrl: string, tenantId: number }) {
+  const [client] = useState(() => new AuthClient(baseUrl, tenantId));
   const [isAuthenticated, setIsAuthenticated] = useState(client.isAuthenticated());
 
   const syncAuthState = useCallback(() => {
@@ -26,8 +27,8 @@ export function AuthProvider({
   }, [client]);
 
   const login = useCallback(
-    async (email: string, password: string, tenantId: number) => {
-      await client.login(email, password, tenantId);
+    async (email: string, password: string) => {
+      await client.login(email, password);
       syncAuthState();
     },
     [client, syncAuthState],

@@ -1,4 +1,5 @@
-import type { AuthTokens, User } from "./types.js";
+import { LocalStorageAdapter } from "./adapters.js";
+import type { AuthTokens, TokenStorage, User } from "./types.js";
 import fetch from "cross-fetch";
 
 export class AuthClient {
@@ -6,11 +7,15 @@ export class AuthClient {
 	private accessToken: string | null;
 	private refreshToken: string | null;
 	private tokenRefreshPromise: Promise<void> | null = null;
+	private tenantId: number;
+	private storage: TokenStorage;
 
-	constructor(baseUrl: string) {
+	constructor(baseUrl: string, tenantId: number, storage?: TokenStorage) {
 		this.baseUrl = baseUrl;
-		this.accessToken = localStorage.getItem("accessToken");
-		this.refreshToken = localStorage.getItem("refreshToken");
+		this.tenantId = tenantId;
+		this.storage = storage || new LocalStorageAdapter();
+		this.accessToken = this.storage.getItem("accessToken");
+		this.refreshToken = this.storage.getItem("refreshToken");
 	}
 
 	private async fetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -68,10 +73,10 @@ export class AuthClient {
 		return this.tokenRefreshPromise;
 	}
 
-	async login(email: string, password: string, tenantId: number): Promise<void> {
+	async login(email: string, password: string): Promise<void> {
 		const response = await this.fetch<AuthTokens>("api/login", {
 			method: "POST",
-			body: JSON.stringify({ email, password, tenant_id: tenantId }),
+			body: JSON.stringify({ email, password, tenant_id: this.tenantId }),
 		});
 
 		console.log("Tokens set:", {
@@ -101,9 +106,25 @@ export class AuthClient {
 		return this.fetch<User>("api/protected/me");
 	}
 
-	async listUsers(tenantId: number): Promise<User[]> {
-		return this.fetch<User[]>(`api/protected/tenants/${tenantId}/users`);
+	async signUp(email: string, password: string): Promise<void> {
+		const response = await this.fetch<AuthTokens>("api/register", {
+			method: "POST",
+			body: JSON.stringify({email, password, tenant_id: this.tenantId})
+		})
+
+		console.log("Tokens set:", {
+			hasAccessToken: !!this.accessToken,
+			hasRefreshToken: !!this.refreshToken,
+		});
+
+		this.accessToken = response.access_token;
+		this.refreshToken = response.refresh_token;
+		this.persistTokens();
 	}
+
+	//async listUsers(): Promise<User[]> {
+	//	return this.fetch<User[]>(`api/protected/tenants/${this.tenantId}/users`);
+	//}
 
 	isAuthenticated(): boolean {
 		console.log("isAuthenticated check:", {
@@ -119,11 +140,11 @@ export class AuthClient {
 
 	private persistTokens() {
 		if (this.accessToken && this.refreshToken) {
-			localStorage.setItem("accessToken", this.accessToken);
-			localStorage.setItem("refreshToken", this.refreshToken);
+			this.storage.setItem("accessToken", this.accessToken);
+			this.storage.setItem("refreshToken", this.refreshToken);
 		} else {
-			localStorage.removeItem("accessToken");
-			localStorage.removeItem("refreshToken");
+			this.storage.removeItem("accessToken");
+			this.storage.removeItem("refreshToken");
 		}
 	}
 }

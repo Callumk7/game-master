@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { charactersPermissions } from "./characters";
@@ -25,6 +25,7 @@ export const users = pgTable("users", {
 		withTimezone: true,
 		mode: "date",
 	}),
+	authId: integer("auth_id").notNull().unique()
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

@@ -21,13 +21,12 @@ app.get("/", (c) => c.text("OK"));
 // Application routes
 app.use(logger());
 app.route("/auth", authRoute);
-// This will apply JWT middleware to all routes except "/"
-//app.use(
-//	"*",
-//	jwt({
-//		secret: env.SERVER_SECRET,
-//	}),
-//);
+app.use(
+	"*",
+	jwt({
+		secret: env.SERVER_SECRET,
+	}),
+);
 
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);

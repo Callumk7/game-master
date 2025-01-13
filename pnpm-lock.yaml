@@ -261,6 +261,9 @@ importers:
       '@repo/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@repo/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       callum-util:
         specifier: ^2.0.1
         version: 2.0.1
