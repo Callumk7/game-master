@@ -14,7 +14,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 		const decoded = await verifyToken(token);
 
 		c.set("user", decoded);
-		 await next();
+		await next();
 	} catch (error) {
 		c.json({ error: "Invalid token" }, 401);
 	}

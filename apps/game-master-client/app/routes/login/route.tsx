@@ -69,8 +69,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   session.set("userId", existingUser.id);
-  const token = generateServerToken(existingUser.id)
-  localStorage.setItem("token", token)
+  const token = generateServerToken(existingUser.id);
+  localStorage.setItem("token", token);
 
   return redirect("/", {
     headers: {

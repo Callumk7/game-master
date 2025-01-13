@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { logger } from "hono/logger";
+import { authRoute } from "./features/auth";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
@@ -11,7 +12,6 @@ import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
 import type { Variables } from "./types";
-import { authRoute } from "./features/auth";
 
 const app = new Hono<{ Variables: Variables }>();
 app.use("*", cors());

@@ -4,8 +4,8 @@ import { generateToken } from "./jwt";
 export const authRoute = new Hono();
 
 authRoute.get("/", (c) => {
-	return c.text("Please use the /login route to authenticate your requests.")
-})
+	return c.text("Please use the /login route to authenticate your requests.");
+});
 
 authRoute.post("/login", async (c) => {
 	try {
@@ -18,7 +18,7 @@ authRoute.post("/login", async (c) => {
 			});
 			return c.json({ token });
 		}
-		return c.json({error: "Invalid credentials"}, 401);
+		return c.json({ error: "Invalid credentials" }, 401);
 	} catch (error) {
 		return c.json({ error: "Invalid request" }, 400);
 	}
