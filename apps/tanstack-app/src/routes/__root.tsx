@@ -1,8 +1,12 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import type { AuthClient } from "@repo/auth";
+import { Link, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { ProtectedRoute } from "../components/protected-route";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  auth: AuthClient
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
 })
 
@@ -26,6 +30,14 @@ function RootComponent() {
           }}
         >
           About
+        </Link>
+        <Link
+          to="/games"
+          activeProps={{
+            className: "font-bold",
+          }}
+        >
+          Games
         </Link>
       </div>
       <hr />

@@ -1,13 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SDK } from "@repo/api";
+import { createFileRoute } from '@tanstack/react-router'
+import { SDK } from '@repo/api'
 
-const SERVER_URL = "http://localhost:3000";
-const api = new SDK({ baseUrl: SERVER_URL, apiKey: localStorage.getItem("jwt_token")! });
+const SERVER_URL = 'http://localhost:3000'
+const api = new SDK({
+  baseUrl: SERVER_URL,
+  apiKey: localStorage.getItem('jwt_token')!,
+})
 
-export const Route = createFileRoute("/games/$gameId/")({
+export const Route = createFileRoute('/games/$gameId/')({
   component: RouteComponent,
   loader: ({ params: { gameId } }) => api.games.getAllGameEntities(gameId),
-});
+})
 
 function RouteComponent() {
   return (
@@ -30,5 +33,5 @@ function RouteComponent() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -13,8 +13,10 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as GamesIndexImport } from './routes/games/index'
+import { Route as AuthenticatedAImport } from './routes/_authenticated/a'
 import { Route as GamesGameIdIndexImport } from './routes/games/$gameId/index'
 
 // Create/Update Routes
@@ -31,6 +33,11 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -41,6 +48,12 @@ const GamesIndexRoute = GamesIndexImport.update({
   id: '/games/',
   path: '/games/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedARoute = AuthenticatedAImport.update({
+  id: '/a',
+  path: '/a',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const GamesGameIdIndexRoute = GamesGameIdIndexImport.update({
@@ -60,6 +73,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -73,6 +93,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/a': {
+      id: '/_authenticated/a'
+      path: '/a'
+      fullPath: '/a'
+      preLoaderRoute: typeof AuthenticatedAImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/games/': {
       id: '/games/'
@@ -93,18 +120,34 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedARoute: typeof AuthenticatedARoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedARoute: AuthenticatedARoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/a': typeof AuthenticatedARoute
   '/games': typeof GamesIndexRoute
   '/games/$gameId': typeof GamesGameIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/a': typeof AuthenticatedARoute
   '/games': typeof GamesIndexRoute
   '/games/$gameId': typeof GamesGameIdIndexRoute
 }
@@ -112,23 +155,34 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/_authenticated/a': typeof AuthenticatedARoute
   '/games/': typeof GamesIndexRoute
   '/games/$gameId/': typeof GamesGameIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/login' | '/games' | '/games/$gameId'
+  fullPaths: '/' | '' | '/about' | '/login' | '/a' | '/games' | '/games/$gameId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/games' | '/games/$gameId'
-  id: '__root__' | '/' | '/about' | '/login' | '/games/' | '/games/$gameId/'
+  to: '/' | '' | '/about' | '/login' | '/a' | '/games' | '/games/$gameId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/about'
+    | '/login'
+    | '/_authenticated/a'
+    | '/games/'
+    | '/games/$gameId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
   GamesIndexRoute: typeof GamesIndexRoute
@@ -137,6 +191,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   GamesIndexRoute: GamesIndexRoute,
@@ -154,6 +209,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_authenticated",
         "/about",
         "/login",
         "/games/",
@@ -163,11 +219,21 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/a"
+      ]
+    },
     "/about": {
       "filePath": "about.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/_authenticated/a": {
+      "filePath": "_authenticated/a.tsx",
+      "parent": "/_authenticated"
     },
     "/games/": {
       "filePath": "games/index.tsx"

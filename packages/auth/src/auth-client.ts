@@ -6,7 +6,6 @@ export class AuthClient {
 	private accessToken: string | null;
 	private refreshToken: string | null;
 	private tokenRefreshPromise: Promise<void> | null = null;
-	private authStateListeners: (() => void)[] = [];
 
 	constructor(baseUrl: string) {
 		this.baseUrl = baseUrl;
@@ -66,7 +65,6 @@ export class AuthClient {
 			}
 		})();
 
-		this.notifyAuthStateChange();
 		return this.tokenRefreshPromise;
 	}
 
@@ -84,7 +82,6 @@ export class AuthClient {
 		this.accessToken = response.access_token;
 		this.refreshToken = response.refresh_token;
 		this.persistTokens();
-		this.notifyAuthStateChange();
 	}
 
 	async logout(): Promise<void> {
@@ -98,7 +95,6 @@ export class AuthClient {
 		this.accessToken = null;
 		this.refreshToken = null;
 		this.persistTokens();
-		this.notifyAuthStateChange();
 	}
 
 	async getCurrentUser(): Promise<User> {
@@ -119,23 +115,6 @@ export class AuthClient {
 
 	getAccessToken(): string | null {
 		return this.accessToken;
-	}
-
-	private notifyAuthStateChange() {
-		console.log("Notifying auth state change", {
-			listenerCount: this.authStateListeners.length,
-			isAuthenticated: this.isAuthenticated(),
-		});
-		this.authStateListeners.forEach((listener) => listener());
-	}
-
-	public subscribeToAuthStateChange(listener: () => void): () => void {
-		this.authStateListeners.push(listener);
-		return () => {
-			this.authStateListeners = this.authStateListeners.filter(
-				(l) => l !== listener,
-			);
-		};
 	}
 
 	private persistTokens() {

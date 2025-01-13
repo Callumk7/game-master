@@ -3,7 +3,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -38,11 +37,6 @@ export function AuthProvider({
     await client.logout();
     setIsAuthenticated(false);
     syncAuthState();
-  }, [client, syncAuthState]);
-
-  useEffect(() => {
-    const unsubscribe = client.subscribeToAuthStateChange(syncAuthState);
-    return () => unsubscribe();
   }, [client, syncAuthState]);
 
   return (

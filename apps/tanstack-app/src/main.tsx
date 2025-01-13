@@ -1,14 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { AuthProvider } from "@repo/auth";
-
-// Set up a Router instance
-const router = createRouter({
-  routeTree,
-  defaultPreload: "intent",
-});
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./router";
+import { AuthProvider, useAuth } from "@repo/auth";
 
 // Register things for typesafety
 declare module "@tanstack/react-router" {
@@ -24,10 +18,15 @@ if (!rootElement.innerHTML) {
   root.render(<App />);
 }
 
-export function App() {
+function InnerApp() {
+  const auth = useAuth().client;
+  return <RouterProvider router={router} context={{ auth }} />;
+}
+
+function App() {
   return (
     <AuthProvider baseUrl="http://localhost:4000">
-      <RouterProvider router={router} />
+      <InnerApp />
     </AuthProvider>
   );
 }
