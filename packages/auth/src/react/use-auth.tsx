@@ -1,5 +1,12 @@
 import { AuthClient } from "../auth-client.js";
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 const AuthContext = createContext<{
   client: AuthClient;
@@ -19,11 +26,10 @@ export function AuthProvider({
     setIsAuthenticated(client.isAuthenticated());
   }, [client]);
 
-
   const login = useCallback(
     async (email: string, password: string, tenantId: number) => {
       await client.login(email, password, tenantId);
-      syncAuthState()
+      syncAuthState();
     },
     [client, syncAuthState],
   );
@@ -31,12 +37,13 @@ export function AuthProvider({
   const logout = useCallback(async () => {
     await client.logout();
     setIsAuthenticated(false);
-    syncAuthState()
+    syncAuthState();
   }, [client, syncAuthState]);
 
-  //useEffect(() =>  {
-  //  const unsubscribe = client.sub
-  //})
+  useEffect(() => {
+    const unsubscribe = client.subscribeToAuthStateChange(syncAuthState);
+    return () => unsubscribe();
+  }, [client, syncAuthState]);
 
   return (
     <AuthContext.Provider value={{ client, isAuthenticated, login, logout }}>
@@ -48,7 +55,7 @@ export function AuthProvider({
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider I am afraid.")
+    throw new Error("useAuth must be used within an AuthProvider I am afraid.");
   }
 
   return context;

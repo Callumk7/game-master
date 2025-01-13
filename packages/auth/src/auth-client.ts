@@ -10,8 +10,8 @@ export class AuthClient {
 
 	constructor(baseUrl: string) {
 		this.baseUrl = baseUrl;
-		this.accessToken = null;
-		this.refreshToken = null;
+		this.accessToken = localStorage.getItem("accessToken");
+		this.refreshToken = localStorage.getItem("refreshToken");
 	}
 
 	private async fetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -76,6 +76,11 @@ export class AuthClient {
 			body: JSON.stringify({ email, password, tenant_id: tenantId }),
 		});
 
+		console.log("Tokens set:", {
+			hasAccessToken: !!this.accessToken,
+			hasRefreshToken: !!this.refreshToken,
+		});
+
 		this.accessToken = response.access_token;
 		this.refreshToken = response.refresh_token;
 		this.persistTokens();
@@ -105,6 +110,10 @@ export class AuthClient {
 	}
 
 	isAuthenticated(): boolean {
+		console.log("isAuthenticated check:", {
+			hasAccessToken: !!this.accessToken,
+			token: this.accessToken,
+		});
 		return !!this.accessToken;
 	}
 
@@ -113,6 +122,10 @@ export class AuthClient {
 	}
 
 	private notifyAuthStateChange() {
+		console.log("Notifying auth state change", {
+			listenerCount: this.authStateListeners.length,
+			isAuthenticated: this.isAuthenticated(),
+		});
 		this.authStateListeners.forEach((listener) => listener());
 	}
 
