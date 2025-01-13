@@ -40,14 +40,6 @@ function RootComponent() {
         >
           Games
         </Link>
-        <Link
-          to="/a"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          Games
-        </Link>
         <button type="button" onClick={logout}>
           Logout
         </button>

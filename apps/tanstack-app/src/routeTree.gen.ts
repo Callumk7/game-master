@@ -15,7 +15,6 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthenticatedAImport } from './routes/_authenticated/a'
 import { Route as AuthenticatedGamesIndexImport } from './routes/_authenticated/games/index'
 import { Route as AuthenticatedGamesGameIdIndexImport } from './routes/_authenticated/games/$gameId/index'
 
@@ -42,12 +41,6 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const AuthenticatedARoute = AuthenticatedAImport.update({
-  id: '/a',
-  path: '/a',
-  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 const AuthenticatedGamesIndexRoute = AuthenticatedGamesIndexImport.update({
@@ -95,13 +88,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticated/a': {
-      id: '/_authenticated/a'
-      path: '/a'
-      fullPath: '/a'
-      preLoaderRoute: typeof AuthenticatedAImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/games/': {
       id: '/_authenticated/games/'
       path: '/games'
@@ -122,13 +108,11 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedARoute: typeof AuthenticatedARoute
   AuthenticatedGamesIndexRoute: typeof AuthenticatedGamesIndexRoute
   AuthenticatedGamesGameIdIndexRoute: typeof AuthenticatedGamesGameIdIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedARoute: AuthenticatedARoute,
   AuthenticatedGamesIndexRoute: AuthenticatedGamesIndexRoute,
   AuthenticatedGamesGameIdIndexRoute: AuthenticatedGamesGameIdIndexRoute,
 }
@@ -142,7 +126,6 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
-  '/a': typeof AuthenticatedARoute
   '/games': typeof AuthenticatedGamesIndexRoute
   '/games/$gameId': typeof AuthenticatedGamesGameIdIndexRoute
 }
@@ -152,7 +135,6 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
-  '/a': typeof AuthenticatedARoute
   '/games': typeof AuthenticatedGamesIndexRoute
   '/games/$gameId': typeof AuthenticatedGamesGameIdIndexRoute
 }
@@ -163,23 +145,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
-  '/_authenticated/a': typeof AuthenticatedARoute
   '/_authenticated/games/': typeof AuthenticatedGamesIndexRoute
   '/_authenticated/games/$gameId/': typeof AuthenticatedGamesGameIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/about' | '/login' | '/a' | '/games' | '/games/$gameId'
+  fullPaths: '/' | '' | '/about' | '/login' | '/games' | '/games/$gameId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/login' | '/a' | '/games' | '/games/$gameId'
+  to: '/' | '' | '/about' | '/login' | '/games' | '/games/$gameId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/about'
     | '/login'
-    | '/_authenticated/a'
     | '/_authenticated/games/'
     | '/_authenticated/games/$gameId/'
   fileRoutesById: FileRoutesById
@@ -221,7 +201,6 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
-        "/_authenticated/a",
         "/_authenticated/games/",
         "/_authenticated/games/$gameId/"
       ]
@@ -231,10 +210,6 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
-    },
-    "/_authenticated/a": {
-      "filePath": "_authenticated/a.tsx",
-      "parent": "/_authenticated"
     },
     "/_authenticated/games/": {
       "filePath": "_authenticated/games/index.tsx",
