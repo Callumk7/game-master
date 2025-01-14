@@ -1,5 +1,5 @@
 {
-  "id": "15f68282-d6e5-44db-817d-c9fbbca79169",
+  "id": "fd34a498-f509-42f8-8b1c-9f1a500cf296",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -19,6 +19,79 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "level": {
+          "name": "level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "class": {
+          "name": "class",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "race": {
+          "name": "race",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "strength": {
+          "name": "strength",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dexterity": {
+          "name": "dexterity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "constitution": {
+          "name": "constitution",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intelligence": {
+          "name": "intelligence",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wisdom": {
+          "name": "wisdom",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "charisma": {
+          "name": "charisma",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "personality": {
+          "name": "personality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "goal": {
+          "name": "goal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "flaw": {
+          "name": "flaw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "content": {
           "name": "content",
@@ -62,6 +135,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "folder_id": {
+          "name": "folder_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "is_player": {
           "name": "is_player",
           "type": "boolean",
@@ -76,6 +155,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'private'"
+        },
+        "primary_faction_id": {
+          "name": "primary_faction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -99,6 +184,32 @@
           "tableTo": "users",
           "columnsFrom": [
             "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "characters_folder_id_folders_id_fk": {
+          "name": "characters_folder_id_folders_id_fk",
+          "tableFrom": "characters",
+          "tableTo": "folders",
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "characters_primary_faction_id_factions_id_fk": {
+          "name": "characters_primary_faction_id_factions_id_fk",
+          "tableFrom": "characters",
+          "tableTo": "factions",
+          "columnsFrom": [
+            "primary_faction_id"
           ],
           "columnsTo": [
             "id"
@@ -145,7 +256,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "characters_in_factions_faction_id_factions_id_fk": {
@@ -158,7 +269,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -189,18 +300,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "can_view": {
-          "name": "can_view",
-          "type": "boolean",
+        "permission": {
+          "name": "permission",
+          "type": "permission",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "can_edit": {
-          "name": "can_edit",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         }
       },
       "indexes": {},
@@ -215,7 +320,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "characters_permissions_user_id_users_id_fk": {
@@ -228,7 +333,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -258,6 +363,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -358,8 +469,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "leader_id": {
-          "name": "leader_id",
+        "folder_id": {
+          "name": "folder_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -371,6 +482,30 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'private'"
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alignment": {
+          "name": "alignment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "leader_id": {
+          "name": "leader_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "power": {
+          "name": "power",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -401,12 +536,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "factions_leader_id_characters_id_fk": {
-          "name": "factions_leader_id_characters_id_fk",
+        "factions_folder_id_folders_id_fk": {
+          "name": "factions_folder_id_folders_id_fk",
           "tableFrom": "factions",
-          "tableTo": "characters",
+          "tableTo": "folders",
           "columnsFrom": [
-            "leader_id"
+            "folder_id"
           ],
           "columnsTo": [
             "id"
@@ -434,18 +569,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "can_view": {
-          "name": "can_view",
-          "type": "boolean",
+        "permission": {
+          "name": "permission",
+          "type": "permission",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "can_edit": {
-          "name": "can_edit",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         }
       },
       "indexes": {},
@@ -503,6 +632,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -649,7 +784,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "users_to_games_game_id_games_id_fk": {
@@ -662,7 +797,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -675,6 +810,105 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.images": {
+      "name": "images",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_id": {
+          "name": "note_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "character_id": {
+          "name": "character_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "faction_id": {
+          "name": "faction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "images_owner_id_users_id_fk": {
+          "name": "images_owner_id_users_id_fk",
+          "tableFrom": "images",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "images_note_id_notes_id_fk": {
+          "name": "images_note_id_notes_id_fk",
+          "tableFrom": "images",
+          "tableTo": "notes",
+          "columnsFrom": [
+            "note_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "images_character_id_characters_id_fk": {
+          "name": "images_character_id_characters_id_fk",
+          "tableFrom": "images",
+          "tableTo": "characters",
+          "columnsFrom": [
+            "character_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "images_faction_id_factions_id_fk": {
+          "name": "images_faction_id_factions_id_fk",
+          "tableFrom": "images",
+          "tableTo": "factions",
+          "columnsFrom": [
+            "faction_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.folders": {
@@ -693,21 +927,60 @@
           "primaryKey": false,
           "notNull": true
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
         "parent_folder_id": {
           "name": "parent_folder_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
+        "game_id": {
+          "name": "game_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "owner_id": {
           "name": "owner_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "visibility": {
+          "name": "visibility",
+          "type": "visibility",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'private'"
         }
       },
       "indexes": {},
       "foreignKeys": {
+        "folders_game_id_games_id_fk": {
+          "name": "folders_game_id_games_id_fk",
+          "tableFrom": "folders",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "folders_owner_id_users_id_fk": {
           "name": "folders_owner_id_users_id_fk",
           "tableFrom": "folders",
@@ -723,6 +996,70 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.folders_permissions": {
+      "name": "folders_permissions",
+      "schema": "",
+      "columns": {
+        "folder_id": {
+          "name": "folder_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission": {
+          "name": "permission",
+          "type": "permission",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "folders_permissions_folder_id_folders_id_fk": {
+          "name": "folders_permissions_folder_id_folders_id_fk",
+          "tableFrom": "folders_permissions",
+          "tableTo": "folders",
+          "columnsFrom": [
+            "folder_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "folders_permissions_user_id_users_id_fk": {
+          "name": "folders_permissions_user_id_users_id_fk",
+          "tableFrom": "folders_permissions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "folders_permissions_user_id_folder_id_pk": {
+          "name": "folders_permissions_user_id_folder_id_pk",
+          "columns": [
+            "user_id",
+            "folder_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.links": {
@@ -741,8 +1078,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "label": {
+          "name": "label",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -801,6 +1138,12 @@
         },
         "folder_id": {
           "name": "folder_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cover_image_url": {
+          "name": "cover_image_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -909,7 +1252,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "notes_permissions_user_id_users_id_fk": {
@@ -922,7 +1265,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1013,9 +1356,39 @@
           "primaryKey": false,
           "notNull": true
         },
-        "password_hash": {
-          "name": "password_hash",
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_verification_token": {
+          "name": "email_verification_token",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_verification_token_expiry": {
+          "name": "email_verification_token_expiry",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reset_token": {
+          "name": "reset_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reset_token_expiry": {
+          "name": "reset_token_expiry",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_id": {
+          "name": "auth_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
@@ -1030,19 +1403,34 @@
           "columns": [
             "email"
           ]
+        },
+        "users_auth_id_unique": {
+          "name": "users_auth_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "auth_id"
+          ]
         }
       }
     }
   },
   "enums": {
+    "public.permission": {
+      "name": "permission",
+      "schema": "public",
+      "values": [
+        "none",
+        "view",
+        "edit"
+      ]
+    },
     "public.visibility": {
       "name": "visibility",
       "schema": "public",
       "values": [
         "public",
         "private",
-        "viewable",
-        "partial"
+        "viewable"
       ]
     },
     "public.role": {
@@ -1064,16 +1452,8 @@
         "faction",
         "location",
         "item",
-        "quest"
-      ]
-    },
-    "public.permission": {
-      "name": "permission",
-      "schema": "public",
-      "values": [
-        "none",
-        "view",
-        "edit"
+        "quest",
+        "scene"
       ]
     }
   },

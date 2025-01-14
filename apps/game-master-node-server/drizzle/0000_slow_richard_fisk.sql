@@ -1,5 +1,11 @@
 DO $$ BEGIN
- CREATE TYPE "public"."visibility" AS ENUM('public', 'private', 'viewable', 'partial');
+ CREATE TYPE "public"."permission" AS ENUM('none', 'view', 'edit');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "public"."visibility" AS ENUM('public', 'private', 'viewable');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -11,13 +17,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."note_type" AS ENUM('note', 'character', 'faction', 'location', 'item', 'quest');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "public"."permission" AS ENUM('none', 'view', 'edit');
+ CREATE TYPE "public"."note_type" AS ENUM('note', 'character', 'faction', 'location', 'item', 'quest', 'scene');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -25,6 +25,18 @@ END $$;
 CREATE TABLE IF NOT EXISTS "characters" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
+	"level" integer DEFAULT 1 NOT NULL,
+	"class" text,
+	"race" text,
+	"strength" integer,
+	"dexterity" integer,
+	"constitution" integer,
+	"intelligence" integer,
+	"wisdom" integer,
+	"charisma" integer,
+	"personality" text,
+	"goal" text,
+	"flaw" text,
 	"content" text,
 	"html_content" text,
 	"created_at" timestamp with time zone NOT NULL,
@@ -32,8 +44,10 @@ CREATE TABLE IF NOT EXISTS "characters" (
 	"cover_image_url" text,
 	"game_id" text NOT NULL,
 	"owner_id" text NOT NULL,
+	"folder_id" text,
 	"is_player" boolean DEFAULT false NOT NULL,
-	"visibility" "visibility" DEFAULT 'private' NOT NULL
+	"visibility" "visibility" DEFAULT 'private' NOT NULL,
+	"primary_faction_id" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "characters_in_factions" (
@@ -46,14 +60,14 @@ CREATE TABLE IF NOT EXISTS "characters_in_factions" (
 CREATE TABLE IF NOT EXISTS "characters_permissions" (
 	"character_id" text NOT NULL,
 	"user_id" text NOT NULL,
-	"can_view" boolean NOT NULL,
-	"can_edit" boolean DEFAULT false NOT NULL,
+	"permission" "permission" NOT NULL,
 	CONSTRAINT "characters_permissions_user_id_character_id_pk" PRIMARY KEY("user_id","character_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "notes_on_characters" (
 	"note_id" text NOT NULL,
 	"character_id" text NOT NULL,
+	"label" text,
 	CONSTRAINT "notes_on_characters_note_id_character_id_pk" PRIMARY KEY("note_id","character_id")
 );
 --> statement-breakpoint
@@ -67,21 +81,25 @@ CREATE TABLE IF NOT EXISTS "factions" (
 	"cover_image_url" text,
 	"game_id" text NOT NULL,
 	"owner_id" text NOT NULL,
+	"folder_id" text,
+	"visibility" "visibility" DEFAULT 'private' NOT NULL,
+	"location" text,
+	"alignment" text,
 	"leader_id" text,
-	"visibility" "visibility" DEFAULT 'private' NOT NULL
+	"power" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "factions_permissions" (
 	"faction_id" text NOT NULL,
 	"user_id" text NOT NULL,
-	"can_view" boolean NOT NULL,
-	"can_edit" boolean DEFAULT false NOT NULL,
+	"permission" "permission" NOT NULL,
 	CONSTRAINT "factions_permissions_user_id_faction_id_pk" PRIMARY KEY("user_id","faction_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "notes_on_factions" (
 	"note_id" text NOT NULL,
 	"faction_id" text NOT NULL,
+	"label" text,
 	CONSTRAINT "notes_on_factions_note_id_faction_id_pk" PRIMARY KEY("note_id","faction_id")
 );
 --> statement-breakpoint
@@ -102,17 +120,37 @@ CREATE TABLE IF NOT EXISTS "users_to_games" (
 	CONSTRAINT "users_to_games_user_id_game_id_pk" PRIMARY KEY("user_id","game_id")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "images" (
+	"id" text PRIMARY KEY NOT NULL,
+	"owner_id" text NOT NULL,
+	"note_id" text,
+	"character_id" text,
+	"faction_id" text,
+	"image_url" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "folders" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
+	"created_at" timestamp with time zone NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL,
 	"parent_folder_id" text,
-	"owner_id" text NOT NULL
+	"game_id" text NOT NULL,
+	"owner_id" text NOT NULL,
+	"visibility" "visibility" DEFAULT 'private' NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "folders_permissions" (
+	"folder_id" text NOT NULL,
+	"user_id" text NOT NULL,
+	"permission" "permission" NOT NULL,
+	CONSTRAINT "folders_permissions_user_id_folder_id_pk" PRIMARY KEY("user_id","folder_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "links" (
 	"from_id" text NOT NULL,
 	"to_id" text NOT NULL,
-	"description" text
+	"label" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "notes" (
@@ -124,6 +162,7 @@ CREATE TABLE IF NOT EXISTS "notes" (
 	"updated_at" timestamp with time zone NOT NULL,
 	"owner_id" text NOT NULL,
 	"folder_id" text,
+	"cover_image_url" text,
 	"game_id" text NOT NULL,
 	"type" "note_type" DEFAULT 'note' NOT NULL,
 	"visibility" "visibility" DEFAULT 'private' NOT NULL
@@ -148,8 +187,14 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"last_name" text,
 	"username" text NOT NULL,
 	"email" text NOT NULL,
-	"password_hash" text NOT NULL,
-	CONSTRAINT "users_email_unique" UNIQUE("email")
+	"email_verified" boolean,
+	"email_verification_token" text,
+	"email_verification_token_expiry" timestamp with time zone,
+	"reset_token" text,
+	"reset_token_expiry" timestamp with time zone,
+	"auth_id" integer NOT NULL,
+	CONSTRAINT "users_email_unique" UNIQUE("email"),
+	CONSTRAINT "users_auth_id_unique" UNIQUE("auth_id")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -165,25 +210,37 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "characters_in_factions" ADD CONSTRAINT "characters_in_factions_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "public"."characters"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "characters" ADD CONSTRAINT "characters_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."folders"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "characters_in_factions" ADD CONSTRAINT "characters_in_factions_faction_id_factions_id_fk" FOREIGN KEY ("faction_id") REFERENCES "public"."factions"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "characters" ADD CONSTRAINT "characters_primary_faction_id_factions_id_fk" FOREIGN KEY ("primary_faction_id") REFERENCES "public"."factions"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "characters_permissions" ADD CONSTRAINT "characters_permissions_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "public"."characters"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "characters_in_factions" ADD CONSTRAINT "characters_in_factions_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "public"."characters"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "characters_permissions" ADD CONSTRAINT "characters_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "characters_in_factions" ADD CONSTRAINT "characters_in_factions_faction_id_factions_id_fk" FOREIGN KEY ("faction_id") REFERENCES "public"."factions"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "characters_permissions" ADD CONSTRAINT "characters_permissions_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "public"."characters"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "characters_permissions" ADD CONSTRAINT "characters_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -213,7 +270,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "factions" ADD CONSTRAINT "factions_leader_id_characters_id_fk" FOREIGN KEY ("leader_id") REFERENCES "public"."characters"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "factions" ADD CONSTRAINT "factions_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."folders"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -249,19 +306,61 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "users_to_games" ADD CONSTRAINT "users_to_games_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "users_to_games" ADD CONSTRAINT "users_to_games_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "users_to_games" ADD CONSTRAINT "users_to_games_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "users_to_games" ADD CONSTRAINT "users_to_games_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "images" ADD CONSTRAINT "images_owner_id_users_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "images" ADD CONSTRAINT "images_note_id_notes_id_fk" FOREIGN KEY ("note_id") REFERENCES "public"."notes"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "images" ADD CONSTRAINT "images_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "public"."characters"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "images" ADD CONSTRAINT "images_faction_id_factions_id_fk" FOREIGN KEY ("faction_id") REFERENCES "public"."factions"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "folders" ADD CONSTRAINT "folders_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "folders" ADD CONSTRAINT "folders_owner_id_users_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "folders_permissions" ADD CONSTRAINT "folders_permissions_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."folders"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "folders_permissions" ADD CONSTRAINT "folders_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -285,13 +384,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "notes_permissions" ADD CONSTRAINT "notes_permissions_note_id_notes_id_fk" FOREIGN KEY ("note_id") REFERENCES "public"."notes"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "notes_permissions" ADD CONSTRAINT "notes_permissions_note_id_notes_id_fk" FOREIGN KEY ("note_id") REFERENCES "public"."notes"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "notes_permissions" ADD CONSTRAINT "notes_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "notes_permissions" ADD CONSTRAINT "notes_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

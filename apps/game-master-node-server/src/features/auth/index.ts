@@ -17,6 +17,8 @@ authRoute.post("/login", async (c) => {
 
 		await auth.login(email, password);
 
+		//console.log(await verifyToken(auth.getAccessToken()!))
+
 		if (auth.isAuthenticated()) {
 			return c.json({ token: auth.getAccessToken() });
 		}

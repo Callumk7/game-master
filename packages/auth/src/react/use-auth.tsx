@@ -20,10 +20,10 @@ export function AuthProvider({
   tenantId
 }: { children: ReactNode; baseUrl: string, tenantId: number }) {
   const [client] = useState(() => new AuthClient(baseUrl, tenantId));
-  const [isAuthenticated, setIsAuthenticated] = useState(client.isAuthenticated());
+  const [isAuthenticated, setIsAuthenticated] = useState(client.hasToken());
 
   const syncAuthState = useCallback(() => {
-    setIsAuthenticated(client.isAuthenticated());
+    setIsAuthenticated(client.hasToken());
   }, [client]);
 
   const login = useCallback(

@@ -122,16 +122,16 @@ export class AuthClient {
 		this.persistTokens();
 	}
 
-	//async listUsers(): Promise<User[]> {
-	//	return this.fetch<User[]>(`api/protected/tenants/${this.tenantId}/users`);
-	//}
-
-	isAuthenticated(): boolean {
+	hasToken(): boolean {
 		console.log("isAuthenticated check:", {
 			hasAccessToken: !!this.accessToken,
 			token: this.accessToken,
 		});
 		return !!this.accessToken;
+	}
+
+	verifyToken() {
+
 	}
 
 	getAccessToken(): string | null {

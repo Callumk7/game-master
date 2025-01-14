@@ -9,10 +9,13 @@ import { BaseUserForm } from "~/components/forms/user-forms";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
-import { authCookie, commitSession, getSession } from "~/lib/auth.server";
+import { authCookie, commitSession, getSession, verifyToken } from "~/lib/auth.server";
 import { env } from "~/lib/env.server";
 import { emailService } from "~/services/email.server";
-import { hashPassword } from "~/services/password-hash.server";
+import { AuthClient, InMemoryStorage } from "@repo/auth";
+
+const storage = new InMemoryStorage();
+const authClient = new AuthClient("http://localhost:4000", 1, storage);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(
@@ -26,11 +29,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { error: result.error };
   }
 
+  const { username, password, email, firstName, lastName } = result.data;
+  await authClient.signUp(email, password);
+  const authId = Number(verifyToken(authClient.getAccessToken()!).sub);
+
   try {
     const verificationToken = crypto.randomUUID();
     const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    const { username, password, email, firstName, lastName } = result.data;
-    const passwordHash = await hashPassword(password);
 
     const newUser = await db
       .insert(users)
@@ -38,12 +43,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         id: `user_${uuidv4()}`,
         username,
         email,
-        passwordHash,
         firstName,
         lastName,
         emailVerified: false,
         emailVerificationToken: verificationToken,
         emailVerificationTokenExpiry: tokenExpiry,
+        authId,
       })
       .returning({ userId: users.id, username: users.username, email: users.email });
 

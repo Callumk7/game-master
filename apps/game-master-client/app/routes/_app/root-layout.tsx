@@ -1,4 +1,5 @@
 import { Outlet, useHref, useNavigate } from "@remix-run/react";
+import { AuthProvider } from "@repo/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-aria-components";
 import { Toaster } from "sonner";
@@ -12,19 +13,21 @@ export function AppLayout() {
 
   return (
     <RouterProvider navigate={navigate} useHref={useHref}>
-      <QueryClientProvider client={queryClient}>
-        <GlobalStateProvider gameSelectionId={""}>
-          <SuccessRedirectHandler>
-            <Toaster
-              toastOptions={{
-                className: "bg-popover text-popover-foreground border-border",
-              }}
-            />
-            <Outlet />
-            <DiceWidget />
-          </SuccessRedirectHandler>
-        </GlobalStateProvider>
-      </QueryClientProvider>
+      <AuthProvider baseUrl="http://localhost:4000" tenantId={1}>
+        <QueryClientProvider client={queryClient}>
+          <GlobalStateProvider gameSelectionId={""}>
+            <SuccessRedirectHandler>
+              <Toaster
+                toastOptions={{
+                  className: "bg-popover text-popover-foreground border-border",
+                }}
+              />
+              <Outlet />
+              <DiceWidget />
+            </SuccessRedirectHandler>
+          </GlobalStateProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </RouterProvider>
   );
 }

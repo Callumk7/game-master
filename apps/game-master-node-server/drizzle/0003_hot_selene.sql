@@ -1,1 +1,0 @@
-ALTER TABLE "folders" ADD COLUMN "visibility" "visibility" DEFAULT 'private' NOT NULL;

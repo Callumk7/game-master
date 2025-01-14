@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, json, redirect, useLoaderData } from "@remix-run/react";
+import { data, Form, redirect, useLoaderData } from "@remix-run/react";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { eq } from "drizzle-orm";
@@ -19,8 +19,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/");
   }
 
-  const data = { error: session.get("error") };
-  return json(data, {
+  const errData = { error: session.get("error") };
+  return data(errData, {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
