@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, json, redirect, useLoaderData } from "@remix-run/react";
+import { Form, data, redirect, useLoaderData } from "@remix-run/react";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { eq } from "drizzle-orm";
@@ -15,12 +15,12 @@ import { verifyPassword } from "./queries.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getUserSession(request);
   // user is already logged in.
-  if (session.get("userId")) {
+  if (session.get("token")) {
     return redirect("/");
   }
 
-  const data = { error: session.get("error") };
-  return json(data, {
+  const errData = { error: session.get("error") };
+  return data(errData, {
     headers: {
       "Set-Cookie": await commitSession(session),
     },

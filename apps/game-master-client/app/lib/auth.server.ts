@@ -18,6 +18,8 @@ export type SessionData = {
 	userId: string;
 	username: string;
 	email: string;
+	authId: number;
+	token: string;
 };
 
 type SessionFlashData = {
@@ -60,4 +62,9 @@ export const getUserSession = async (request: Request) => {
 // JWT for server-to-server communication
 export const generateServerToken = (userId: string) => {
 	return jwt.sign({ userId }, env.SERVER_SECRET, { expiresIn: "1h" });
+};
+
+// JWT for server-to-server communication
+export const generateServerTokenWithToken = (accessToken: string) => {
+	return jwt.sign({ accessToken }, env.SERVER_SECRET, { expiresIn: "1h" });
 };
