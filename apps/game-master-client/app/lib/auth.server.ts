@@ -35,11 +35,12 @@ const { getSession, commitSession, destroySession } = createCookieSessionStorage
 
 export { getSession, commitSession, destroySession };
 
-export const validateUser = async (request: Request): Promise<string> => {
+export const validateUser = async (request: Request) => {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = session.get("userId");
-	if (!userId) throw redirect("/login");
-	return userId;
+	const token = session.get("token");
+	if (!userId || !token) throw redirect("/login");
+	return { userId, token };
 };
 
 export const validateUserSession = async (request: Request) => {

@@ -1,15 +1,14 @@
 import { SDK, type ServerResponse } from "@repo/api";
-import { generateServerToken, validateUser } from "./auth.server";
+import { validateUser } from "./auth.server";
 import { env } from "./env.server";
 
-export const createApi = (userId: string) => {
-	const serverToken = generateServerToken(userId);
-	return new SDK({ baseUrl: env.SERVER_URL, apiKey: serverToken });
+export const createApi = (token: string) => {
+	return new SDK({ baseUrl: env.SERVER_URL, apiKey: token });
 };
 
 export const createApiFromReq = async (req: Request) => {
-	const userId = await validateUser(req);
-	const api = createApi(userId);
+	const { userId, token } = await validateUser(req);
+	const api = createApi(token);
 	return { userId, api };
 };
 
