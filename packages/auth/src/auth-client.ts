@@ -6,11 +6,18 @@ export class AuthClient {
 	private accessToken: string | null;
 	private refreshToken: string | null;
 	private tokenRefreshPromise: Promise<void> | null = null;
+	private tenantId: number;
 
-	constructor(baseUrl: string) {
+	constructor(
+		baseUrl: string,
+		tenantId: number,
+		accessToken?: string,
+		refreshToken?: string,
+	) {
 		this.baseUrl = baseUrl;
-		this.accessToken = localStorage.getItem("accessToken");
-		this.refreshToken = localStorage.getItem("refreshToken");
+		this.accessToken = accessToken ?? null;
+		this.refreshToken = refreshToken ?? null;
+		this.tenantId = tenantId;
 	}
 
 	private async fetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -68,10 +75,15 @@ export class AuthClient {
 		return this.tokenRefreshPromise;
 	}
 
-	async login(email: string, password: string, tenantId: number): Promise<void> {
+	// NOTE: The login function is setting the access token in THIS CLASS, so will have
+	// to be properly hooked into React for example. In addition, it is important to consider
+	// how this class is persisted when initialised to make sure these tokens are stored.
+	// An alternative API might be to let the consumer of this module get the accessToken and
+	// store it itself, which would mean we need a better init flow.
+	async login(email: string, password: string): Promise<void> {
 		const response = await this.fetch<AuthTokens>("api/login", {
 			method: "POST",
-			body: JSON.stringify({ email, password, tenant_id: tenantId }),
+			body: JSON.stringify({ email, password, tenant_id: this.tenantId }),
 		});
 
 		console.log("Tokens set:", {
@@ -81,7 +93,6 @@ export class AuthClient {
 
 		this.accessToken = response.access_token;
 		this.refreshToken = response.refresh_token;
-		this.persistTokens();
 	}
 
 	async logout(): Promise<void> {
@@ -94,15 +105,24 @@ export class AuthClient {
 
 		this.accessToken = null;
 		this.refreshToken = null;
-		this.persistTokens();
+	}
+
+	async register(email: string, password: string): Promise<void> {
+		const response = await this.fetch<AuthTokens>("api/register", {
+			method: "POST",
+			body: JSON.stringify({ email, password, tenant_id: this.tenantId }),
+		});
+		console.log("Tokens set:", {
+			hasAccessToken: !!this.accessToken,
+			hasRefreshToken: !!this.refreshToken,
+		});
+
+		this.accessToken = response.access_token;
+		this.refreshToken = response.refresh_token;
 	}
 
 	async getCurrentUser(): Promise<User> {
 		return this.fetch<User>("api/protected/me");
-	}
-
-	async listUsers(tenantId: number): Promise<User[]> {
-		return this.fetch<User[]>(`api/protected/tenants/${tenantId}/users`);
 	}
 
 	isAuthenticated(): boolean {
@@ -115,15 +135,5 @@ export class AuthClient {
 
 	getAccessToken(): string | null {
 		return this.accessToken;
-	}
-
-	private persistTokens() {
-		if (this.accessToken && this.refreshToken) {
-			localStorage.setItem("accessToken", this.accessToken);
-			localStorage.setItem("refreshToken", this.refreshToken);
-		} else {
-			localStorage.removeItem("accessToken");
-			localStorage.removeItem("refreshToken");
-		}
 	}
 }

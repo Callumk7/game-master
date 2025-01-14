@@ -9,8 +9,11 @@ import { Button } from "~/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
-import { commitSession, generateServerToken, getUserSession } from "~/lib/auth.server";
+import { commitSession, getUserSession } from "~/lib/auth.server";
 import { verifyPassword } from "./queries.server";
+import { AuthClient } from "@repo/auth";
+
+const authClient = new AuthClient("http://localhost:4000", 1);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getUserSession(request);
@@ -69,8 +72,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   session.set("userId", existingUser.id);
-  const token = generateServerToken(existingUser.id);
-  localStorage.setItem("token", token);
+
+  await authClient.login(existingUser.email, password);
+  if (authClient.isAuthenticated()) {
+    session.set("token", authClient.getAccessToken()!);
+  }
 
   return redirect("/", {
     headers: {

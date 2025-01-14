@@ -13,6 +13,9 @@ import { authCookie, commitSession, getSession } from "~/lib/auth.server";
 import { env } from "~/lib/env.server";
 import { emailService } from "~/services/email.server";
 import { hashPassword } from "~/services/password-hash.server";
+import { AuthClient } from "@repo/auth";
+
+const authClient = new AuthClient("http://localhost:4000", 1);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const result = await zx.parseFormSafe(
@@ -32,26 +35,39 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { username, password, email, firstName, lastName } = result.data;
     const passwordHash = await hashPassword(password);
 
-    const newUser = await db
-      .insert(users)
-      .values({
-        id: `user_${uuidv4()}`,
-        username,
-        email,
-        passwordHash,
-        firstName,
-        lastName,
-        emailVerified: false,
-        emailVerificationToken: verificationToken,
-        emailVerificationTokenExpiry: tokenExpiry,
-      })
-      .returning({ userId: users.id, username: users.username, email: users.email });
+    let outcome = [];
+
+  try{
+      const newUser = await db
+        .insert(users)
+        .values({
+          id: `user_${uuidv4()}`,
+          username,
+          email,
+          passwordHash,
+          firstName,
+          lastName,
+          emailVerified: false,
+          emailVerificationToken: verificationToken,
+          emailVerificationTokenExpiry: tokenExpiry,
+        })
+        .returning({ userId: users.id, username: users.username, email: users.email });
+
+      outcome = newUser;
+    } catch(error) {
+      console.log(error)
+    }
+
 
     const confirmationLink = `${env.APP_URL}/verify-email/${verificationToken}`;
 
     await emailService.sendConfirmationEmail(email, confirmationLink);
 
-    const session = await getSession(await authCookie.serialize(newUser[0]));
+    await authClient.register(email, password);
+
+    const session = await getSession(
+      await authCookie.serialize({ ...outcome[0], token: authClient.getAccessToken()! }),
+    );
 
     return redirect("/check-email", {
       headers: {
