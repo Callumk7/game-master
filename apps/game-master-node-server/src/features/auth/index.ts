@@ -1,10 +1,26 @@
 import { Hono } from "hono";
 import { generateToken } from "./jwt";
+import { authMiddleware } from "~/middleware/auth";
+import type { Variables } from "~/types";
+import { db } from "~/db";
+import { eq } from "drizzle-orm";
+import { users } from "~/db/schema/users";
 
-export const authRoute = new Hono();
+export const authRoute = new Hono<{ Variables: Variables }>();
+
+authRoute.use("*", authMiddleware);
 
 authRoute.get("/", (c) => {
 	return c.text("Please use the /login route to authenticate your requests.");
+});
+
+authRoute.get("/user", async (c) => {
+	const authUser = c.get("user");
+	const user = await db.query.users.findFirst({
+		where: eq(users.authId, authUser.id)
+	})
+
+	return c.json(user);
 });
 
 authRoute.post("/login", async (c) => {
