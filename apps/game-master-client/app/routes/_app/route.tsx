@@ -4,6 +4,7 @@ import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
 import { getData } from "~/util/handle-error";
 import { AppLayout } from "./root-layout";
+import { AuthClient, extractJwtFromHeaders } from "~/lib/auth.server";
 
 export const meta: MetaFunction = () => {
   return [

@@ -1,5 +1,11 @@
 import ky, { type Options } from "ky";
-import { DatabaseError } from "./error.js";
+import {
+	ApiError,
+	AuthenticationError,
+	DatabaseError,
+	NotFoundError,
+	ValidationError,
+} from "./error.js";
 import { Characters } from "./resources/characters.js";
 import { Factions } from "./resources/factions.js";
 import { Folders } from "./resources/folders.js";
@@ -27,26 +33,26 @@ export class Client {
 				beforeError: [
 					(error) => {
 						const { response } = error;
-						
+
 						if (response.status === 401) {
 							throw new AuthenticationError();
 						}
-						
+
 						if (response.status === 404) {
 							throw new NotFoundError(response.statusText);
 						}
-						
+
 						if (response.statusText === "Database Error") {
 							throw new DatabaseError();
 						}
-						
+
 						if (response.status === 400) {
 							throw new ValidationError(response.statusText);
 						}
 
 						throw new ApiError(
-							response.statusText || 'Unknown error occurred',
-							response.status
+							response.statusText || "Unknown error occurred",
+							response.status,
 						);
 					},
 				],
