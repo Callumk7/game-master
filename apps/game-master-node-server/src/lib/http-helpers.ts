@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
-import type { StatusCode } from "hono/utils/http-status";
+import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import type { ZodSchema } from "zod";
 
@@ -23,7 +23,7 @@ export async function validateOrThrowError<T>(schema: ZodSchema<T>, c: Context) 
 	}
 }
 
-export function httpException(status?: StatusCode) {
+export function httpException(status?: ContentfulStatusCode) {
 	return new HTTPException(status);
 }
 
@@ -32,7 +32,7 @@ export function successResponse<T>(
 	data: T,
 	status: StatusCodes = StatusCodes.OK,
 ) {
-	return c.json({ success: true, data }, status as StatusCode);
+	return c.json({ success: true, data }, status as ContentfulStatusCode);
 }
 
 export function handleNotFound(c: Context, error?: unknown) {

@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
-import { commitSession, getUserSession } from "~/lib/auth.server";
+import { commitSession, generateServerToken, getUserSession } from "~/lib/auth.server";
 import { verifyPassword } from "./queries.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -69,6 +69,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   session.set("userId", existingUser.id);
+  const token = generateServerToken(existingUser.id);
+  localStorage.setItem("token", token);
 
   return redirect("/", {
     headers: {

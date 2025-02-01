@@ -1,4 +1,3 @@
-import { getLogger } from "@logtape/logtape";
 import {
 	createCharacterSchema,
 	createPermissionSchema,
