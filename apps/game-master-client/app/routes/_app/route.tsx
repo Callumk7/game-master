@@ -2,9 +2,9 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useRouteError, useRouteLoaderData } from "@remix-run/react";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
+import { AuthClient, extractJwtFromHeaders } from "~/lib/auth.server";
 import { getData } from "~/util/handle-error";
 import { AppLayout } from "./root-layout";
-import { AuthClient, extractJwtFromHeaders } from "~/lib/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
