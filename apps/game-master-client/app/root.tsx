@@ -11,6 +11,7 @@ import "./editor.css";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
 import { getTheme } from "./lib/theme/theme.server";
+import { AlligatorProvider } from "alligator-auth";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);
@@ -42,5 +43,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <AlligatorProvider tenantId={1}>
+      <Outlet />
+    </AlligatorProvider>
+  );
 }
