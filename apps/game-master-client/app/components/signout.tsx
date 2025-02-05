@@ -1,10 +1,10 @@
 import { GearIcon } from "@radix-ui/react-icons";
+import { useAlligator } from "alligator-auth";
 import { useState } from "react";
 import { useAppData } from "~/routes/_app/route";
 import { Button } from "./ui/button";
 import { Link } from "./ui/link";
 import { Toolbar } from "./ui/toolbar";
-import { useAlligator } from "alligator-auth";
 
 export function SignoutButton() {
   const { userData } = useAppData();

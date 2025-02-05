@@ -1,8 +1,7 @@
 import { redirect } from "@remix-run/node";
+import { AlligatorServer } from "alligator-auth";
 import jwt from "jsonwebtoken";
 import { env } from "./env.server";
-import { AlligatorServer } from "alligator-auth";
-
 
 const auth = new AlligatorServer(1);
 
@@ -16,7 +15,7 @@ export const validateUser = async (request: Request): Promise<string> => {
 			const user = await auth.getUserFromRequest(request);
 			return user.external_id!;
 		}
-		throw redirect("/login")
+		throw redirect("/login");
 	}
 };
 

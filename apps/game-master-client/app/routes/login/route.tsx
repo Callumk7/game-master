@@ -14,13 +14,13 @@ export default function LoginRoute() {
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     const loginSuccess = await auth.login(email, password);
     if (loginSuccess) {
-      await auth.getCurrentUser()
+      await auth.getCurrentUser();
       navigate("/");
     }
-  }
+  };
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="mx-auto md:w-1/2">

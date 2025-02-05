@@ -9,9 +9,9 @@ import {
 import "./tailwind.css";
 import "./editor.css";
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import { AlligatorProvider } from "alligator-auth";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
 import { getTheme } from "./lib/theme/theme.server";
-import { AlligatorProvider } from "alligator-auth";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);

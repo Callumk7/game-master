@@ -1,10 +1,10 @@
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { generateToken } from "./jwt";
+import { db } from "~/db";
+import { users } from "~/db/schema/users";
 import { authMiddleware } from "~/middleware/auth";
 import type { Variables } from "~/types";
-import { db } from "~/db";
-import { eq } from "drizzle-orm";
-import { users } from "~/db/schema/users";
+import { generateToken } from "./jwt";
 
 export const authRoute = new Hono<{ Variables: Variables }>();
 
@@ -17,8 +17,8 @@ authRoute.get("/", (c) => {
 authRoute.get("/user", async (c) => {
 	const authUser = c.get("user");
 	const user = await db.query.users.findFirst({
-		where: eq(users.authId, authUser.id)
-	})
+		where: eq(users.authId, authUser.id),
+	});
 
 	return c.json(user);
 });

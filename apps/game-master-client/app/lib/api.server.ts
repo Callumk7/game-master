@@ -1,11 +1,11 @@
+import { redirect } from "@remix-run/node";
 import { SDK, type ServerResponse } from "@repo/api";
-import { generateServerToken, validateUser } from "./auth.server";
-import { env } from "./env.server";
 import { AlligatorServer } from "alligator-auth";
 import { db } from "db";
-import { eq } from "drizzle-orm";
 import { users } from "db/schema/users";
-import { redirect } from "@remix-run/node";
+import { eq } from "drizzle-orm";
+import { generateServerToken, validateUser } from "./auth.server";
+import { env } from "./env.server";
 
 export const createApi = (userId: string) => {
 	const serverToken = generateServerToken(userId);
