@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   type Params,
+  ShouldRevalidateFunction,
   redirect,
   useRouteError,
   useRouteLoaderData,

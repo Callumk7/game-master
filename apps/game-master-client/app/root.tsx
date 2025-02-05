@@ -9,6 +9,7 @@ import {
 import "./tailwind.css";
 import "./editor.css";
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import { AlligatorProvider } from "alligator-auth";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
 import { getTheme } from "./lib/theme/theme.server";
 
@@ -42,5 +43,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <AlligatorProvider tenantId={1}>
+      <Outlet />
+    </AlligatorProvider>
+  );
 }

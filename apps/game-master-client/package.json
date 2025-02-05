@@ -13,6 +13,7 @@
 		"test:run": "vitest run"
 	},
 	"dependencies": {
+		"alligator-auth": "link:../../../../auth/alligator",
 		"@aws-sdk/client-ses": "^3.693.0",
 		"@logtape/logtape": "^0.7.1",
 		"@node-rs/argon2": "^1.8.3",

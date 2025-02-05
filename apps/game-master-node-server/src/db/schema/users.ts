@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { charactersPermissions } from "./characters";
@@ -9,6 +9,7 @@ import { notesPermissions } from "./notes";
 
 export const users = pgTable("users", {
 	id: text("id").primaryKey().notNull(),
+	authId: integer("auth_id"),
 	firstName: text("first_name"),
 	lastName: text("last_name"),
 	username: text("username").notNull(),
