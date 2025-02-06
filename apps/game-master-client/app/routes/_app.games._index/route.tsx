@@ -3,18 +3,19 @@ import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { useAppData } from "../_app/route";
 import { HomeNavigation } from "./components/home-navigation";
+import { Layout } from "~/components/layout";
 
 export default function Index() {
   const { userGames } = useAppData();
   return (
-    <div className="p-4 font-sans">
+    <Layout width="wide">
       <HomeNavigation />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-wrap gap-1">
         {userGames.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
-    </div>
+    </Layout>
   );
 }
 
