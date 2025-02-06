@@ -109,6 +109,29 @@ export const getCharacterFactions = async (charId: string) => {
 		.then((result) => result.map((row) => row.faction));
 };
 
+export const getCharacterFactionsWithMembers = async (
+	charId: string,
+): Promise<FactionWithMembers[]> => {
+	return await db.query.charactersInFactions
+		.findMany({
+			where: eq(charactersInFactions.characterId, charId),
+			with: {
+				faction: {
+					with: { members: { with: { character: true } } },
+				},
+			},
+		})
+		.then((result) =>
+			result.map((row) => ({
+				...row.faction,
+				members: row.faction.members.map((m) => ({
+					...m.character,
+					role: m.role,
+				})),
+			})),
+		);
+};
+
 export const linkCharacterToFactions = async (charId: string, factionIds: string[]) => {
 	const linkInsert = factionIds.map((id) => ({
 		characterId: charId,

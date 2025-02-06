@@ -21,7 +21,7 @@ export interface Character extends Entity {
 }
 
 export interface CharacterWithFaction extends Character {
-	primaryFaction: Faction | null;
+	primaryFaction?: Faction | null;
 }
 
 export interface CharacterWithNotes extends Character {

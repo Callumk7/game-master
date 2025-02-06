@@ -27,6 +27,7 @@ import {
 	createCharacter,
 	createCharacterPermission,
 	getCharacterFactions,
+	getCharacterFactionsWithMembers,
 	getCharacterImages,
 	getCharacterNotes,
 	getCharacterWithPermissions,
@@ -39,6 +40,8 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
+import { evaluateParams } from "../games/util";
+import { getFactionWithMembers } from "../factions/queries";
 
 export const characterRoute = new Hono();
 
@@ -167,11 +170,23 @@ characterRoute.post("/:charId/duplicate", async (c) => {
 // Factions
 characterRoute.get("/:charId/factions", async (c) => {
 	const charId = c.req.param("charId");
-	try {
-		const characterFactions = await getCharacterFactions(charId);
-		return c.json(characterFactions);
-	} catch (error) {
-		return handleDatabaseError(c, error);
+	const withData = evaluateParams(c.req.query());
+	if (withData === "base") {
+		try {
+			const characterFactions = await getCharacterFactions(charId);
+			return c.json(characterFactions);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+	if (withData === "members") {
+		try {
+			const characterFactionsWithMembers =
+				await getCharacterFactionsWithMembers(charId);
+			return c.json(characterFactionsWithMembers);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
 	}
 });
 
