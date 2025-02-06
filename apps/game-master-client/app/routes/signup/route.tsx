@@ -1,12 +1,11 @@
 import { type ActionFunctionArgs, data, redirect } from "@remix-run/node";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { baseUserSchema } from "@repo/api";
-import { AlligatorServer, useAlligator } from "alligator-auth";
+import { AlligatorServer } from "alligator-auth";
 import { uuidv4 } from "callum-util";
 import { db } from "db";
 import { users } from "db/schema/users";
 import { eq } from "drizzle-orm";
-import { type FormEvent, useState } from "react";
 import { z } from "zod";
 import { zx } from "zodix";
 import { Button } from "~/components/ui/button";
