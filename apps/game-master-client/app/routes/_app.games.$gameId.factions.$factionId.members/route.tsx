@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useRouteLoaderData, type Params } from "@remix-run/react";
+import { type Params, useRouteLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { parseParams } from "zodix";
 import { createApiFromReq } from "~/lib/api.server";

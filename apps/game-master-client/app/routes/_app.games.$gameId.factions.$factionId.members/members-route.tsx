@@ -1,11 +1,11 @@
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { Text } from "~/components/ui/typeography";
-import type { loader } from "./route";
 import { Layout } from "~/components/layout";
-import { MembersToolbar } from "./components/members-toolbar";
-import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
 import { CharacterTable } from "~/components/tables/character-table";
+import { Text } from "~/components/ui/typeography";
+import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
+import { MembersToolbar } from "./components/members-toolbar";
+import type { loader } from "./route";
 
 export function MembersRoute() {
   const { factionDetails } = useFactionData();

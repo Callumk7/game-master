@@ -1,9 +1,9 @@
 import type { Game } from "@repo/api";
+import { Layout } from "~/components/layout";
 import { Card } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { useAppData } from "../_app/route";
 import { HomeNavigation } from "./components/home-navigation";
-import { Layout } from "~/components/layout";
 
 export default function Index() {
   const { userGames } = useAppData();

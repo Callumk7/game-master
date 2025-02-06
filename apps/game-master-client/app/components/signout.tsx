@@ -1,11 +1,11 @@
 import { GearIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "@remix-run/react";
 import { useAlligator } from "alligator-auth";
 import { useState } from "react";
 import { useAppData } from "~/routes/_app/route";
 import { Button } from "./ui/button";
 import { Link } from "./ui/link";
 import { Toolbar } from "./ui/toolbar";
-import { useNavigate } from "@remix-run/react";
 
 export function SignoutButton() {
   const { userData } = useAppData();

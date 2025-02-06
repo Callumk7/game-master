@@ -1,6 +1,6 @@
-import { Toolbar } from "~/components/ui/toolbar";
 import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
 import { Button } from "~/components/ui/button";
+import { Toolbar } from "~/components/ui/toolbar";
 import { useFactionMemberData } from "../route";
 import { AddMemberDialog } from "./add-member-dialog";
 

@@ -23,6 +23,8 @@ import { getPayload } from "~/lib/jwt";
 import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
 import { validateUploadIsImageOrThrow } from "~/utils";
+import { getFactionWithMembers } from "../factions/queries";
+import { evaluateParams } from "../games/util";
 import {
 	createCharacter,
 	createCharacterPermission,
@@ -40,8 +42,6 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
-import { evaluateParams } from "../games/util";
-import { getFactionWithMembers } from "../factions/queries";
 
 export const characterRoute = new Hono();
 
