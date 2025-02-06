@@ -20,7 +20,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { charId, gameId } = getParams(params);
   const [charFactions, primaryFaction, allFactions] = await resolve(
-    getData(() => api.characters.factions(charId)),
+    getData(() => api.characters.factions.withMembers(charId)),
     getData(() => api.characters.factions.primary(charId)),
     getData(() => api.factions.forGame(gameId)),
   );
