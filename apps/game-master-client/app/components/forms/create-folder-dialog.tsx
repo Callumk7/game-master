@@ -24,7 +24,7 @@ export function CreateFolderSlideover({ gameId, folders }: CreateFolderSlideover
             <div className="overflow-y-auto max-h-[95vh]">
               <div className="space-y-6 p-[1px]">
                 <DialogHeader>
-                  <DialogTitle>Create Character</DialogTitle>
+                  <DialogTitle>Create Folder</DialogTitle>
                 </DialogHeader>
                 <CreateFolderForm close={close} gameId={gameId} folders={folders} />
               </div>

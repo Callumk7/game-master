@@ -48,7 +48,11 @@ export function Layout({
 }: LayoutProps) {
   return (
     <div
-      className={cn(className, layoutVariants({ padding, grid, width, spacing }))}
+      className={cn(
+        "relative top-10",
+        className,
+        layoutVariants({ padding, grid, width, spacing }),
+      )}
       {...props}
     >
       {children}
