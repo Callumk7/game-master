@@ -10,13 +10,12 @@ import type { loader } from "./route";
 export function MembersRoute() {
   const { factionDetails } = useFactionData();
   const { members } = useLoaderData<typeof loader>();
-  const [isEditing, setIsEditing] = useState(false);
   return (
     <Layout width="full" spacing="wide">
       <Text variant={"h1"} weight={"bold"}>
         {factionDetails.name}: Members
       </Text>
-      <MembersToolbar isEditing={isEditing} setIsEditing={setIsEditing} />
+      <MembersToolbar />
       <CharacterTable characters={members} />
     </Layout>
   );

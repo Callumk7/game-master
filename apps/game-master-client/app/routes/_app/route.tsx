@@ -37,8 +37,9 @@ export function ErrorBoundary() {
   return (
     <div className="mx-auto w-4/5">
       <Text variant={"h3"} className="pt-20 w-full text-center">
-        Something went wrong
+        Something went wrong:
       </Text>
+      <p>{JSON.stringify(error)}</p>
     </div>
   );
 }
