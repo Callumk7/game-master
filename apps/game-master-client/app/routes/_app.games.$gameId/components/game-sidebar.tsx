@@ -1,10 +1,6 @@
 import { FilePlusIcon } from "@radix-ui/react-icons";
 import { Form } from "@remix-run/react";
-import type {
-  BasicEntityWithDates,
-  EntityType,
-  GameWithDatedEntities,
-} from "@repo/api";
+import type { BasicEntityWithDates, EntityType, GameWithDatedEntities } from "@repo/api";
 import { useState } from "react";
 import { SignoutButton } from "~/components/signout";
 import { Button } from "~/components/ui/button";
@@ -39,21 +35,11 @@ export function GameSidebar({ gameWithSidebarData }: GameSidebarProps) {
         <SignoutButton />
         <ThemeToggle />
       </div>
-      <NewEntityMenu
-        gameId={gameWithSidebarData.id}
-        className="flex-none my-auto"
-      />
+      <NewEntityMenu gameId={gameWithSidebarData.id} className="flex-none my-auto" />
       <div className="flex flex-col gap-y-4 items-start">
-        <FolderTree
-          gameId={gameWithSidebarData.id}
-          folders={gameFolders ?? []}
-        />
+        <FolderTree gameId={gameWithSidebarData.id} folders={gameFolders ?? []} />
         <SidebarSection items={gameNotes} type="notes" label="Notes" />
-        <SidebarSection
-          items={gameChars}
-          type="characters"
-          label="Characters"
-        />
+        <SidebarSection items={gameChars} type="characters" label="Characters" />
         <SidebarSection items={gameFactions} type="factions" label="Factions" />
       </div>
     </aside>
@@ -108,9 +94,7 @@ function NewEntityMenu({ gameId, className }: NewEntityMenuProps) {
         <MenuItem href={`/games/${gameId}/notes/new`}>Note</MenuItem>
         <MenuItem href={`/games/${gameId}/characters/new`}>Character</MenuItem>
         <MenuItem href={`/games/${gameId}/factions/new`}>Faction</MenuItem>
-        <MenuItem onAction={() => setIsNewFolderDialogOpen(true)}>
-          Folder
-        </MenuItem>
+        <MenuItem onAction={() => setIsNewFolderDialogOpen(true)}>Folder</MenuItem>
       </JollyMenu>
       <NewFolderDialog
         isOpen={isNewFolderDialogOpen}
@@ -136,11 +120,7 @@ export function NewFolderDialog({
     <DialogOverlay isOpen={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         {({ close }) => (
-          <Form
-            onSubmit={close}
-            method="post"
-            action={`/games/${selectedGame}/folders`}
-          >
+          <Form onSubmit={close} method="post" action={`/games/${selectedGame}/folders`}>
             <div className="space-y-2">
               <DialogHeader>
                 <DialogTitle>Create a folder</DialogTitle>

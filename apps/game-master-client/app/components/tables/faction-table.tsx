@@ -29,12 +29,8 @@ interface FactionTableProps {
 
 export function FactionTable({ factions }: FactionTableProps) {
   const [isEditFactionDialogOpen, setIsEditFactionDialogOpen] = useState(false);
-  const [selectedFactionId, setSelectedFactionId] = useState<string | null>(
-    null
-  );
-  const selectedFaction = factions.find(
-    (faction) => faction.id === selectedFactionId
-  );
+  const [selectedFactionId, setSelectedFactionId] = useState<string | null>(null);
+  const selectedFaction = factions.find((faction) => faction.id === selectedFactionId);
   const table = useFactionTable({
     data: factions,
     setIsEditFactionDialogOpen,
@@ -55,16 +51,13 @@ export function FactionTable({ factions }: FactionTableProps) {
                       header.index === 0
                         ? 24
                         : header.getSize()
-                        ? header.getSize()
-                        : "auto",
+                          ? header.getSize()
+                          : "auto",
                   }}
                 >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                    : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </tr>
@@ -219,10 +212,7 @@ const useFactionTable = ({
       h.display({
         header: "Controls",
         cell: ({ row }) => (
-          <EntityRowControls
-            entityId={row.original.id}
-            handleEdit={handleEdit}
-          />
+          <EntityRowControls entityId={row.original.id} handleEdit={handleEdit} />
         ),
       }),
     ];
