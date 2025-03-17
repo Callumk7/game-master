@@ -1,4 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
+import { Layout } from "~/components/layout";
+import { FactionTable } from "~/components/tables/faction-table";
 import { LinkedFactionList } from "./components/faction-list";
 import { LinkFactionDialog } from "./components/link-faction-dialog";
 import { PrimaryFaction } from "./components/primary-faction";
@@ -8,14 +10,12 @@ export function CharacterFactionsRoute() {
   const { charId, allFactions, charFactions, primaryFaction } =
     useLoaderData<typeof loader>();
   return (
-    <div className="space-y-4">
+    <Layout width="full" spacing={"normal"}>
       {primaryFaction ? (
         <PrimaryFaction faction={primaryFaction} members={primaryFaction.members} />
       ) : null}
       <LinkFactionDialog allFactions={allFactions} />
-      {charFactions.length > 0 ? (
-        <LinkedFactionList characterId={charId} factions={charFactions} />
-      ) : null}
-    </div>
+      {charFactions.length > 0 ? <FactionTable factions={charFactions} /> : null}
+    </Layout>
   );
 }

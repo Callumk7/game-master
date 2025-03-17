@@ -4,8 +4,6 @@ import type {
 	DuplicateFactionRequestBody,
 	Faction,
 	FactionMember,
-	FactionWithMembers,
-	FactionWithNotes,
 	FactionWithPermissions,
 	UpdateFactionRequestBody,
 } from "../types/factions.js";

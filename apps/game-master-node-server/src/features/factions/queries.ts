@@ -1,5 +1,6 @@
 import type {
 	FactionMember,
+	FactionWithMembers,
 	FactionWithPermissions,
 	Permission,
 	UpdateFactionRequestBody,
@@ -95,6 +96,28 @@ export async function createFactionPermission(
 	}
 
 	return result;
+}
+
+export async function getFactionWithMembers(
+	factionId: string,
+): Promise<FactionWithMembers> {
+	const result = await db.query.factions.findFirst({
+		where: eq(factions.id, factionId),
+		with: {
+			members: { with: { character: true } },
+		},
+	});
+
+	if (!result) {
+		throw new Error("Could not find faction in the database");
+	}
+	return {
+		...result,
+		members: result.members.map((m) => ({
+			...m.character,
+			role: m.role,
+		})),
+	};
 }
 
 export async function getFactionMembers(factionId: string): Promise<FactionMember[]> {

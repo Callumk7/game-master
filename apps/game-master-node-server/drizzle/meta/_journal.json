@@ -134,6 +134,13 @@
       "when": 1738432137437,
       "tag": "0018_tough_gateway",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1738851629674,
+      "tag": "0019_equal_lizard",
+      "breakpoints": true
     }
   ]
 }

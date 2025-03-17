@@ -23,10 +23,13 @@ import { getPayload } from "~/lib/jwt";
 import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
 import { validateUploadIsImageOrThrow } from "~/utils";
+import { getFactionWithMembers } from "../factions/queries";
+import { evaluateParams } from "../games/util";
 import {
 	createCharacter,
 	createCharacterPermission,
 	getCharacterFactions,
+	getCharacterFactionsWithMembers,
 	getCharacterImages,
 	getCharacterNotes,
 	getCharacterWithPermissions,
@@ -167,11 +170,23 @@ characterRoute.post("/:charId/duplicate", async (c) => {
 // Factions
 characterRoute.get("/:charId/factions", async (c) => {
 	const charId = c.req.param("charId");
-	try {
-		const characterFactions = await getCharacterFactions(charId);
-		return c.json(characterFactions);
-	} catch (error) {
-		return handleDatabaseError(c, error);
+	const withData = evaluateParams(c.req.query());
+	if (withData === "base") {
+		try {
+			const characterFactions = await getCharacterFactions(charId);
+			return c.json(characterFactions);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
+	}
+	if (withData === "members") {
+		try {
+			const characterFactionsWithMembers =
+				await getCharacterFactionsWithMembers(charId);
+			return c.json(characterFactionsWithMembers);
+		} catch (error) {
+			return handleDatabaseError(c, error);
+		}
 	}
 });
 

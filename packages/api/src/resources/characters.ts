@@ -156,6 +156,9 @@ export class Characters {
 			primary: async (charId: Id) => {
 				return this.getPrimaryFaction(charId);
 			},
+			withMembers: async (charId: Id) => {
+				return this.getCharacterFactionsWithMembers(charId);
+			},
 		},
 	);
 
@@ -268,5 +271,11 @@ export class Characters {
 		return this.client.get<CharacterWithPermissions>(
 			`characters/${charId}/permissions`,
 		);
+	}
+
+	private async getCharacterFactionsWithMembers(charId: Id) {
+		return this.client.get<FactionWithMembers[]>(`characters/${charId}/factions`, {
+			searchParams: { withData: "members" },
+		});
 	}
 }

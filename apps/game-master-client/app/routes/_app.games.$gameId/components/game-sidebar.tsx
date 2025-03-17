@@ -121,13 +121,15 @@ export function NewFolderDialog({
       <DialogContent>
         {({ close }) => (
           <Form onSubmit={close} method="post" action={`/games/${selectedGame}/folders`}>
-            <DialogHeader>
-              <DialogTitle>Create a folder</DialogTitle>
-            </DialogHeader>
-            <JollyTextField label="Name" name="name" />
-            <DialogFooter>
-              <Button type="submit">Create</Button>
-            </DialogFooter>
+            <div className="space-y-2">
+              <DialogHeader>
+                <DialogTitle>Create a folder</DialogTitle>
+              </DialogHeader>
+              <JollyTextField label="Name" name="name" />
+              <DialogFooter>
+                <Button type="submit">Create</Button>
+              </DialogFooter>
+            </div>
             <input type="hidden" name="gameId" value={selectedGame} />
           </Form>
         )}

@@ -1,39 +1,22 @@
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { CreateCharacterSlideover } from "~/components/forms/create-character-dialog";
-import { Button } from "~/components/ui/button";
+import { Layout } from "~/components/layout";
+import { CharacterTable } from "~/components/tables/character-table";
 import { Text } from "~/components/ui/typeography";
-import { AddMemberDialog } from "./components/add-member-dialog";
-import { MemberCard } from "./components/member-card";
+import { useFactionData } from "../_app.games.$gameId.factions.$factionId/route";
+import { MembersToolbar } from "./components/members-toolbar";
 import type { loader } from "./route";
 
 export function MembersRoute() {
-  const { members, gameId, factionId } = useLoaderData<typeof loader>();
-  const [isEditing, setIsEditing] = useState(false);
+  const { factionDetails } = useFactionData();
+  const { members } = useLoaderData<typeof loader>();
   return (
-    <div className="space-y-4">
+    <Layout width="full" spacing="wide">
       <Text variant={"h1"} weight={"bold"}>
-        Members
+        {factionDetails.name}: Members
       </Text>
-      <Button
-        onPress={() => setIsEditing(!isEditing)}
-        variant={isEditing ? "default" : "outline"}
-      >
-        {isEditing ? "Save" : "Edit"}
-      </Button>
-      <AddMemberDialog allCharacters={[]} />
-      <CreateCharacterSlideover gameId={gameId} factionId={factionId} />
-      <div className="grid grid-cols-4 gap-3">
-        {members.map((member) => (
-          <MemberCard
-            key={member.id}
-            characterId={member.id}
-            name={member.name}
-            role={member.role}
-            isEditing={isEditing}
-          />
-        ))}
-      </div>
-    </div>
+      <MembersToolbar />
+      <CharacterTable characters={members} />
+    </Layout>
   );
 }

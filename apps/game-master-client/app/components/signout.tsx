@@ -1,4 +1,5 @@
 import { GearIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "@remix-run/react";
 import { useAlligator } from "alligator-auth";
 import { useState } from "react";
 import { useAppData } from "~/routes/_app/route";
@@ -11,9 +12,11 @@ export function SignoutButton() {
   const [label, setLabel] = useState(userData.username);
 
   const auth = useAlligator();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await auth.logout();
+    navigate("/login");
   };
 
   return (
