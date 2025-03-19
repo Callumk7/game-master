@@ -68,6 +68,7 @@ export const useTheme = (): ThemeContextType => {
   return context;
 };
 
+// TODO: should change to a dropdown select with static label
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 

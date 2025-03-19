@@ -20,7 +20,7 @@ export function SignoutButton() {
   };
 
   return (
-    <Toolbar>
+    <Toolbar className="self-end">
       <Button
         variant={label === "Logout?" ? "destructive" : "outline"}
         type="submit"
