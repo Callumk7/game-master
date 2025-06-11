@@ -9,10 +9,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters } from "./characters";
 import { factions } from "./factions";
 import { folders, notes } from "./notes";
-import { users } from "./users";
 
 export const games = pgTable("games", {
 	id: text("id").primaryKey().notNull(),
@@ -22,13 +22,13 @@ export const games = pgTable("games", {
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).notNull(),
 	ownerId: text("owner_id")
 		.notNull()
-		.references(() => users.id),
+		.references(() => user.id),
 });
 
 export const gamesRelations = relations(games, ({ one, many }) => ({
-	owner: one(users, {
+	owner: one(user, {
 		fields: [games.ownerId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	members: many(usersToGames),
 	notes: many(notes),
@@ -50,7 +50,7 @@ export const usersToGames = pgTable(
 	{
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
+			.references(() => user.id, { onDelete: "cascade" }),
 		gameId: text("game_id")
 			.notNull()
 			.references(() => games.id, { onDelete: "cascade" }),
@@ -61,9 +61,9 @@ export const usersToGames = pgTable(
 );
 
 export const usersToGamesRelations = relations(usersToGames, ({ one }) => ({
-	user: one(users, {
+	user: one(user, {
 		fields: [usersToGames.userId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	game: one(games, {
 		fields: [usersToGames.gameId],

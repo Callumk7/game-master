@@ -2,11 +2,11 @@ import { relations } from "drizzle-orm";
 import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters, notesOnCharacters } from "./characters";
 import { factions, notesOnFactions } from "./factions";
 import { games } from "./games";
 import { images } from "./images";
-import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
@@ -35,7 +35,7 @@ export const notes = pgTable("notes", {
 	}).notNull(),
 	ownerId: text("owner_id")
 		.notNull()
-		.references(() => users.id),
+		.references(() => user.id),
 	folderId: text("folder_id").references(() => folders.id),
 	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
@@ -46,9 +46,9 @@ export const notes = pgTable("notes", {
 });
 
 export const notesRelations = relations(notes, ({ one, many }) => ({
-	owner: one(users, {
+	owner: one(user, {
 		fields: [notes.ownerId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	game: one(games, {
 		fields: [notes.gameId],
@@ -106,7 +106,7 @@ export const folders = pgTable("folders", {
 		.references(() => games.id),
 	ownerId: text("owner_id")
 		.notNull()
-		.references(() => users.id),
+		.references(() => user.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 });
 
@@ -142,7 +142,7 @@ export const notesPermissions = pgTable(
 			.references(() => notes.id, { onDelete: "cascade" }),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
+			.references(() => user.id, { onDelete: "cascade" }),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
@@ -155,9 +155,9 @@ export const notesPermissionsRelations = relations(notesPermissions, ({ one }) =
 		fields: [notesPermissions.noteId],
 		references: [notes.id],
 	}),
-	user: one(users, {
+	user: one(user, {
 		fields: [notesPermissions.userId],
-		references: [users.id],
+		references: [user.id],
 	}),
 }));
 
@@ -169,7 +169,7 @@ export const foldersPermissions = pgTable(
 			.references(() => folders.id),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => user.id),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
@@ -182,8 +182,8 @@ export const foldersPermissionsRelations = relations(foldersPermissions, ({ one 
 		fields: [foldersPermissions.folderId],
 		references: [folders.id],
 	}),
-	user: one(users, {
+	user: one(user, {
 		fields: [foldersPermissions.userId],
-		references: [users.id],
+		references: [user.id],
 	}),
 }));

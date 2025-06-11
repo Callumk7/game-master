@@ -1,20 +1,18 @@
-import type { Game, Id, User } from "@repo/api";
+import type { Game, Id } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { db } from "~/db";
+import { user } from "~/db/schema/auth";
 import { usersToGames } from "~/db/schema/games";
-import { users } from "~/db/schema/users";
 
-export const getUser = async (userId: Id): Promise<User> => {
+export const getUser = async (userId: Id) => {
 	const userResult = await db
 		.select({
-			id: users.id,
-			firstName: users.firstName,
-			lastName: users.lastName,
-			username: users.username,
-			email: users.email,
+			id: user.id,
+			username: user.name,
+			email: user.email,
 		})
-		.from(users)
-		.where(eq(users.id, userId))
+		.from(user)
+		.where(eq(user.id, userId))
 		.then((rows) => rows[0]);
 
 	if (!userResult) {

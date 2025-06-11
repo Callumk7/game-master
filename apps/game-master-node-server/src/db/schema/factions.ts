@@ -9,11 +9,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
 import { images } from "./images";
 import { folders, notes } from "./notes";
-import { users } from "./users";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
@@ -29,7 +29,7 @@ export const factions = pgTable("factions", {
 		.references(() => games.id)
 		.notNull(),
 	ownerId: text("owner_id")
-		.references(() => users.id)
+		.references(() => user.id)
 		.notNull(),
 	folderId: text("folder_id").references(() => folders.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
@@ -56,9 +56,9 @@ export const factionRelations = relations(factions, ({ one, many }) => ({
 		fields: [factions.folderId],
 		references: [folders.id],
 	}),
-	owner: one(users, {
+	owner: one(user, {
 		fields: [factions.ownerId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	members: many(charactersInFactions),
 	permissions: many(factionsPermissions),
@@ -106,7 +106,7 @@ export const factionsPermissions = pgTable(
 			.references(() => factions.id),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id),
+			.references(() => user.id),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
@@ -119,8 +119,8 @@ export const factionsPermissionsRelations = relations(factionsPermissions, ({ on
 		fields: [factionsPermissions.factionId],
 		references: [factions.id],
 	}),
-	user: one(users, {
+	user: one(user, {
 		fields: [factionsPermissions.userId],
-		references: [users.id],
+		references: [user.id],
 	}),
 }));

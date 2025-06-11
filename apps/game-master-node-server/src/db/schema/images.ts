@@ -1,15 +1,15 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 import { characters } from "./characters";
 import { factions } from "./factions";
 import { notes } from "./notes";
-import { users } from "./users";
 
 export const images = pgTable("images", {
 	id: text("id").notNull().primaryKey(),
 	ownerId: text("owner_id")
 		.notNull()
-		.references(() => users.id),
+		.references(() => user.id),
 	noteId: text("note_id").references(() => notes.id, { onDelete: "set null" }),
 	characterId: text("character_id").references(() => characters.id, {
 		onDelete: "set null",
@@ -19,9 +19,9 @@ export const images = pgTable("images", {
 });
 
 export const imageRelations = relations(images, ({ one }) => ({
-	owner: one(users, {
+	owner: one(user, {
 		fields: [images.ownerId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	note: one(notes, {
 		fields: [images.noteId],

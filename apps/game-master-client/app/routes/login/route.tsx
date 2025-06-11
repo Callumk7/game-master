@@ -1,13 +1,12 @@
 import { useNavigate } from "@remix-run/react";
-import { useAlligator } from "alligator-auth";
 import { type FormEvent, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
+import { authClient } from "~/lib/auth-client";
 
 export default function LoginRoute() {
-  const auth = useAlligator();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,9 +14,8 @@ export default function LoginRoute() {
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const loginSuccess = await auth.login(email, password);
-    if (loginSuccess) {
-      await auth.getCurrentUser();
+    const { data } = await authClient.signIn.email({ email, password });
+    if (data) {
       navigate("/");
     }
   };

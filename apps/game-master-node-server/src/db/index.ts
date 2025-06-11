@@ -1,3 +1,4 @@
+import * as authSchema from "./schema/auth";
 import * as charactersSchema from "./schema/characters";
 import * as factionsSchema from "./schema/factions";
 import * as gamesSchema from "./schema/games";
@@ -12,6 +13,7 @@ import { env } from "~/lib/env";
 const queryClient = postgres(env.DB_URL);
 export const db = drizzle(queryClient, {
 	schema: {
+		...authSchema,
 		...usersSchema,
 		...gamesSchema,
 		...notesSchema,
