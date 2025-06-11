@@ -13,7 +13,6 @@
 		"test:run": "vitest run"
 	},
 	"dependencies": {
-		"alligator-auth": "link:../../../../auth/alligator",
 		"@aws-sdk/client-ses": "^3.693.0",
 		"@logtape/logtape": "^0.7.1",
 		"@node-rs/argon2": "^1.8.3",
@@ -35,6 +34,7 @@
 		"@tiptap/react": "2.5.6",
 		"@tiptap/starter-kit": "2.5.6",
 		"@tiptap/suggestion": "2.5.6",
+		"better-auth": "^1.2.8",
 		"callum-util": "^2.2.0",
 		"class-variance-authority": "^0.7.0",
 		"compression": "^1.7.4",

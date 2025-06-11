@@ -59,13 +59,13 @@ export function SidebarSection({ type, items, label }: SidebarSectionProps) {
         {label}
       </Text>
       <hr />
-      <nav aria-labelledby="label" className="flex flex-col items-start mt-1">
+      <nav aria-labelledby="label" className="flex flex-col items-start mt-1 w-full">
         {items.map((item) => (
           <Link
             key={item.id}
             href={hrefFor(type, item.gameId, item.id)}
             variant={"link"}
-            className={"pl-0"}
+            className={"pl-0 overflow-hidden w-full text-left justify-start"}
           >
             {item.name}
           </Link>

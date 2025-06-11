@@ -1,20 +1,19 @@
 import { redirect } from "@remix-run/node";
-import { AlligatorServer } from "alligator-auth";
 import jwt from "jsonwebtoken";
 import { env } from "./env.server";
-
-const auth = new AlligatorServer(1);
+import { auth } from "./auth";
 
 export const validateUser = async (request: Request): Promise<string> => {
 	try {
-		const user = await auth.getUserFromRequest(request);
-		return user.external_id!;
-	} catch (error) {
-		const refreshSuccess = await auth.refreshTokens(request);
-		if (refreshSuccess.tokenRefreshed) {
-			const user = await auth.getUserFromRequest(request);
-			return user.external_id!;
+		const data = await auth.api.getSession({
+			headers: request.headers,
+		});
+
+		if (!data) {
+			throw new Error("user not found when trying to get session from better-auth");
 		}
+		return data.user.id;
+	} catch (error) {
 		throw redirect("/login");
 	}
 };

@@ -4,9 +4,7 @@ import type { Id } from "./index.js";
 
 export interface User {
 	id: Id;
-	firstName: string | null;
-	lastName: string | null;
-	username: string;
+	name: string;
 	email: string;
 }
 

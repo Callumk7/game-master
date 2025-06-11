@@ -1,9 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { baseUserSchema } from "@repo/api";
-import { db } from "db";
-import { users } from "db/schema/users";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { parseForm } from "zodix";
 import { BaseUserForm } from "~/components/forms/user-forms";
@@ -14,7 +11,6 @@ import { Link } from "~/components/ui/link";
 import { JollyTextField } from "~/components/ui/textfield";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
-import { hashPassword } from "~/services/password-hash.server";
 import { useAppData } from "../_app/route";
 
 const updatePasswordSchema = z.object({
@@ -37,12 +33,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (data.intent === "updateUser") {
       const result = await api.users.update(userId, data);
       return result;
-    }
-
-    if (data.intent === "updatePassword") {
-      const passwordHash = await hashPassword(data.newPass);
-      await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
-      return { success: true };
     }
   }
 };
@@ -77,9 +67,16 @@ export default function UserRoute() {
                 type="password"
                 name="currentPass"
               />
-              <JollyTextField label="New password" type="password" name="newPass" />
+              <JollyTextField
+                label="New password"
+                type="password"
+                name="newPass"
+                isDisabled
+              />
               <input type="hidden" name="intent" value={"updatePassword"} />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" isDisabled>
+                Submit
+              </Button>
             </div>
           </Form>
         </CardContent>

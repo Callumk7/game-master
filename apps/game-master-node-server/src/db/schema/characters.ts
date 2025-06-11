@@ -14,7 +14,7 @@ import { factions } from "./factions";
 import { games } from "./games";
 import { images } from "./images";
 import { folders, notes } from "./notes";
-import { users } from "./users";
+import { user } from "./auth";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 
@@ -42,7 +42,7 @@ export const characters = pgTable("characters", {
 		.references(() => games.id)
 		.notNull(),
 	ownerId: text("owner_id")
-		.references(() => users.id)
+		.references(() => user.id)
 		.notNull(),
 	folderId: text("folder_id").references(() => folders.id),
 	isPlayer: boolean("is_player").notNull().default(false),
@@ -62,9 +62,9 @@ export const characterRelations = relations(characters, ({ one, many }) => ({
 		fields: [characters.gameId],
 		references: [games.id],
 	}),
-	owner: one(users, {
+	owner: one(user, {
 		fields: [characters.ownerId],
-		references: [users.id],
+		references: [user.id],
 	}),
 	folder: one(folders, {
 		fields: [characters.folderId],
@@ -153,7 +153,7 @@ export const charactersPermissions = pgTable(
 			.references(() => characters.id, { onDelete: "cascade" }),
 		userId: text("user_id")
 			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
+			.references(() => user.id, { onDelete: "cascade" }),
 		permission: permissionEnum("permission").notNull(),
 	},
 	(t) => ({
@@ -168,9 +168,9 @@ export const charactersPermissionsRelations = relations(
 			fields: [charactersPermissions.characterId],
 			references: [characters.id],
 		}),
-		user: one(users, {
+		user: one(user, {
 			fields: [charactersPermissions.userId],
-			references: [users.id],
+			references: [user.id],
 		}),
 	}),
 );
