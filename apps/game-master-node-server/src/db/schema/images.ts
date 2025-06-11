@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 import { characters } from "./characters";
 import { factions } from "./factions";
 import { notes } from "./notes";
-import { user } from "./auth";
 
 export const images = pgTable("images", {
 	id: text("id").notNull().primaryKey(),

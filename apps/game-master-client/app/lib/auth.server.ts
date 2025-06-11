@@ -1,7 +1,7 @@
 import { redirect } from "@remix-run/node";
 import jwt from "jsonwebtoken";
-import { env } from "./env.server";
 import { auth } from "./auth";
+import { env } from "./env.server";
 
 export const validateUser = async (request: Request): Promise<string> => {
 	try {

@@ -9,10 +9,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters } from "./characters";
 import { factions } from "./factions";
 import { folders, notes } from "./notes";
-import { user } from "./auth";
 
 export const games = pgTable("games", {
 	id: text("id").primaryKey().notNull(),

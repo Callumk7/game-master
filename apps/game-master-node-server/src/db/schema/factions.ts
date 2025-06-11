@@ -9,11 +9,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters, charactersInFactions } from "./characters";
 import { games } from "./games";
 import { images } from "./images";
 import { folders, notes } from "./notes";
-import { user } from "./auth";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 

@@ -2,11 +2,11 @@ import { relations } from "drizzle-orm";
 import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { user } from "./auth";
 import { characters, notesOnCharacters } from "./characters";
 import { factions, notesOnFactions } from "./factions";
 import { games } from "./games";
 import { images } from "./images";
-import { user } from "./auth";
 
 export const visibilityEnum = pgEnum("visibility", ["public", "private", "viewable"]);
 

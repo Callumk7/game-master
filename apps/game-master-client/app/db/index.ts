@@ -1,7 +1,7 @@
 import "dotenv/config";
-import * as authSchema from "./schema/auth-schema";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import * as authSchema from "./schema/auth-schema";
 
 const queryClient = postgres(process.env.DB_URL!);
 
