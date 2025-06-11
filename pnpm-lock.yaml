@@ -261,9 +261,6 @@ importers:
       '@repo/api':
         specifier: workspace:*
         version: link:../../packages/api
-      alligator-auth:
-        specifier: link:../../../../auth/alligator
-        version: link:../../../../auth/alligator
       callum-util:
         specifier: ^2.0.1
         version: 2.2.0
