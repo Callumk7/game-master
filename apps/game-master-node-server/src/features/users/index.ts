@@ -10,11 +10,10 @@ import {
 	successResponse,
 	validateOrThrowError,
 } from "~/lib/http-helpers";
-import type { Variables } from "~/types";
 import { updatedNow } from "~/utils";
 import { getUser, getUserGames } from "./queries";
 
-export const usersRoute = new Hono<{ Variables: Variables }>();
+export const usersRoute = new Hono();
 
 usersRoute.get("/", async (c) => {
 	const { limit, offset } = c.req.query();

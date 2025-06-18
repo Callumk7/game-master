@@ -3,7 +3,6 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { logger } from "hono/logger";
-import { authRoute } from "./features/auth";
 import { characterRoute } from "./features/characters";
 import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
@@ -11,16 +10,14 @@ import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
-import type { Variables } from "./types";
 
-const app = new Hono<{ Variables: Variables }>();
+const app = new Hono();
 app.use("*", cors());
 // Healthcheck
 app.get("/", (c) => c.text("OK"));
 
 // Application routes
 app.use(logger());
-app.route("/auth", authRoute);
 // This will apply JWT middleware to all routes except "/"
 app.use(
 	"*",
