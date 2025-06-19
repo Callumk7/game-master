@@ -1,3 +1,5 @@
+import { useNavigate } from "@remix-run/react";
+import type { BetterFetchError } from "better-auth/react";
 import { type FormEvent, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -10,30 +12,57 @@ export default function SignUpRoute() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<BetterFetchError | null>(null);
+  const [buttonHasError, setButtonHasError] = useState(!!error);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleEmailInput = (e: FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+    setButtonHasError(false);
+  };
+
+  const handlePasswordInput = (e: FormEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
+    setButtonHasError(false);
+  };
+
+  const handleNameInput = (e: FormEvent<HTMLInputElement>) => {
+    setName(e.currentTarget.value);
+    setButtonHasError(false);
+  };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email,
         password,
         name,
-        callbackURL: "/",
       },
       {
-        onRequest: (ctx) => {},
-        onSuccess: (ctx) => {},
+        onRequest: () => {
+          setError(null);
+          setIsLoading(true);
+        },
+        onSuccess: () => {
+          navigate("/");
+          setError(null);
+          setIsSuccess(true);
+        },
         onError: (ctx) => {
-          setError(ctx.error.message);
-          console.error(ctx.error);
+          setIsLoading(false);
+          setError(ctx.error);
+          setButtonHasError(true);
         },
       },
     );
   };
   return (
-    <div className="flex justify-center items-center h-screen">
-      <p className="text-red-400">{error}</p>
+    <div className="flex flex-col justify-center items-center h-screen">
       <Card className="mx-auto md:w-1/2">
         <CardHeader>
           <CardTitle>Signup for Game Master</CardTitle>
@@ -46,7 +75,7 @@ export default function SignUpRoute() {
               type="text"
               isRequired
               value={name}
-              onInput={(e) => setName(e.currentTarget.value)}
+              onInput={handleNameInput}
             />
             <JollyTextField
               name="email"
@@ -54,7 +83,7 @@ export default function SignUpRoute() {
               type="text"
               isRequired
               value={email}
-              onInput={(e) => setEmail(e.currentTarget.value)}
+              onInput={handleEmailInput}
             />
             <JollyTextField
               name="password"
@@ -62,10 +91,16 @@ export default function SignUpRoute() {
               type="password"
               isRequired
               value={password}
-              onInput={(e) => setPassword(e.currentTarget.value)}
+              onInput={handlePasswordInput}
             />
             <div className="flex flex-col space-y-2">
-              <Button type="submit">Sign Up</Button>
+              <Button
+                type="submit"
+                isDisabled={isLoading}
+                variant={buttonHasError ? "destructive" : "default"}
+              >
+                {isLoading ? "Loading" : isSuccess ? "👍" : "Login"}
+              </Button>
               <Link variant={"secondary"} href="/login">
                 Already have an account? Sign in
               </Link>
@@ -73,6 +108,7 @@ export default function SignUpRoute() {
           </form>
         </CardContent>
       </Card>
+      {error && <p className="text-destructive font-bold mt-5">{error.message}</p>}
     </div>
   );
 }

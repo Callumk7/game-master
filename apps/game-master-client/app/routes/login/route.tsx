@@ -1,4 +1,4 @@
-import { Form, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import type { BetterFetchError } from "better-auth/react";
 import { type FormEvent, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -61,7 +61,7 @@ export default function LoginRoute() {
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>
         </CardHeader>
-        <Form onSubmit={signIn} className="p-6 space-y-4">
+        <form onSubmit={signIn} className="p-6 space-y-4">
           <JollyTextField
             name="email"
             label="Email"
@@ -93,7 +93,7 @@ export default function LoginRoute() {
               Forgotten Password?
             </Link>
           </div>
-        </Form>
+        </form>
       </Card>
       {error && <p className="text-destructive font-bold mt-5">{error.message}</p>}
     </div>
