@@ -8,6 +8,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import "./editor.css";
+import "@xyflow/react/dist/style.css";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { ThemeProvider } from "./lib/theme/dark-mode-context";
 import { getTheme } from "./lib/theme/theme.server";
