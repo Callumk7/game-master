@@ -23,7 +23,7 @@ export function FactionNavigation({ factionId, gameId }: FactionNavigationProps)
         <Tab id={"/members"} href={`${baseUrl}/members`}>
           Members
         </Tab>
-        <Tab id={"/relations"} href={`${baseUrl}/relations`} isDisabled>
+        <Tab id={"/relations"} href={`${baseUrl}/relations`}>
           Relations
         </Tab>
         <Tab id={"/images"} href={`${baseUrl}/images`} isDisabled>

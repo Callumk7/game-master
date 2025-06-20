@@ -30,6 +30,7 @@ import {
 	updateFaction,
 } from "./queries";
 import { createFactionInsert } from "./util";
+import { getNodeTree } from "~/lib/get-node-tree";
 
 export const factionRoute = new Hono();
 
@@ -221,6 +222,20 @@ factionRoute.get("/:factionId/images", async (c) => {
 	try {
 		const factionImages = await getFactionImages(factionId);
 		return c.json(factionImages);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                RELATIONS
+////////////////////////////////////////////////////////////////////////////////
+
+factionRoute.get("/:factionId/relations", async (c) => {
+	const factionId = c.req.param("factionId");
+	try {
+		const factionTree = await getNodeTree({ id: factionId, type: "factions" });
+		return c.json(factionTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

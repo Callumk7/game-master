@@ -19,8 +19,8 @@ export interface LayoutOptions {
 const DEFAULT_LAYOUT_OPTIONS: LayoutOptions = {
 	nodeWidth: 200,
 	nodeHeight: 60,
-	horizontalSpacing: 250,
-	verticalSpacing: 100,
+	horizontalSpacing: 100,
+	verticalSpacing: 50,
 	groupSpacing: 50,
 	layoutDirection: "horizontal",
 };
@@ -195,7 +195,6 @@ export function convertToReactFlowElements(positionedTree: PositionedNode) {
 		// Add node
 		nodes.push({
 			id: `${node.type}:${node.id}`,
-			type: "custom", // You'll create custom node types
 			position: node.position,
 			data: {
 				label: node.name,
