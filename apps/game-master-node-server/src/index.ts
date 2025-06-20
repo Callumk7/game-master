@@ -18,6 +18,7 @@ app.get("/", (c) => c.text("OK"));
 
 // Application routes
 app.use(logger());
+
 // This will apply JWT middleware to all routes except "/"
 app.use(
 	"*",
@@ -25,6 +26,14 @@ app.use(
 		secret: env.SERVER_SECRET,
 	}),
 );
+
+// dev? log bearer token
+if (process.env.NODE_ENV === "development") {
+	app.use("*", async (c, next) => {
+		console.log(c.req.raw.headers.get("Authorization"));
+		await next();
+	});
+}
 
 app.route("/users", usersRoute);
 app.route("/games", gamesRoute);

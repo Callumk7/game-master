@@ -42,6 +42,7 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
+import { getNodeTree } from "~/lib/get-node-tree";
 
 export const characterRoute = new Hono();
 
@@ -332,6 +333,21 @@ characterRoute.get("/:charId/images", async (c) => {
 	try {
 		const charImages = await getCharacterImages(charId);
 		return c.json(charImages);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                RELATIONS
+////////////////////////////////////////////////////////////////////////////////
+
+characterRoute.get("/:charId/relations", async (c) => {
+	const charId = c.req.param("charId");
+
+	try {
+		const characterTree = await getNodeTree({ id: charId, type: "characters" });
+		return c.json(characterTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}
