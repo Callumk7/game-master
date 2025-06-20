@@ -1,18 +1,9 @@
-import type { EntityType } from "@repo/api";
+import type { EntityType, NodeTree } from "@repo/api";
 import { eq } from "drizzle-orm";
 import { db } from "~/db";
 import { characters } from "~/db/schema/characters";
 import { factions } from "~/db/schema/factions";
 import { notes } from "~/db/schema/notes";
-
-export interface NodeTree {
-	id: string;
-	name: string;
-	type: EntityType;
-	children: {
-		[key in EntityType]?: NodeTree[];
-	};
-}
 
 interface GetNodeTreeArgs {
 	id: string;

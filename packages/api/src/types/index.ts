@@ -43,3 +43,12 @@ export const createPermissionSchema = z.object({
 	permission: permissionSchema,
 });
 export type CreatePermissionRequestBody = z.infer<typeof createPermissionSchema>;
+
+export interface NodeTree {
+	id: string;
+	name: string;
+	type: EntityType;
+	children: {
+		[key in EntityType]?: NodeTree[];
+	};
+}
