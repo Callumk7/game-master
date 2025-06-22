@@ -6,17 +6,6 @@ import type { UpdateUserRequestBody, User, UserWithSidebarData } from "../types/
 export class Users {
 	constructor(private client: Client) {}
 
-	getUser = Object.assign(
-		async (userId: Id) => {
-			return this.client.get<User>(`users/${userId}`);
-		},
-		{
-			withSidebar: (userId: string) => {
-				return this.getUserWithSidebarData(userId);
-			},
-		},
-	);
-
 	games = Object.assign(
 		async (userId: Id) => {
 			return this.client.get<Game[]>(`users/${userId}/games`);
@@ -32,17 +21,6 @@ export class Users {
 			},
 		},
 	);
-
-	async all(options?: QueryOptions): Promise<User[]> {
-		const searchParams: Record<string, number> = {};
-
-		if (options?.limit) searchParams.limit = options.limit;
-		if (options?.offset) searchParams.offset = options.offset;
-
-		return this.client.get<User[]>("users", {
-			searchParams: Object.keys(searchParams).length ? searchParams : undefined,
-		});
-	}
 
 	async getUserWithSidebarData(userId: Id): Promise<UserWithSidebarData> {
 		return this.client.get<UserWithSidebarData>(`users/${userId}/sidebar`);

@@ -9,7 +9,7 @@ import { Toolbar } from "./ui/toolbar";
 
 export function SignoutButton() {
   const { userData } = useAppData();
-  const [label, setLabel] = useState(userData.username);
+  const [label, setLabel] = useState(userData.name);
 
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ export function SignoutButton() {
         variant={label === "Logout?" ? "destructive" : "outline"}
         type="submit"
         onHoverStart={() => setLabel("Logout?")}
-        onHoverEnd={() => setLabel(userData.username)}
+        onHoverEnd={() => setLabel(userData.name)}
         onPress={handleLogout}
         className={"w-24"}
       >

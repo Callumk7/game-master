@@ -9,6 +9,7 @@ import { folderRoute } from "./features/folders";
 import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
 import { env } from "./lib/env";
+import { usersRoute } from "./features/users";
 
 const app = new Hono();
 app.use("*", cors());
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV === "development") {
 	});
 }
 
+app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
 app.route("/characters", characterRoute);

@@ -25,26 +25,10 @@ export function BaseUserForm<T extends User>({
           type="email"
           isRequired
         />
-        <div className="flex items-stretch gap-2 w-full">
-          <JollyTextField
-            name="firstName"
-            label="First Name"
-            defaultValue={user?.firstName ?? undefined}
-            type="text"
-            className={"flex-1"}
-          />
-          <JollyTextField
-            name="lastName"
-            label="Last Name"
-            defaultValue={user?.lastName ?? undefined}
-            type="text"
-            className={"flex-1"}
-          />
-        </div>
         <JollyTextField
           name="username"
           label="Username"
-          defaultValue={user?.username}
+          defaultValue={user?.name}
           type="text"
           isRequired
         />

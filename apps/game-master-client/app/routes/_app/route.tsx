@@ -1,9 +1,10 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useRouteError, useRouteLoaderData } from "@remix-run/react";
+import { redirect, useRouteError, useRouteLoaderData } from "@remix-run/react";
 import { Text } from "~/components/ui/typeography";
 import { createApiFromReq } from "~/lib/api.server";
 import { getData } from "~/util/handle-error";
 import { AppLayout } from "./root-layout";
+import { auth } from "~/lib/auth";
 
 export const meta: MetaFunction = () => {
   return [
@@ -18,9 +19,13 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId, api } = await createApiFromReq(request);
   const userGames = await getData(() => api.users.games(userId));
-  const userData = await getData(() => api.users.getUser(userId));
+  const session = await auth.api.getSession({ headers: request.headers });
 
-  return { userGames, userData };
+  if (session?.user) {
+    return { userGames, userData: session.user };
+  }
+
+  throw redirect("/login");
 };
 
 export function useAppData() {

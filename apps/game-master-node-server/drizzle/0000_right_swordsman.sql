@@ -223,27 +223,6 @@ CREATE TABLE IF NOT EXISTS "notes_permissions" (
 	CONSTRAINT "notes_permissions_user_id_note_id_pk" PRIMARY KEY("user_id","note_id")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "sessions" (
-	"id" text PRIMARY KEY NOT NULL,
-	"user_id" text NOT NULL,
-	"expires_at" timestamp with time zone NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "users" (
-	"id" text PRIMARY KEY NOT NULL,
-	"auth_id" integer,
-	"first_name" text,
-	"last_name" text,
-	"username" text NOT NULL,
-	"email" text NOT NULL,
-	"email_verified" boolean,
-	"email_verification_token" text,
-	"email_verification_token_expiry" timestamp with time zone,
-	"reset_token" text,
-	"reset_token_expiry" timestamp with time zone,
-	CONSTRAINT "users_email_unique" UNIQUE("email")
-);
---> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
@@ -450,12 +429,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "notes_permissions" ADD CONSTRAINT "notes_permissions_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
