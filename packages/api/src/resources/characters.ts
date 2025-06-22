@@ -13,6 +13,7 @@ import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
 	Id,
+	NodeTree,
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
@@ -101,6 +102,10 @@ export class Characters {
 			},
 		},
 	};
+
+	async getRelations(charId: Id, depth = 3) {
+		return this.client.get<NodeTree>(`characters/${charId}/relations?depth=${depth}`);
+	}
 
 	images = {
 		updateCoverImage: async (

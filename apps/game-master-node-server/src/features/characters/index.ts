@@ -11,6 +11,7 @@ import { Hono } from "hono";
 import { db } from "~/db";
 import { characters, charactersInFactions } from "~/db/schema/characters";
 import { images } from "~/db/schema/images";
+import { getNodeTree } from "~/lib/get-node-tree";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -332,6 +333,26 @@ characterRoute.get("/:charId/images", async (c) => {
 	try {
 		const charImages = await getCharacterImages(charId);
 		return c.json(charImages);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                RELATIONS
+////////////////////////////////////////////////////////////////////////////////
+
+characterRoute.get("/:charId/relations", async (c) => {
+	const charId = c.req.param("charId");
+	const depth = c.req.query("depth");
+	const depthNumber = depth ? (Number.isNaN(+depth) ? undefined : +depth) : undefined;
+	try {
+		const characterTree = await getNodeTree({
+			id: charId,
+			type: "characters",
+			depth: depthNumber,
+		});
+		return c.json(characterTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

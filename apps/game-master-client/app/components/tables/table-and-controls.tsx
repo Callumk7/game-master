@@ -82,6 +82,7 @@ export function TableControlBar({
         <JollySearchField
           value={searchTerm}
           onInput={(e) => setSearchTerm(e.currentTarget.value)}
+          aria-label="Search notes"
         />
       </div>
     </Toolbar>

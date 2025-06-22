@@ -7,6 +7,7 @@ import {
   MenuItem as AriaMenuItem,
   type MenuItemProps as AriaMenuItemProps,
   type MenuProps as AriaMenuProps,
+  MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   type MenuTriggerProps as AriaMenuTriggerProps,
   Separator as AriaSeparator,
@@ -19,14 +20,14 @@ import {
 import { cn } from "callum-util";
 import type { ReactNode } from "react";
 import { Button, type buttonVariants } from "./button";
-import { ListBoxCollection, ListBoxSection } from "./list-box";
+import { ListBoxCollection } from "./list-box";
 import { SelectPopover } from "./select";
 
 const MenuTrigger = AriaMenuTrigger;
 
 const MenuSubTrigger = AriaSubmenuTrigger;
 
-const MenuSection = ListBoxSection;
+const MenuSection = AriaMenuSection;
 
 const MenuCollection = ListBoxCollection;
 

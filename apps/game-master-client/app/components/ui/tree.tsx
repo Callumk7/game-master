@@ -1,9 +1,9 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "callum-util";
 import {
-  UNSTABLE_Tree as AriaTree,
-  UNSTABLE_TreeItem as AriaTreeItem,
-  UNSTABLE_TreeItemContent as AriaTreeItemContent,
+  Tree as AriaTree,
+  TreeItem as AriaTreeItem,
+  TreeItemContent as AriaTreeItemContent,
   type TreeItemContentProps as AriaTreeItemContentProps,
   type TreeItemProps as AriaTreeItemProps,
   type TreeProps as AriaTreeProps,

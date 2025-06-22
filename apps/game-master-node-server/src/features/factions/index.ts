@@ -9,6 +9,7 @@ import { Hono } from "hono";
 import { db } from "~/db";
 import { factions } from "~/db/schema/factions";
 import { images } from "~/db/schema/images";
+import { getNodeTree } from "~/lib/get-node-tree";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -221,6 +222,26 @@ factionRoute.get("/:factionId/images", async (c) => {
 	try {
 		const factionImages = await getFactionImages(factionId);
 		return c.json(factionImages);
+	} catch (error) {
+		return handleDatabaseError(c, error);
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////
+//                                RELATIONS
+////////////////////////////////////////////////////////////////////////////////
+
+factionRoute.get("/:factionId/relations", async (c) => {
+	const factionId = c.req.param("factionId");
+	const depth = c.req.query("depth");
+	const depthNumber = depth ? (Number.isNaN(+depth) ? undefined : +depth) : undefined;
+	try {
+		const factionTree = await getNodeTree({
+			id: factionId,
+			type: "factions",
+			depth: depthNumber,
+		});
+		return c.json(factionTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);
 	}

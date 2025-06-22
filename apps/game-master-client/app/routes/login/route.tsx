@@ -1,4 +1,5 @@
 import { useNavigate } from "@remix-run/react";
+import type { BetterFetchError } from "better-auth/react";
 import { type FormEvent, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
@@ -10,29 +11,64 @@ export default function LoginRoute() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<BetterFetchError | null>(null);
+  const [buttonHasError, setButtonHasError] = useState(!!error);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleEmailInput = (e: FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+    setButtonHasError(false);
+  };
+
+  const handlePasswordInput = (e: FormEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
+    setButtonHasError(false);
+  };
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { data } = await authClient.signIn.email({ email, password });
-    if (data) {
-      navigate("/");
-    }
+  const signIn = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Don't display password in the URL
+    await authClient.signIn.email(
+      {
+        email,
+        password,
+      },
+      {
+        onRequest: () => {
+          setError(null);
+          setIsLoading(true);
+        },
+        onSuccess: () => {
+          navigate("/");
+          setError(null);
+          setIsLoading(false);
+          setIsSuccess(true);
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          setError(ctx.error);
+          setButtonHasError(true);
+        },
+      },
+    );
   };
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center h-screen">
       <Card className="mx-auto md:w-1/2">
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>
         </CardHeader>
-        <form onSubmit={handleLogin} className="p-6 space-y-4">
+        <form onSubmit={signIn} className="p-6 space-y-4">
           <JollyTextField
             name="email"
             label="Email"
             type="text"
             isRequired
             value={email}
-            onInput={(e) => setEmail(e.currentTarget.value)}
+            onInput={handleEmailInput}
           />
           <JollyTextField
             name="password"
@@ -40,10 +76,16 @@ export default function LoginRoute() {
             type="password"
             isRequired
             value={password}
-            onInput={(e) => setPassword(e.currentTarget.value)}
+            onInput={handlePasswordInput}
           />
           <div className="flex flex-col gap-2">
-            <Button type="submit">Login</Button>
+            <Button
+              variant={buttonHasError ? "destructive" : "default"}
+              type="submit"
+              isDisabled={isLoading}
+            >
+              {isLoading ? "Loading" : isSuccess ? "👍" : "Login"}
+            </Button>
             <Link variant={"secondary"} href={"/signup"}>
               Need an account? Sign up
             </Link>
@@ -53,6 +95,7 @@ export default function LoginRoute() {
           </div>
         </form>
       </Card>
+      {error && <p className="text-destructive font-bold mt-5">{error.message}</p>}
     </div>
   );
 }

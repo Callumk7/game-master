@@ -18,7 +18,6 @@ import {
 	validateOrThrowError,
 } from "~/lib/http-helpers";
 import { getPayload } from "~/lib/jwt";
-import { PermissionService } from "~/services/permissions";
 import { itemOrArrayToArray, updatedNow } from "~/utils";
 import {
 	createGame,

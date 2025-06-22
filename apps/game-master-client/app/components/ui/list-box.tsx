@@ -7,7 +7,7 @@ import {
   ListBoxItem as AriaListBoxItem,
   type ListBoxItemProps as AriaListBoxItemProps,
   type ListBoxProps as AriaListBoxProps,
-  Section as AriaSection,
+  ListBoxSection as AriaSection,
   composeRenderProps,
 } from "react-aria-components";
 

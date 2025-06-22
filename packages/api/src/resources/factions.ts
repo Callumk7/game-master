@@ -13,6 +13,7 @@ import type {
 	BasicServerResponse,
 	CreatePermissionRequestBody,
 	Id,
+	NodeTree,
 	Permission,
 	ServerResponse,
 } from "../types/index.js";
@@ -56,6 +57,12 @@ export class Factions {
 		return this.client.post<ServerResponse<Faction>>(
 			`factions/${factionId}/duplicate`,
 			duplicateData,
+		);
+	}
+
+	async getRelations(factionId: Id, depth = 3) {
+		return this.client.get<NodeTree>(
+			`factions/${factionId}/relations?depth=${depth}`,
 		);
 	}
 
