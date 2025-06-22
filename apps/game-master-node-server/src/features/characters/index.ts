@@ -344,9 +344,14 @@ characterRoute.get("/:charId/images", async (c) => {
 
 characterRoute.get("/:charId/relations", async (c) => {
 	const charId = c.req.param("charId");
-
+	const depth = c.req.query("depth");
+	const depthNumber = depth ? (Number.isNaN(+depth) ? undefined : +depth) : undefined;
 	try {
-		const characterTree = await getNodeTree({ id: charId, type: "characters" });
+		const characterTree = await getNodeTree({
+			id: charId,
+			type: "characters",
+			depth: depthNumber,
+		});
 		return c.json(characterTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);

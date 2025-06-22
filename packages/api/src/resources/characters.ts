@@ -103,8 +103,8 @@ export class Characters {
 		},
 	};
 
-	async getRelations(charId: Id) {
-		return this.client.get<NodeTree>(`characters/${charId}/relations`);
+	async getRelations(charId: Id, depth = 3) {
+		return this.client.get<NodeTree>(`characters/${charId}/relations?depth=${depth}`);
 	}
 
 	images = {

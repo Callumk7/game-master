@@ -60,8 +60,10 @@ export class Factions {
 		);
 	}
 
-	async getRelations(factionId: Id) {
-		return this.client.get<NodeTree>(`factions/${factionId}/relations`);
+	async getRelations(factionId: Id, depth = 3) {
+		return this.client.get<NodeTree>(
+			`factions/${factionId}/relations?depth=${depth}`,
+		);
 	}
 
 	getFaction = Object.assign(

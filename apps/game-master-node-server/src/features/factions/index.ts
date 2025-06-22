@@ -233,8 +233,14 @@ factionRoute.get("/:factionId/images", async (c) => {
 
 factionRoute.get("/:factionId/relations", async (c) => {
 	const factionId = c.req.param("factionId");
+	const depth = c.req.query("depth");
+	const depthNumber = depth ? (Number.isNaN(+depth) ? undefined : +depth) : undefined;
 	try {
-		const factionTree = await getNodeTree({ id: factionId, type: "factions" });
+		const factionTree = await getNodeTree({
+			id: factionId,
+			type: "factions",
+			depth: depthNumber,
+		});
 		return c.json(factionTree);
 	} catch (error) {
 		return handleDatabaseError(c, error);

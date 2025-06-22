@@ -14,6 +14,7 @@ import {
   useNodesState,
 } from "@xyflow/react";
 import { addPositionsToNodeTree, convertToReactFlowElements } from "~/lib/nodes";
+import { useTheme } from "~/lib/theme/dark-mode-context";
 
 const getParams = (params: Params) => {
   return parseParams(params, { charId: z.string() });
@@ -23,7 +24,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { api } = await createApiFromReq(request);
   const { charId } = getParams(params);
 
-  const relations = await api.characters.getRelations(charId);
+  const relations = await api.characters.getRelations(charId, 5);
   return { relations };
 };
 
@@ -54,9 +55,12 @@ function Flow({
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  const { theme } = useTheme();
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
+        colorMode={theme === "dark" ? "dark" : theme === "light" ? "light" : "system"}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
