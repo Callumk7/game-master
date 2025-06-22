@@ -11,6 +11,7 @@ import { Hono } from "hono";
 import { db } from "~/db";
 import { characters, charactersInFactions } from "~/db/schema/characters";
 import { images } from "~/db/schema/images";
+import { getNodeTree } from "~/lib/get-node-tree";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -42,7 +43,6 @@ import {
 	updateCharacterToFactionLinks,
 } from "./queries";
 import { createCharacterInsert } from "./util";
-import { getNodeTree } from "~/lib/get-node-tree";
 
 export const characterRoute = new Hono();
 

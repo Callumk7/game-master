@@ -9,6 +9,7 @@ import { Hono } from "hono";
 import { db } from "~/db";
 import { factions } from "~/db/schema/factions";
 import { images } from "~/db/schema/images";
+import { getNodeTree } from "~/lib/get-node-tree";
 import {
 	basicSuccessResponse,
 	handleDatabaseError,
@@ -30,7 +31,6 @@ import {
 	updateFaction,
 } from "./queries";
 import { createFactionInsert } from "./util";
-import { getNodeTree } from "~/lib/get-node-tree";
 
 export const factionRoute = new Hono();
 

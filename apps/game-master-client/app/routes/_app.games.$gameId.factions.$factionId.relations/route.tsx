@@ -1,8 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { type Params, useLoaderData } from "@remix-run/react";
-import { z } from "zod";
-import { parseParams } from "zodix";
-import { createApiFromReq } from "~/lib/api.server";
 import {
   Background,
   Controls,
@@ -12,8 +9,11 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import { addPositionsToNodeTree, convertToReactFlowElements } from "~/lib/nodes";
 import { useMemo } from "react";
+import { z } from "zod";
+import { parseParams } from "zodix";
+import { createApiFromReq } from "~/lib/api.server";
+import { addPositionsToNodeTree, convertToReactFlowElements } from "~/lib/nodes";
 import { useTheme } from "~/lib/theme/dark-mode-context";
 
 const getParams = (params: Params) => {
