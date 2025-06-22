@@ -8,7 +8,6 @@ import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
 import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
-import { usersRoute } from "./features/users";
 import { env } from "./lib/env";
 
 const app = new Hono();
@@ -27,7 +26,7 @@ app.use(
 	}),
 );
 
-// dev? log bearer token
+// dev? log bearer token (for testing)
 if (process.env.NODE_ENV === "development") {
 	app.use("*", async (c, next) => {
 		console.log(c.req.raw.headers.get("Authorization"));
@@ -35,7 +34,6 @@ if (process.env.NODE_ENV === "development") {
 	});
 }
 
-app.route("/users", usersRoute);
 app.route("/games", gamesRoute);
 app.route("/notes", notesRoute);
 app.route("/characters", characterRoute);

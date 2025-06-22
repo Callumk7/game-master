@@ -1,4 +1,9 @@
+import { relations } from "drizzle-orm";
 import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { charactersPermissions } from "./characters";
+import { factionsPermissions } from "./factions";
+import { usersToGames } from "./games";
+import { notesPermissions } from "./notes";
 
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
@@ -15,6 +20,13 @@ export const user = pgTable("user", {
 		.$defaultFn(() => /* @__PURE__ */ new Date())
 		.notNull(),
 });
+
+export const usersRelations = relations(user, ({ many }) => ({
+	games: many(usersToGames),
+	characterPermissions: many(charactersPermissions),
+	factionPermissions: many(factionsPermissions),
+	notePermissions: many(notesPermissions),
+}));
 
 export const session = pgTable("session", {
 	id: text("id").primaryKey(),
