@@ -13,6 +13,7 @@ export interface Folder {
 	gameId: Id;
 	ownerId: Id;
 	visibility: Visibility;
+	isDefault: boolean;
 }
 
 export interface FolderWithChildren extends Folder {

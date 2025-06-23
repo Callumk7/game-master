@@ -19,6 +19,7 @@ import {
 } from "~/lib/http-helpers";
 import { updatedNow } from "~/utils";
 import { createFolderInsert } from "./utils";
+import { getUnsortedFolder } from "./queries";
 
 export const folderRoute = new Hono();
 
@@ -71,18 +72,26 @@ folderRoute.get("/:folderId", async (c) => {
 
 folderRoute.delete("/:folderId", async (c) => {
 	const folderId = c.req.param("folderId");
+	const folder = await db.query.folders.findFirst({ where: eq(folders.id, folderId) });
+
+	if (!folder) {
+		return handleNotFound(c);
+	}
+
+	const defaultFolder = await getUnsortedFolder(folder.gameId);
+
 	try {
 		await db
 			.update(notes)
-			.set({ folderId: null })
+			.set({ folderId: defaultFolder.id })
 			.where(eq(notes.folderId, folderId));
 		await db
 			.update(characters)
-			.set({ folderId: null })
+			.set({ folderId: defaultFolder.id })
 			.where(eq(characters.folderId, folderId));
 		await db
 			.update(factions)
-			.set({ folderId: null })
+			.set({ folderId: defaultFolder.id })
 			.where(eq(factions.folderId, folderId));
 		await db
 			.update(folders)

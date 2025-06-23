@@ -29,6 +29,7 @@ export const createNoteSchema = z.object({
 	htmlContent: z.string(),
 	type: noteTypeSchema,
 	visibility: visibilitySchema,
+	folderId: z.string().optional(),
 });
 export type CreateNoteRequestBody = z.infer<typeof createNoteSchema>;
 

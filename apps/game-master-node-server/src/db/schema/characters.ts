@@ -44,7 +44,9 @@ export const characters = pgTable("characters", {
 	ownerId: text("owner_id")
 		.references(() => user.id)
 		.notNull(),
-	folderId: text("folder_id").references(() => folders.id),
+	folderId: text("folder_id")
+		.references(() => folders.id)
+		.notNull(),
 	isPlayer: boolean("is_player").notNull().default(false),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 	primaryFactionId: text("primary_faction_id").references(() => factions.id),

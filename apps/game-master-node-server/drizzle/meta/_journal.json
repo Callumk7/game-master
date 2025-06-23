@@ -8,6 +8,20 @@
       "when": 1750617721988,
       "tag": "0000_right_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750687941092,
+      "tag": "0001_stormy_outlaw_kid",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750688107431,
+      "tag": "0002_great_ghost_rider",
+      "breakpoints": true
     }
   ]
 }

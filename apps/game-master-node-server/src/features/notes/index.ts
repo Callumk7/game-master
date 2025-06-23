@@ -45,7 +45,7 @@ const getNote = async (noteId: Id) => {
 
 notesRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createNoteSchema, c);
-	const newNoteInsert = createNoteInsert(data);
+	const newNoteInsert = await createNoteInsert(data);
 	try {
 		const newNote = await createNote(newNoteInsert);
 		return successResponse(c, newNote);

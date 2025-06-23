@@ -53,6 +53,7 @@ export const createCharacterSchema = z.object({
 	personality: z.string().optional(),
 	flaw: z.string().optional(),
 	factionId: z.string().optional(),
+	folderId: z.string().optional(),
 });
 export type CreateCharacterRequestBody = z.infer<typeof createCharacterSchema>;
 

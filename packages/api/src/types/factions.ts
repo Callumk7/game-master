@@ -34,6 +34,7 @@ export const createFactionSchema = z.object({
 	gameId: z.string(),
 	leaderId: z.string().optional(),
 	members: z.array(z.string()).optional(),
+	folderId: z.string().optional(),
 });
 export type CreateFactionRequestBody = z.infer<typeof createFactionSchema>;
 

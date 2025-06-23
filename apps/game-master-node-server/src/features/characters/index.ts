@@ -24,7 +24,6 @@ import { getPayload } from "~/lib/jwt";
 import { s3 } from "~/lib/s3";
 import { PermissionService } from "~/services/permissions";
 import { validateUploadIsImageOrThrow } from "~/utils";
-import { getFactionWithMembers } from "../factions/queries";
 import { evaluateParams } from "../games/util";
 import {
 	createCharacter,
@@ -55,7 +54,7 @@ const getCharacter = async (charId: string) => {
 characterRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createCharacterSchema, c);
 
-	const newCharacterInsert = createCharacterInsert(data);
+	const newCharacterInsert = await createCharacterInsert(data);
 
 	try {
 		const newChar = await createCharacter(newCharacterInsert);

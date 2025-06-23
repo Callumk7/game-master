@@ -31,7 +31,9 @@ export const factions = pgTable("factions", {
 	ownerId: text("owner_id")
 		.references(() => user.id)
 		.notNull(),
-	folderId: text("folder_id").references(() => folders.id),
+	folderId: text("folder_id")
+		.references(() => folders.id)
+		.notNull(),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
 	// add some nice to have stuff
 	location: text("location"), // could be a location note

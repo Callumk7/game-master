@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { user } from "./auth";
@@ -36,7 +43,9 @@ export const notes = pgTable("notes", {
 	ownerId: text("owner_id")
 		.notNull()
 		.references(() => user.id),
-	folderId: text("folder_id").references(() => folders.id),
+	folderId: text("folder_id")
+		.references(() => folders.id)
+		.notNull(),
 	coverImageUrl: text("cover_image_url"),
 	gameId: text("game_id")
 		.references(() => games.id)
@@ -108,6 +117,7 @@ export const folders = pgTable("folders", {
 		.notNull()
 		.references(() => user.id),
 	visibility: visibilityEnum("visibility").notNull().default("private"),
+	isDefault: boolean("is_default").default(false).notNull(),
 });
 
 export const folderRelations = relations(folders, ({ one, many }) => ({

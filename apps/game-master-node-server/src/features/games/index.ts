@@ -39,6 +39,7 @@ import {
 	evaluateParams,
 	findMembersToAddAndRemove,
 } from "./util";
+import { createUnsortedFolder } from "../folders/queries";
 
 export const gamesRoute = new Hono();
 
@@ -48,6 +49,10 @@ gamesRoute.post("/", async (c) => {
 
 	try {
 		const newGame = await createGame(newGameInsert);
+		await createUnsortedFolder({
+			gameId: newGame.id,
+			ownerId: newGameInsert.ownerId,
+		});
 		return successResponse(c, newGame);
 	} catch (error) {
 		return handleDatabaseError(c, error);

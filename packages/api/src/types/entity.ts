@@ -8,7 +8,7 @@ export interface Entity {
 	createdAt: Date;
 	updatedAt: Date;
 	ownerId: Id;
-	folderId?: Id | null;
+	folderId: Id;
 	gameId: Id;
 	visibility: Visibility;
 	userPermissionLevel?: Permission;

@@ -56,7 +56,7 @@ factionRoute.get("/:factionId", async (c) => {
 factionRoute.post("/", async (c) => {
 	const data = await validateOrThrowError(createFactionSchema, c);
 
-	const newFactionInsert = createFactionInsert(data);
+	const newFactionInsert = await createFactionInsert(data);
 
 	try {
 		const newFaction = await createFaction(newFactionInsert);
