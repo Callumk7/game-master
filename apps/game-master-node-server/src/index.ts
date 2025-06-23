@@ -8,8 +8,8 @@ import { factionRoute } from "./features/factions";
 import { folderRoute } from "./features/folders";
 import { gamesRoute } from "./features/games";
 import { notesRoute } from "./features/notes";
-import { env } from "./lib/env";
 import { usersRoute } from "./features/users";
+import { env } from "./lib/env";
 
 const app = new Hono();
 app.use("*", cors());

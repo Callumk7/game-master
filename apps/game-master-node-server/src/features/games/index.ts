@@ -19,6 +19,7 @@ import {
 } from "~/lib/http-helpers";
 import { getPayload } from "~/lib/jwt";
 import { itemOrArrayToArray, updatedNow } from "~/utils";
+import { createUnsortedFolder } from "../folders/queries";
 import {
 	createGame,
 	deleteMembers,
@@ -39,7 +40,6 @@ import {
 	evaluateParams,
 	findMembersToAddAndRemove,
 } from "./util";
-import { createUnsortedFolder } from "../folders/queries";
 
 export const gamesRoute = new Hono();
 
