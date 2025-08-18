@@ -14,6 +14,7 @@ export const validateUser = async (request: Request): Promise<string> => {
 		}
 		return data.user.id;
 	} catch (error) {
+		console.error(error);
 		throw redirect("/login");
 	}
 };

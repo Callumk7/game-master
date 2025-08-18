@@ -9,4 +9,11 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	advanced: {
+		defaultCookieAttributes: {
+			sameSite: "none", // WARN: cross-site cookies - should change when domain is setup
+			secure: true,
+			partitioned: true, // New browser standards will mandate this for foreign cookies
+		},
+	},
 });
