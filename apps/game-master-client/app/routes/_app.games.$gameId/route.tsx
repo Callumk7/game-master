@@ -20,7 +20,8 @@ const getParams = (params: Params) => {
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const gameId = getParams(params);
-  const { api } = await createApiFromReq(request);
+  const { api, userId } = await createApiFromReq(request);
+  console.log(`userId: ${userId}`);
   const data = await getData(() => api.games.getAllGameEntities(gameId));
   const sidebarData = await getData(() => api.games.getGame.withData(gameId));
   return { ...data, sidebarData };
