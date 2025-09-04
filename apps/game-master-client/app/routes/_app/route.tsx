@@ -5,6 +5,7 @@ import { createApiFromReq } from "~/lib/api.server";
 import { auth } from "~/lib/auth";
 import { getData } from "~/util/handle-error";
 import { AppLayout } from "./root-layout";
+import { client } from "~/api/client.gen";
 
 export const meta: MetaFunction = () => {
   return [
@@ -15,6 +16,12 @@ export const meta: MetaFunction = () => {
     },
   ];
 };
+
+client.setConfig({
+  headers: {
+    Authorization: "Bearer l2PwxuwVDrhhDmEoJs2se9SOwCSku63xBqOPaXFAXm4",
+  },
+});
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId, api } = await createApiFromReq(request);

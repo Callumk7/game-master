@@ -1,9 +1,19 @@
 import { useLoaderData } from "@remix-run/react";
 import { EditableText, Text } from "~/components/ui/typeography";
 import type { loader } from "./route";
+import { useQuery } from "@tanstack/react-query";
+import { getGameOptions } from "~/api/@tanstack/react-query.gen";
 
 export function GameRoute() {
   const { game } = useLoaderData<typeof loader>();
+  const query = useQuery({
+    ...getGameOptions({
+      path: { id: 2 },
+    }),
+  });
+
+  const { data } = query;
+  console.log(data);
   return (
     <div className="p-4 space-y-10">
       <div>

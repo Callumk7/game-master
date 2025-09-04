@@ -10,7 +10,8 @@
 		"typecheck": "tsc",
 		"lint": "biome check --write",
 		"test": "vitest",
-		"test:run": "vitest run"
+		"test:run": "vitest run",
+		"codegen": "openapi-ts"
 	},
 	"dependencies": {
 		"@aws-sdk/client-ses": "^3.693.0",
@@ -66,6 +67,7 @@
 		"zustand": "^4.5.4"
 	},
 	"devDependencies": {
+		"@hey-api/openapi-ts": "0.82.3",
 		"@remix-run/dev": "^2.15.2",
 		"@remix-run/fs-routes": "^2.15.2",
 		"@remix-run/route-config": "^2.15.2",

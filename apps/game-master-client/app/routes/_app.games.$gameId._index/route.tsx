@@ -7,6 +7,7 @@ import { getData } from "~/util/handle-error";
 import { methodNotAllowed } from "~/util/responses";
 import { updateGameDetails } from "./actions.server";
 import { GameRoute } from "./game-route-index";
+import { getGame } from "~/api";
 
 const getParams = (params: Params) => {
   return parseParams(params, { gameId: z.string() });
@@ -16,6 +17,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { gameId } = getParams(params);
   const { api } = await createApiFromReq(request);
   const game = await getData(() => api.games.getGame.withMembers(gameId));
+
+  const someData = await getGame({ path: { id: Number(2) } });
+  console.log(someData);
+
   return { game };
 };
 
